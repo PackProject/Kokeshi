@@ -74,7 +74,7 @@ const MapFile::Symbol* MapFile::QueryTextSymbol(const void* addr) {
     TList<Symbol>::Iterator it = mSymbols.Begin();
     for (; it != mSymbols.End(); it++) {
         // Resolve the symbol's address
-        const void* symb = (it->type == LinkType_Static)
+        const void* symb = it->type == LinkType_Static
                                ? it->addr
                                : AddToPtr(GetTextStart(), it->offset);
 
