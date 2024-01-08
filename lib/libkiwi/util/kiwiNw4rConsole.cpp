@@ -69,7 +69,7 @@ void Nw4rConsole::Printf(const char* fmt, ...) {
  * @param args Format args
  */
 void Nw4rConsole::VPrintf(const char* fmt, std::va_list args) {
-    char msgbuf[0x400];
+    char msgbuf[1024];
     std::vsnprintf(msgbuf, sizeof(msgbuf), fmt, args);
     PrintToBuffer(msgbuf);
 }
@@ -173,7 +173,7 @@ char* Nw4rConsole::PutTab(char* dst) {
  * @return u32 Number of bytes written
  */
 u32 Nw4rConsole::PutChar(const char* str, char* dst) {
-    const u32 width = CodeWidth(str);
+    u32 width = CodeWidth(str);
 
     // Character would overflow line
     if (mPrintX + width >= mWidth) {
@@ -263,7 +263,7 @@ void Nw4rConsole::PrintToBuffer(const char* str) {
                 str++;
                 dst = PutTab(dst);
             } else {
-                const u32 bytes = PutChar(str, dst);
+                u32 bytes = PutChar(str, dst);
 
                 if (bytes != 0) {
                     str += bytes;

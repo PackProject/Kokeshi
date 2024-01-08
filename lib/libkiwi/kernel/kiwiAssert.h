@@ -8,7 +8,7 @@
 #define ASSERT(msg) K_ASSERT(msg)
 #define ASSERT_EX(msg, ...) K_ASSERT_EX(msg, __VA_ARGS__)
 
-#ifndef LIBKIWI_RELEASE
+#ifndef NDEBUG
 // Log a message to the console
 #define K_LOG(msg) kiwi_log(msg)
 

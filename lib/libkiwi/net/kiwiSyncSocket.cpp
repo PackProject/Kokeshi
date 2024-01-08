@@ -36,7 +36,7 @@ bool SyncSocket::Connect(const SOSockAddr& addr) {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::Connect(mHandle, addr) >= SO_SUCCESS;
+    return LibSO::Connect(mHandle, addr) >= 0;
 }
 
 /**
@@ -49,7 +49,7 @@ SyncSocket* SyncSocket::Accept() {
     K_WARN(mType == SO_SOCK_DGRAM, "Accept won't do anything for dgram.");
 
     SOSockAddr addr;
-    const s32 err = LibSO::Accept(mHandle, addr);
+    s32 err = LibSO::Accept(mHandle, addr);
 
     // Result >= 0 is the peer socket descriptor
     return err >= 0 ? new SyncSocket(err, mFamily, mType) : NULL;
@@ -70,8 +70,7 @@ s32 SyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
     if (mRecvPacket.IsEmpty()) {
         // Try reading header for new packet
         Packet::Header header;
-        const s32 result =
-            LibSO::Read(mHandle, &header, sizeof(Packet::Header));
+        s32 result = LibSO::Read(mHandle, &header, sizeof(Packet::Header));
 
         // Setup new packet
         if (result == sizeof(Packet::Header)) {

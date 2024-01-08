@@ -231,7 +231,7 @@ template <typename T> void BasicString<T>::Assign(const T* s, std::size_t n) {
     K_ASSERT(s != NULL);
 
     // Reserve string buffer
-    const std::size_t len = n != npos ? n : StrLen(s);
+    std::size_t len = n != npos ? n : StrLen(s);
     Reserve(len);
 
     // Copy data
@@ -283,7 +283,7 @@ template <typename T> void BasicString<T>::Append(const BasicString<T>& str) {
  */
 template <typename T> void BasicString<T>::Append(const T* s) {
     // Reserve string buffer
-    const std::size_t len = StrLen(s);
+    std::size_t len = StrLen(s);
     Reserve(mLength + len);
 
     // Concatenate data

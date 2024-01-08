@@ -52,7 +52,7 @@ AsyncClient::AsyncClient(SOProtoFamily family, SOSockType type)
     mpMsgBuffer = new u8[Packet::MAX_SIZE];
 
     // Determine thread function from socket type
-    const OSThreadFunc func =
+    OSThreadFunc func =
         GetType() == SO_SOCK_STREAM ? ThreadFuncTCP : ThreadFuncUDP;
 
     OSCreateThread(&mThread, func, this, mThreadStack + sizeof(mThreadStack),

@@ -139,8 +139,8 @@ s32 strtol(const char* str, char** endptr, int base) {
     }
 
     // Check prefix
-    const char c0 = *str;
-    const char c1 = *str + 1;
+    char c0 = *str;
+    char c1 = *str + 1;
 
     // Auto-detect base
     // If base is octal/hex, just check for optional prefix
@@ -164,7 +164,7 @@ s32 strtol(const char* str, char** endptr, int base) {
     // Parse digits
     s32 ret = 0;
     for (; *str != '\0'; str++) {
-        const char digit = *str;
+        char digit = *str;
 
         if (isdigit(digit)) {
             ret *= base;
@@ -278,7 +278,7 @@ const wchar_t* wcsstr(const wchar_t* str, const wchar_t* seq) {
     }
 
     // First character in sequence
-    const wchar_t begin = *seq;
+    wchar_t begin = *seq;
 
     // Check for sequence
     while (*str != L'\0') {

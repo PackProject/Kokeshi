@@ -15,22 +15,21 @@ namespace {
 void WaitVIRetrace() {
     AutoInterruptLock lock(true);
 
-    const s32 count = VIGetRetraceCount();
+    s32 count = VIGetRetraceCount();
     while (count == VIGetRetraceCount()) {
         ;
     }
 }
 
 /**
- * Create framebuffer from OS arena memory
+ * Create framebuffer
  *
  * @param mode GX render configuration
  * @return Framebuffer
  */
 void* CreateFB(const GXRenderModeObj* mode) {
     // Calculate framebuffer size in bytes
-    const u32 size =
-        ROUND_UP(mode->fbWidth, 16) * mode->xfbHeight * sizeof(u16);
+    u32 size = ROUND_UP(mode->fbWidth, 16) * mode->xfbHeight * sizeof(u16);
 
     // Try using heap
     void* fb = new (32) u8[size];
@@ -129,7 +128,7 @@ void Nw4rDirectPrint::EraseXfb(int x, int y, int w, int h) const {
         w *= 2;
     }
 
-    const int x2 = Min<int>(x + w, mBufferWidth);
+    int x2 = Min<int>(x + w, mBufferWidth);
     x = Max(x, 0);
     w = x2 - x;
 
@@ -138,7 +137,7 @@ void Nw4rDirectPrint::EraseXfb(int x, int y, int w, int h) const {
         h *= 2;
     }
 
-    const int y2 = Min<int>(y + h, mBufferHeight);
+    int y2 = Min<int>(y + h, mBufferHeight);
     y = Max(y, 0);
     h = y2 - y;
 
@@ -176,7 +175,7 @@ void Nw4rDirectPrint::DrawString(int x, int y, const char* fmt, ...) const {
         return;
     }
 
-    char msgbuf[0x400];
+    char msgbuf[1024];
     std::va_list list;
 
     va_start(list, fmt);
@@ -225,13 +224,13 @@ void Nw4rDirectPrint::DrawStringImpl(int x, int y, const char* str) const {
     }
 
     // Base X position
-    const int x1 = x;
+    int x1 = x;
     // Framebuffer width in units
-    const int fbWidth = mBufferWidth / GetDotWidth();
+    int fbWidth = mBufferWidth / GetDotWidth();
 
     while (*str != '\0') {
         // Attempt to draw line (whatever is allowed by framebuffer width)
-        const int width = (fbWidth - x) / scFontCharWidth;
+        int width = (fbWidth - x) / scFontCharWidth;
         str = DrawStringLine(x, y, str, width);
         y += scFontLeading;
 
@@ -278,7 +277,7 @@ const char* Nw4rDirectPrint::DrawStringLine(int x, int y, const char* str,
     int count = 0;
 
     while (*str != '\0') {
-        const char c = *str;
+        char c = *str;
 
         // Line or string has ended, stop drawing
         if (c == '\n' || c == '\0') {
@@ -286,11 +285,11 @@ const char* Nw4rDirectPrint::DrawStringLine(int x, int y, const char* str,
         }
 
         // Convert to font code
-        const int code = scAscii2Font[c & (LENGTHOF(scAscii2Font) - 1)];
+        int code = scAscii2Font[c & (LENGTHOF(scAscii2Font) - 1)];
 
         // Tab character
         if (code == 0xFD) {
-            const int tabSize = scTabSize - (count & (scTabSize - 1));
+            int tabSize = scTabSize - (count & (scTabSize - 1));
             x += tabSize * scFontCharWidth;
             count += tabSize;
         } else {
@@ -337,14 +336,14 @@ void Nw4rDirectPrint::DrawStringChar(int x, int y, int code) const {
     static const u32 scTwiceBit[] = {0b0000, 0b0011, 0b1100, 0b1111};
 
     // Convert to font-relative code
-    const int ncode = code >= 100 ? code - 100 : code;
+    int ncode = code >= 100 ? code - 100 : code;
 
-    const int fontW = ncode % 5 * scFontCharWidth;
-    const int fontH = ncode / 5 * scFontCharHeight;
+    int fontW = ncode % 5 * scFontCharWidth;
+    int fontH = ncode / 5 * scFontCharHeight;
     const u32* fontLine = code < 100 ? &scFontData[fontH] : &scFontData2[fontH];
 
-    const int dotW = GetDotWidth();
-    const int dotH = GetDotHeight();
+    int dotW = GetDotWidth();
+    int dotH = GetDotHeight();
 
     // Character location in framebuffer
     u16* pixel = reinterpret_cast<u16*>(mpBuffer);

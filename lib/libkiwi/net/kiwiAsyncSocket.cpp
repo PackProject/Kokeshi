@@ -74,7 +74,7 @@ AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
       mpAcceptCallback(NULL),
       mpAcceptCallbackArg(NULL) {
     // Make socket non-blocking
-    const bool success = SetBlocking(false);
+    bool success = SetBlocking(false);
     K_ASSERT(success);
 
     // Add socket to global list
@@ -101,7 +101,7 @@ AsyncSocket::AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type)
       mpAcceptCallback(NULL),
       mpAcceptCallbackArg(NULL) {
     // Make socket non-blocking
-    const bool success = SetBlocking(false);
+    bool success = SetBlocking(false);
     K_ASSERT(success);
 
     // Add socket to global list
@@ -163,7 +163,7 @@ s32 AsyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
     }
 
     // Copy out data
-    const std::size_t bytes = packet.Read(dst, len);
+    std::size_t bytes = packet.Read(dst, len);
 
     // Remove packet if completely read
     if (packet.IsReadComplete()) {
@@ -225,8 +225,7 @@ void AsyncSocket::CalcRecv() {
 
         // No existing packets, attempt to read new packet header
         Packet::Header header;
-        const s32 result =
-            LibSO::Read(mHandle, &header, sizeof(Packet::Header));
+        s32 result = LibSO::Read(mHandle, &header, sizeof(Packet::Header));
 
         // Packet header found, enqueue new packet
         if (result == sizeof(Packet::Header)) {
@@ -236,8 +235,8 @@ void AsyncSocket::CalcRecv() {
 
         // No new packet found, stop receiving more packets
         K_WARN_EX(result > 0,
-                  "Couldn't read packet header, but read something "
-                  "instead? Size: %d bytes",
+                  "Couldn't read packet header, but read something instead? "
+                  "Size: %d bytes",
                   result);
         return;
     }

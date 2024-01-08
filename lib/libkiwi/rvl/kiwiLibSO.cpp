@@ -125,11 +125,11 @@ s32 LibSO::Accept(SOSocket socket, SOSockAddr& addr) {
     peer.len = addr.len;
 
     // Result >= 0 == peer descriptor
-    const s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Accept, &fd, sizeof(fd),
-                                 &peer, peer.len);
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Accept, &fd, sizeof(fd), &peer,
+                           peer.len);
 
     // Copy out results (if no error)
-    if (result >= SO_SUCCESS) {
+    if (result >= 0) {
         std::memcpy(&addr, &peer, peer.len);
     }
 
@@ -214,11 +214,11 @@ s32 LibSO::GetSockName(SOSocket socket, SOSockAddr& addr) {
     s32 fd ALIGN(32) = socket;
     SOSockAddr self ALIGN(32);
 
-    const s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetSocketName, &fd,
-                                 sizeof(fd), &self, addr.len);
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetSocketName, &fd, sizeof(fd),
+                           &self, addr.len);
 
     // Copy out results (if no error)
-    if (result >= SO_SUCCESS) {
+    if (result >= 0) {
         std::memcpy(&addr, &self, addr.len);
     }
 
@@ -244,11 +244,11 @@ s32 LibSO::GetPeerName(SOSocket socket, SOSockAddr& addr) {
     SOSockAddr peer ALIGN(32);
     peer.len = addr.len;
 
-    const s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetPeerName, &fd,
-                                 sizeof(fd), &peer, peer.len);
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetPeerName, &fd, sizeof(fd),
+                           &peer, peer.len);
 
     // Copy out results (if no error)
-    if (result >= SO_SUCCESS) {
+    if (result >= 0) {
         std::memcpy(&addr, &peer, peer.len);
     }
 
@@ -417,8 +417,8 @@ s32 LibSO::RecvImpl(SOSocket socket, void* dst, std::size_t n, u32 flags,
         vectors[V_FROM].length = 0;
     }
 
-    const s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_ReceiveFrom, V_NUM_IN,
-                                  V_NUM_OUT, vectors);
+    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_ReceiveFrom, V_NUM_IN,
+                            V_NUM_OUT, vectors);
 
     delete[] vectors;
     return result;
@@ -478,8 +478,7 @@ s32 LibSO::SendImpl(SOSocket socket, const void* src, std::size_t n, u32 flags,
     vectors[V_BUFFER].length = n;
 
     // Request send
-    const s32 result =
-        IOS_Ioctlv(sDeviceHandle, Ioctl_SendTo, V_MAX, 0, vectors);
+    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_SendTo, V_MAX, 0, vectors);
 
     delete[] vectors;
     return result;
@@ -557,11 +556,11 @@ s32 LibSO::Poll(SOPollFD fds[], std::size_t numfds, s64 timeout) {
     // Copy in specified socket descriptors
     std::memcpy(buffer, fds, numfds * sizeof(SOPollFD));
 
-    const s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Poll, &msec, sizeof(msec),
-                                 buffer, numfds * sizeof(SOPollFD));
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Poll, &msec, sizeof(msec),
+                           buffer, numfds * sizeof(SOPollFD));
 
     // Copy out poll result if successful
-    if (result >= SO_SUCCESS) {
+    if (result >= 0) {
         std::memcpy(fds, buffer, numfds * sizeof(SOPollFD));
     }
 
@@ -627,11 +626,10 @@ String LibSO::INetNtoP(const SOInAddr6& addr) {
  * @return IOS error code
  */
 s32 LibSO::GetHostID(SOInAddr& addr) {
-    const s32 result =
-        IOS_Ioctl(sDeviceHandle, Ioctl_GetHostID, NULL, 0, NULL, 0);
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetHostID, NULL, 0, NULL, 0);
 
     // Copy out IP if successful
-    if (result >= SO_SUCCESS) {
+    if (result >= 0) {
         addr.raw = static_cast<u32>(result);
     }
 

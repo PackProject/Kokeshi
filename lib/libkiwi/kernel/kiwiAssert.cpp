@@ -8,7 +8,7 @@
  * @note Newline is automatically appended
  */
 void kiwi_log(const char* msg, ...) {
-    char msgbuf[0x400];
+    char msgbuf[1024];
     std::va_list list;
 
     va_start(list, msg);
@@ -23,7 +23,7 @@ void kiwi_log(const char* msg, ...) {
  * @note Newline is automatically appended
  */
 void kiwi_fail_assert(const char* file, int line, const char* msg, ...) {
-    char msgbuf[0x400];
+    char msgbuf[1024];
     std::va_list list;
 
     va_start(list, msg);

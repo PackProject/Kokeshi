@@ -316,7 +316,7 @@ void Nw4rException::DefaultCallback(const Info& info, void* arg) {
         }
 
         // Wait 100ms before polling again
-        const s64 start = OSGetTime();
+        s64 start = OSGetTime();
         while (OSGetTime() - start < OS_MSEC_TO_TICKS(100)) {
             ;
         }
@@ -498,7 +498,7 @@ void Nw4rException::PrintThankYouMsg() {
  */
 void Nw4rException::PrintSymbol(const void* addr) {
     // Symbol's offset from the start of game code
-    const std::ptrdiff_t textOffset = PtrDistance(GetTextStart(), addr);
+    std::ptrdiff_t textOffset = PtrDistance(GetTextStart(), addr);
 
     // Symbol is from game (outside module)
     if (textOffset < 0 || textOffset >= GetTextSize()) {
@@ -540,10 +540,9 @@ void Nw4rException::PrintSymbol(const void* addr) {
     }
 
     // Offset into function where exception occurred
-    const u32 offset =
-        (sym->type == MapFile::LinkType_Relocatable)
-            ? PtrDistance(AddToPtr(GetTextStart(), sym->offset), addr)
-            : PtrDistance(sym->addr, addr);
+    u32 offset = sym->type == MapFile::LinkType_Relocatable
+                     ? PtrDistance(AddToPtr(GetTextStart(), sym->offset), addr)
+                     : PtrDistance(sym->addr, addr);
 
     // Print function name and instruction offset
     Printf("%s(+0x%04X)", sym->name, offset);

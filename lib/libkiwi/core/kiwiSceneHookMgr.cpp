@@ -43,7 +43,7 @@ void SceneHookMgr::DoConfigure() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mConfigureFn != NULL) {
         hook.mConfigureFn(GetCurrentScene());
     }
@@ -59,7 +59,7 @@ void SceneHookMgr::DoLoadResource() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mLoadResourceFn != NULL) {
         hook.mLoadResourceFn(GetCurrentScene());
     }
@@ -75,7 +75,7 @@ void SceneHookMgr::DoCalculate() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mCalculateFn != NULL) {
         hook.mCalculateFn(GetCurrentScene());
     }
@@ -91,7 +91,7 @@ void SceneHookMgr::DoUserDraw() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mUserDrawFn != NULL) {
         RPGrpRenderer::Begin();
         hook.mUserDrawFn(GetCurrentScene());
@@ -109,7 +109,7 @@ void SceneHookMgr::DoExit() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mExitFn != NULL) {
         hook.mExitFn(GetCurrentScene());
     }
@@ -125,7 +125,7 @@ void SceneHookMgr::DoPause() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mPauseFn != NULL) {
         hook.mPauseFn(GetCurrentScene(), true);
     }
@@ -141,7 +141,7 @@ void SceneHookMgr::DoUnpause() {
         return;
     }
 
-    const Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
+    Hook hook = GetInstance().mHooks[GetCurrentSceneID()];
     if (hook.mPauseFn != NULL) {
         hook.mPauseFn(GetCurrentScene(), false);
     }

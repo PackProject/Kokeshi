@@ -75,7 +75,7 @@ SocketBase::~SocketBase() {
 u32 SocketBase::GetHostAddr() {
     SOInAddr addr;
 
-    if (LibSO::GetHostID(addr) >= SO_SUCCESS) {
+    if (LibSO::GetHostID(addr) >= 0) {
         return addr.raw;
     }
 
@@ -94,7 +94,7 @@ bool SocketBase::Bind(const SOSockAddr& addr) const {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::Bind(mHandle, addr) >= SO_SUCCESS;
+    return LibSO::Bind(mHandle, addr) >= 0;
 }
 
 /**
@@ -107,7 +107,7 @@ bool SocketBase::Listen(s32 backlog) const {
     K_ASSERT(mHandle >= 0);
     K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.");
 
-    return LibSO::Listen(mHandle, backlog) >= SO_SUCCESS;
+    return LibSO::Listen(mHandle, backlog) >= 0;
 }
 
 /**
@@ -140,7 +140,7 @@ bool SocketBase::Shutdown(SOShutdownType how) const {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(how == SO_SHUT_RD || how == SO_SHUT_WR || how == SO_SHUT_RDWR);
 
-    return LibSO::Shutdown(mHandle, how) >= SO_SUCCESS;
+    return LibSO::Shutdown(mHandle, how) >= 0;
 }
 
 /**
@@ -151,11 +151,14 @@ bool SocketBase::Shutdown(SOShutdownType how) const {
 bool SocketBase::Close() {
     K_ASSERT(mHandle >= 0);
 
-    // Invalidate socket descriptor
-    const SOSocket fd = mHandle;
-    mHandle = -1;
+    // Attempt to close
+    if (LibSO::Close(mHandle) < 0) {
+        return false;
+    }
 
-    return LibSO::Close(fd) >= SO_SUCCESS;
+    // Invalidate socket descriptor
+    mHandle = -1;
+    return true;
 }
 
 /**
@@ -167,7 +170,7 @@ bool SocketBase::Close() {
  * @return Success
  */
 bool SocketBase::Poll(SOPollFD fds[], std::size_t numfds, s64 timeout) const {
-    return LibSO::Poll(fds, numfds, timeout) >= SO_SUCCESS;
+    return LibSO::Poll(fds, numfds, timeout) >= 0;
 }
 
 /**
@@ -180,7 +183,7 @@ bool SocketBase::GetSocketAddr(SOSockAddr& addr) const {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::GetSockName(mHandle, addr) >= SO_SUCCESS;
+    return LibSO::GetSockName(mHandle, addr) >= 0;
 }
 
 /**
@@ -193,7 +196,7 @@ bool SocketBase::GetPeerAddr(SOSockAddr& addr) const {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::GetPeerName(mHandle, addr) >= SO_SUCCESS;
+    return LibSO::GetPeerName(mHandle, addr) >= 0;
 }
 
 /**

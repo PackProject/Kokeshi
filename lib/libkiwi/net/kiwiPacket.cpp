@@ -99,8 +99,8 @@ std::size_t Packet::Write(const void* src, std::size_t n) {
  * @returns Bytes received, or -1 if blocking
  */
 std::size_t Packet::Receive(SOSocket socket) {
-    const s32 result = LibSO::RecvFrom(socket, mpBuffer + mWriteOffset,
-                                       WriteRemain(), 0, mAddress);
+    s32 result = LibSO::RecvFrom(socket, mpBuffer + mWriteOffset, WriteRemain(),
+                                 0, mAddress);
 
     if (result >= 0) {
         mWriteOffset += result;

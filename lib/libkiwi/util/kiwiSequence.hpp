@@ -113,7 +113,7 @@ public:
      * Draw current phase (debug level)
      */
     void DebugDraw() {
-#ifndef LIBKIWI_RELEASE
+#ifndef NDEBUG
         if (mpPhase != NULL) {
             mpPhase->DebugDraw(mpParam);
         }
