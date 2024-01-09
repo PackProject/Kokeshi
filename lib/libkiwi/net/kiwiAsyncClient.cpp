@@ -7,6 +7,8 @@ namespace kiwi {
  */
 void* AsyncClient::ThreadFuncTCP(void* arg) {
     K_ASSERT(arg != NULL);
+
+    // Thread argument is this object
     AsyncClient* self = static_cast<AsyncClient*>(arg);
 
     while (true) {

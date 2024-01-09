@@ -49,10 +49,10 @@ SyncSocket* SyncSocket::Accept() {
     K_WARN(mType == SO_SOCK_DGRAM, "Accept won't do anything for dgram.");
 
     SOSockAddr addr;
-    s32 err = LibSO::Accept(mHandle, addr);
+    s32 result = LibSO::Accept(mHandle, addr);
 
     // Result >= 0 is the peer socket descriptor
-    return err >= 0 ? new SyncSocket(err, mFamily, mType) : NULL;
+    return result >= 0 ? new SyncSocket(result, mFamily, mType) : NULL;
 }
 
 /**
@@ -72,13 +72,14 @@ s32 SyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
         Packet::Header header;
         s32 result = LibSO::Read(mHandle, &header, sizeof(Packet::Header));
 
-        // Setup new packet
-        if (result == sizeof(Packet::Header)) {
-            mRecvPacket.Set(header);
-        } else {
-            K_LOG("Expected packet header, got something else.");
-            return -1;
+        // Something here, but not a packet
+        if (result != sizeof(Packet::Header)) {
+            K_WARN_EX(result != 0, "Found extraneous data: %d bytes", result);
+            // Discard the data
+            return 0;
         }
+
+        mRecvPacket.Set(header);
     }
 
     K_WARN_EX(mRecvPacket.WriteRemain() > len,
@@ -105,14 +106,12 @@ s32 SyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
 s32 SyncSocket::SendImpl(const void* src, std::size_t len,
                          const SOSockAddr* addr) {
     K_ASSERT(mHandle >= 0);
+    K_ASSERT(mSendPacket.IsEmpty());
 
-    // No partial packet
-    if (mSendPacket.IsEmpty()) {
-        // Setup new packet
-        Packet::Header header;
-        header.length = len;
-        mSendPacket.Set(header, addr);
-    }
+    // Setup new packet
+    Packet::Header header;
+    header.length = len;
+    mSendPacket.Set(header, addr);
 
     // Write packet data
     mSendPacket.Write(src, len);

@@ -20,6 +20,13 @@ public:
     virtual SocketBase* Accept() = 0;
 
     /**
+     * Conversion for use as socket descriptor
+     */
+    operator SOSocket() const {
+        return mHandle;
+    }
+
+    /**
      * Tests whether the socket has a valid descriptor
      */
     bool IsOpen() const {
@@ -42,7 +49,7 @@ public:
 
     bool Bind(const SOSockAddr& addr) const;
     bool Listen(s32 backlog = 5) const;
-    bool SetBlocking(bool block) const;
+    bool SetBlocking(bool enable) const;
     bool Shutdown(SOShutdownType how) const;
     bool Close();
 
