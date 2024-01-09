@@ -95,7 +95,7 @@ struct SockAddr4 : public SOSockAddr {
 struct SockAddr6 : public SOSockAddr {
     SockAddr6() {
         len = sizeof(SOSockAddrIn6);
-        std::memset(&in6, 0, sizeof(SOInAddr6));
+        std::memset(&in6, 0, sizeof(SOSockAddrIn6));
         in6.family = SO_AF_INET6;
     }
 
