@@ -9,8 +9,11 @@ namespace kiwi {
  * @param dest Packet recipient (optional)
  */
 void Packet::Set(const Header& header, const SOSockAddr* dest) {
+    K_ASSERT(header.length <= MAX_SIZE);
+
     // Allocate data buffer
-    Alloc(header.length);
+    mHeader = header;
+    Alloc();
 
     // Copy in destination address
     if (dest != NULL) {
@@ -22,15 +25,12 @@ void Packet::Set(const Header& header, const SOSockAddr* dest) {
 
 /**
  * Allocates packet buffer
- *
- * @param capacity Buffer capacity
  */
-void Packet::Alloc(size_type capacity) {
+void Packet::Alloc() {
     Free();
 
-    // New buffer
-    mpBuffer = new u8[capacity];
-    mCapacity = capacity;
+    mpBuffer = new u8[mHeader.length];
+    K_ASSERT(mpBuffer != NULL);
 
     mReadOffset = 0;
     mWriteOffset = 0;
@@ -48,7 +48,9 @@ void Packet::Free() {
  * Erase packet contents
  */
 void Packet::Clear() {
-    std::memset(mpBuffer, 0, mCapacity);
+    K_ASSERT(mpBuffer != NULL);
+
+    std::memset(mpBuffer, 0, mHeader.length);
     mReadOffset = 0;
     mWriteOffset = 0;
 }
@@ -61,9 +63,12 @@ void Packet::Clear() {
  *
  * @returns Bytes read
  */
-std::size_t Packet::Read(void* dst, std::size_t n) {
+u16 Packet::Read(void* dst, u16 n) {
+    K_ASSERT(mpBuffer != NULL);
+    K_ASSERT(n <= MAX_SIZE);
+
     // Clamp size to avoid overflow
-    n = Min(n, mCapacity - mReadOffset);
+    n = Min(n, ReadRemain());
 
     // Copy data from buffer
     std::memcpy(dst, mpBuffer + mReadOffset, n);
@@ -80,9 +85,13 @@ std::size_t Packet::Read(void* dst, std::size_t n) {
  *
  * @returns Bytes written
  */
-std::size_t Packet::Write(const void* src, std::size_t n) {
+
+u16 Packet::Write(const void* src, u16 n) {
+    K_ASSERT(mpBuffer != NULL);
+    K_ASSERT(n <= MAX_SIZE);
+
     // Clamp size to avoid overflow
-    n = Min(n, mCapacity - mWriteOffset);
+    n = Min(n, WriteRemain());
 
     // Copy data to buffer
     std::memcpy(mpBuffer + mWriteOffset, src, n);
@@ -98,7 +107,9 @@ std::size_t Packet::Write(const void* src, std::size_t n) {
  *
  * @returns Bytes received, or -1 if blocking
  */
-std::size_t Packet::Receive(SOSocket socket) {
+u16 Packet::Receive(SOSocket socket) {
+    K_ASSERT(mpBuffer != NULL);
+
     s32 result = LibSO::RecvFrom(socket, mpBuffer + mWriteOffset, WriteRemain(),
                                  0, mAddress);
 
@@ -117,14 +128,13 @@ std::size_t Packet::Receive(SOSocket socket) {
  *
  * @returns Bytes written, or -1 if blocking
  */
-std::size_t Packet::Send(SOSocket socket) {
-    s32 result;
+u16 Packet::Send(SOSocket socket) {
+    K_ASSERT(mpBuffer != NULL);
 
     // Send header before data
     if (mReadOffset == 0) {
-        Header header;
-        header.length = mCapacity;
-        result = LibSO::SendTo(socket, &header, sizeof(Header), 0, mAddress);
+        s32 result =
+            LibSO::SendTo(socket, &mHeader, sizeof(Header), 0, mAddress);
 
         if (result < 0) {
             return result == SO_EWOULDBLOCK ? -1 : 0;
@@ -132,8 +142,8 @@ std::size_t Packet::Send(SOSocket socket) {
     }
 
     // Send packet data
-    result = LibSO::SendTo(socket, mpBuffer + mReadOffset, ReadRemain(), 0,
-                           mAddress);
+    s32 result = LibSO::SendTo(socket, mpBuffer + mReadOffset, ReadRemain(), 0,
+                               mAddress);
 
     if (result >= 0) {
         mReadOffset += result;

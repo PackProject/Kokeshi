@@ -13,22 +13,29 @@ namespace kiwi {
  */
 class Packet {
 public:
-    typedef u16 size_type;
-    // Largest packet size
-    static const size_type MAX_SIZE = 2048;
-
     /**
      * Packet header
      */
     struct Header {
-        size_type length;
+        Header() : capacity(0) {}
+
+        // Packet capacity (for write), or length (for read)
+        union {
+            u16 length;
+            u16 capacity;
+        };
     };
+
+    /**
+     * Maximum packet content size, in bytes
+     */
+    static const u16 MAX_SIZE = 0xFFFF - sizeof(Header);
 
 public:
     /**
      * Constructor
      */
-    Packet() : mpBuffer(NULL), mReadOffset(0), mWriteOffset(0), mCapacity(0) {}
+    Packet() : mpBuffer(NULL), mReadOffset(0), mWriteOffset(0) {}
 
     /**
      * Constructor
@@ -37,7 +44,7 @@ public:
      * @param dest Packet recipient (optional)
      */
     Packet(const Header& header, const SOSockAddr* dest = NULL)
-        : mpBuffer(NULL), mReadOffset(0), mWriteOffset(0), mCapacity(0) {
+        : mpBuffer(NULL), mReadOffset(0), mWriteOffset(0) {
         Set(header, dest);
     }
 
@@ -49,29 +56,26 @@ public:
     }
 
     void Set(const Header& header, const SOSockAddr* dest = NULL);
-    void Alloc(size_type capacity = MAX_SIZE);
-    void Free();
-    void Clear();
 
-    std::size_t Read(void* dst, std::size_t n);
-    std::size_t Write(const void* src, std::size_t n);
+    u16 Read(void* dst, u16 n);
+    u16 Write(const void* src, u16 n);
 
-    std::size_t Send(SOSocket socket);
-    std::size_t Receive(SOSocket socket);
+    u16 Send(SOSocket socket);
+    u16 Receive(SOSocket socket);
 
     /**
      * Gets the number of bytes that must be read to complete the packet
      */
-    std::size_t ReadRemain() const {
-        return mCapacity - mReadOffset;
+    u16 ReadRemain() const {
+        return Max(mHeader.length - mReadOffset, 0);
     }
 
     /**
      * Gets the number of bytes that must be written to complete the
      * packet
      */
-    std::size_t WriteRemain() const {
-        return mCapacity - mWriteOffset;
+    u16 WriteRemain() const {
+        return Max(mHeader.capacity - mWriteOffset, 0);
     }
 
     /**
@@ -92,19 +96,24 @@ public:
      * Tests whether the packet contains no data
      */
     bool IsEmpty() const {
-        return mpBuffer == NULL || mCapacity == 0;
+        return mpBuffer == NULL || mHeader.capacity == 0;
     }
 
 private:
+    void Alloc();
+    void Free();
+    void Clear();
+
+private:
+    // Packet header
+    Header mHeader;
     // Packet data
     u8* mpBuffer;
 
     // Packet read offset
-    std::size_t mReadOffset;
+    int mReadOffset;
     // Packet write offset
-    std::size_t mWriteOffset;
-    // Packet capacity
-    std::size_t mCapacity;
+    int mWriteOffset;
 
     // Packet sender (RecvFrom) or recipient (SendTo)
     SOSockAddr mAddress;

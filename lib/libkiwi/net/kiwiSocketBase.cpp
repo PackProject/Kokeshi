@@ -11,7 +11,7 @@ namespace {
  * @param[out] outsize Message size, or -1 if error/blocking
  * @return Message success or would-be-blocking
  */
-bool MsgResultProc(s32 err, std::size_t* outsize) {
+bool ProcessResult(s32 err, std::size_t* outsize) {
     // Socket error
     if (err < 0) {
         // Cannot know message size
@@ -64,7 +64,9 @@ SocketBase::SocketBase(SOSocket socket, SOProtoFamily family, SOSockType type)
  */
 SocketBase::~SocketBase() {
     K_ASSERT(mHandle >= 0);
-    Close();
+
+    bool success = Close();
+    K_ASSERT(success);
 }
 
 /**
@@ -113,15 +115,15 @@ bool SocketBase::Listen(s32 backlog) const {
 /**
  * Toggles socket blocking
  *
- * @param block Whether to enable blocking
+ * @param enable Whether to enable blocking
  * @return Success
  */
-bool SocketBase::SetBlocking(bool block) const {
+bool SocketBase::SetBlocking(bool enable) const {
     K_ASSERT(mHandle >= 0);
 
     s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
 
-    if (block) {
+    if (enable) {
         flags &= ~SO_O_NONBLOCK;
     } else {
         flags |= SO_O_NONBLOCK;
@@ -239,7 +241,8 @@ bool SocketBase::CanSend() const {
  */
 bool SocketBase::RecieveBytes(void* buf, std::size_t len, std::size_t* nrecv) {
     K_ASSERT(mHandle >= 0);
-    return MsgResultProc(RecieveImpl(buf, len, NULL), nrecv);
+    s32 result = RecieveImpl(buf, len, NULL);
+    return ProcessResult(result, nrecv);
 }
 
 /**
@@ -254,7 +257,8 @@ bool SocketBase::RecieveBytes(void* buf, std::size_t len, std::size_t* nrecv) {
 bool SocketBase::RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
                                   std::size_t* nrecv) {
     K_ASSERT(mHandle >= 0);
-    return MsgResultProc(RecieveImpl(buf, len, &addr), nrecv);
+    s32 result = RecieveImpl(buf, len, &addr);
+    return ProcessResult(result, nrecv);
 }
 
 /**
@@ -268,7 +272,8 @@ bool SocketBase::RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
 bool SocketBase::SendBytes(const void* buf, std::size_t len,
                            std::size_t* nsend) {
     K_ASSERT(mHandle >= 0);
-    return MsgResultProc(SendImpl(buf, len, NULL), nsend);
+    s32 result = SendImpl(buf, len, NULL);
+    return ProcessResult(result, nsend);
 }
 
 /**
@@ -283,7 +288,8 @@ bool SocketBase::SendBytes(const void* buf, std::size_t len,
 bool SocketBase::SendBytesTo(const void* buf, std::size_t len,
                              const SOSockAddr& addr, std::size_t* nsend) {
     K_ASSERT(mHandle >= 0);
-    return MsgResultProc(SendImpl(buf, len, &addr), nsend);
+    s32 result = SendImpl(buf, len, &addr);
+    return ProcessResult(result, nsend);
 }
 
 } // namespace kiwi

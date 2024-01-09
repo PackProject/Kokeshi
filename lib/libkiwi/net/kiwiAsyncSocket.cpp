@@ -123,7 +123,7 @@ AsyncSocket::~AsyncSocket() {
  * @return Success
  */
 bool AsyncSocket::Connect(const SOSockAddr& addr) {
-    std::memcpy(&mPeer, &addr, addr.len);
+    mPeer = addr;
     mTask = Task_Connecting;
     // Connect doesn't actually happen on this thread
     return false;
@@ -154,21 +154,21 @@ s32 AsyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
         return SO_EWOULDBLOCK;
     }
 
-    // Packet at front of queue
+    // Next packet
     Packet& packet = mRecvPackets.Back();
 
-    // Packet incomplete
+    // Packet not yet received
     if (!packet.IsWriteComplete()) {
         return SO_EWOULDBLOCK;
     }
 
-    // Copy out data
+    // Copy out packet data
     std::size_t bytes = packet.Read(dst, len);
 
     // Remove packet if completely read
     if (packet.IsReadComplete()) {
-        packet.Free();
         mRecvPackets.PopBack();
+        delete &packet;
     }
 
     return bytes;
@@ -215,9 +215,8 @@ Packet* AsyncSocket::FindPacketForRecv() {
  */
 void AsyncSocket::CalcRecv() {
     while (true) {
-        Packet* packet = FindPacketForRecv();
-
         // Receive data for the next packet
+        Packet* packet = FindPacketForRecv();
         if (packet != NULL) {
             packet->Receive(mHandle);
             continue;
@@ -233,11 +232,9 @@ void AsyncSocket::CalcRecv() {
             continue;
         }
 
+        K_WARN_EX(result > 0, "Found extraneous data: %d bytes", result);
+
         // No new packet found, stop receiving more packets
-        K_WARN_EX(result > 0,
-                  "Couldn't read packet header, but read something instead? "
-                  "Size: %d bytes",
-                  result);
         return;
     }
 }
@@ -250,7 +247,7 @@ void AsyncSocket::CalcSend() {
         Packet& packet = mSendPackets.Back();
         packet.Send(mHandle);
 
-        // Packet was completely sent, remove from queue
+        // Remove packet if completely sent
         if (packet.IsWriteComplete()) {
             mSendPackets.PopBack();
             delete &packet;
