@@ -9,13 +9,13 @@ namespace kiwi {
  * @param dest Packet recipient (optional)
  */
 void Packet::Set(const Header& header, const SOSockAddr* dest) {
-    K_ASSERT(header.length <= MAX_SIZE);
+    K_ASSERT(header.capacity <= MAX_SIZE);
 
-    // Allocate data buffer
+    // Allocate for capacity
     mHeader = header;
     Alloc();
 
-    // Copy in destination address
+    // Destination address is optional
     if (dest != NULL) {
         std::memcpy(&mAddress, dest, dest->len);
     } else {
@@ -27,9 +27,12 @@ void Packet::Set(const Header& header, const SOSockAddr* dest) {
  * Allocates packet buffer
  */
 void Packet::Alloc() {
-    Free();
+    // Free existing buffer
+    if (mpBuffer != NULL) {
+        Free();
+    }
 
-    mpBuffer = new u8[mHeader.length];
+    mpBuffer = new u8[mHeader.capacity];
     K_ASSERT(mpBuffer != NULL);
 
     mReadOffset = 0;
@@ -42,17 +45,6 @@ void Packet::Alloc() {
 void Packet::Free() {
     delete mpBuffer;
     mpBuffer = NULL;
-}
-
-/**
- * Erase packet contents
- */
-void Packet::Clear() {
-    K_ASSERT(mpBuffer != NULL);
-
-    std::memset(mpBuffer, 0, mHeader.length);
-    mReadOffset = 0;
-    mWriteOffset = 0;
 }
 
 /**
@@ -107,17 +99,20 @@ u16 Packet::Write(const void* src, u16 n) {
  *
  * @returns Bytes received, or -1 if blocking
  */
-u16 Packet::Receive(SOSocket socket) {
+s32 Packet::Receive(SOSocket socket) {
     K_ASSERT(mpBuffer != NULL);
 
+    // Read from socket (try to complete packet)
     s32 result = LibSO::RecvFrom(socket, mpBuffer + mWriteOffset, WriteRemain(),
                                  0, mAddress);
 
+    // > 0 means bytes read from socket
     if (result >= 0) {
         mWriteOffset += result;
         return result;
     }
 
+    // SO error: Nothing received, but -1 to signal blocking
     return result == SO_EWOULDBLOCK ? -1 : 0;
 }
 
@@ -128,28 +123,32 @@ u16 Packet::Receive(SOSocket socket) {
  *
  * @returns Bytes written, or -1 if blocking
  */
-u16 Packet::Send(SOSocket socket) {
+s32 Packet::Send(SOSocket socket) {
     K_ASSERT(mpBuffer != NULL);
 
-    // Send header before data
-    if (mReadOffset == 0) {
+    // Try to send header first
+    if (!mSentHeader) {
         s32 result =
             LibSO::SendTo(socket, &mHeader, sizeof(Header), 0, mAddress);
 
         if (result < 0) {
             return result == SO_EWOULDBLOCK ? -1 : 0;
         }
+
+        mSentHeader = true;
     }
 
-    // Send packet data
+    // Send through socket (try to complete packet)
     s32 result = LibSO::SendTo(socket, mpBuffer + mReadOffset, ReadRemain(), 0,
                                mAddress);
 
+    // > 0 means bytes written to socket
     if (result >= 0) {
         mReadOffset += result;
         return result;
     }
 
+    // SO error: Nothing written, but -1 to signal blocking
     return result == SO_EWOULDBLOCK ? -1 : 0;
 }
 

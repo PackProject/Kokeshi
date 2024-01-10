@@ -17,7 +17,7 @@ void* AsyncSocket::ThreadFunc(void* arg) {
     while (true) {
         for (TList<AsyncSocket>::Iterator it = sSocketList.Begin();
              it != sSocketList.End(); it++) {
-            K_ASSERT_EX(it->mHandle >= 0,
+            K_ASSERT_EX(it->IsOpen(),
                         "Closed socket shouldn't be in the active list");
 
             switch (it->mTask) {
@@ -25,30 +25,36 @@ void* AsyncSocket::ThreadFunc(void* arg) {
                 it->CalcRecv();
                 it->CalcSend();
                 break;
+
             case Task_Connecting:
                 // Attempt to connect
                 result = LibSO::Connect(it->mHandle, it->mPeer);
 
+                // Ignore async return codes
                 if (result != SO_EWOULDBLOCK || result != SO_EINPROGRESS) {
+                    // Done, report result to user
                     it->mTask = Task_None;
-                    // User callback
                     it->mpConnectCallback(result, it->mpConnectCallbackArg);
                 }
                 break;
+
             case Task_Accepting:
                 // Attempt to accept
                 result = LibSO::Accept(it->mHandle, it->mPeer);
 
+                // Ignore async return codes
                 if (result != SO_EWOULDBLOCK) {
-                    it->mTask = Task_None;
-
                     // Create new socket for peer
                     AsyncSocket* socket =
                         result >= 0
                             ? new AsyncSocket(result, it->mFamily, it->mType)
                             : NULL;
 
-                    // User callback
+                    // If there was no error, confirm successful allocation
+                    K_ASSERT(socket != NULL || result < 0);
+
+                    // Done, report result to user
+                    it->mTask = Task_None;
                     it->mpAcceptCallback(socket, it->mPeer,
                                          it->mpAcceptCallbackArg);
                 }
@@ -186,7 +192,7 @@ s32 AsyncSocket::SendImpl(const void* src, std::size_t len,
                           const SOSockAddr* addr) {
     // Create new packet
     Packet::Header header;
-    header.length = len;
+    header.capacity = len;
     Packet* packet = new Packet(header);
     mSendPackets.PushFront(packet);
 

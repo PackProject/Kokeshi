@@ -11,3 +11,6 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 FixNamespaceComments: true
 AccessModifierOffset: -4
 AllowShortFunctionsOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: True
+AlignConsecutiveShortCaseStatements:
+  Enabled: true

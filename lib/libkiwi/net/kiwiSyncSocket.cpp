@@ -110,7 +110,7 @@ s32 SyncSocket::SendImpl(const void* src, std::size_t len,
 
     // Setup new packet
     Packet::Header header;
-    header.length = len;
+    header.capacity = len;
     mSendPacket.Set(header, addr);
 
     // Write packet data
