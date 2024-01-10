@@ -4,8 +4,6 @@
 
 namespace kiwi {
 
-K_DYNAMIC_SINGLETON_IMPL(SceneHookMgr);
-
 namespace {
 
 /**
