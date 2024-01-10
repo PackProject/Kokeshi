@@ -33,20 +33,6 @@ public:
         return mHandle >= 0;
     }
 
-    /**
-     * Gets protocol family
-     */
-    SOProtoFamily GetFamily() const {
-        return mFamily;
-    }
-
-    /**
-     * Gets socket type
-     */
-    SOSockType GetType() const {
-        return mType;
-    }
-
     bool Bind(const SOSockAddr& addr) const;
     bool Listen(s32 backlog = 5) const;
     bool SetBlocking(bool enable) const;

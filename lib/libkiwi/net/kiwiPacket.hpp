@@ -19,11 +19,8 @@ public:
     struct Header {
         Header() : capacity(0) {}
 
-        // Packet capacity (for write), or length (for read)
-        union {
-            u16 length;
-            u16 capacity;
-        };
+        // Packet capacity
+        u16 capacity;
     };
 
     /**
@@ -35,7 +32,8 @@ public:
     /**
      * Constructor
      */
-    Packet() : mpBuffer(NULL), mReadOffset(0), mWriteOffset(0) {}
+    Packet()
+        : mpBuffer(NULL), mSentHeader(false), mReadOffset(0), mWriteOffset(0) {}
 
     /**
      * Constructor
@@ -57,58 +55,60 @@ public:
 
     void Set(const Header& header, const SOSockAddr* dest = NULL);
 
-    u16 Read(void* dst, u16 n);
-    u16 Write(const void* src, u16 n);
+    /**
+     * Whether the packet contains no data
+     */
+    bool IsEmpty() const {
+        return mpBuffer == NULL || mHeader.capacity == 0;
+    }
 
-    u16 Send(SOSocket socket);
-    u16 Receive(SOSocket socket);
+    u16 Read(void* dst, u16 n);
 
     /**
-     * Gets the number of bytes that must be read to complete the packet
+     * The number of bytes that must be read to complete the packet
      */
     u16 ReadRemain() const {
-        return Max(mHeader.length - mReadOffset, 0);
+        return Max(mHeader.capacity - mReadOffset, 0);
     }
 
     /**
-     * Gets the number of bytes that must be written to complete the
-     * packet
+     * Whether read operation has been completed
+     */
+    bool IsReadComplete() const {
+        return ReadRemain() == 0;
+    }
+
+    u16 Write(const void* src, u16 n);
+
+    /**
+     * The number of bytes that must be written to complete the packet
      */
     u16 WriteRemain() const {
         return Max(mHeader.capacity - mWriteOffset, 0);
     }
 
     /**
-     * Tests whether read operation has been completed
-     */
-    bool IsReadComplete() const {
-        return ReadRemain() == 0;
-    }
-
-    /**
-     * Tests whether write operation has been completed
+     * Whether write operation has been completed
      */
     bool IsWriteComplete() const {
         return WriteRemain() == 0;
     }
 
-    /**
-     * Tests whether the packet contains no data
-     */
-    bool IsEmpty() const {
-        return mpBuffer == NULL || mHeader.capacity == 0;
-    }
+    s32 Send(SOSocket socket);
+    s32 Receive(SOSocket socket);
 
 private:
     void Alloc();
     void Free();
-    void Clear();
 
 private:
     // Packet header
     Header mHeader;
     // Packet data
     u8* mpBuffer;
+
+    // Whether packet header has been sent
+    bool mSentHeader;
 
     // Packet read offset
     int mReadOffset;
