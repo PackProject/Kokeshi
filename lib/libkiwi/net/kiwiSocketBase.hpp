@@ -45,28 +45,27 @@ public:
     bool CanReceive() const;
     bool CanSend() const;
 
-    bool RecieveBytes(void* buf, std::size_t len, std::size_t* nrecv = NULL);
+    bool RecieveBytes(void* buf, std::size_t len, s32* nrecv = NULL);
     bool RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
-                          std::size_t* nrecv = NULL);
+                          s32* nrecv = NULL);
 
-    bool SendBytes(const void* buf, std::size_t len, std::size_t* nsend = NULL);
+    bool SendBytes(const void* buf, std::size_t len, s32* nsend = NULL);
     bool SendBytesTo(const void* buf, std::size_t len, const SOSockAddr& addr,
-                     std::size_t* nsend = NULL);
+                     s32* nsend = NULL);
 
-    template <typename T> bool Receive(T& dst, std::size_t* nrecv = NULL) {
+    template <typename T> bool Receive(T& dst, s32* nrecv = NULL) {
         return RecieveBytes(&dst, sizeof(T), nrecv);
     }
     template <typename T>
-    bool ReceiveFrom(T& dst, SOSockAddr& addr, std::size_t* nrecv = NULL) {
+    bool ReceiveFrom(T& dst, SOSockAddr& addr, s32* nrecv = NULL) {
         return RecieveBytesFrom(&dst, sizeof(T), addr, nrecv);
     }
 
-    template <typename T> bool Send(const T& src, std::size_t* nsend = NULL) {
+    template <typename T> bool Send(const T& src, s32* nsend = NULL) {
         return SendBytes(&src, sizeof(T), nsend);
     }
     template <typename T>
-    bool SendTo(const T& src, const SOSockAddr& addr,
-                std::size_t* nsend = NULL) {
+    bool SendTo(const T& src, const SOSockAddr& addr, s32* nsend = NULL) {
         return SendBytesTo(&src, sizeof(T), addr, nsend);
     }
 

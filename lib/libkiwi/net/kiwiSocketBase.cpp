@@ -11,7 +11,7 @@ namespace {
  * @param[out] outsize Message size, or -1 if error/blocking
  * @return Message success or would-be-blocking
  */
-bool ProcessResult(s32 err, std::size_t* outsize) {
+bool ProcessResult(s32 err, s32* outsize) {
     // Socket error
     if (err < 0) {
         // Cannot know message size
@@ -26,7 +26,7 @@ bool ProcessResult(s32 err, std::size_t* outsize) {
 
     // "Error code" is actually message size (when >= 0)
     if (outsize != NULL) {
-        *outsize = static_cast<std::size_t>(err);
+        *outsize = err;
     }
 
     // Message was successful
@@ -239,7 +239,7 @@ bool SocketBase::CanSend() const {
  * @param[out] nrecv Number of bytes received, or -1 if error/blocking
  * @return Success or would-be-blocking
  */
-bool SocketBase::RecieveBytes(void* buf, std::size_t len, std::size_t* nrecv) {
+bool SocketBase::RecieveBytes(void* buf, std::size_t len, s32* nrecv) {
     K_ASSERT(mHandle >= 0);
     s32 result = RecieveImpl(buf, len, NULL);
     return ProcessResult(result, nrecv);
@@ -255,7 +255,7 @@ bool SocketBase::RecieveBytes(void* buf, std::size_t len, std::size_t* nrecv) {
  * @return Success or would-be-blocking
  */
 bool SocketBase::RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
-                                  std::size_t* nrecv) {
+                                  s32* nrecv) {
     K_ASSERT(mHandle >= 0);
     s32 result = RecieveImpl(buf, len, &addr);
     return ProcessResult(result, nrecv);
@@ -269,8 +269,7 @@ bool SocketBase::RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
  * @param[out] nsend Number of bytes sent, or -1 if error/blocking
  * @return Success or would-be-blocking
  */
-bool SocketBase::SendBytes(const void* buf, std::size_t len,
-                           std::size_t* nsend) {
+bool SocketBase::SendBytes(const void* buf, std::size_t len, s32* nsend) {
     K_ASSERT(mHandle >= 0);
     s32 result = SendImpl(buf, len, NULL);
     return ProcessResult(result, nsend);
@@ -286,7 +285,7 @@ bool SocketBase::SendBytes(const void* buf, std::size_t len,
  * @return Success or would-be-blocking
  */
 bool SocketBase::SendBytesTo(const void* buf, std::size_t len,
-                             const SOSockAddr& addr, std::size_t* nsend) {
+                             const SOSockAddr& addr, s32* nsend) {
     K_ASSERT(mHandle >= 0);
     s32 result = SendImpl(buf, len, &addr);
     return ProcessResult(result, nsend);
