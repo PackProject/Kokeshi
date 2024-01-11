@@ -13,7 +13,7 @@ void* AsyncSocket::ThreadFunc(void* arg) {
 #pragma unused(arg)
     s32 result;
 
-    // Operate all open async sockets
+    // Operate all open sockets
     while (true) {
         for (TList<AsyncSocket>::Iterator it = sSocketList.Begin();
              it != sSocketList.End(); it++) {
@@ -27,7 +27,6 @@ void* AsyncSocket::ThreadFunc(void* arg) {
                 break;
 
             case Task_Connecting:
-                // Attempt to connect
                 result = LibSO::Connect(it->mHandle, it->mPeer);
 
                 // Ignore async return codes
@@ -39,12 +38,11 @@ void* AsyncSocket::ThreadFunc(void* arg) {
                 break;
 
             case Task_Accepting:
-                // Attempt to accept
                 result = LibSO::Accept(it->mHandle, it->mPeer);
 
                 // Ignore async return codes
                 if (result != SO_EWOULDBLOCK) {
-                    // Create new socket for peer
+                    // Peer socket
                     AsyncSocket* socket =
                         result >= 0
                             ? new AsyncSocket(result, it->mFamily, it->mType)
