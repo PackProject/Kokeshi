@@ -2,7 +2,7 @@
 #define LIBKIWI_CORE_SCENE_HOOK_MGR_H
 #include <Pack/RPSystem.h>
 #include <libkiwi/core/kiwiArray.hpp>
-#include <libkiwi/util/kiwiDynamicSingleton.hpp>
+#include <libkiwi/util/kiwiStaticSingleton.hpp>
 #include <types.h>
 
 namespace kiwi {
@@ -10,8 +10,8 @@ namespace kiwi {
 /**
  * Scene hook manager
  */
-class SceneHookMgr : public DynamicSingleton<SceneHookMgr> {
-    friend class DynamicSingleton<SceneHookMgr>;
+class SceneHookMgr : public StaticSingleton<SceneHookMgr> {
+    friend class StaticSingleton<SceneHookMgr>;
 
 public:
     /**

@@ -192,7 +192,7 @@ s32 AsyncSocket::SendImpl(const void* src, std::size_t len,
                           const SOSockAddr* addr) {
     // Create new packet
     Packet::Header header;
-    header.length = len;
+    header.capacity = len;
     Packet* packet = new Packet(header);
     mSendPackets.PushFront(packet);
 

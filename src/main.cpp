@@ -1,13 +1,12 @@
+#include <Pack/RPKernel.h>
 #include <kokeshi.hpp>
 #include <libkiwi.h>
 #include <types.h>
 
-namespace kokeshi {
-
 /**
  * Mod entrypoint
  */
-void entry() {
+void KokeshiMain() {
     // Setup libkiwi debugging utilities
 #ifndef NDEBUG
     kiwi::Nw4rException::CreateInstance();
@@ -15,19 +14,13 @@ void entry() {
     kiwi::MapFile::GetInstance().Open(kokeshi::scMapfilePath,
                                       kiwi::MapFile::LinkType_Relocatable);
 #endif
-
-    // Setup everything else
-    kiwi::SceneHookMgr::CreateInstance();
+    // Your code goes here!
 
     // Enter game loop
-    RPSysSceneCreator::getInstance()->changeSceneAfterFade(
-        RPSysSceneCreator::RP_BOOT_SCENE, false);
-    RPSysSystem::getInstance()->setCallBack();
     RPSysSystem::getInstance()->mainLoop();
-
-    // Unreachable
+    // Main function should never return
     ASSERT(false);
 }
-KM_BRANCH(KOKESHI_BY_PACK(0x80183b6c, NULL, NULL), entry);
-
-} // namespace kokeshi
+KOKESHI_BY_PACK(KM_BRANCH(0x80183f04, KokeshiMain), // Wii Sports
+                KOKESHI_BY_PACK_NOOP,               // Wii Play
+                KOKESHI_BY_PACK_NOOP);              // Wii Sports Resort
