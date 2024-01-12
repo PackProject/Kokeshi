@@ -152,7 +152,7 @@ AsyncSocket* AsyncSocket::Accept() {
  * @param[out] addr Sender address
  * @return Bytes received (< 0 if failure)
  */
-s32 AsyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
+s32 AsyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
     // No packets available
     if (mRecvPackets.Empty()) {
         return SO_EWOULDBLOCK;

@@ -63,7 +63,7 @@ SyncSocket* SyncSocket::Accept() {
  * @param[out] addr Sender address
  * @return Bytes received (< 0 if failure)
  */
-s32 SyncSocket::RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
+s32 SyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
     K_ASSERT(mHandle >= 0);
 
     // No partial packet

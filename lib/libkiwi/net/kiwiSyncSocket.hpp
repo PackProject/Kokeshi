@@ -20,7 +20,7 @@ public:
 private:
     SyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type);
 
-    virtual s32 RecieveImpl(void* dst, std::size_t len, SOSockAddr* addr);
+    virtual s32 ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr);
     virtual s32 SendImpl(const void* src, std::size_t len,
                          const SOSockAddr* addr);
 

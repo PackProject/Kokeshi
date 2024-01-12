@@ -239,9 +239,9 @@ bool SocketBase::CanSend() const {
  * @param[out] nrecv Number of bytes received, or -1 if error/blocking
  * @return Success or would-be-blocking
  */
-bool SocketBase::RecieveBytes(void* buf, std::size_t len, s32* nrecv) {
+bool SocketBase::ReceiveBytes(void* buf, std::size_t len, s32* nrecv) {
     K_ASSERT(mHandle >= 0);
-    s32 result = RecieveImpl(buf, len, NULL);
+    s32 result = ReceiveImpl(buf, len, NULL);
     return ProcessResult(result, nrecv);
 }
 
@@ -254,10 +254,10 @@ bool SocketBase::RecieveBytes(void* buf, std::size_t len, s32* nrecv) {
  * @param[out] nrecv Number of bytes received, or -1 if error/blocking
  * @return Success or would-be-blocking
  */
-bool SocketBase::RecieveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
+bool SocketBase::ReceiveBytesFrom(void* buf, std::size_t len, SOSockAddr& addr,
                                   s32* nrecv) {
     K_ASSERT(mHandle >= 0);
-    s32 result = RecieveImpl(buf, len, &addr);
+    s32 result = ReceiveImpl(buf, len, &addr);
     return ProcessResult(result, nrecv);
 }
 

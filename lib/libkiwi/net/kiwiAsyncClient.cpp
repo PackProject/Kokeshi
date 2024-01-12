@@ -16,7 +16,7 @@ void* AsyncClient::ThreadFuncTCP(void* arg) {
 
         // Read packet
         s32 nrecv;
-        if (self->RecieveBytes(self->mpMsgBuffer, Packet::MAX_SIZE, &nrecv)) {
+        if (self->ReceiveBytes(self->mpMsgBuffer, Packet::MAX_SIZE, &nrecv)) {
             // 0 bytes means we disconnected from the server
             if (nrecv == 0 && self->mpDisconnectCallback != NULL) {
                 self->mpDisconnectCallback(self->mpDisconnectCallbackArg);
