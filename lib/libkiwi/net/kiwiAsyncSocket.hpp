@@ -71,6 +71,8 @@ private:
 
     AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type);
 
+    void Initialize();
+
     virtual s32 RecvImpl(void* dst, u32 len, SOSockAddr* addr);
     virtual s32 SendImpl(const void* src, u32 len, const SOSockAddr* addr);
 
@@ -105,6 +107,8 @@ private:
 
     // Thread for async socket operation
     static OSThread sSocketThread;
+    // Socket thread has been created
+    static bool sSocketThreadCreated;
     // Async socket thread stack
     static u8 sSocketThreadStack[scSocketThreadStackSize];
     // List of all active async sockets

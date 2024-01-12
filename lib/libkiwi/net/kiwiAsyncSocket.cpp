@@ -3,6 +3,7 @@
 namespace kiwi {
 
 OSThread AsyncSocket::sSocketThread;
+bool AsyncSocket::sSocketThreadCreated = false;
 u8 AsyncSocket::sSocketThreadStack[scSocketThreadStackSize];
 TList<AsyncSocket> AsyncSocket::sSocketList;
 
@@ -77,17 +78,7 @@ AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
       mpConnectCallbackArg(NULL),
       mpAcceptCallback(NULL),
       mpAcceptCallbackArg(NULL) {
-    // Make socket non-blocking
-    bool success = SetBlocking(false);
-    K_ASSERT(success);
-
-    // Add socket to global list
-    sSocketList.PushBack(this);
-
-    OSCreateThread(&sSocketThread, ThreadFunc, NULL,
-                   sSocketThreadStack + sizeof(sSocketThreadStack),
-                   sizeof(sSocketThreadStack), OS_PRIORITY_MAX, 0);
-    OSResumeThread(&sSocketThread);
+    Initialize();
 }
 
 /**
@@ -104,19 +95,36 @@ AsyncSocket::AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type)
       mpConnectCallbackArg(NULL),
       mpAcceptCallback(NULL),
       mpAcceptCallbackArg(NULL) {
+    Initialize();
+}
+
+/**
+ * Prepares socket for async operation
+ */
+void AsyncSocket::Initialize() {
     // Make socket non-blocking
     bool success = SetBlocking(false);
     K_ASSERT(success);
 
-    // Add socket to global list
+    // Thread needs to see this socket
     sSocketList.PushBack(this);
+
+    // Thread must exist if there is an open socket
+    if (!sSocketThreadCreated) {
+        OSCreateThread(&sSocketThread, ThreadFunc, NULL,
+                       &sSocketThreadStack[LENGTHOF(sSocketThreadStack) - 1],
+                       sizeof(sSocketThreadStack), OS_PRIORITY_MAX, 0);
+
+        OSResumeThread(&sSocketThread);
+        sSocketThreadCreated = true;
+    }
 }
 
 /**
  * Destructor
  */
 AsyncSocket::~AsyncSocket() {
-    // Erase socket from list
+    // Socket list should only contain open sockets
     sSocketList.Remove(this);
 }
 
@@ -167,7 +175,7 @@ s32 AsyncSocket::RecvImpl(void* dst, u32 len, SOSockAddr* addr) {
     }
 
     // Copy out packet data
-    u32 bytes = packet.Read(dst, len);
+    u16 bytes = packet.Read(dst, len);
 
     // Remove packet if completely read
     if (packet.IsReadComplete()) {
