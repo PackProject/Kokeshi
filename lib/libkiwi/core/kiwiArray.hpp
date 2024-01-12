@@ -11,7 +11,7 @@ namespace kiwi {
  * @tparam T Array element type
  * @tparam N Array size
  */
-template <typename T, std::size_t N> class TArray {
+template <typename T, u32 N> class TArray {
 public:
     T& At(int i) {
         K_ASSERT(i >= 0 && i < N);
@@ -49,7 +49,7 @@ private:
  * @tparam M Outer array size
  * @tparam N Inner array size
  */
-template <typename T, std::size_t M, std::size_t N> class TArray2D {
+template <typename T, u32 M, u32 N> class TArray2D {
 public:
     TArray<T, N>& At(int i) {
         K_ASSERT(i >= 0 && i < N);

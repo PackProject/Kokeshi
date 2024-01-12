@@ -35,7 +35,7 @@ public:
      * @param pos Substring start index
      * @param len Substring length
      */
-    BasicString(const BasicString& str, std::size_t pos, std::size_t len = npos)
+    BasicString(const BasicString& str, u32 pos, u32 len = npos)
         : mpBuffer(NULL), mCapacity(0), mLength(0) {
         Assign(str.Substr(pos, len));
     }
@@ -57,7 +57,7 @@ public:
      * @param s Buffer/sequence
      * @param n Number of characters to copy
      */
-    BasicString(const T* s, std::size_t n)
+    BasicString(const T* s, u32 n)
         : mpBuffer(NULL), mCapacity(0), mLength(0) {
         Assign(s, n);
     }
@@ -85,7 +85,7 @@ public:
     /**
      * Gets the length of the underlying string
      */
-    std::size_t Length() const {
+    u32 Length() const {
         return mLength;
     }
 
@@ -109,7 +109,7 @@ public:
      * @param i Character index
      * @return Reference to character
      */
-    T& operator[](std::size_t i) {
+    T& operator[](u32 i) {
         K_ASSERT(i < mLength);
         return mpBuffer[i];
     }
@@ -120,17 +120,17 @@ public:
      * @param i Character index
      * @return Reference to character
      */
-    const T& operator[](std::size_t i) const {
+    const T& operator[](u32 i) const {
         K_ASSERT(i < mLength);
         return mpBuffer[i];
     }
 
     void Clear();
-    BasicString Substr(std::size_t pos = 0, std::size_t len = npos) const;
+    BasicString Substr(u32 pos = 0, u32 len = npos) const;
 
-    std::size_t Find(const BasicString& str, std::size_t pos = 0) const;
-    std::size_t Find(const T* s, std::size_t pos = 0) const;
-    std::size_t Find(T c, std::size_t pos = 0) const;
+    u32 Find(const BasicString& str, u32 pos = 0) const;
+    u32 Find(const T* s, u32 pos = 0) const;
+    u32 Find(T c, u32 pos = 0) const;
 
     BasicString& operator+=(const BasicString& str) {
         Append(str);
@@ -176,10 +176,10 @@ public:
     }
 
 private:
-    void Reserve(std::size_t n);
+    void Reserve(u32 n);
 
     void Assign(const BasicString& str);
-    void Assign(const T* s, std::size_t n = npos);
+    void Assign(const T* s, u32 n = npos);
     void Assign(T c);
 
     void Append(const BasicString& str);
@@ -190,15 +190,15 @@ private:
     // String buffer
     T* mpBuffer;
     // Allocated buffer size
-    std::size_t mCapacity;
+    u32 mCapacity;
     // String length
-    std::size_t mLength;
+    u32 mLength;
 
     // Static string for empty BasicStrings
     static const T* scEmptyCStr;
 
 public:
-    static const std::size_t npos = -1;
+    static const u32 npos = -1;
 };
 
 typedef BasicString<char> String;

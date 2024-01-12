@@ -152,7 +152,7 @@ AsyncSocket* AsyncSocket::Accept() {
  * @param[out] addr Sender address
  * @return Bytes received (< 0 if failure)
  */
-s32 AsyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
+s32 AsyncSocket::RecvImpl(void* dst, u32 len, SOSockAddr* addr) {
     // No packets available
     if (mRecvPackets.Empty()) {
         return SO_EWOULDBLOCK;
@@ -167,7 +167,7 @@ s32 AsyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
     }
 
     // Copy out packet data
-    std::size_t bytes = packet.Read(dst, len);
+    u32 bytes = packet.Read(dst, len);
 
     // Remove packet if completely read
     if (packet.IsReadComplete()) {
@@ -186,8 +186,7 @@ s32 AsyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
  * @param addr Destination address
  * @return Bytes sent (< 0 if failure)
  */
-s32 AsyncSocket::SendImpl(const void* src, std::size_t len,
-                          const SOSockAddr* addr) {
+s32 AsyncSocket::SendImpl(const void* src, u32 len, const SOSockAddr* addr) {
     // Create new packet
     Packet::Header header;
     header.capacity = len;
@@ -222,7 +221,7 @@ void AsyncSocket::CalcRecv() {
         // Receive data for the next packet
         Packet* packet = FindPacketForRecv();
         if (packet != NULL) {
-            packet->Receive(mHandle);
+            packet->Recv(mHandle);
             continue;
         }
 

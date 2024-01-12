@@ -19,7 +19,7 @@ enum {
     Ioctl_GetSocketName = 7,
     Ioctl_Listen = 10,
     Ioctl_Poll = 11,
-    Ioctl_ReceiveFrom = 12,
+    Ioctl_RecvFrom = 12,
     Ioctl_SendTo = 13,
     Ioctl_Shutdown = 14,
     Ioctl_Create = 15,
@@ -263,7 +263,7 @@ s32 LibSO::GetPeerName(SOSocket socket, SOSockAddr& addr) {
  * @param n Number of bytes to read
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::Read(SOSocket socket, void* dst, std::size_t n) {
+s32 LibSO::Read(SOSocket socket, void* dst, u32 n) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
 
@@ -279,7 +279,7 @@ s32 LibSO::Read(SOSocket socket, void* dst, std::size_t n) {
  * @param flags Operation flags
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::Recv(SOSocket socket, void* dst, std::size_t n, u32 flags) {
+s32 LibSO::Recv(SOSocket socket, void* dst, u32 n, u32 flags) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
 
@@ -296,7 +296,7 @@ s32 LibSO::Recv(SOSocket socket, void* dst, std::size_t n, u32 flags) {
  * @param[out] addr Sender address
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::RecvFrom(SOSocket socket, void* dst, std::size_t n, u32 flags,
+s32 LibSO::RecvFrom(SOSocket socket, void* dst, u32 n, u32 flags,
                     SOSockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
@@ -315,7 +315,7 @@ s32 LibSO::RecvFrom(SOSocket socket, void* dst, std::size_t n, u32 flags,
  * @param n Number of bytes to write
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::Write(SOSocket socket, const void* src, std::size_t n) {
+s32 LibSO::Write(SOSocket socket, const void* src, u32 n) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
 
@@ -331,7 +331,7 @@ s32 LibSO::Write(SOSocket socket, const void* src, std::size_t n) {
  * @param flags Operation flags
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::Send(SOSocket socket, const void* src, std::size_t n, u32 flags) {
+s32 LibSO::Send(SOSocket socket, const void* src, u32 n, u32 flags) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
 
@@ -348,7 +348,7 @@ s32 LibSO::Send(SOSocket socket, const void* src, std::size_t n, u32 flags) {
  * @param addr Destination address
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::SendTo(SOSocket socket, const void* src, std::size_t n, u32 flags,
+s32 LibSO::SendTo(SOSocket socket, const void* src, u32 n, u32 flags,
                   const SOSockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
@@ -369,7 +369,7 @@ s32 LibSO::SendTo(SOSocket socket, const void* src, std::size_t n, u32 flags,
  * @param[out] addr Sender address
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::RecvImpl(SOSocket socket, void* dst, std::size_t n, u32 flags,
+s32 LibSO::RecvImpl(SOSocket socket, void* dst, u32 n, u32 flags,
                     SOSockAddr* addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
@@ -417,7 +417,7 @@ s32 LibSO::RecvImpl(SOSocket socket, void* dst, std::size_t n, u32 flags,
         vectors[V_FROM].length = 0;
     }
 
-    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_ReceiveFrom, V_NUM_IN,
+    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_RecvFrom, V_NUM_IN,
                             V_NUM_OUT, vectors);
 
     delete[] vectors;
@@ -434,7 +434,7 @@ s32 LibSO::RecvImpl(SOSocket socket, void* dst, std::size_t n, u32 flags,
  * @param addr Recipient address
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::SendImpl(SOSocket socket, const void* src, std::size_t n, u32 flags,
+s32 LibSO::SendImpl(SOSocket socket, const void* src, u32 n, u32 flags,
                     const SOSockAddr* addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
@@ -546,7 +546,7 @@ s32 LibSO::Shutdown(SOSocket socket, SOShutdownType how) {
  * @param timeout Timeout for blocking
  * @return Number of socket results written out, or IOS error code
  */
-s32 LibSO::Poll(SOPollFD fds[], std::size_t numfds, s64 timeout) {
+s32 LibSO::Poll(SOPollFD fds[], u32 numfds, s64 timeout) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
     // Setup args for ioctl

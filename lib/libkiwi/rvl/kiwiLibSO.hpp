@@ -22,19 +22,19 @@ public:
     static s32 GetSockName(SOSocket socket, SOSockAddr& addr);
     static s32 GetPeerName(SOSocket socket, SOSockAddr& addr);
 
-    static s32 Read(SOSocket socket, void* dst, std::size_t n);
-    static s32 Recv(SOSocket socket, void* dst, std::size_t n, u32 flags);
-    static s32 RecvFrom(SOSocket socket, void* dst, std::size_t n, u32 flags,
+    static s32 Read(SOSocket socket, void* dst, u32 n);
+    static s32 Recv(SOSocket socket, void* dst, u32 n, u32 flags);
+    static s32 RecvFrom(SOSocket socket, void* dst, u32 n, u32 flags,
                         SOSockAddr& addr);
 
-    static s32 Write(SOSocket socket, const void* src, std::size_t n);
-    static s32 Send(SOSocket socket, const void* src, std::size_t n, u32 flags);
-    static s32 SendTo(SOSocket socket, const void* src, std::size_t n,
+    static s32 Write(SOSocket socket, const void* src, u32 n);
+    static s32 Send(SOSocket socket, const void* src, u32 n, u32 flags);
+    static s32 SendTo(SOSocket socket, const void* src, u32 n,
                       u32 flags, const SOSockAddr& addr);
 
     static s32 Fcntl(SOSocket socket, s32 cmd, ...);
     static s32 Shutdown(SOSocket socket, SOShutdownType how);
-    static s32 Poll(SOPollFD fds[], std::size_t numfds, s64 timeout);
+    static s32 Poll(SOPollFD fds[], u32 numfds, s64 timeout);
 
     static bool INetPtoN(String str, SOInAddr& addr);
     static bool INetPtoN(String str, SOInAddr6& addr);
@@ -44,14 +44,14 @@ public:
     static s32 GetHostID(SOInAddr& addr);
 
     static s32 GetSockOpt(SOSocket socket, SOSockOptLevel level, SOSockOpt opt,
-                          void* val, std::size_t len);
+                          void* val, u32 len);
     static s32 SetSockOpt(SOSocket socket, SOSockOptLevel level, SOSockOpt opt,
-                          const void* val, std::size_t len);
+                          const void* val, u32 len);
 
 private:
-    static s32 RecvImpl(SOSocket socket, void* dst, std::size_t n, u32 flags,
+    static s32 RecvImpl(SOSocket socket, void* dst, u32 n, u32 flags,
                         SOSockAddr* addr);
-    static s32 SendImpl(SOSocket socket, const void* src, std::size_t n,
+    static s32 SendImpl(SOSocket socket, const void* src, u32 n,
                         u32 flags, const SOSockAddr* addr);
 
 private:

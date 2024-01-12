@@ -16,15 +16,15 @@ void* AsyncClient::ThreadFuncTCP(void* arg) {
 
         // Read packet
         s32 nrecv;
-        if (self->ReceiveBytes(self->mpMsgBuffer, Packet::MAX_SIZE, &nrecv)) {
+        if (self->RecvBytes(self->mpMsgBuffer, Packet::MAX_SIZE, &nrecv)) {
             // 0 bytes means we disconnected from the server
             if (nrecv == 0 && self->mpDisconnectCallback != NULL) {
                 self->mpDisconnectCallback(self->mpDisconnectCallbackArg);
             }
             // -1 bytes means the socket would have blocked
-            else if (nrecv != -1 && self->mpReceiveCallback != NULL) {
-                self->mpReceiveCallback(self->mpMsgBuffer, nrecv,
-                                        self->mpReceiveCallbackArg);
+            else if (nrecv != -1 && self->mpRecvCallback != NULL) {
+                self->mpRecvCallback(self->mpMsgBuffer, nrecv,
+                                     self->mpRecvCallbackArg);
             }
         }
     }
@@ -47,8 +47,8 @@ void* AsyncClient::ThreadFuncUDP(void* arg) {
 AsyncClient::AsyncClient(SOProtoFamily family, SOSockType type)
     : AsyncSocket(family, type),
       mpMsgBuffer(NULL),
-      mpReceiveCallback(NULL),
-      mpReceiveCallbackArg(NULL),
+      mpRecvCallback(NULL),
+      mpRecvCallbackArg(NULL),
       mpDisconnectCallback(NULL) {
     // Allocate full size buffer so we can receive any packet fully
     mpMsgBuffer = new u8[Packet::MAX_SIZE];

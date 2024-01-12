@@ -71,9 +71,8 @@ private:
 
     AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type);
 
-    virtual s32 ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr);
-    virtual s32 SendImpl(const void* src, std::size_t len,
-                         const SOSockAddr* addr);
+    virtual s32 RecvImpl(void* dst, u32 len, SOSockAddr* addr);
+    virtual s32 SendImpl(const void* src, u32 len, const SOSockAddr* addr);
 
     void CalcRecv();
     void CalcSend();
@@ -82,7 +81,7 @@ private:
 
 private:
     // Socket thread stack size
-    static const std::size_t scSocketThreadStackSize = 0x4000;
+    static const u32 scSocketThreadStackSize = 0x4000;
 
     // Socket async task
     Task mTask;

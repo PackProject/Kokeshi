@@ -24,7 +24,7 @@ public:
      * @param len Message data length
      * @param arg User callback argument
      */
-    typedef void (*ReceiveCallback)(const u8* msg, std::size_t len, void* arg);
+    typedef void (*RecvCallback)(const u8* msg, u32 len, void* arg);
 
 public:
     AsyncClient(SOProtoFamily family, SOSockType type);
@@ -47,9 +47,9 @@ public:
      * @param callback Callback function
      * @param arg Callback function argument
      */
-    void SetReceiveCallback(ReceiveCallback callback, void* arg = NULL) {
-        mpReceiveCallback = callback;
-        mpReceiveCallbackArg = arg;
+    void SetRecvCallback(RecvCallback callback, void* arg = NULL) {
+        mpRecvCallback = callback;
+        mpRecvCallbackArg = arg;
     }
 
     // Only expose supported socket methods
@@ -67,7 +67,7 @@ private:
 
 private:
     // Client thread stack size
-    static const std::size_t scThreadStackSize = 0x4000;
+    static const u32 scThreadStackSize = 0x4000;
 
     // Server address
     SOSockAddr mServer;
@@ -76,9 +76,9 @@ private:
     u8* mpMsgBuffer;
 
     // Message receive callback
-    ReceiveCallback mpReceiveCallback;
+    RecvCallback mpRecvCallback;
     // Message receive callback argument
-    void* mpReceiveCallbackArg;
+    void* mpRecvCallbackArg;
 
     // Server disconnection callback
     DisconnectCallback mpDisconnectCallback;

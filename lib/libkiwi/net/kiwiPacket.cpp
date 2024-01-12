@@ -99,7 +99,7 @@ u16 Packet::Write(const void* src, u16 n) {
  *
  * @returns Bytes received, or -1 if blocking
  */
-s32 Packet::Receive(SOSocket socket) {
+s32 Packet::Recv(SOSocket socket) {
     K_ASSERT(mpBuffer != NULL);
 
     // Read from socket (try to complete packet)

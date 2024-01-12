@@ -63,7 +63,7 @@ SyncSocket* SyncSocket::Accept() {
  * @param[out] addr Sender address
  * @return Bytes received (< 0 if failure)
  */
-s32 SyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
+s32 SyncSocket::RecvImpl(void* dst, u32 len, SOSockAddr* addr) {
     K_ASSERT(mHandle >= 0);
 
     // No partial packet
@@ -88,7 +88,7 @@ s32 SyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
 
     // Read packet over socket
     while (!mRecvPacket.IsWriteComplete()) {
-        mRecvPacket.Receive(mHandle);
+        mRecvPacket.Recv(mHandle);
     }
 
     // Copy out packet data
@@ -103,7 +103,7 @@ s32 SyncSocket::ReceiveImpl(void* dst, std::size_t len, SOSockAddr* addr) {
  * @param addr Destination address
  * @return Bytes sent (< 0 if failure)
  */
-s32 SyncSocket::SendImpl(const void* src, std::size_t len,
+s32 SyncSocket::SendImpl(const void* src, u32 len,
                          const SOSockAddr* addr) {
     K_ASSERT(mHandle >= 0);
     K_ASSERT(mSendPacket.IsEmpty());

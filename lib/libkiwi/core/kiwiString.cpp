@@ -12,10 +12,10 @@ template <> const wchar_t* BasicString<wchar_t>::scEmptyCStr = L"";
  */
 namespace {
 
-template <typename T> std::size_t StrLen(const T* s);
-template <typename T> T* StrNCat(T* dst, const T* src, std::size_t n);
-template <typename T> int StrNCmp(const T* s1, const T* s2, std::size_t n);
-template <typename T> T* StrNCpy(T* dst, const T* src, std::size_t n);
+template <typename T> u32 StrLen(const T* s);
+template <typename T> T* StrNCat(T* dst, const T* src, u32 n);
+template <typename T> int StrNCmp(const T* s1, const T* s2, u32 n);
+template <typename T> T* StrNCpy(T* dst, const T* src, u32 n);
 template <typename T> const T* StrChr(const T* s, T c);
 template <typename T> const T* StrStr(const T* s1, const T* s2);
 
@@ -49,7 +49,7 @@ template <typename T> void BasicString<T>::Clear() {
  * @param len Substring size
  */
 template <typename T>
-BasicString<T> BasicString<T>::Substr(std::size_t pos, std::size_t len) const {
+BasicString<T> BasicString<T>::Substr(u32 pos, u32 len) const {
     K_ASSERT(pos <= mLength);
 
     // Empty string if the substring begins at the end
@@ -79,8 +79,8 @@ BasicString<T> BasicString<T>::Substr(std::size_t pos, std::size_t len) const {
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-std::size_t BasicString<T>::Find(const BasicString<T>& str,
-                                 std::size_t pos) const {
+u32 BasicString<T>::Find(const BasicString<T>& str,
+                                 u32 pos) const {
     // Cannot match empty string
     if (str.Empty()) {
         return npos;
@@ -102,7 +102,7 @@ std::size_t BasicString<T>::Find(const BasicString<T>& str,
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-std::size_t BasicString<T>::Find(const T* s, std::size_t pos) const {
+u32 BasicString<T>::Find(const T* s, u32 pos) const {
     K_ASSERT(s != NULL);
 
     // Cannot match past end of string
@@ -130,7 +130,7 @@ std::size_t BasicString<T>::Find(const T* s, std::size_t pos) const {
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-std::size_t BasicString<T>::Find(T c, std::size_t pos) const {
+u32 BasicString<T>::Find(T c, u32 pos) const {
     // Cannot match past end of string
     if (pos >= mLength) {
         return npos;
@@ -181,7 +181,7 @@ template <typename T> bool BasicString<T>::operator==(const T* s) const {
  *
  * @param n Number of characters to reserve (ignoring null terminator)
  */
-template <typename T> void BasicString<T>::Reserve(std::size_t n) {
+template <typename T> void BasicString<T>::Reserve(u32 n) {
     // Already have enough space
     if (mCapacity >= n + 1) {
         return;
@@ -227,11 +227,11 @@ template <typename T> void BasicString<T>::Assign(const BasicString<T>& str) {
  * @param s C-style string to copy
  * @param n Number of characters to copy
  */
-template <typename T> void BasicString<T>::Assign(const T* s, std::size_t n) {
+template <typename T> void BasicString<T>::Assign(const T* s, u32 n) {
     K_ASSERT(s != NULL);
 
     // Reserve string buffer
-    std::size_t len = n != npos ? n : StrLen(s);
+    u32 len = n != npos ? n : StrLen(s);
     Reserve(len);
 
     // Copy data
@@ -283,7 +283,7 @@ template <typename T> void BasicString<T>::Append(const BasicString<T>& str) {
  */
 template <typename T> void BasicString<T>::Append(const T* s) {
     // Reserve string buffer
-    std::size_t len = StrLen(s);
+    u32 len = StrLen(s);
     Reserve(mLength + len);
 
     // Concatenate data
@@ -316,42 +316,42 @@ namespace {
 /**
  * strlen wrapper function
  */
-template <> std::size_t StrLen<char>(const char* s) {
+template <> u32 StrLen<char>(const char* s) {
     return std::strlen(s);
 }
-template <> std::size_t StrLen<wchar_t>(const wchar_t* s) {
+template <> u32 StrLen<wchar_t>(const wchar_t* s) {
     return std::wcslen(s);
 }
 
 /**
  * strncat wrapper function
  */
-template <> char* StrNCat(char* dst, const char* src, std::size_t n) {
+template <> char* StrNCat(char* dst, const char* src, u32 n) {
     return std::strncat(dst, src, n);
 }
-template <> wchar_t* StrNCat(wchar_t* dst, const wchar_t* src, std::size_t n) {
+template <> wchar_t* StrNCat(wchar_t* dst, const wchar_t* src, u32 n) {
     return ksl::wcsncat(dst, src, n);
 }
 
 /**
  * strncmp wrapper function
  */
-template <> int StrNCmp<char>(const char* s1, const char* s2, std::size_t n) {
+template <> int StrNCmp<char>(const char* s1, const char* s2, u32 n) {
     return std::strncmp(s1, s2, n);
 }
 template <>
-int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, std::size_t n) {
+int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, u32 n) {
     return ksl::wcsncmp(s1, s2, n);
 }
 
 /**
  * strncpy wrapper function
  */
-template <> char* StrNCpy<char>(char* dst, const char* src, std::size_t n) {
+template <> char* StrNCpy<char>(char* dst, const char* src, u32 n) {
     return std::strncpy(dst, src, n);
 }
 template <>
-wchar_t* StrNCpy<wchar_t>(wchar_t* dst, const wchar_t* src, std::size_t n) {
+wchar_t* StrNCpy<wchar_t>(wchar_t* dst, const wchar_t* src, u32 n) {
     return std::wcsncpy(dst, src, n);
 }
 

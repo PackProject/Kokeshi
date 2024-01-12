@@ -26,7 +26,7 @@ MemoryMgr::~MemoryMgr() {
  * @param align Block alignment
  * @return void* Pointer to allocated block
  */
-void* MemoryMgr::Alloc(std::size_t size, s32 align) {
+void* MemoryMgr::Alloc(u32 size, s32 align) {
     K_ASSERT_EX(mpHeap != NULL, "Please call MemoryMgr::Initialize");
     void* block = mpHeap->alloc(size, align);
 
@@ -47,24 +47,24 @@ void MemoryMgr::Free(void* block) {
 /**
  * Gets total size of available heap memory
  */
-std::size_t MemoryMgr::GetFreeSize() {
+u32 MemoryMgr::GetFreeSize() {
     K_ASSERT_EX(mpHeap != NULL, "Please call MemoryMgr::Initialize");
     return mpHeap->getAllocatableSize(4);
 }
 
 } // namespace kiwi
 
-void* operator new(std::size_t size) {
+void* operator new(u32 size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4);
 }
-void* operator new[](std::size_t size) {
+void* operator new[](u32 size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4);
 }
 
-void* operator new(std::size_t size, s32 align) {
+void* operator new(u32 size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align);
 }
-void* operator new[](std::size_t size, s32 align) {
+void* operator new[](u32 size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align);
 }
 

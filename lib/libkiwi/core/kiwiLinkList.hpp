@@ -244,7 +244,7 @@ public:
     /**
      * Gets list size
      */
-    std::size_t GetSize() const {
+    u32 GetSize() const {
         return mSize;
     }
 
@@ -416,7 +416,7 @@ public:
 
 private:
     // List size
-    std::size_t mSize;
+    u32 mSize;
     // List end node
     TListNode<T> mEndNode;
 };

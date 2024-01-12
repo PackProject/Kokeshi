@@ -36,7 +36,7 @@ static inline const void* GetInitStart() {
 static inline const void* GetInitEnd() {
     return &_e_init;
 }
-static inline std::size_t GetInitSize() {
+static inline u32 GetInitSize() {
     return PtrDistance(GetInitStart(), GetInitEnd());
 }
 
@@ -46,7 +46,7 @@ static inline const void* GetTextStart() {
 static inline const void* GetTextEnd() {
     return &_e_text;
 }
-static inline std::size_t GetTextSize() {
+static inline u32 GetTextSize() {
     return PtrDistance(GetTextStart(), GetTextEnd());
 }
 
@@ -56,7 +56,7 @@ static inline const void* GetCtorsStart() {
 static inline const void* GetCtorsEnd() {
     return &_e_ctors;
 }
-static inline std::size_t GetCtorsSize() {
+static inline u32 GetCtorsSize() {
     return PtrDistance(GetCtorsStart(), GetCtorsEnd());
 }
 
@@ -66,7 +66,7 @@ static inline const void* GetDtorsStart() {
 static inline const void* GetDtorsEnd() {
     return &_e_dtors;
 }
-static inline std::size_t GetDtorsSize() {
+static inline u32 GetDtorsSize() {
     return PtrDistance(GetDtorsStart(), GetDtorsEnd());
 }
 
@@ -76,7 +76,7 @@ static inline const void* GetRodataStart() {
 static inline const void* GetRodataEnd() {
     return &_e_rodata;
 }
-static inline std::size_t GetRodataSize() {
+static inline u32 GetRodataSize() {
     return PtrDistance(GetRodataStart(), GetRodataEnd());
 }
 
@@ -86,7 +86,7 @@ static inline const void* GetDataStart() {
 static inline const void* GetDataEnd() {
     return &_e_data;
 }
-static inline std::size_t GetDataSize() {
+static inline u32 GetDataSize() {
     return PtrDistance(GetDataStart(), GetDataEnd());
 }
 

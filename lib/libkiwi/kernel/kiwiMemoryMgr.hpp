@@ -13,9 +13,9 @@ class MemoryMgr : public StaticSingleton<MemoryMgr> {
     friend class StaticSingleton<MemoryMgr>;
 
 public:
-    void* Alloc(std::size_t size, s32 align);
+    void* Alloc(u32 size, s32 align);
     void Free(void* block);
-    std::size_t GetFreeSize();
+    u32 GetFreeSize();
 
 private:
     MemoryMgr();
@@ -26,7 +26,7 @@ private:
     EGG::ExpHeap* mpHeap;
 
     // Main heap size
-    static const std::size_t scHeapSize = OS_MEM_KB_TO_B(256);
+    static const u32 scHeapSize = OS_MEM_KB_TO_B(256);
 };
 
 } // namespace kiwi

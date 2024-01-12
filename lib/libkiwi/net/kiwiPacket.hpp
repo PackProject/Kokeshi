@@ -95,7 +95,7 @@ public:
     }
 
     s32 Send(SOSocket socket);
-    s32 Receive(SOSocket socket);
+    s32 Recv(SOSocket socket);
 
 private:
     void Alloc();
