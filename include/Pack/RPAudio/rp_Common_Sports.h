@@ -1,7 +1,9 @@
-#ifndef RP_AUDIO_RP_COMMON_SOUND_RSAR_H
-#define RP_AUDIO_RP_COMMON_SOUND_RSAR_H
+#ifndef RP_AUDIO_RP_COMMON_SOUND_H
+#define RP_AUDIO_RP_COMMON_SOUND_H
 
-enum rp_Common_Sports {
+namespace rp_Common_Sports {
+
+enum ESoundID {
     /* 0x00 */ RP_COMMON_SE_LOGO_01,
     /* 0x01 */ RP_COMMON_SE_WIN_OPEN_01,
     /* 0x02 */ RP_COMMON_SE_WIN_CLOSE_01,
@@ -81,5 +83,7 @@ enum rp_Common_Sports {
     /* 0x4C */ RP_COM_GAME_SE_PAUSE_KEY_A_01_TVSP,
     /* 0x4D */ RP_COM_GAME_SE_PAUSE_KEY_A_01
 };
+
+} // namespace rp_Common_Sports
 
 #endif

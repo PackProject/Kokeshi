@@ -60,7 +60,7 @@ struct SoundCommonInfo {
     u8 BYTE_0x29;
 };
 
-typedef Util::Table<Util::DataRef<SoundCommonInfo, void, void, void>>
+typedef Util::Table<Util::DataRef<SoundCommonInfo, void, void, void> >
     SoundCommonTable;
 
 struct BankInfo {
@@ -68,7 +68,7 @@ struct BankInfo {
     UNKWORD WORD_0x4;
 };
 
-typedef Util::Table<Util::DataRef<BankInfo, void, void, void>> BankTable;
+typedef Util::Table<Util::DataRef<BankInfo, void, void, void> > BankTable;
 
 struct PlayerInfo {
     char UNK_0x0[0x4];
@@ -76,7 +76,7 @@ struct PlayerInfo {
     UNKWORD WORD_0x8;
 };
 
-typedef Util::Table<Util::DataRef<PlayerInfo, void, void, void>> PlayerTable;
+typedef Util::Table<Util::DataRef<PlayerInfo, void, void, void> > PlayerTable;
 
 struct GroupItemInfo {
     UNKWORD WORD_0x0;
@@ -86,7 +86,7 @@ struct GroupItemInfo {
     UNKWORD WORD_0x10;
 };
 
-typedef Util::Table<Util::DataRef<GroupItemInfo, void, void, void>>
+typedef Util::Table<Util::DataRef<GroupItemInfo, void, void, void> >
     GroupItemTable;
 
 struct GroupInfo {
@@ -99,7 +99,7 @@ struct GroupInfo {
     Util::DataRef<GroupItemTable, void, void, void> mGroupItemTable; // at 0x20
 };
 
-typedef Util::Table<Util::DataRef<GroupInfo, void, void, void>> GroupTable;
+typedef Util::Table<Util::DataRef<GroupInfo, void, void, void> > GroupTable;
 
 struct SoundArchivePlayerInfo {
     u16 SIZE_0x0;
@@ -111,7 +111,7 @@ struct SoundArchivePlayerInfo {
     u16 SHORT_0xC;
 };
 
-typedef Util::Table<Util::DataRef<SoundArchive::FilePos, void, void, void>>
+typedef Util::Table<Util::DataRef<SoundArchive::FilePos, void, void, void> >
     FilePosTable;
 
 struct FileInfo {
@@ -122,7 +122,7 @@ struct FileInfo {
     Util::DataRef<FilePosTable, void, void, void> TABLE_0x14;
 };
 
-typedef Util::Table<Util::DataRef<FileInfo, void, void, void>> FileTable;
+typedef Util::Table<Util::DataRef<FileInfo, void, void, void> > FileTable;
 
 struct StringNode {
     enum { FLAG_LEAF = 0x0001 };

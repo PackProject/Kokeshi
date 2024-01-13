@@ -1,21 +1,28 @@
-#ifndef EGG_AUDIO_AUDIOMGR_H
-#define EGG_AUDIO_AUDIOMGR_H
+#ifndef EGG_AUDIO_AUDIO_MGR_H
+#define EGG_AUDIO_AUDIO_MGR_H
 #include "eggAudioArcPlayerMgr.h"
 #include "eggAudioHeapMgr.h"
+#include "eggAudioSystem.h"
+#include "eggIAudioMgr.h"
 #include "types_egg.h"
 
 namespace EGG {
-class IAudioMgr {
+
+class SimpleAudioMgr : public IAudioMgr,
+                       public SoundHeapMgr,
+                       public ArcPlayer,
+                       public AudioSystem {
 public:
-    class Arg {};
+    struct SimpleAudioMgrArg : IAudioMgr::Arg {
+        SimpleAudioMgrArg();
+    };
 
-    virtual UNKTYPE initialize(Arg*) {}
-    virtual UNKTYPE calc() = 0;
+    SimpleAudioMgr();
+    virtual ~SimpleAudioMgr();                // at 0x80
+    virtual void initialize(IAudioMgr::Arg*); // at 0x8
+    virtual void calc();                      // at 0xC
 };
 
-class SimpleAudioMgr : public IAudioMgr, public SoundHeapMgr, public ArcPlayer {
-    virtual ~SimpleAudioMgr(); // at 0x80
-};
 } // namespace EGG
 
 #endif

@@ -1,14 +1,18 @@
 #ifndef RP_AUDIO_SND_AUDIO_MANAGER_H
 #define RP_AUDIO_SND_AUDIO_MANAGER_H
-#include "types_nw4r.h"
-#include "types_rp.h"
+#include <egg/audio.h>
+#include <egg/core.h>
+#include <nw4r/snd.h>
+#include <types_RP.h>
 
-#include <nw4r/snd/snd_SoundHandle.h>
-#include <nw4r/snd/snd_SoundHeap.h>
-
-class RPSndAudioMgr {
+/**
+ * @brief RP sound manager (BGM, SFX, etc.)
+ */
+class RPSndAudioMgr : public EGG::ExpAudioMgr {
 public:
-    static RPSndAudioMgr* getInstance() {
+    // @address 801b82dc
+    static RPSndAudioMgr* CreateInstance(EGG::Heap* heap);
+    static RPSndAudioMgr* GetInstance() {
         return sInstance;
     }
 

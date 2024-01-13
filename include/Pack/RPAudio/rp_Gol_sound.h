@@ -1,7 +1,9 @@
-#ifndef RP_AUDIO_RP_GOL_SOUND_RSAR_H
-#define RP_AUDIO_RP_GOL_SOUND_RSAR_H
+#ifndef RP_AUDIO_RP_GOL_SOUND_H
+#define RP_AUDIO_RP_GOL_SOUND_H
 
-enum rp_Gol_sound {
+namespace rp_Gol_sound {
+
+enum ESoundID {
     /* 0x00 */ SE_TR_FlagHit,
     /* 0x01 */ SE_TR_DRIVER_HIT,
     /* 0x02 */ SE_TR_DRIVER_HIT_TVSP,
@@ -217,5 +219,7 @@ enum rp_Gol_sound {
     /* 0xD4 */ RP_COM_GAME_SE_PAUSE_KEY_A_01_TVSP,
     /* 0xD5 */ RP_COM_GAME_SE_PAUSE_KEY_A_01
 };
+
+} // namespace rp_Gol_sound
 
 #endif

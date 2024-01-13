@@ -1,7 +1,9 @@
-#ifndef RP_AUDIO_RP_BOW_SOUND_RSAR_H
-#define RP_AUDIO_RP_BOW_SOUND_RSAR_H
+#ifndef RP_AUDIO_RP_BOW_SOUND_H
+#define RP_AUDIO_RP_BOW_SOUND_H
 
-enum rp_Bow_sound {
+namespace rp_Bow_sound {
+
+enum ESoundID {
     /* 0x00 */ SE_TR_Training_Kabeyoke_Replay_WallEffect,
     /* 0x01 */ SE_TR_HitFloor,
     /* 0x02 */ SE_TR_HitFloor_TVSP,
@@ -162,5 +164,7 @@ enum rp_Bow_sound {
     /* 0x9D */ RP_COM_GAME_SE_PAUSE_KEY_A_01_TVSP,
     /* 0x9E */ RP_COM_GAME_SE_PAUSE_KEY_A_01
 };
+
+} // namespace rp_Bow_sound
 
 #endif

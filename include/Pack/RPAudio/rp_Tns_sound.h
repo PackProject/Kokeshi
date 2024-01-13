@@ -1,7 +1,9 @@
-#ifndef RP_AUDIO_RP_TNS_SOUND_RSAR_H
-#define RP_AUDIO_RP_TNS_SOUND_RSAR_H
+#ifndef RP_AUDIO_RP_TNS_SOUND_H
+#define RP_AUDIO_RP_TNS_SOUND_H
 
-enum rp_Tns_sound {
+namespace rp_Tns_sound {
+
+enum ESoundID {
     /* 0x00 */ SE_TR_TARGET_CRUSH,
     /* 0x01 */ SE_TR_WALL_CRUSH,
     /* 0x02 */ SE_TR_SERVE,
@@ -175,5 +177,7 @@ enum rp_Tns_sound {
     /* 0xAA */ RP_COM_GAME_SE_PAUSE_KEY_A_01_TVSP,
     /* 0xAB */ RP_COM_GAME_SE_PAUSE_KEY_A_01
 };
+
+} // namespace rp_Tns_sound
 
 #endif

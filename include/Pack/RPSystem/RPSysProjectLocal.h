@@ -74,7 +74,7 @@ private:
           mPackID(RP_SPORTS_PACK),
           mLocale(RP_ENGLISH_US),
           mLanguage(RP_ENGLISH_US),
-          WORD_0x18(0),
+          mSndPal50Fix(FALSE),
           mSndStorage(RP_STORAGE_MEM) {}
 
     // @address 80186364
@@ -90,10 +90,10 @@ private:
     u32 mLocale; // at 0x10
     // @brief Seems to be unused, set alongside locale
     u32 mLanguage; // at 0x14
-    // @brief Audio related, only used by code leftover from Wii Play
-    UNKWORD WORD_0x18;
+    // @brief Play sequenced audio at 5/6 speed
+    BOOL mSndPal50Fix; // at 0x18
     // @brief Where audio archives are stored (DVD, NAND, memory)
-    u32 mSndStorage;
+    u32 mSndStorage; // at 0x1C
 
     /**
      * Static instance

@@ -9,6 +9,9 @@ typedef u32 RPTime32;
 
 struct RPSysUnknownBase;
 
+// RPAudio
+struct RPSndAudioMgr;
+
 // RPGraphics
 struct IRPGrpDrawObject;
 struct RPGrpRenderer;

@@ -1,6 +1,7 @@
 ﻿---
 BasedOnStyle: LLVM
 Language: Cpp
+Standard: Cpp03
 SortIncludes: "true"
 SortUsingDeclarations: "true"
 UseTab: Never

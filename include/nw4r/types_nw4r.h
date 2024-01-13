@@ -91,6 +91,7 @@ struct Sound3DActor;
 struct Sound3DListener;
 struct Sound3DManager;
 struct SoundHandle;
+struct SoundHeap;
 struct StrmSoundHandle;
 struct WaveSoundHandle;
 

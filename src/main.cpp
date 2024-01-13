@@ -1,4 +1,9 @@
+#include <Pack/RPAudio.h>
+#include <Pack/RPGraphics.h>
 #include <Pack/RPKernel.h>
+#include <Pack/RPSports.h>
+#include <Pack/RPSystem.h>
+#include <Pack/RPUtility.h>
 #include <kokeshi.hpp>
 #include <libkiwi.h>
 #include <types.h>
