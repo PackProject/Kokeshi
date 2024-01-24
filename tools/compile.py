@@ -306,7 +306,9 @@ def build_loader(args) -> bool:
     # Identify loader files
     srcs = search_files(LOADER_DIR, SRC_EXTENSIONS)
     objs = [src_to_obj(f) for f in srcs]
-    inc_dirs = search_dirs(INCLUDE_DIR, recursive=False)
+
+    inc_dirs = search_dirs(SRC_DIR, recursive=False) + \
+        search_dirs(INCLUDE_DIR, recursive=False)
     inc_dirs.append(LOADER_DIR)
 
     # Loader compiler flags
@@ -368,8 +370,9 @@ def build_module(args) -> bool:
     srcs = search_files(SRC_DIR, SRC_EXTENSIONS) + \
         search_files(LIBRARY_DIR, SRC_EXTENSIONS)
     objs = [src_to_obj(f) for f in srcs]
-    inc_dirs = search_dirs(INCLUDE_DIR, recursive=False) + \
-        search_dirs(LIBRARY_DIR, recursive=False)
+
+    inc_dirs = search_dirs(SRC_DIR, recursive=False) + search_dirs(
+        INCLUDE_DIR, recursive=False) + search_dirs(LIBRARY_DIR, recursive=False)
     inc_dirs.append(LOADER_DIR)
 
     # Module compiler flags

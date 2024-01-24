@@ -3,6 +3,7 @@
 #include "RPSysUnknownBase.h"
 #include "types_RP.h"
 
+#include <RPGolScene/RPGolMapObjPin.h>
 #include <nw4r/math/math_types.h>
 
 /**
@@ -41,6 +42,24 @@ public:
     static void CreateInstance();
     // @address 80293fc4
     static void DestroyInstance();
+
+    static RPGolFieldManager* GetInstance() {
+        return sInstance;
+    }
+
+    RPGolMapObjBase* GetCourseObj() const {
+        return mCourseObj;
+    }
+
+    int GetNumPinObj() const {
+        return mNumPinObjs;
+    }
+    RPGolMapObjPin* GetCurrentPinObj() const {
+        return mCurrentPinObj;
+    }
+    RPGolMapObjPin* GetPinObj(int i) const {
+        return &mPinObjs[i];
+    }
 
 private:
     // @address 80293d74

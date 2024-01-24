@@ -2,6 +2,8 @@
 #define RP_UTILITY_LYT_BASE_H
 #include "types_RP.h"
 
+#include <egg/core.h>
+
 class RPUtlLytBase {
 public:
     RPUtlLytBase();

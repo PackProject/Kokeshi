@@ -196,6 +196,8 @@
     Reset__21RPSportsLytCursorBaseFv=0x801f1c2c
 #RPGolCollisionModel
     sInstance__19RPGolCollisionModel=0x804bf908
+#RPGolFieldManager
+    sInstance__17RPGolFieldManager=0x804bf868
 #RPGolPlayerManager
     sInstance__18RPGolPlayerManager=0x804bf8d0
 #RPGolPlayer
@@ -204,6 +206,8 @@
     sInstance__16RPGolClubManager=0x804bf900
 #RPGolLib
     GetMinRedlinePow__8RPGolLibFv=0x802a7c50
+#RPGolMapObjCup
+    SetCollision__14RPGolMapObjCupFv=0x802b7458
 #RPGrpRenderer
     Begin__13RPGrpRendererFv=0x801aff6c
     End__13RPGrpRendererFv=0x801afee0
@@ -248,6 +252,13 @@
 #g3d_resdict
     __vc__Q34nw4r3g3d6ResDicCFPCc=0x80050988
     __vc__Q34nw4r3g3d6ResDicCFQ34nw4r3g3d7ResName=0x80050a04
+#g3d_resmdl
+    GetResMatNumEntries__Q34nw4r3g3d6ResMdlCFv=0x80052e84
+    GetResMat__Q34nw4r3g3d6ResMdlCFi=0x80052ddc
+#g3d_rescommon
+    __eq__Q34nw4r3g3d7ResNameCFQ34nw4r3g3d7ResName=0x8005064c
+#g3d_scnmdlsmpl
+    GetByteCode__Q34nw4r3g3d12ScnMdlSimpleCFQ44nw4r3g3d12ScnMdlSimple12ByteCodeType=0x800748ec
 #ut_CharWriter
     SetTextColor__Q34nw4r2ut10CharWriterFQ34nw4r2ut5Color=0x8000af2c
 

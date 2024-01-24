@@ -8,20 +8,20 @@
 namespace nw4r {
 namespace g3d {
 struct ResMdlData {
-    char mMagic[4]; // "MDL0"
-    u32 INT_0x4;
-    u32 mRevision; // at 0x8
-    s32 INT_0xC;
-    u32 mByteCodeDictOfs;    // at 0x10
-    u32 mNodeDictOfs;        // at 0x14
-    u32 mVtxPosDictOfs;      // at 0x18
-    u32 mVtxNrmDictOfs;      // at 0x1C
-    u32 mVtxClrDictOfs;      // at 0x20
-    u32 mVtxTexCoordDictOfs; // at 0x24
-    u32 mMatDictOfs;         // at 0x28
-    u32 mTevDictOfs;         // at 0x2C
-    u32 mShpDictOfs;         // at 0x30
-    u32 mPlttTexInfoOfs;     // at 0x34
+    char kind[4];       // "MDL0"
+    u32 size;           // at 0x4
+    u32 revision;       // at 0x8
+    s32 resFileOfs;     // at 0xC
+    u32 byteCodeOfs;    // at 0x10
+    u32 nodeOfs;        // at 0x14
+    u32 vtxPosOfs;      // at 0x18
+    u32 vtxNrmOfs;      // at 0x1C
+    u32 vtxClrOfs;      // at 0x20
+    u32 vtxTxcOfs;      // at 0x24
+    u32 matOfs;         // at 0x28
+    u32 tevOfs;         // at 0x2C
+    u32 shpOfs;         // at 0x30
+    u32 plttTexInfoOfs; // at 0x34
 };
 
 struct ResMdl {
@@ -79,12 +79,12 @@ struct ResMdl {
     void Terminate();
 
     inline bool CheckRevision() const {
-        return mMdl.ref().mRevision == REVISION;
+        return mMdl.ref().revision == REVISION;
     }
 
     inline u32 GetResVtxTexCoordNumEntries() const {
         ResMdlData& ref = mMdl.ref();
-        return mMdl.ofs_to_obj<ResDic>(ref.mVtxTexCoordDictOfs).GetNumData();
+        return mMdl.ofs_to_obj<ResDic>(ref.vtxTxcOfs).GetNumData();
     }
 };
 } // namespace g3d

@@ -58,7 +58,10 @@ struct ResMatDLData {
 };
 
 struct ResMatData {
-    char UNK_0x0[0x38];
+    u32 size;    // at 0x0
+    s32 mdlOfs;  // at 0x4
+    s32 nameOfs; // at 0x8
+    char UNK_0xC[0x38 - 0xC];
     u32 resMatDLOfs; // at 0x38
     char UNK_0x3C[0x1A4 - 0x3C];
     ResTexSrtData texSrtData; // at 0x1A4
@@ -80,6 +83,12 @@ struct ResMat {
         ResMatDLData* dlData =
             mMat.ofs_to_ptr<ResMatDLData>(mMat.ref().resMatDLOfs);
         return ResMatTexCoordGen(&dlData->texCoordGenData);
+    }
+
+    ResName GetResName() const {
+        const ResNameData* data =
+            mMat.ofs_to_ptr<ResNameData>(mMat.ref().nameOfs - sizeof(u32));
+        return ResName(data);
     }
 
     bool Bind(ResFile);
