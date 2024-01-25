@@ -1,9 +1,4 @@
-#include <Pack/RPAudio.h>
-#include <Pack/RPGraphics.h>
 #include <Pack/RPKernel.h>
-#include <Pack/RPSports.h>
-#include <Pack/RPSystem.h>
-#include <Pack/RPUtility.h>
 #include <kokeshi.hpp>
 #include <libkiwi.h>
 #include <types.h>
@@ -27,5 +22,5 @@ void KokeshiMain() {
     ASSERT(false);
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183f04, KokeshiMain), // Wii Sports
-                KOKESHI_BY_PACK_NOOP,               // Wii Play
-                KOKESHI_BY_PACK_NOOP);              // Wii Sports Resort
+                KM_BRANCH(0x80183b3c, KokeshiMain), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);            // Wii Sports Resort

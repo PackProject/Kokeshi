@@ -47,8 +47,8 @@ void Report(const char* msg, ...) {
     va_end(list);
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
-                KOKESHI_BY_PACK_NOOP,          // Wii Play
-                KOKESHI_BY_PACK_NOOP);         // Wii Sports Resort
+                KM_BRANCH(0x80183b50, Report), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);       // Wii Sports Resort
 
 /**
  * @brief Load module and apply patches
@@ -57,8 +57,8 @@ void Load() {
     kamek::loadKamekBinaryFromDisc(&cLoaderFunctions, scModulePath);
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load), // Wii Sports
-                KOKESHI_BY_PACK_NOOP,        // Wii Play
-                KOKESHI_BY_PACK_NOOP);       // Wii Sports Resort
+                KM_BRANCH(0x80182d6c, Load), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);     // Wii Sports Resort
 
 } // namespace
 

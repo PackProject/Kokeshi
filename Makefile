@@ -82,8 +82,8 @@ build:
 #
 # NOTE: If you want to add custom preprocessor definitions, supply each using
 # the following format: --define=KEY VALUE
-	$(foreach game, $(PACK), \
-		$(QUIET) $(PYTHON) $(BUILDSCRIPT) --game=$(game) --target=$(TARGET) --cflags="$(CFLAGS)" --define="" \
+	$(QUIET) $(foreach game, $(PACK), \
+		$(PYTHON) $(BUILDSCRIPT) --game=$(game) --target=$(TARGET) --cflags="$(CFLAGS)" --define=""; \
 	)
 
 

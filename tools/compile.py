@@ -80,9 +80,15 @@ INCLUDE_EXTENSIONS = [".h", ".hpp", ".hh", ".hxx"]
 # Known good file hashes
 #
 
-GOOD_HASHES = [
-    "8bb422971b88b5551a37de98db69557df7b46637"  # Wii Sports (US, Rev 1)
-]
+GOOD_HASHES = {
+    "sports": [
+        "8bb422971b88b5551a37de98db69557df7b46637"  # Wii Sports (US, Rev 1)
+    ],
+
+    "play": [
+        "0da5e7e51135219f580ad011d1b635bc83569bb9"  # Wii Play (US, Rev 1)
+    ],
+}
 
 #
 # Functions
@@ -282,7 +288,7 @@ def baserom_ok(args) -> bool:
     # Verify hash
     ctx = sha1()
     ctx.update(dol)
-    if ctx.hexdigest() not in GOOD_HASHES:
+    if ctx.hexdigest() not in GOOD_HASHES[args.game]:
         print(f"[FATAL] Baserom does not have the correct hash: {rom_path}")
         return False
 

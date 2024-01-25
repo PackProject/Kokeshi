@@ -27,6 +27,7 @@
  * @brief Null statement for KOKESHI_BY_PACK
  */
 #define KOKESHI_BY_PACK_NOOP ((void)0)
+#define KOKESHI_NOTIMPLEMENTED KOKESHI_BY_PACK_NOOP
 
 /**
  * @brief Kamek module name
@@ -34,7 +35,7 @@
 // clang-format off
 #define KOKESHI_MODULE_PATH                                                    \
     KOKESHI_BY_PACK("/modules/m_sports", /* Wii Sports */                      \
-                    "/modules/m_party",  /* Wii Play */                        \
+                    "/modules/m_play",   /* Wii Play */                        \
                     "/modules/m_resort") /* Wii Sports Resort */
 // clang-format on
 
