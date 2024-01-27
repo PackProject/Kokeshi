@@ -35,8 +35,12 @@ public:
         RP_PHYSICAL_RESULT_SCENE,
         RP_GOL_SELECT_SCENE,
 
-#ifdef RP_PARTY_PACK
+#ifdef PACK_SPORTS
+        RP_SCENE_MAX,
+#endif
+
         // Party Pack scenes
+        RP_SCENE_09h,
         RP_FSH_SCENE,
         RP_HKY_SCENE,
         RP_DUC_SCENE,
@@ -49,9 +53,11 @@ public:
         RP_SCENE_18H,
         RP_PARTY_TITLE_SCENE,
         RP_SCENE_1AH,
+
+#ifdef PACK_PLAY
+        RP_SCENE_MAX,
 #endif
 
-#ifdef RP_HEALTH_PACK
         // Health Pack scenes
         RP_HEALTH_TITLE_SCENE,
         RP_HEALTH_COUNSEL_SCENE,
@@ -63,9 +69,7 @@ public:
         RP_HEALTH_SKI_SCENE,
         RP_SCENE_23H,
         RP_SCENE_24H,
-#endif
 
-#ifdef RP_MUSIC_PACK
         // Music Pack scenes
         RP_DRM_SCENE,
         RP_OCH_SCENE,
@@ -75,9 +79,7 @@ public:
         RP_MPE_4_SCENE,
         RP_MPE_5_SCENE,
         RP_MUSIC_TITLE_SCENE,
-#endif
 
-#ifdef RP_DEBUG
         // All pack scenes
         RP_ALL_PACK_SCENE,
         RP_BASIC_DEBUG_SCENE,
@@ -94,9 +96,6 @@ public:
         RP_DRM_DEBUG_SCENE,
         RP_OCH_DEBUG_SCENE,
         RP_OCH_MUSIC_SELECT_SCENE,
-#endif
-
-        RP_SCENE_MAX
     };
 
     /**
@@ -163,7 +162,7 @@ public:
      * @address 80184ba4
      * @return Success
      */
-    bool changeSceneAfterFade(s32 sceneID, bool reenterCurrent);
+    bool changeSceneAfterFade(s32 sceneID, bool reenterCurrent = false);
     /**
      * @brief Change to the boot scene (performing a soft reset)
      * @address 80184b98

@@ -2,14 +2,14 @@
 #define RP_UTILITY_BASE_FSM_H
 #include "types_RP.h"
 
-#include <cmath>
+#include <climits>
 
 /**
  * @brief Declare enter/calc functions by state name
  */
 #define RP_UTL_FSM_STATE_DECL(X)                                               \
-    void State_##X_enter();                                                    \
-    void State_##X_calc();
+    void State_##X##_enter();                                                  \
+    void State_##X##_calc();
 
 /**
  * @brief Generic state machine
@@ -51,6 +51,15 @@ public:
     void RegistState(StateFunc enter, StateFunc calc, u32 id) {
         mEnterFns[id] = enter;
         mCalcFns[id] = calc;
+    }
+
+    /**
+     * @brief Change to new state
+     */
+    void ChangeState(u32 id) {
+        mNextState = id;
+        mDoEnter = true;
+        mDoExit = true;
     }
 
     /**

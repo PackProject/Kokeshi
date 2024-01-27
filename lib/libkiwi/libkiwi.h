@@ -26,6 +26,7 @@
 #include <libkiwi/util/kiwiNw4rConsole.hpp>
 #include <libkiwi/util/kiwiNw4rDirectPrint.hpp>
 #include <libkiwi/util/kiwiNw4rException.hpp>
+#include <libkiwi/util/kiwiOverride.hpp>
 #include <libkiwi/util/kiwiSequence.hpp>
 #include <libkiwi/util/kiwiStaticSingleton.hpp>
 #include <types.h>

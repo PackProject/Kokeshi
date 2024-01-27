@@ -157,7 +157,7 @@ Nw4rException::Nw4rException()
 
     // Auto-detect render mode
     mpRenderMode = LibGX::GetDefaultRenderMode();
-    K_ASSERT(mpRenderMode != NULL);
+    K_WARN(mpRenderMode == NULL, "No render mode!");
 }
 
 /**
@@ -411,7 +411,7 @@ void Nw4rException::DumpAssert() {
  */
 void Nw4rException::PrintHeapInfo() {
     Printf("---Heap Info---\n");
-    Printf("Heap_Module: %.2f KB free\n",
+    Printf("Module: %.2f KB free\n",
            OS_MEM_B_TO_KB(
                static_cast<f32>(MemoryMgr::GetInstance().GetFreeSize())));
     Printf("\n");

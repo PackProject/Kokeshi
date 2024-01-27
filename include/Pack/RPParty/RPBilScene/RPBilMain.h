@@ -17,7 +17,7 @@ private:
     virtual ~RPBilMain();
 
 private:
-    RPUtlBaseFsm<RPBilMain>* mStateMachine; // at 0x4
+    RPUtlBaseFsm<RPBilMain>* mpStateMachine; // at 0x4
 
     static RPBilMain* sInstance;
 };

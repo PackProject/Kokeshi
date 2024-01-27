@@ -3,6 +3,7 @@
 
 #include <RPSystem/RPSysBootScene.h>
 #include <RPSystem/RPSysCommonObject.h>
+#include <RPSystem/RPSysConfigData.h>
 #include <RPSystem/RPSysDvdStatus.h>
 #include <RPSystem/RPSysFontManager.h>
 #include <RPSystem/RPSysGameConfig.h>
@@ -18,6 +19,7 @@
 #include <RPSystem/RPSysScene.h>
 #include <RPSystem/RPSysSceneCreator.h>
 #include <RPSystem/RPSysSceneMgr.h>
+#include <RPSystem/RPSysSystem.h>
 #include <RPSystem/RPSysTagParms.h>
 
 #endif

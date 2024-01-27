@@ -2,11 +2,11 @@
 #define RP_KERNEL_SYSTEM_H
 #include "types_RP.h"
 
-#include <GX/GXFrameBuf.h>
-#include <OS/OSMutex.h>
-#include <egg/core/eggHeap.h>
-#include <egg/core/eggTaskThread.h>
-#include <nw4r/ut/ut_Color.h>
+#include <RPSystem/RPSysConfigData.h>
+#include <egg/core.h>
+#include <nw4r/ut.h>
+#include <revolution/GX.h>
+#include <revolution/OS.h>
 
 /**
  * @brief Main RP engine class
@@ -29,14 +29,14 @@ public:
         return sInstance;
     }
 
-    static EGG::Heap* getRootMem1Heap() {
-        return sRootMem1;
+    static EGG::Heap* getRootHeapMem1() {
+        return sConfigData.getRootHeapMem1();
     }
-    static EGG::Heap* getRootMem2Heap() {
-        return sRootMem2;
+    static EGG::Heap* getRootHeapMem2() {
+        return sConfigData.getRootHeapMem2();
     }
     static EGG::Heap* getSystemHeap() {
-        return sSystemHeap;
+        return sConfigData.getSystemHeap();
     }
 
     void* alloc(EGG::Heap* heap, u32 size, s32 align = 4) {
@@ -84,16 +84,6 @@ public:
     static void softResetCallBack();      // 80182bb8
     static void shutdownSystemCallBack(); // 80182bac
 
-    EGG::Heap* getResourceHeap() {
-        return mResourceHeap;
-    }
-    EGG::Heap* getMem2SmallHeap() {
-        return mMem2Heap500KB;
-    }
-    EGG::Heap* getMem1SmallHeap() {
-        return mMem1Heap256B;
-    }
-
 private:
     RPSysSystem();          // 8018309c
     virtual ~RPSysSystem(); // 80183178
@@ -103,8 +93,8 @@ private:
     EGG::Heap* mMem2Heap500KB; // at 0xC
     EGG::Heap* mMem1Heap256B;  // at 0x10
     EGG::Heap* HEAP_0x14;
-    EGG::Heap* HEAP_0x18; // Used to backup Heap::sCurrentHeap when changed
-    OSMutex mMutex;       // at 0x1C
+    EGG::Heap* mOldCurrentHeap;   // at 0x18
+    OSMutex mMutex;               // at 0x1C
     EGG::TaskThread* mNandThread; // at 0x34
     EGG::TaskThread* mDvdThread;  // at 0x38
     EGG::TaskThread* mWc24Thread; // at 0x3C
@@ -117,12 +107,8 @@ private:
     u32 mLoadCount;         // at 0x54 (incremented by mTicksPerFrame)
     char* mTimeStampString; // at 0x58
 
-    static RPSysSystem* sInstance; // 804bf4b8
-
-    // TO-DO: Move to RPSysConfigData
-    static EGG::Heap* sRootMem1;   // MEM1 arena
-    static EGG::Heap* sRootMem2;   // MEM2 arena
-    static EGG::Heap* sSystemHeap; // ~6MB, child of sRootMem1
+    static RPSysSystem* sInstance;      // 804bf4b8
+    static RPSysConfigData sConfigData; // 804a3d50
 };
 
 #endif

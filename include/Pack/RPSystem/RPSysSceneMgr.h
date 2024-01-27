@@ -1,6 +1,5 @@
 #ifndef RP_SYSTEM_SCENE_MGR_H
 #define RP_SYSTEM_SCENE_MGR_H
-#include "RPSysSystem.h"
 #include "types_RP.h"
 
 #include <egg/core/eggColorFader.h>
@@ -150,13 +149,8 @@ public:
     EGG::Scene* getCurrentScene() const;
 
 private:
-    RPSysSceneMgr() : EGG::SceneManager(NULL) {
-        RPSysSystem* sys = RPSysSystem::getInstance();
-        mSceneFader = new EGG::ColorFader(
-            0.0f, 0.0f, sys->getFBWidth(), sys->getXFBHeight(),
-            nw4r::ut::Color(0), EGG::ColorFader::STATUS_PREPARE_IN);
-    }
-
+    // inlined
+    RPSysSceneMgr();
     // @address 80185678
     virtual ~RPSysSceneMgr();
 

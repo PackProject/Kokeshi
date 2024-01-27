@@ -6,7 +6,7 @@
  * Available for use under MIT license
  */
 
-#include <Pack/RPKernel.h>
+#include <Pack/RPSystem.h>
 #include <cstdio>
 #include <egg/core.h>
 #include <kokeshi.hpp>
@@ -18,19 +18,6 @@ namespace {
  * @brief Memory interface for the Kamek loader
  */
 const kamek::loaderFunctions cLoaderFunctions = {Alloc, Free};
-
-/**
- * @brief Get heap from RP engine.
- *
- * @details Memory for the binary sections is allocated from MEM1 (system heap).
- * Temp memory for the Kamek binary is allocated from MEM2 (resource heap).
- *
- * @param mem1 Use MEM1 (MEM2 otherwise)
- */
-EGG::Heap* GetHeap(bool mem1) {
-    return mem1 ? RPSysSystem::getInstance()->getSystemHeap()
-                : RPSysSystem::getInstance()->getResourceHeap();
-}
 
 /**
  * @brief Log message
@@ -69,17 +56,21 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load), // Wii Sports
  * @param sys Use system (MEM1) heap
  */
 void* Alloc(std::size_t size, bool sys) {
-    return RPSysSystem::getInstance()->alloc(GetHeap(sys), size, 32);
+    return RPSysSystem::getInstance()->alloc(
+        sys ? RPSysSystem::getRootHeapMem1() : RPSysSystem::getRootHeapMem2(),
+        size, 32);
 }
 
 /**
  * @brief Free memory
  *
  * @param block Memory block
- * @param sys Use system heap
+ * @param sys Use system (MEM1) heap
  */
 void Free(void* block, bool sys) {
-    return RPSysSystem::getInstance()->free(GetHeap(sys), block);
+    return RPSysSystem::getInstance()->free(
+        sys ? RPSysSystem::getRootHeapMem1() : RPSysSystem::getRootHeapMem2(),
+        block);
 }
 
 } // namespace kokeshi

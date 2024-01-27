@@ -70,6 +70,8 @@ struct ExpHeap;
 struct Fader;
 struct FrmHeap;
 struct Heap;
+struct PerformanceView;
+struct ProcessMeter;
 struct Scene;
 struct SceneManager;
 struct Stream;

@@ -34,7 +34,8 @@ void MapFile::Open(String path, LinkType type) {
 
     // Load file from disc
     mpMapBuffer = static_cast<char*>(EGG::DvdRipper::loadToMainRAM(
-        path, NULL, NULL, EGG::DvdRipper::ALLOC_HEAD, 0, NULL, NULL));
+        path, NULL, MemoryMgr::GetInstance().GetEggHeap(),
+        EGG::DvdRipper::ALLOC_HEAD, 0, NULL, NULL));
 
     if (mpMapBuffer == NULL) {
         K_LOG_EX("Map file (%s) could not be opened!", path.CStr());

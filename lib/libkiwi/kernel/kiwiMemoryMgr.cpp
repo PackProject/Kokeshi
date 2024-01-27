@@ -1,13 +1,37 @@
 #include <libkiwi.h>
 
 namespace kiwi {
+namespace {
+
+/**
+ * @brief Print heap information
+ *
+ * @param name Heap name
+ * @param heap Heap object
+ */
+void LogHeap(const char* name, EGG::Heap* heap) {
+    if (heap == NULL) {
+        K_LOG_EX("[%s] NULL ->", name);
+        return;
+    }
+
+    K_LOG_EX("[%s] %p-> %.2fKB free", name, heap,
+             OS_MEM_B_TO_KB(static_cast<f32>(heap->getAllocatableSize())));
+}
+
+} // namespace
 
 /**
  * Constructor
  */
 MemoryMgr::MemoryMgr() {
-    // Child of sAllocatableHeap
-    mpHeap = EGG::ExpHeap::create(scHeapSize, NULL, 0);
+    LogHeap("RootMEM1", RPSysSystem::getRootHeapMem1());
+    LogHeap("RootMEM2", RPSysSystem::getRootHeapMem2());
+    LogHeap("System", RPSysSystem::getSystemHeap());
+
+    mpHeap = EGG::ExpHeap::create(scHeapSize, RPSysSystem::getSystemHeap(), 0);
+    LogHeap("libkiwi", mpHeap);
+
     K_ASSERT(mpHeap != NULL);
 }
 

@@ -3,9 +3,7 @@
 ######
 #RPSysSystem
     sInstance__11RPSysSystem=0x804bf4b8
-    sRootMem1__11RPSysSystem=0x804a3d68
-    sRootMem2__11RPSysSystem=0x804a3d6c
-    sSystemHeap__11RPSysSystem=0x804a3d74
+    sConfigData__11RPSysSystem=0x804a3d50
     mainLoop__11RPSysSystemFv=0x801838f8
     setCallBack__11RPSysSystemFv=0x80182c28
 #RPSysSystemWinMgr

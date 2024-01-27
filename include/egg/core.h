@@ -21,6 +21,8 @@
 #include <egg/core/eggGraphicsFifo.h>
 #include <egg/core/eggHeap.h>
 #include <egg/core/eggIBinary.h>
+#include <egg/core/eggPerformanceView.h>
+#include <egg/core/eggProcessMeter.h>
 #include <egg/core/eggScene.h>
 #include <egg/core/eggSceneCreator.h>
 #include <egg/core/eggSceneManager.h>

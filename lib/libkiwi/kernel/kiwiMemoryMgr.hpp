@@ -17,6 +17,14 @@ public:
     void Free(void* block);
     u32 GetFreeSize();
 
+    /**
+     * Access underlying heap for use with EGG functions
+     * TODO: Remove this and reimplement required EGG features
+     */
+    EGG::Heap* GetEggHeap() {
+        return mpHeap;
+    }
+
 private:
     MemoryMgr();
     ~MemoryMgr();

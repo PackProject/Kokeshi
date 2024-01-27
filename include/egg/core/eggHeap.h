@@ -29,15 +29,15 @@ public:
     static void free(void*, Heap*);
 
     Heap(MEMiHeapHead*);
-    virtual ~Heap();                                 // at 0x8
-    virtual EHeapKind getHeapKind() const = 0;       // at 0xC
-    virtual void initAllocator(Allocator*, s32) = 0; // at 0x10
-    virtual void* alloc(u32, s32) = 0;               // at 0x14
-    virtual void free(void*) = 0;                    // at 0x18
-    virtual void destroy() = 0;                      // at 0x1C
-    virtual u32 resizeForMBlock(void*, u32) = 0;     // at 0x20
-    virtual u32 getAllocatableSize(s32) = 0;         // at 0x24
-    virtual u32 adjust() = 0;                        // at 0x28
+    virtual ~Heap();                                   // at 0x8
+    virtual EHeapKind getHeapKind() const = 0;         // at 0xC
+    virtual void initAllocator(Allocator*, s32) = 0;   // at 0x10
+    virtual void* alloc(u32, s32) = 0;                 // at 0x14
+    virtual void free(void*) = 0;                      // at 0x18
+    virtual void destroy() = 0;                        // at 0x1C
+    virtual u32 resizeForMBlock(void*, u32) = 0;       // at 0x20
+    virtual u32 getAllocatableSize(s32 align = 4) = 0; // at 0x24
+    virtual u32 adjust() = 0;                          // at 0x28
 
     u8* getStartAddress() {
         return (u8*)this;

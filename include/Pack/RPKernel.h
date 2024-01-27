@@ -19,7 +19,6 @@
 #include <RPKernel/RPSysLytTextBox.h>
 #include <RPKernel/RPSysLytWindow.h>
 #include <RPKernel/RPSysMessage.h>
-#include <RPKernel/RPSysSystem.h>
 #include <RPKernel/RPSysSystemWinMgr.h>
 #include <RPKernel/RPSysTextWriter.h>
 #include <RPKernel/RPSysWideTextWriter.h>
