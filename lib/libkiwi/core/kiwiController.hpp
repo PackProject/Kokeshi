@@ -8,9 +8,21 @@
 namespace kiwi {
 
 /**
+ * @brief Player IDs
+ */
+enum Player {
+    Player_1,
+    Player_2,
+    Player_3,
+    Player_4,
+
+    Player_Max
+};
+
+/**
  * EGG controller wrapper
  */
-class WiiCtrl : public EGG::CoreController, NonCopyable {
+class WiiCtrl : public EGG::CoreController, private NonCopyable {
 public:
     enum Button {
         Button_None = 0,
@@ -66,23 +78,35 @@ public:
     u32 Trig() const {
         return getCoreStatus(0)->trig;
     }
+
+    /**
+     * Gets KPAD data
+     */
+    KPADStatus& Raw() {
+        return *reinterpret_cast<KPADStatus*>(getCoreStatus(0));
+    }
+
+    /**
+     * Gets KPAD data
+     */
+    const KPADStatus& Raw() const {
+        return *reinterpret_cast<KPADStatus*>(getCoreStatus(0));
+    }
 };
 
 /**
  * EGG controller manager wrapper
  */
-class CtrlManager : protected EGG::CoreControllerMgr, NonCopyable {
+class CtrlMgr : protected EGG::CoreControllerMgr, private NonCopyable {
 public:
-    static const int scMaxPlayers = WPAD_MAX_CONTROLLERS;
-
-    static CtrlManager& GetInstance() {
+    static CtrlMgr& GetInstance() {
         EGG::CoreControllerMgr* base = EGG::CoreControllerMgr::getInstance();
         K_ASSERT(base != NULL);
-        return static_cast<CtrlManager&>(*base);
+        return static_cast<CtrlMgr&>(*base);
     }
 
-    WiiCtrl& GetWiiCtrl(int i) {
-        K_ASSERT(i < scMaxPlayers);
+    WiiCtrl& GetWiiCtrl(Player i) {
+        K_ASSERT(i < Player_Max);
 
         EGG::CoreController* base = getNthController(i);
         K_ASSERT(base != NULL);

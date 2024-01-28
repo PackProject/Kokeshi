@@ -24,7 +24,7 @@ public:
      * @param hook Scene hook
      * @param id Scene ID
      */
-    void RegistHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
+    void AddHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
         K_ASSERT(hook != NULL);
         mHookLists[id].PushBack(hook);
     }
@@ -35,18 +35,18 @@ public:
      * @param hook Scene hook
      * @param id Scene ID
      */
-    void UnRegistHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
+    void RemoveHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
         K_ASSERT(hook != NULL);
         mHookLists[id].Remove(hook);
     }
 
-    static void DoConfigure();
-    static void DoLoadResource();
-    static void DoCalculate();
-    static void DoReset();
-    static void DoExit();
-    static void DoPause();
-    static void DoUnPause();
+    static void OnSceneEnter();
+    static void OnSceneReEnter();
+    static void OnSceneLoadResource();
+    static void OnSceneCalculate();
+    static void OnSceneExit();
+    static void OnScenePause();
+    static void OnSceneUnPause();
 
 private:
     /**
@@ -79,40 +79,50 @@ public:
      * @param id Scene ID
      */
     IScnHook(RPSysSceneCreator::ESceneID id) : mSceneID(id) {
-        SceneHookMgr::GetInstance().RegistHook(this, mSceneID);
+        SceneHookMgr::GetInstance().AddHook(this, mSceneID);
     }
 
     /**
      * @brief Destructor
      */
     virtual ~IScnHook() {
-        SceneHookMgr::GetInstance().UnRegistHook(this, mSceneID);
+        SceneHookMgr::GetInstance().RemoveHook(this, mSceneID);
     }
 
     /**
-     * @brief Enter scene
+     * @brief Configure callback
      */
     virtual void Configure(RPSysScene* scene) {}
 
     /**
-     * @brief Load scene assets
+     * @brief Reset callback
+     */
+    virtual void Reset(RPSysScene* scene) {}
+
+    /**
+     * @brief LoadResource callback
      */
     virtual void LoadResource(RPSysScene* scene) {}
 
     /**
-     * @brief Logic tick
+     * @brief Calculate callback (before game logic)
      */
-    virtual void Calculate(RPSysScene* scene) {}
+    virtual void BeforeCalculate(RPSysScene* scene) {}
 
     /**
-     * @brief Exit scene
+     * @brief Calculate callback (after game logic)
+     */
+    virtual void AfterCalculate(RPSysScene* scene) {}
+
+    /**
+     * @brief Exit callback
      */
     virtual void Exit(RPSysScene* scene) {}
 
     /**
-     * @brief Pause game
+     * @brief Pause callback
      *
-     * @param enter Entering pause menu
+     * @param enter Whether entering menu
      */
     virtual void Pause(RPSysScene* scene, bool enter) {}
 
