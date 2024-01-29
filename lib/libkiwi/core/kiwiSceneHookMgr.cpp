@@ -27,12 +27,8 @@ void SceneHookMgr::OnSceneEnter() {
         return;
     }
 
-    // RPSysScene::enter calls both Configure and Reset
     for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
         it++->Configure(GetCurrentScene());
-    }
-    for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Reset(GetCurrentScene());
     }
 }
 // clang-format off
@@ -50,14 +46,22 @@ void SceneHookMgr::OnSceneReEnter() {
         return;
     }
 
+    // Hooks before scene logic
     for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Reset(GetCurrentScene());
+        it++->BeforeReset(GetCurrentScene());
+    }
+
+    GetCurrentScene()->Reset();
+
+    // Hooks after scene logic
+    for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
+        it++->AfterReset(GetCurrentScene());
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_BRANCH(0x80185300, SceneHookMgr::OnSceneReEnter), // Wii Sports
-                KM_BRANCH(0x80184cf8, SceneHookMgr::OnSceneReEnter), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                             // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x801852d8, SceneHookMgr::OnSceneReEnter), // Wii Sports
+                KM_CALL(0x80184cd0, SceneHookMgr::OnSceneReEnter), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);                           // Wii Sports Resort
 // clang-format on
 
 /**

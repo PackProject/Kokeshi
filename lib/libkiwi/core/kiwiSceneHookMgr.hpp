@@ -95,9 +95,14 @@ public:
     virtual void Configure(RPSysScene* scene) {}
 
     /**
-     * @brief Reset callback
+     * @brief Reset callback (before game logic)
      */
-    virtual void Reset(RPSysScene* scene) {}
+    virtual void BeforeReset(RPSysScene* scene) {}
+
+    /**
+     * @brief Reset callback (after game logic)
+     */
+    virtual void AfterReset(RPSysScene* scene) {}
 
     /**
      * @brief LoadResource callback
