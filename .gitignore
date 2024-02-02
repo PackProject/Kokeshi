@@ -22,6 +22,8 @@ tools/mwasmeppc.exe
 tools/mwcceppc.exe
 tools/mwldeppc.exe
 tools/lmgr*.dll
+# Compiled Python
+tools/**/*.pyc
 
 #=========================================================#
 # Build Artifacts

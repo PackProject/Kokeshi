@@ -23,18 +23,20 @@ RPSysScene* GetCurrentScene() {
  */
 void SceneHookMgr::OnSceneEnter() {
     TList<IScnHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
-    }
 
-    for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Configure(GetCurrentScene());
+    GetCurrentScene()->Configure();
+
+    if (active != NULL) {
+        for (TList<IScnHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->Configure(GetCurrentScene());
+        }
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_BRANCH(0x801853fc, SceneHookMgr::OnSceneEnter), // Wii Sports
-                KM_BRANCH(0x80184df4, SceneHookMgr::OnSceneEnter), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                           // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x8018532c, SceneHookMgr::OnSceneEnter), // Wii Sports
+                KM_CALL(0x80184d24, SceneHookMgr::OnSceneEnter), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);                         // Wii Sports Resort
 // clang-format on
 
 /**
@@ -42,25 +44,31 @@ KOKESHI_BY_PACK(KM_BRANCH(0x801853fc, SceneHookMgr::OnSceneEnter), // Wii Sports
  */
 void SceneHookMgr::OnSceneReEnter() {
     TList<IScnHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
-    }
 
     // Hooks before scene logic
-    for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->BeforeReset(GetCurrentScene());
+    if (active != NULL) {
+        for (TList<IScnHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->BeforeReset(GetCurrentScene());
+        }
     }
 
     GetCurrentScene()->Reset();
 
     // Hooks after scene logic
-    for (TList<IScnHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->AfterReset(GetCurrentScene());
+    if (active != NULL) {
+        for (TList<IScnHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->AfterReset(GetCurrentScene());
+        }
     }
 }
 // clang-format off
 KOKESHI_BY_PACK(KM_CALL(0x801852d8, SceneHookMgr::OnSceneReEnter), // Wii Sports
                 KM_CALL(0x80184cd0, SceneHookMgr::OnSceneReEnter), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);                           // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x801853d4, SceneHookMgr::OnSceneReEnter), // Wii Sports
+                KM_CALL(0x80184dcc, SceneHookMgr::OnSceneReEnter), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                           // Wii Sports Resort
 // clang-format on
 
