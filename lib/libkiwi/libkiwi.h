@@ -2,6 +2,7 @@
 #define LIBKIWI_H
 #include <libkiwi/core/kiwiColor.hpp>
 #include <libkiwi/core/kiwiController.hpp>
+#include <libkiwi/core/kiwiDvdStream.hpp>
 #include <libkiwi/core/kiwiIStream.hpp>
 #include <libkiwi/core/kiwiNandStream.hpp>
 #include <libkiwi/core/kiwiSceneHookMgr.hpp>

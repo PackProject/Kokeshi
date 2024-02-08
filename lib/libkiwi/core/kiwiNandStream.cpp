@@ -3,7 +3,7 @@
 namespace kiwi {
 
 /**
- * @brief Open stream to file
+ * @brief Open stream to NAND file
  *
  * @param path File path
  * @param create Create file if it doesn't exist
@@ -73,12 +73,25 @@ void NandStream::Close() {
 }
 
 /**
+ * @brief Get file byte size
+ */
+u32 NandStream::GetSize() const {
+    // Parameter must be non-const according to decomp
+    NANDFileInfo* info = const_cast<NANDFileInfo*>(&mFileInfo);
+
+    u32 size = 0;
+    s32 result = NANDGetLength(info, &size);
+
+    return result == NAND_RESULT_OK ? size : 0;
+}
+
+/**
  * @brief Seek stream
  *
  * @param dir Seek direction
  * @param offset Seek offset
  */
-void NandStream::Seek(ESeekDir dir, s32 offset) {
+void NandStream::SeekImpl(ESeekDir dir, s32 offset) {
     NANDSeekMode mode;
     s32 result;
 
@@ -92,19 +105,6 @@ void NandStream::Seek(ESeekDir dir, s32 offset) {
 
     result = NANDSeek(&mFileInfo, offset, mode);
     K_WARN_EX(result != NAND_RESULT_OK, "NANDSeek failed (%d)", result);
-}
-
-/**
- * @brief Get file byte size
- */
-u32 NandStream::GetSize() const {
-    // Parameter must be non-const according to decomp
-    NANDFileInfo* info = const_cast<NANDFileInfo*>(&mFileInfo);
-
-    u32 size = 0;
-    s32 result = NANDGetLength(info, &size);
-
-    return result == NAND_RESULT_OK ? size : 0;
 }
 
 /**

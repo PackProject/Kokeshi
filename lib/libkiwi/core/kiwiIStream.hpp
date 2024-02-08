@@ -47,7 +47,7 @@ public:
      * Seek operation
      */
     virtual bool CanSeek() const = 0;
-    virtual void Seek(ESeekDir dir, s32 offset) = 0;
+    void Seek(ESeekDir dir, s32 offset);
 
     /**
      * Read operation
@@ -99,6 +99,7 @@ public:
     String Peek_string();
 
 protected:
+    virtual void SeekImpl(ESeekDir dir, s32 offset) = 0;
     virtual s32 ReadImpl(void* dst, u32 size) = 0;
     virtual s32 WriteImpl(const void* src, u32 size) = 0;
     virtual s32 PeekImpl(void* dst, u32 size) = 0;

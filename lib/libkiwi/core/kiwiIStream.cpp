@@ -73,6 +73,19 @@ IO_FUNC_DEF(f64);
 IO_FUNC_DEF(bool);
 
 /**
+ * @brief Seek around through the stream
+ *
+ * @param dir Seek origin
+ * @param offset Seek amount
+ */
+void IStream::Seek(ESeekDir dir, s32 offset) {
+    K_ASSERT_EX(IsOpen(), "Stream is not available");
+    K_ASSERT_EX(CanSeek(), "Stream does not support seeking");
+
+    SeekImpl(dir, offset);
+}
+
+/**
  * @brief Read data from the stream
  *
  * @param dst Destination buffer
