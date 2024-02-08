@@ -1,6 +1,6 @@
 #ifndef LIBKIWI_UTIL_MAP_FILE_H
 #define LIBKIWI_UTIL_MAP_FILE_H
-#include <libkiwi/core/kiwiLinkList.hpp>
+#include <libkiwi/prim/kiwiLinkList.hpp>
 #include <libkiwi/util/kiwiDynamicSingleton.hpp>
 #include <types.h>
 
@@ -16,10 +16,10 @@ public:
     /**
      * Module link type
      */
-    enum LinkType {
-        LinkType_None,       // Map file not loaded
-        LinkType_Static,     // Map file for static module
-        LinkType_Relocatable // Map file for dynamic/relocatable module
+    enum ELinkType {
+        ELinkType_None,       // Map file not loaded
+        ELinkType_Static,     // Map file for static module
+        ELinkType_Relocatable // Map file for dynamic/relocatable module
     };
 
     /**
@@ -27,7 +27,7 @@ public:
      */
     struct Symbol {
         // Symbol linkage
-        LinkType type;
+        ELinkType type;
         // Symbol location
         union {
             void* addr;
@@ -47,7 +47,7 @@ public:
         return mpMapBuffer != NULL && mIsUnpacked;
     }
 
-    void Open(String path, LinkType type);
+    void Open(String path, ELinkType type);
     void Close();
 
     const Symbol* QueryTextSymbol(const void* addr);
@@ -60,7 +60,7 @@ private:
 
 private:
     // Map file type
-    LinkType mLinkType;
+    ELinkType mELinkType;
     // Map file text buffer
     char* mpMapBuffer;
     // Whether the map has been unpacked

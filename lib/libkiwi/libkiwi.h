@@ -1,14 +1,10 @@
 #ifndef LIBKIWI_H
 #define LIBKIWI_H
-#include <libkiwi/core/kiwiArray.hpp>
 #include <libkiwi/core/kiwiColor.hpp>
 #include <libkiwi/core/kiwiController.hpp>
 #include <libkiwi/core/kiwiIStream.hpp>
-#include <libkiwi/core/kiwiLinkList.hpp>
 #include <libkiwi/core/kiwiNandStream.hpp>
-#include <libkiwi/core/kiwiSTL.hpp>
 #include <libkiwi/core/kiwiSceneHookMgr.hpp>
-#include <libkiwi/core/kiwiString.hpp>
 #include <libkiwi/kernel/kiwiAssert.h>
 #include <libkiwi/kernel/kiwiMemoryMgr.hpp>
 #include <libkiwi/kernel/kiwiRuntime.h>
@@ -18,6 +14,10 @@
 #include <libkiwi/net/kiwiPacket.hpp>
 #include <libkiwi/net/kiwiSocketBase.hpp>
 #include <libkiwi/net/kiwiSyncSocket.hpp>
+#include <libkiwi/prim/kiwiArray.hpp>
+#include <libkiwi/prim/kiwiLinkList.hpp>
+#include <libkiwi/prim/kiwiSTL.hpp>
+#include <libkiwi/prim/kiwiString.hpp>
 #include <libkiwi/rvl/kiwiLibGX.hpp>
 #include <libkiwi/rvl/kiwiLibSO.hpp>
 #include <libkiwi/util/kiwiAutoLock.hpp>
@@ -30,7 +30,6 @@
 #include <libkiwi/util/kiwiNw4rException.hpp>
 #include <libkiwi/util/kiwiOverride.hpp>
 #include <libkiwi/util/kiwiRandom.hpp>
-#include <libkiwi/util/kiwiSequence.hpp>
 #include <libkiwi/util/kiwiStaticSingleton.hpp>
 #include <types.h>
 

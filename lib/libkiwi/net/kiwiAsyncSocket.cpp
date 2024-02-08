@@ -22,23 +22,23 @@ void* AsyncSocket::ThreadFunc(void* arg) {
                         "Closed socket shouldn't be in the active list");
 
             switch (it->mTask) {
-            case Task_None:
+            case ETask_None:
                 it->CalcRecv();
                 it->CalcSend();
                 break;
 
-            case Task_Connecting:
+            case ETask_Connecting:
                 result = LibSO::Connect(it->mHandle, it->mPeer);
 
                 // Ignore async return codes
                 if (result != SO_EWOULDBLOCK || result != SO_EINPROGRESS) {
                     // Done, report result to user
-                    it->mTask = Task_None;
+                    it->mTask = ETask_None;
                     it->mpConnectCallback(result, it->mpConnectCallbackArg);
                 }
                 break;
 
-            case Task_Accepting:
+            case ETask_Accepting:
                 result = LibSO::Accept(it->mHandle, it->mPeer);
 
                 // Ignore async return codes
@@ -53,7 +53,7 @@ void* AsyncSocket::ThreadFunc(void* arg) {
                     K_ASSERT(socket != NULL || result < 0);
 
                     // Done, report result to user
-                    it->mTask = Task_None;
+                    it->mTask = ETask_None;
                     it->mpAcceptCallback(socket, it->mPeer,
                                          it->mpAcceptCallbackArg);
                 }
@@ -73,7 +73,7 @@ void* AsyncSocket::ThreadFunc(void* arg) {
  */
 AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
     : SocketBase(family, type),
-      mTask(Task_None),
+      mTask(ETask_None),
       mpConnectCallback(NULL),
       mpConnectCallbackArg(NULL),
       mpAcceptCallback(NULL),
@@ -90,7 +90,7 @@ AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
  */
 AsyncSocket::AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type)
     : SocketBase(socket, family, type),
-      mTask(Task_None),
+      mTask(ETask_None),
       mpConnectCallback(NULL),
       mpConnectCallbackArg(NULL),
       mpAcceptCallback(NULL),
@@ -136,7 +136,7 @@ AsyncSocket::~AsyncSocket() {
  */
 bool AsyncSocket::Connect(const SOSockAddr& addr) {
     mPeer = addr;
-    mTask = Task_Connecting;
+    mTask = ETask_Connecting;
     // Connect doesn't actually happen on this thread
     return false;
 }
@@ -147,7 +147,7 @@ bool AsyncSocket::Connect(const SOSockAddr& addr) {
  * @return New socket
  */
 AsyncSocket* AsyncSocket::Accept() {
-    mTask = Task_Accepting;
+    mTask = ETask_Accepting;
     // Accept doesn't actually happen on this thread
     return NULL;
 }

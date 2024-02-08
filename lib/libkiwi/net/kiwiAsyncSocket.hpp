@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_NET_ASYNC_SOCKET_H
 #define LIBKIWI_NET_ASYNC_SOCKET_H
-#include <libkiwi/core/kiwiLinkList.hpp>
 #include <libkiwi/net/kiwiPacket.hpp>
 #include <libkiwi/net/kiwiSocketBase.hpp>
+#include <libkiwi/prim/kiwiLinkList.hpp>
 #include <revolution/OS.h>
 #include <types.h>
 
@@ -35,7 +35,7 @@ private:
     /**
      * Socket async task
      */
-    enum Task { Task_None, Task_Connecting, Task_Accepting };
+    enum ETask { ETask_None, ETask_Connecting, ETask_Accepting };
 
 public:
     AsyncSocket(SOProtoFamily family, SOSockType type);
@@ -86,7 +86,7 @@ private:
     static const u32 scSocketThreadStackSize = 0x4000;
 
     // Socket async task
-    Task mTask;
+    ETask mTask;
     // Socket peer address
     SOSockAddr mPeer;
 

@@ -1,6 +1,6 @@
 #ifndef LIBKIWI_RVL_LIBSO_HPP
 #define LIBKIWI_RVL_LIBSO_HPP
-#include <libkiwi/core/kiwiString.hpp>
+#include <libkiwi/prim/kiwiString.hpp>
 #include <revolution/SO.h>
 #include <types.h>
 
@@ -29,8 +29,8 @@ public:
 
     static s32 Write(SOSocket socket, const void* src, u32 n);
     static s32 Send(SOSocket socket, const void* src, u32 n, u32 flags);
-    static s32 SendTo(SOSocket socket, const void* src, u32 n,
-                      u32 flags, const SOSockAddr& addr);
+    static s32 SendTo(SOSocket socket, const void* src, u32 n, u32 flags,
+                      const SOSockAddr& addr);
 
     static s32 Fcntl(SOSocket socket, s32 cmd, ...);
     static s32 Shutdown(SOSocket socket, SOShutdownType how);
@@ -51,8 +51,8 @@ public:
 private:
     static s32 RecvImpl(SOSocket socket, void* dst, u32 n, u32 flags,
                         SOSockAddr* addr);
-    static s32 SendImpl(SOSocket socket, const void* src, u32 n,
-                        u32 flags, const SOSockAddr* addr);
+    static s32 SendImpl(SOSocket socket, const void* src, u32 n, u32 flags,
+                        const SOSockAddr* addr);
 
 private:
     // IOS IP device handle

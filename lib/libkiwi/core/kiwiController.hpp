@@ -24,30 +24,30 @@ enum EPlayer {
  */
 class WiiCtrl : public EGG::CoreController, private NonCopyable {
 public:
-    enum Button {
-        Button_None = 0,
+    enum EButton {
+        EButton_None = 0,
 
-        Button_A = (1 << 11),
-        Button_B = (1 << 10),
+        EButton_A = (1 << 11),
+        EButton_B = (1 << 10),
 
-        Button_Up = (1 << 3),
-        Button_Down = (1 << 2),
-        Button_Left = (1 << 0),
-        Button_Right = (1 << 1),
+        EButton_Up = (1 << 3),
+        EButton_Down = (1 << 2),
+        EButton_Left = (1 << 0),
+        EButton_Right = (1 << 1),
 
-        Button_1 = (1 << 9),
-        Button_2 = (1 << 8),
+        EButton_1 = (1 << 9),
+        EButton_2 = (1 << 8),
 
-        Button_Minus = (1 << 12),
-        Button_Plus = (1 << 4),
+        EButton_Minus = (1 << 12),
+        EButton_Plus = (1 << 4),
 
-        Button_Home = (1 << 15),
+        EButton_Home = (1 << 15),
 
-        Button_DPad = Button_Up | Button_Down | Button_Left | Button_Right,
+        EButton_DPad = EButton_Up | EButton_Down | EButton_Left | EButton_Right,
 
-        Button_Any = Button_A | Button_B | Button_Up | Button_Down |
-                     Button_Left | Button_Right | Button_1 | Button_2 |
-                     Button_Minus | Button_Plus | Button_Home
+        EButton_Any = EButton_A | EButton_B | EButton_Up | EButton_Down |
+                      EButton_Left | EButton_Right | EButton_1 | EButton_2 |
+                      EButton_Minus | EButton_Plus | EButton_Home
     };
 
 public:

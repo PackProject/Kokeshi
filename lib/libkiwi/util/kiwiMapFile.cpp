@@ -10,7 +10,7 @@ K_DYNAMIC_SINGLETON_IMPL(MapFile);
  * Constructor
  */
 MapFile::MapFile()
-    : mLinkType(LinkType_None), mpMapBuffer(NULL), mIsUnpacked(false) {}
+    : mELinkType(ELinkType_None), mpMapBuffer(NULL), mIsUnpacked(false) {}
 
 /**
  * Destructor
@@ -24,8 +24,8 @@ MapFile::~MapFile() {
  * @param path Map file path
  * @param type Module linkage type
  */
-void MapFile::Open(String path, LinkType type) {
-    K_ASSERT(type != LinkType_None);
+void MapFile::Open(String path, ELinkType type) {
+    K_ASSERT(type != ELinkType_None);
 
     // Close existing map file
     if (mpMapBuffer != NULL) {
@@ -42,7 +42,7 @@ void MapFile::Open(String path, LinkType type) {
         return;
     }
 
-    mLinkType = type;
+    mELinkType = type;
     Unpack();
 }
 
@@ -75,7 +75,7 @@ const MapFile::Symbol* MapFile::QueryTextSymbol(const void* addr) {
     TList<Symbol>::Iterator it = mSymbols.Begin();
     for (; it != mSymbols.End(); it++) {
         // Resolve the symbol's address
-        const void* symb = it->type == LinkType_Static
+        const void* symb = it->type == ELinkType_Static
                                ? it->addr
                                : AddToPtr(GetTextStart(), it->offset);
 
@@ -113,14 +113,14 @@ void MapFile::Unpack() {
         Symbol* sym = new Symbol();
 
         // Location
-        if (mLinkType == LinkType_Static) {
+        if (mELinkType == ELinkType_Static) {
             sym->addr = reinterpret_cast<void*>(ksl::strtoul(map, &map, 16));
         } else {
             sym->offset = ksl::strtoul(map, &map, 16);
         }
 
         // Linkage
-        sym->type = mLinkType;
+        sym->type = mELinkType;
 
         // Size
         sym->size = ksl::strtoul(map, &map, 16);

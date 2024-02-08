@@ -540,7 +540,7 @@ void Nw4rException::PrintSymbol(const void* addr) {
     }
 
     // Offset into function where exception occurred
-    u32 offset = sym->type == MapFile::LinkType_Relocatable
+    u32 offset = sym->type == MapFile::ELinkType_Relocatable
                      ? PtrDistance(AddToPtr(GetTextStart(), sym->offset), addr)
                      : PtrDistance(sym->addr, addr);
 
