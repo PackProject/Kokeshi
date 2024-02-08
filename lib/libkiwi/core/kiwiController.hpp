@@ -10,13 +10,13 @@ namespace kiwi {
 /**
  * @brief Player IDs
  */
-enum Player {
-    Player_1,
-    Player_2,
-    Player_3,
-    Player_4,
+enum EPlayer {
+    EPlayer_1,
+    EPlayer_2,
+    EPlayer_3,
+    EPlayer_4,
 
-    Player_Max
+    EPlayer_Max
 };
 
 /**
@@ -105,8 +105,8 @@ public:
         return static_cast<CtrlMgr&>(*base);
     }
 
-    WiiCtrl& GetWiiCtrl(Player i) {
-        K_ASSERT(i < Player_Max);
+    WiiCtrl& GetWiiCtrl(EPlayer i) {
+        K_ASSERT(i < EPlayer_Max);
 
         EGG::CoreController* base = getNthController(i);
         K_ASSERT(base != NULL);

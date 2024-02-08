@@ -118,7 +118,7 @@ void Nw4rDirectPrint::ChangeXfb(void* buffer, u16 w, u16 h) {
  * @param w Width
  * @param h Height
  */
-void Nw4rDirectPrint::EraseXfb(int x, int y, int w, int h) const {
+void Nw4rDirectPrint::EraseXfb(s32 x, s32 y, s32 w, s32 h) const {
     if (mpBuffer == NULL) {
         return;
     }
@@ -128,8 +128,8 @@ void Nw4rDirectPrint::EraseXfb(int x, int y, int w, int h) const {
         w *= 2;
     }
 
-    int x2 = Min<int>(x + w, mBufferWidth);
-    x = Max(x, 0);
+    s32 x2 = Min<s32>(x + w, mBufferWidth);
+    x = Max<s32>(x, 0);
     w = x2 - x;
 
     if (GetDotHeight() == 2) {
@@ -137,8 +137,8 @@ void Nw4rDirectPrint::EraseXfb(int x, int y, int w, int h) const {
         h *= 2;
     }
 
-    int y2 = Min<int>(y + h, mBufferHeight);
-    y = Max(y, 0);
+    s32 y2 = Min<s32>(y + h, mBufferHeight);
+    y = Max<s32>(y, 0);
     h = y2 - y;
 
     // Character location in framebuffer
@@ -170,7 +170,7 @@ void Nw4rDirectPrint::StoreCache() const {
  * @param fmt Format string
  * @param ... Format arguments
  */
-void Nw4rDirectPrint::DrawString(int x, int y, const char* fmt, ...) const {
+void Nw4rDirectPrint::DrawString(s32 x, s32 y, const char* fmt, ...) const {
     if (mpBuffer == NULL) {
         return;
     }
@@ -200,14 +200,14 @@ void Nw4rDirectPrint::SetColor(const Color rgb) {
 /**
  * Gets framebuffer dot/unit width (in pixels)
  */
-int Nw4rDirectPrint::GetDotWidth() const {
+s32 Nw4rDirectPrint::GetDotWidth() const {
     return mBufferWidth < 400 ? 1 : 2;
 }
 
 /**
  * Gets framebuffer dot/unit height (in pixels)
  */
-int Nw4rDirectPrint::GetDotHeight() const {
+s32 Nw4rDirectPrint::GetDotHeight() const {
     return mBufferHeight < 300 ? 1 : 2;
 }
 
@@ -218,19 +218,19 @@ int Nw4rDirectPrint::GetDotHeight() const {
  * @param y Text Y position
  * @param str Text string
  */
-void Nw4rDirectPrint::DrawStringImpl(int x, int y, const char* str) const {
+void Nw4rDirectPrint::DrawStringImpl(s32 x, s32 y, const char* str) const {
     if (mpBuffer == NULL) {
         return;
     }
 
     // Base X position
-    int x1 = x;
+    s32 x1 = x;
     // Framebuffer width in units
-    int fbWidth = mBufferWidth / GetDotWidth();
+    s32 fbWidth = mBufferWidth / GetDotWidth();
 
     while (*str != '\0') {
         // Attempt to draw line (whatever is allowed by framebuffer width)
-        int width = (fbWidth - x) / scFontCharWidth;
+        s32 width = (fbWidth - x) / scFontCharWidth;
         str = DrawStringLine(x, y, str, width);
         y += scFontLeading;
 
@@ -268,13 +268,13 @@ void Nw4rDirectPrint::DrawStringImpl(int x, int y, const char* str) const {
  * @return char* String contents after what was drawn
  */
 
-const char* Nw4rDirectPrint::DrawStringLine(int x, int y, const char* str,
-                                            int maxlen) const {
+const char* Nw4rDirectPrint::DrawStringLine(s32 x, s32 y, const char* str,
+                                            s32 maxlen) const {
     if (mpBuffer == NULL || maxlen <= 0) {
         return NULL;
     }
 
-    int count = 0;
+    s32 count = 0;
 
     while (*str != '\0') {
         char c = *str;
@@ -285,11 +285,11 @@ const char* Nw4rDirectPrint::DrawStringLine(int x, int y, const char* str,
         }
 
         // Convert to font code
-        int code = scAscii2Font[c & (LENGTHOF(scAscii2Font) - 1)];
+        s32 code = scAscii2Font[c & (LENGTHOF(scAscii2Font) - 1)];
 
         // Tab character
         if (code == 0xFD) {
-            int tabSize = scTabSize - (count & (scTabSize - 1));
+            s32 tabSize = scTabSize - (count & (scTabSize - 1));
             x += tabSize * scFontCharWidth;
             count += tabSize;
         } else {
@@ -328,7 +328,7 @@ const char* Nw4rDirectPrint::DrawStringLine(int x, int y, const char* str,
  * @param y Character Y position
  * @param code Character code
  */
-void Nw4rDirectPrint::DrawStringChar(int x, int y, int code) const {
+void Nw4rDirectPrint::DrawStringChar(s32 x, s32 y, s32 code) const {
     if (mpBuffer == NULL) {
         return;
     }
@@ -336,14 +336,14 @@ void Nw4rDirectPrint::DrawStringChar(int x, int y, int code) const {
     static const u32 scTwiceBit[] = {0b0000, 0b0011, 0b1100, 0b1111};
 
     // Convert to font-relative code
-    int ncode = code >= 100 ? code - 100 : code;
+    s32 ncode = code >= 100 ? code - 100 : code;
 
-    int fontW = ncode % 5 * scFontCharWidth;
-    int fontH = ncode / 5 * scFontCharHeight;
+    s32 fontW = ncode % 5 * scFontCharWidth;
+    s32 fontH = ncode / 5 * scFontCharHeight;
     const u32* fontLine = code < 100 ? &scFontData[fontH] : &scFontData2[fontH];
 
-    int dotW = GetDotWidth();
-    int dotH = GetDotHeight();
+    s32 dotW = GetDotWidth();
+    s32 dotH = GetDotHeight();
 
     // Character location in framebuffer
     u16* pixel = reinterpret_cast<u16*>(mpBuffer);

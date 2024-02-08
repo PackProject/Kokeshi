@@ -78,17 +78,17 @@ u32 MemoryMgr::GetFreeSize() {
 
 } // namespace kiwi
 
-void* operator new(u32 size) {
+void* operator new(std::size_t size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4);
 }
-void* operator new[](u32 size) {
+void* operator new[](std::size_t size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4);
 }
 
-void* operator new(u32 size, s32 align) {
+void* operator new(std::size_t size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align);
 }
-void* operator new[](u32 size, s32 align) {
+void* operator new[](std::size_t size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align);
 }
 

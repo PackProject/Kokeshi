@@ -79,8 +79,7 @@ BasicString<T> BasicString<T>::Substr(u32 pos, u32 len) const {
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-u32 BasicString<T>::Find(const BasicString<T>& str,
-                                 u32 pos) const {
+u32 BasicString<T>::Find(const BasicString<T>& str, u32 pos) const {
     // Cannot match empty string
     if (str.Empty()) {
         return npos;
@@ -101,8 +100,7 @@ u32 BasicString<T>::Find(const BasicString<T>& str,
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
-template <typename T>
-u32 BasicString<T>::Find(const T* s, u32 pos) const {
+template <typename T> u32 BasicString<T>::Find(const T* s, u32 pos) const {
     K_ASSERT(s != NULL);
 
     // Cannot match past end of string
@@ -129,8 +127,7 @@ u32 BasicString<T>::Find(const T* s, u32 pos) const {
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
-template <typename T>
-u32 BasicString<T>::Find(T c, u32 pos) const {
+template <typename T> u32 BasicString<T>::Find(T c, u32 pos) const {
     // Cannot match past end of string
     if (pos >= mLength) {
         return npos;
@@ -200,6 +197,16 @@ template <typename T> void BasicString<T>::Reserve(u32 n) {
     // Set new configuration
     mpBuffer = buffer;
     mCapacity = n + 1;
+}
+
+/**
+ * Shrink buffer to fit string contents
+ */
+template <typename T> void BasicString<T>::Shrink() {
+    K_ASSERT(mCapacity > Length());
+
+    mCapacity = 0;
+    Reserve(Length());
 }
 
 /**
@@ -339,8 +346,7 @@ template <> wchar_t* StrNCat(wchar_t* dst, const wchar_t* src, u32 n) {
 template <> int StrNCmp<char>(const char* s1, const char* s2, u32 n) {
     return std::strncmp(s1, s2, n);
 }
-template <>
-int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, u32 n) {
+template <> int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, u32 n) {
     return ksl::wcsncmp(s1, s2, n);
 }
 
@@ -350,8 +356,7 @@ int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, u32 n) {
 template <> char* StrNCpy<char>(char* dst, const char* src, u32 n) {
     return std::strncpy(dst, src, n);
 }
-template <>
-wchar_t* StrNCpy<wchar_t>(wchar_t* dst, const wchar_t* src, u32 n) {
+template <> wchar_t* StrNCpy<wchar_t>(wchar_t* dst, const wchar_t* src, u32 n) {
     return std::wcsncpy(dst, src, n);
 }
 

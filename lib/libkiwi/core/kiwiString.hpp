@@ -57,9 +57,18 @@ public:
      * @param s Buffer/sequence
      * @param n Number of characters to copy
      */
-    BasicString(const T* s, u32 n)
-        : mpBuffer(NULL), mCapacity(0), mLength(0) {
+    BasicString(const T* s, u32 n) : mpBuffer(NULL), mCapacity(0), mLength(0) {
         Assign(s, n);
+    }
+
+    /**
+     * Constructor
+     * @details Reserve space
+     *
+     * @param n Number of characters to reserve
+     */
+    BasicString(u32 n) : mpBuffer(NULL), mCapacity(0), mLength(0) {
+        Reserve(n);
     }
 
     /**
@@ -83,7 +92,7 @@ public:
     }
 
     /**
-     * Gets the length of the underlying string
+     * Gets the length of the underlying string (not including term)
      */
     u32 Length() const {
         return mLength;
@@ -177,6 +186,7 @@ public:
 
 private:
     void Reserve(u32 n);
+    void Shrink();
 
     void Assign(const BasicString& str);
     void Assign(const T* s, u32 n = npos);

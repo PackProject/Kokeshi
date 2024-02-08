@@ -101,7 +101,7 @@ void Nw4rConsole::DrawDirect() const {
  *
  * @param n Number of characters to scroll
  */
-void Nw4rConsole::ScrollX(int n) {
+void Nw4rConsole::ScrollX(s32 n) {
     mViewX = Clamp<s16>(mViewX + (n * scScrollSpeedX), scViewXMin, scViewXMax);
 }
 
@@ -110,8 +110,8 @@ void Nw4rConsole::ScrollX(int n) {
  *
  * @param n Number of characters to scroll
  */
-void Nw4rConsole::ScrollY(int n) {
-    mViewTopLine = Clamp<int>(mViewTopLine + (n * scScrollSpeedY), mRingNumLine,
+void Nw4rConsole::ScrollY(s32 n) {
+    mViewTopLine = Clamp<s32>(mViewTopLine + (n * scScrollSpeedY), mRingNumLine,
                               GetTotalLines());
 }
 
@@ -199,7 +199,7 @@ void Nw4rConsole::TerminateLine() const {
 /**
  * Gets total number of lines in the console text buffer
  */
-int Nw4rConsole::GetTotalLines() const {
+s32 Nw4rConsole::GetTotalLines() const {
     AutoInterruptLock lock;
     return GetActiveLines() + mRingNumLine;
 }
@@ -208,8 +208,8 @@ int Nw4rConsole::GetTotalLines() const {
  * Gets total number of lines printed to the console that are visible
  * on screen
  */
-int Nw4rConsole::GetActiveLines() const {
-    int active = GetRingUsedLines();
+s32 Nw4rConsole::GetActiveLines() const {
+    s32 active = GetRingUsedLines();
 
     if (mPrintX != 0) {
         active++;
@@ -222,8 +222,8 @@ int Nw4rConsole::GetActiveLines() const {
  * Gets total number of lines printed to the console that are part of the
  * ring buffer
  */
-int Nw4rConsole::GetRingUsedLines() const {
-    int used = mPrintTop - mRingTopLine;
+s32 Nw4rConsole::GetRingUsedLines() const {
+    s32 used = mPrintTop - mRingTopLine;
 
     if (used < 0) {
         used += mHeight;
@@ -297,7 +297,7 @@ void Nw4rConsole::PrintToBuffer(const char* str) {
  * Draw console using DirectPrint (implementation)
  */
 void Nw4rConsole::DrawDirectImpl() const {
-    int viewOffset = mViewTopLine - mRingNumLine;
+    s32 viewOffset = mViewTopLine - mRingNumLine;
     if (viewOffset < 0) {
         viewOffset = 0;
     } else if (viewOffset > GetActiveLines()) {

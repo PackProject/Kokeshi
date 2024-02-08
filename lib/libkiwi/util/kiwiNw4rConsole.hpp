@@ -55,16 +55,16 @@ private:
     Nw4rConsole();
     ~Nw4rConsole();
 
-    void ScrollX(int n);
-    void ScrollY(int n);
+    void ScrollX(s32 n);
+    void ScrollY(s32 n);
     char* GetTextPtr(u16 line, u16 pos) const;
     char* NextLine();
     char* PutTab(char* dst);
     u32 PutChar(const char* str, char* dst);
     void TerminateLine() const;
-    int GetTotalLines() const;
-    int GetActiveLines() const;
-    int GetRingUsedLines() const;
+    s32 GetTotalLines() const;
+    s32 GetActiveLines() const;
+    s32 GetRingUsedLines() const;
     void PrintToBuffer(const char* str);
     void DrawDirectImpl() const;
 
@@ -85,10 +85,10 @@ private:
     // Line where ring buffer begins
     u16 mRingTopLine;
     // Ring buffer capacity
-    int mRingNumLine;
+    s32 mRingNumLine;
 
     // Line where console view begins
-    int mViewTopLine;
+    s32 mViewTopLine;
     // Console view base X position
     s16 mViewX;
     // Console view base Y position
@@ -112,9 +112,9 @@ private:
     static const u32 scViewYDefault = 30;
 
     // Display left scroll bound
-    static const int scViewXMin = -150;
+    static const s32 scViewXMin = -150;
     // Display right scroll bound
-    static const int scViewXMax = 10;
+    static const s32 scViewXMax = 10;
 
     // Display horizontal scroll speed
     static const u32 scScrollSpeedX = 6;

@@ -9,7 +9,7 @@
 namespace kiwi {
 
 // Forward declaration
-class IScnHook;
+class ISceneHook;
 
 /**
  * Scene hook manager
@@ -24,7 +24,7 @@ public:
      * @param hook Scene hook
      * @param id Scene ID
      */
-    void AddHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
+    void AddHook(ISceneHook* hook, RPSysSceneCreator::ESceneID id) {
         K_ASSERT(hook != NULL);
         mHookLists[id].PushBack(hook);
     }
@@ -35,7 +35,7 @@ public:
      * @param hook Scene hook
      * @param id Scene ID
      */
-    void RemoveHook(IScnHook* hook, RPSysSceneCreator::ESceneID id) {
+    void RemoveHook(ISceneHook* hook, RPSysSceneCreator::ESceneID id) {
         K_ASSERT(hook != NULL);
         mHookLists[id].Remove(hook);
     }
@@ -52,7 +52,7 @@ private:
     /**
      * @brief Gets list of hooks for the current scene
      */
-    TList<IScnHook>* GetActiveHooks() {
+    TList<ISceneHook>* GetActiveHooks() {
         s32 id = RPSysSceneMgr::getInstance()->getCurrentSceneID();
 
         // Ignore custom scenes
@@ -65,27 +65,27 @@ private:
 
 private:
     // Lists of scene hooks
-    TArray<TList<IScnHook>, RPSysSceneCreator::RP_SCENE_MAX> mHookLists;
+    TArray<TList<ISceneHook>, RPSysSceneCreator::RP_SCENE_MAX> mHookLists;
 };
 
 /**
  * Scene hook interface for extension of RP scenes
  */
-class IScnHook {
+class ISceneHook {
 public:
     /**
      * @brief Constructor
      *
      * @param id Scene ID
      */
-    IScnHook(RPSysSceneCreator::ESceneID id) : mSceneID(id) {
+    ISceneHook(RPSysSceneCreator::ESceneID id) : mSceneID(id) {
         SceneHookMgr::GetInstance().AddHook(this, mSceneID);
     }
 
     /**
      * @brief Destructor
      */
-    virtual ~IScnHook() {
+    virtual ~ISceneHook() {
         SceneHookMgr::GetInstance().RemoveHook(this, mSceneID);
     }
 

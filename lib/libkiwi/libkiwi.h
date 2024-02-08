@@ -3,7 +3,9 @@
 #include <libkiwi/core/kiwiArray.hpp>
 #include <libkiwi/core/kiwiColor.hpp>
 #include <libkiwi/core/kiwiController.hpp>
+#include <libkiwi/core/kiwiIStream.hpp>
 #include <libkiwi/core/kiwiLinkList.hpp>
+#include <libkiwi/core/kiwiNandStream.hpp>
 #include <libkiwi/core/kiwiSTL.hpp>
 #include <libkiwi/core/kiwiSceneHookMgr.hpp>
 #include <libkiwi/core/kiwiString.hpp>
@@ -27,6 +29,7 @@
 #include <libkiwi/util/kiwiNw4rDirectPrint.hpp>
 #include <libkiwi/util/kiwiNw4rException.hpp>
 #include <libkiwi/util/kiwiOverride.hpp>
+#include <libkiwi/util/kiwiRandom.hpp>
 #include <libkiwi/util/kiwiSequence.hpp>
 #include <libkiwi/util/kiwiStaticSingleton.hpp>
 #include <types.h>

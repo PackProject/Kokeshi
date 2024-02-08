@@ -101,9 +101,9 @@ private:
     static const char* scExceptionNames[OS_ERR_MAX];
 
     // Exception stack trace depth
-    static const int scExceptionTraceDepth = 10;
+    static const s32 scExceptionTraceDepth = 10;
     // Assertion stack trace depth
-    static const int scAssertTraceDepth = 20;
+    static const s32 scAssertTraceDepth = 20;
 };
 
 } // namespace kiwi

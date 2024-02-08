@@ -19,21 +19,21 @@ public:
 
     void SetupXfb();
     void ChangeXfb(void* buffer, u16 w, u16 h);
-    void EraseXfb(int x, int y, int w, int h) const;
+    void EraseXfb(s32 x, s32 y, s32 w, s32 h) const;
     void StoreCache() const;
-    void DrawString(int x, int y, const char* fmt, ...) const;
+    void DrawString(s32 x, s32 y, const char* fmt, ...) const;
     void SetColor(const Color rgb);
 
 private:
     Nw4rDirectPrint();
     ~Nw4rDirectPrint();
 
-    int GetDotWidth() const;
-    int GetDotHeight() const;
+    s32 GetDotWidth() const;
+    s32 GetDotHeight() const;
 
-    void DrawStringImpl(int x, int y, const char* str) const;
-    const char* DrawStringLine(int x, int y, const char* str, int maxlen) const;
-    void DrawStringChar(int x, int y, int code) const;
+    void DrawStringImpl(s32 x, s32 y, const char* str) const;
+    const char* DrawStringLine(s32 x, s32 y, const char* str, s32 maxlen) const;
+    void DrawStringChar(s32 x, s32 y, s32 code) const;
 
 public:
     // Font character width (in dots/units)
