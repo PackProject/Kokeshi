@@ -67,10 +67,6 @@ private:
 private:
     // DVD handle
     DVDFileInfo mFileInfo;
-
-    // Buffered seek parameters
-    ESeekDir mSeekDir;
-    s32 mSeekOffset;
 };
 
 } // namespace kiwi

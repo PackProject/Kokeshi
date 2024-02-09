@@ -30,65 +30,69 @@ extern void* const _e_rodata;
 extern void* const _f_data;
 extern void* const _e_data;
 
-static inline const void* GetInitStart() {
+namespace {
+
+const void* GetInitStart() {
     return &_f_init;
 }
-static inline const void* GetInitEnd() {
+const void* GetInitEnd() {
     return &_e_init;
 }
-static inline u32 GetInitSize() {
+u32 GetInitSize() {
     return PtrDistance(GetInitStart(), GetInitEnd());
 }
 
-static inline const void* GetTextStart() {
+const void* GetTextStart() {
     return &_f_text;
 }
-static inline const void* GetTextEnd() {
+const void* GetTextEnd() {
     return &_e_text;
 }
-static inline u32 GetTextSize() {
+u32 GetTextSize() {
     return PtrDistance(GetTextStart(), GetTextEnd());
 }
 
-static inline const void* GetCtorsStart() {
+const void* GetCtorsStart() {
     return &_f_ctors;
 }
-static inline const void* GetCtorsEnd() {
+const void* GetCtorsEnd() {
     return &_e_ctors;
 }
-static inline u32 GetCtorsSize() {
+u32 GetCtorsSize() {
     return PtrDistance(GetCtorsStart(), GetCtorsEnd());
 }
 
-static inline const void* GetDtorsStart() {
+const void* GetDtorsStart() {
     return &_f_dtors;
 }
-static inline const void* GetDtorsEnd() {
+const void* GetDtorsEnd() {
     return &_e_dtors;
 }
-static inline u32 GetDtorsSize() {
+u32 GetDtorsSize() {
     return PtrDistance(GetDtorsStart(), GetDtorsEnd());
 }
 
-static inline const void* GetRodataStart() {
+const void* GetRodataStart() {
     return &_f_rodata;
 }
-static inline const void* GetRodataEnd() {
+const void* GetRodataEnd() {
     return &_e_rodata;
 }
-static inline u32 GetRodataSize() {
+u32 GetRodataSize() {
     return PtrDistance(GetRodataStart(), GetRodataEnd());
 }
 
-static inline const void* GetDataStart() {
+const void* GetDataStart() {
     return &_f_data;
 }
-static inline const void* GetDataEnd() {
+const void* GetDataEnd() {
     return &_e_data;
 }
-static inline u32 GetDataSize() {
+u32 GetDataSize() {
     return PtrDistance(GetDataStart(), GetDataEnd());
 }
+
+} // namespace
 
 #ifdef __cplusplus
 }

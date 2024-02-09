@@ -4,6 +4,7 @@
 #include <libkiwi/core/kiwiController.hpp>
 #include <libkiwi/core/kiwiDvdStream.hpp>
 #include <libkiwi/core/kiwiIStream.hpp>
+#include <libkiwi/core/kiwiMemStream.hpp>
 #include <libkiwi/core/kiwiNandStream.hpp>
 #include <libkiwi/core/kiwiSceneHookMgr.hpp>
 #include <libkiwi/kernel/kiwiAssert.h>
@@ -23,6 +24,7 @@
 #include <libkiwi/rvl/kiwiLibSO.hpp>
 #include <libkiwi/util/kiwiAutoLock.hpp>
 #include <libkiwi/util/kiwiBuildTarget.hpp>
+#include <libkiwi/util/kiwiChecksum.hpp>
 #include <libkiwi/util/kiwiDynamicSingleton.hpp>
 #include <libkiwi/util/kiwiMapFile.hpp>
 #include <libkiwi/util/kiwiNonCopyable.hpp>

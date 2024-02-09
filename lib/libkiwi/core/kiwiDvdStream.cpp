@@ -19,7 +19,7 @@ bool DvdStream::Open(const char* path) {
     // Try to locate file on disc
     s32 entrynum = DVDConvertPathToEntrynum(path);
     if (entrynum < 0) {
-        K_LOG_EX("Unable to find DVD file: %s", path);
+        K_LOG_EX("Can't find DVD file: %s", path);
         return false;
     }
 
@@ -54,11 +54,17 @@ u32 DvdStream::GetSize() const {
  * @param offset Seek offset
  */
 void DvdStream::SeekImpl(ESeekDir dir, s32 offset) {
-    K_ASSERT_EX(offset < GetSize(), "Cannot seek past end of file");
+    switch (dir) {
+    case ESeekDir_Begin:   mPosition = offset; break;
+    case ESeekDir_Current: mPosition += offset; break;
+    case ESeekDir_End:
+        K_ASSERT_EX(offset < 0, "Can't seek forward from end of file");
+        K_ASSERT_EX(offset > -GetSize(), "Too far backwards");
+        mPosition = GetSize() + offset;
+        break;
+    }
 
-    // Seek is "buffered" here, and applied later through DVDReadPrio.
-    mSeekDir = dir;
-    mSeekOffset = offset;
+    K_ASSERT_EX(mPosition < GetSize(), "Can't seek past end of file");
 }
 
 /**
@@ -70,7 +76,7 @@ void DvdStream::SeekImpl(ESeekDir dir, s32 offset) {
  */
 s32 DvdStream::ReadImpl(void* dst, u32 size) {
     K_ASSERT(dst != NULL);
-    return DVDReadPrio(&mFileInfo, dst, size, mSeekOffset, DVD_PRIO_MEDIUM);
+    return DVDReadPrio(&mFileInfo, dst, size, mPosition, DVD_PRIO_MEDIUM);
 }
 
 /**
@@ -81,7 +87,7 @@ s32 DvdStream::ReadImpl(void* dst, u32 size) {
  * @return s32 Number of bytes written, or error code
  */
 s32 DvdStream::WriteImpl(const void* src, u32 size) {
-    K_ASSERT_EX(false, "Not supported");
+    K_ASSERT_EX(false, "Can't write to the DVD");
     return 0;
 }
 
@@ -93,8 +99,9 @@ s32 DvdStream::WriteImpl(const void* src, u32 size) {
  * @return s32 Number of bytes peeked, or error code
  */
 s32 DvdStream::PeekImpl(void* dst, u32 size) {
-    K_ASSERT_EX(false, "Not yet implemented");
-    return 0;
+    s32 n = ReadImpl(dst, size);
+    mPosition -= n;
+    return n;
 }
 
 } // namespace kiwi

@@ -16,7 +16,7 @@
                                                                                \
         /* Aligned read requires allocation */                                 \
         ptr = new (GetAlign()) T();                                            \
-        Read(ptr, sizeof(T));                                                  \
+        K_ASSERT(Read(ptr, sizeof(T)) > 0);                                    \
         value = *ptr;                                                          \
         delete ptr;                                                            \
                                                                                \
@@ -35,7 +35,7 @@
         /* Aligned write requires allocation */                                \
         ptr = new (GetAlign()) T();                                            \
         *ptr = value;                                                          \
-        Write(ptr, sizeof(T));                                                 \
+        K_ASSERT(Write(ptr, sizeof(T)) > 0);                                   \
         delete ptr;                                                            \
     }                                                                          \
                                                                                \
@@ -51,7 +51,7 @@
                                                                                \
         /* Aligned read requires allocation */                                 \
         ptr = new (GetAlign()) T();                                            \
-        Peek(ptr, sizeof(T));                                                  \
+        K_ASSERT(Peek(ptr, sizeof(T)) > 0);                                    \
         value = *ptr;                                                          \
         delete ptr;                                                            \
                                                                                \

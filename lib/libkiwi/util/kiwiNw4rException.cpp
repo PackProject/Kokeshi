@@ -364,7 +364,8 @@ void Nw4rException::DumpException() {
     // Basic information
     Printf("******** EXCEPTION OCCURRED! ********\n");
     Printf("Exception Type: %s\n", scExceptionNames[mErrorInfo.error]);
-    Printf("SRR0: ");
+    Printf("SRR0: %08X\n", mErrorInfo.ctx->srr0);
+    Printf("Symbol: ");
     PrintSymbol(reinterpret_cast<void*>(mErrorInfo.ctx->srr0));
     Printf("\n");
     Printf("\n");
