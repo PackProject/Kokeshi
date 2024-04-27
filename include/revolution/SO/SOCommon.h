@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-#define SO_F_GETFL 3
-#define SO_F_SETFL 4
-
 #define SO_O_NONBLOCK 0x4
 
 #define SO_INADDR_ANY 0
@@ -16,6 +13,8 @@ extern "C" {
 #define SO_POLLWRNORM 0x8
 #define SO_POLLERR 0x20
 #define SO_POLLHUP 0x40
+
+#define SOMAXCONN 5
 
 typedef s32 SOSocket;
 
@@ -27,6 +26,7 @@ typedef enum {
     SO_EHOSTUNREACH = -23,
     SO_EINPROGRESS = -26,
     SO_EINVAL = -28,
+    SO_EISCONN = -30,
     SO_EMSGSIZE = -35,
     SO_ENOBUFS = -42,
     SO_ENOMEM = -49,
@@ -55,6 +55,8 @@ typedef enum {
     SO_IPPROTO_UDP = 17,
 } SOIPProtocol;
 
+typedef enum { SO_F_GETFL = 3, SO_F_SETFL = 4 } SOFcntlCmd;
+
 typedef enum {
     SO_MSG_OOB = (1 << 0),
     SO_MSG_PEEK = (1 << 1),
@@ -66,7 +68,9 @@ typedef enum {
 } SOSockOptLevel;
 
 typedef enum {
+    SO_SO_REUSEADDR = 0x0004,
     SO_SO_SNDBUF = 0x1002,
+    SO_SO_RCVBUF = 0x1003,
 } SOSockOpt;
 
 typedef enum { SO_SHUT_RD, SO_SHUT_WR, SO_SHUT_RDWR } SOShutdownType;
@@ -93,31 +97,44 @@ typedef struct SOSockAddrIn {
 } SOSockAddrIn;
 
 typedef struct SOSockAddrIn6 {
-    u8 len;    // at 0x0
-    u8 family; // at 0x1
-    u16 port;  // at 0x2
-    u8 UNK_0x4[0x8];
-    SOInAddr6 addr; // at 0xC
+    u8 len;         // at 0x0
+    u8 family;      // at 0x1
+    u16 port;       // at 0x2
+    u32 flowinfo;   // at 0x4
+    SOInAddr6 addr; // at 0x8
+    u32 scope;      // at 0x18
 } SOSockAddrIn6;
 
 typedef struct SOSockAddr {
     union {
-        u8 len;
-        SOSockAddrIn in;
-        SOSockAddrIn6 in6;
+        struct {
+            u8 len;    // at 0x0
+            u8 family; // at 0x1
+            u16 port;  // at 0x2
+        };
+        SOSockAddrIn in;   // at 0x0
+        SOSockAddrIn6 in6; // at 0x0
     };
 } SOSockAddr;
 
 typedef struct SOHostEnt {
-    s32 flags;              // at 0x0
-    s32 family;             // at 0x4
-    s32 type;               // at 0x8
-    s32 protocol;           // at 0xC
-    s32 len;                // at 0x10
-    SOSockAddr* addr;       // at 0x14
-    char* name;             // at 0x18
-    struct SOHostEnt* next; // at 0x1C
+    char* name;     // at 0x0
+    char** aliases; // at 0x4
+    s16 addrType;   // at 0x8
+    s16 length;     // at 0xA
+    u8** addrList;  // at 0xC
 } SOHostEnt;
+
+typedef struct SOAddrInfo {
+    s32 flags;               // at 0x0
+    s32 family;              // at 0x4
+    s32 type;                // at 0x8
+    s32 protocol;            // at 0xC
+    s32 len;                 // at 0x10
+    SOSockAddr* addr;        // at 0x14
+    char* name;              // at 0x18
+    struct SOAddrInfo* next; // at 0x1C
+} SOAddrInfo;
 
 typedef struct SOPollFD {
     s32 fd;      // at 0x0

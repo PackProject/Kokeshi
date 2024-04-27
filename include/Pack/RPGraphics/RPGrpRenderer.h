@@ -5,7 +5,22 @@
 // TODO
 class RPGrpRenderer {
 public:
-    enum EDrawPass { DRAWPASS_LYT = 5 };
+    enum EDrawPass {
+        EDrawPass_DrawBefore,
+        EDrawPass_1,
+        EDrawPass_2,
+        EDrawPass_3,
+        EDrawPass_DrawAfter,
+        EDrawPass_Draw2D,
+        EDrawPass_Effect0,
+        EDrawPass_Effect1,
+        EDrawPass_Effect3,
+        EDrawPass_Effect4,
+        EDrawPass_Effect2,
+        EDrawPass_Begin,
+        EDrawPass_End,
+        EDrawPass_Null
+    };
 
 public:
     static void Begin();
@@ -20,14 +35,10 @@ public:
     void CreateView2D(u8, RPGrpScreen*);
     void CorrectView();
 
-    IRPGrpDrawObject* GetDrawObjectList() const {
-        return mDrawObjects;
-    }
-
     static EDrawPass GetDrawPass() {
-        return (EDrawPass)sDrawPass;
+        return sDrawPass;
     }
-    static void SetDrawPass(s32 pass) {
+    static void SetDrawPass(EDrawPass pass) {
         sDrawPass = pass;
     }
 
@@ -35,18 +46,16 @@ public:
         return sActiveScreen;
     }
 
-    static bool IsDrawLyt() {
-        return sDrawPass == DRAWPASS_LYT && D_804BF615 == 1;
+    static bool IsDrawLayout() {
+        return sDrawPass == EDrawPass_Draw2D && sCurrentViewID == 1;
     }
-
-public:
-    static u8 D_804BF615;
 
 private:
     char UNK_0x0[0xC];
     IRPGrpDrawObject* mDrawObjects; // at 0xC
 
-    static s32 sDrawPass;
+    static EDrawPass sDrawPass;
+    static u8 sCurrentViewID;
     static RPGrpRenderer* sInstance;
     static RPGrpScreen* sActiveScreen;
 };

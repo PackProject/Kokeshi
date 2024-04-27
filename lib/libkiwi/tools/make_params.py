@@ -60,7 +60,7 @@ def write_header(message_keys: list[str], args):
 
         # Path to header file
         header_dir = file_dir.replace("assets", "src")
-        header_path = f"{header_dir}BKMSG_{file_name}.hpp"
+        header_path = f"{header_dir}BKMSG_{file_name}.h"
 
     # Create header directory if it doesn't exist
     makedirs(header_dir, exist_ok=True)

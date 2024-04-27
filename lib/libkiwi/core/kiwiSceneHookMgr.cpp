@@ -22,10 +22,16 @@ RPSysScene* GetCurrentScene() {
  * @brief Enter callback
  */
 void SceneHookMgr::OnSceneEnter() {
-    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
-
     GetCurrentScene()->Configure();
 
+    // Global hooks
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->Configure(GetCurrentScene());
+    }
+
+    // Hooks for this scene
+    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
     if (active != NULL) {
         for (TList<ISceneHook>::Iterator it = active->Begin();
              it != active->End();) {
@@ -46,6 +52,11 @@ void SceneHookMgr::OnSceneReEnter() {
     TList<ISceneHook>* active = GetInstance().GetActiveHooks();
 
     // Hooks before scene logic
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->BeforeReset(GetCurrentScene());
+    }
+
     if (active != NULL) {
         for (TList<ISceneHook>::Iterator it = active->Begin();
              it != active->End();) {
@@ -56,6 +67,11 @@ void SceneHookMgr::OnSceneReEnter() {
     GetCurrentScene()->Reset();
 
     // Hooks after scene logic
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->AfterReset(GetCurrentScene());
+    }
+
     if (active != NULL) {
         for (TList<ISceneHook>::Iterator it = active->Begin();
              it != active->End();) {
@@ -76,13 +92,19 @@ KOKESHI_BY_PACK(KM_CALL(0x801853d4, SceneHookMgr::OnSceneReEnter), // Wii Sports
  * @brief LoadResource callback
  */
 void SceneHookMgr::OnSceneLoadResource() {
-    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
+    // Global hooks
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->LoadResource(GetCurrentScene());
     }
 
-    for (TList<ISceneHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->LoadResource(GetCurrentScene());
+    // Hooks for this scene
+    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
+    if (active != NULL) {
+        for (TList<ISceneHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->LoadResource(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -98,6 +120,11 @@ void SceneHookMgr::OnSceneCalculate() {
     TList<ISceneHook>* active = GetInstance().GetActiveHooks();
 
     // Hooks before scene logic
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->BeforeCalculate(GetCurrentScene());
+    }
+
     if (active != NULL) {
         for (TList<ISceneHook>::Iterator it = active->Begin();
              it != active->End();) {
@@ -110,6 +137,11 @@ void SceneHookMgr::OnSceneCalculate() {
     RPSysSceneMgr::getInstance()->SceneManager::calcCurrentScene();
 
     // Hooks after scene logic
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->AfterCalculate(GetCurrentScene());
+    }
+
     if (active != NULL) {
         for (TList<ISceneHook>::Iterator it = active->Begin();
              it != active->End();) {
@@ -127,13 +159,17 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80185868, SceneHookMgr::OnSceneCalculate), // Wii Sp
  * @brief Exit callback
  */
 void SceneHookMgr::OnSceneExit() {
-    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->Exit(GetCurrentScene());
     }
 
-    for (TList<ISceneHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Exit(GetCurrentScene());
+    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
+    if (active != NULL) {
+        for (TList<ISceneHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->Exit(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -146,13 +182,17 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80185000, SceneHookMgr::OnSceneExit), // Wii Sports
  * @brief Pause callback
  */
 void SceneHookMgr::OnScenePause() {
-    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->Pause(GetCurrentScene(), true);
     }
 
-    for (TList<ISceneHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Pause(GetCurrentScene(), true);
+    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
+    if (active != NULL) {
+        for (TList<ISceneHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->Pause(GetCurrentScene(), true);
+        }
     }
 }
 // clang-format off
@@ -165,13 +205,17 @@ KOKESHI_BY_PACK(KM_BRANCH(0x801b68ec, SceneHookMgr::OnScenePause), // Wii Sports
  * @brief Unpause callback
  */
 void SceneHookMgr::OnSceneUnPause() {
-    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
-    if (active == NULL) {
-        return;
+    for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();
+         it != GetInstance().mGlobalHooks.End();) {
+        it++->Pause(GetCurrentScene(), false);
     }
 
-    for (TList<ISceneHook>::Iterator it = active->Begin(); it != active->End();) {
-        it++->Pause(GetCurrentScene(), false);
+    TList<ISceneHook>* active = GetInstance().GetActiveHooks();
+    if (active != NULL) {
+        for (TList<ISceneHook>::Iterator it = active->Begin();
+             it != active->End();) {
+            it++->Pause(GetCurrentScene(), false);
+        }
     }
 }
 // clang-format off

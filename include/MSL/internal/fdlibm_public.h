@@ -16,6 +16,7 @@ double cos(double x);
 double floor(double x);
 double frexp(double x, int* eptr);
 double ldexp(double value, int exp);
+double log(double x);
 double modf(double x, double* iptr);
 double sin(double x);
 double tan(double x);

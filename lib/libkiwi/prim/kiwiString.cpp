@@ -4,8 +4,8 @@
 
 namespace kiwi {
 
-template <> const char* BasicString<char>::scEmptyCStr = "";
-template <> const wchar_t* BasicString<wchar_t>::scEmptyCStr = L"";
+template <> const char* StringImpl<char>::scEmptyCStr = "";
+template <> const wchar_t* StringImpl<wchar_t>::scEmptyCStr = L"";
 
 /**
  * char/wchar_t template helper functions
@@ -24,7 +24,7 @@ template <typename T> const T* StrStr(const T* s1, const T* s2);
 /**
  * Clears string buffer (yields empty string)
  */
-template <typename T> void BasicString<T>::Clear() {
+template <typename T> void StringImpl<T>::Clear() {
     // Don't delete static memory
     if (mpBuffer == scEmptyCStr) {
         return;
@@ -49,12 +49,12 @@ template <typename T> void BasicString<T>::Clear() {
  * @param len Substring size
  */
 template <typename T>
-BasicString<T> BasicString<T>::Substr(u32 pos, u32 len) const {
+StringImpl<T> StringImpl<T>::Substr(u32 pos, u32 len) const {
     K_ASSERT(pos <= mLength);
 
     // Empty string if the substring begins at the end
     if (pos == mLength) {
-        return BasicString();
+        return StringImpl();
     }
 
     // Clamp substring length
@@ -65,7 +65,7 @@ BasicString<T> BasicString<T>::Substr(u32 pos, u32 len) const {
     StrNCpy(buffer, mpBuffer + pos, len);
 
     // Construct string wrapper
-    BasicString<T> str = BasicString(buffer);
+    StringImpl<T> str = StringImpl(buffer);
 
     delete buffer;
     return str;
@@ -79,7 +79,7 @@ BasicString<T> BasicString<T>::Substr(u32 pos, u32 len) const {
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-u32 BasicString<T>::Find(const BasicString<T>& str, u32 pos) const {
+u32 StringImpl<T>::Find(const StringImpl<T>& str, u32 pos) const {
     // Cannot match empty string
     if (str.Empty()) {
         return npos;
@@ -100,7 +100,7 @@ u32 BasicString<T>::Find(const BasicString<T>& str, u32 pos) const {
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
-template <typename T> u32 BasicString<T>::Find(const T* s, u32 pos) const {
+template <typename T> u32 StringImpl<T>::Find(const T* s, u32 pos) const {
     K_ASSERT(s != NULL);
 
     // Cannot match past end of string
@@ -127,7 +127,7 @@ template <typename T> u32 BasicString<T>::Find(const T* s, u32 pos) const {
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
-template <typename T> u32 BasicString<T>::Find(T c, u32 pos) const {
+template <typename T> u32 StringImpl<T>::Find(T c, u32 pos) const {
     // Cannot match past end of string
     if (pos >= mLength) {
         return npos;
@@ -151,7 +151,7 @@ template <typename T> u32 BasicString<T>::Find(T c, u32 pos) const {
  * @param str String to compare against
  */
 template <typename T>
-bool BasicString<T>::operator==(const BasicString<T>& str) const {
+bool StringImpl<T>::operator==(const StringImpl<T>& str) const {
     // Don't bother comparing data if lengths are different
     if (mLength != str.Length()) {
         return false;
@@ -166,7 +166,7 @@ bool BasicString<T>::operator==(const BasicString<T>& str) const {
  *
  * @param str C-style string to compare against
  */
-template <typename T> bool BasicString<T>::operator==(const T* s) const {
+template <typename T> bool StringImpl<T>::operator==(const T* s) const {
     K_ASSERT(s != NULL);
 
     // Compare string data
@@ -178,7 +178,7 @@ template <typename T> bool BasicString<T>::operator==(const T* s) const {
  *
  * @param n Number of characters to reserve (ignoring null terminator)
  */
-template <typename T> void BasicString<T>::Reserve(u32 n) {
+template <typename T> void StringImpl<T>::Reserve(u32 n) {
     // Already have enough space
     if (mCapacity >= n + 1) {
         return;
@@ -186,8 +186,10 @@ template <typename T> void BasicString<T>::Reserve(u32 n) {
 
     // Reallocate buffer
     T* buffer = new T[n + 1];
+
     // Copy existing data
     StrNCpy(buffer, mpBuffer, mLength);
+    buffer[mLength] = '\0';
 
     // Delete old data
     if (mpBuffer != scEmptyCStr) {
@@ -202,7 +204,7 @@ template <typename T> void BasicString<T>::Reserve(u32 n) {
 /**
  * Shrink buffer to fit string contents
  */
-template <typename T> void BasicString<T>::Shrink() {
+template <typename T> void StringImpl<T>::Shrink() {
     K_ASSERT(mCapacity > Length());
 
     mCapacity = 0;
@@ -215,7 +217,7 @@ template <typename T> void BasicString<T>::Shrink() {
  *
  * @param str String to copy
  */
-template <typename T> void BasicString<T>::Assign(const BasicString<T>& str) {
+template <typename T> void StringImpl<T>::Assign(const StringImpl<T>& str) {
     // Reserve string buffer
     Reserve(str.Length());
 
@@ -234,7 +236,7 @@ template <typename T> void BasicString<T>::Assign(const BasicString<T>& str) {
  * @param s C-style string to copy
  * @param n Number of characters to copy
  */
-template <typename T> void BasicString<T>::Assign(const T* s, u32 n) {
+template <typename T> void StringImpl<T>::Assign(const T* s, u32 n) {
     K_ASSERT(s != NULL);
 
     // Reserve string buffer
@@ -254,7 +256,7 @@ template <typename T> void BasicString<T>::Assign(const T* s, u32 n) {
  *
  * @param c Character to write
  */
-template <typename T> void BasicString<T>::Assign(T c) {
+template <typename T> void StringImpl<T>::Assign(T c) {
     // Reserve string buffer
     Reserve(1);
 
@@ -271,7 +273,7 @@ template <typename T> void BasicString<T>::Assign(T c) {
  *
  * @param str String to append
  */
-template <typename T> void BasicString<T>::Append(const BasicString<T>& str) {
+template <typename T> void StringImpl<T>::Append(const StringImpl<T>& str) {
     // Reserve string buffer
     Reserve(mLength + str.Length());
 
@@ -288,7 +290,7 @@ template <typename T> void BasicString<T>::Append(const BasicString<T>& str) {
  *
  * @param s C-style string to append
  */
-template <typename T> void BasicString<T>::Append(const T* s) {
+template <typename T> void StringImpl<T>::Append(const T* s) {
     // Reserve string buffer
     u32 len = StrLen(s);
     Reserve(mLength + len);
@@ -306,7 +308,7 @@ template <typename T> void BasicString<T>::Append(const T* s) {
  *
  * @param c Character to append
  */
-template <typename T> void BasicString<T>::Append(T c) {
+template <typename T> void StringImpl<T>::Append(T c) {
     // Reserve string buffer
     Reserve(mLength + 1);
 
@@ -384,7 +386,7 @@ const wchar_t* StrStr<wchar_t>(const wchar_t* s1, const wchar_t* s2) {
 } // namespace
 
 // Instantiate supported string types
-template class BasicString<char>;
-template class BasicString<wchar_t>;
+template class StringImpl<char>;
+template class StringImpl<wchar_t>;
 
 } // namespace kiwi

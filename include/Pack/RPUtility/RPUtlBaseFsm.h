@@ -19,7 +19,7 @@ public:
     /**
      * @brief State member function
      */
-    typedef (T::*StateFunc)();
+    typedef void (T::*StateFunc)();
 
 public:
     /**
@@ -85,6 +85,23 @@ public:
         if (mDuration < INT_MAX) {
             mDuration++;
         }
+    }
+
+    /**
+     * @brief Check for a specific state
+     */
+    bool IsState(u32 id) const {
+        // Currently in the state
+        if (mState == id) {
+            return true;
+        }
+
+        // Entering the state on next tick
+        if ((mDoEnter || mDoExit) && mNextState == id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

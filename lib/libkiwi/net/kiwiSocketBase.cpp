@@ -2,39 +2,6 @@
 
 namespace kiwi {
 
-namespace {
-
-/**
- * Processes message (send/recv) result
- *
- * @param err LibSO result code
- * @param[out] outsize Message size, or -1 if error/blocking
- * @return Message success or would-be-blocking
- */
-bool ProcessResult(s32 err, s32* outsize) {
-    // Socket error
-    if (err < 0) {
-        // Cannot know message size
-        if (outsize != NULL) {
-            // Max unsigned value
-            *outsize = -1;
-        }
-
-        // Only successful if error was from blocking
-        return err == SO_EWOULDBLOCK;
-    }
-
-    // "Error code" is actually message size (when >= 0)
-    if (outsize != NULL) {
-        *outsize = err;
-    }
-
-    // Message was successful
-    return true;
-}
-
-} // namespace
-
 /**
  * Constructor
  *
@@ -43,8 +10,13 @@ bool ProcessResult(s32 err, s32* outsize) {
  */
 SocketBase::SocketBase(SOProtoFamily family, SOSockType type)
     : mHandle(-1), mFamily(family), mType(type) {
-    mHandle = LibSO::Socket(family, type);
-    K_ASSERT_EX(mHandle >= 0, "Failed to create socket");
+    // Create IOS socket
+    mHandle = LibSO::Socket(mFamily, mType);
+    K_ASSERT_EX(IsOpen(), "Failed to create socket");
+
+    // By default, enable port reuse
+    bool success = SetReuseAddr(true);
+    K_ASSERT(success);
 }
 
 /**
@@ -56,14 +28,14 @@ SocketBase::SocketBase(SOProtoFamily family, SOSockType type)
  */
 SocketBase::SocketBase(SOSocket socket, SOProtoFamily family, SOSockType type)
     : mHandle(socket), mFamily(family), mType(type) {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT_EX(IsOpen(), "Invalid socket descriptor provided");
 }
 
 /**
  * Destructor
  */
 SocketBase::~SocketBase() {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
 
     bool success = Close();
     K_ASSERT(success);
@@ -72,31 +44,36 @@ SocketBase::~SocketBase() {
 /**
  * Gets the console's IP address
  *
- * @return Raw IPv4 address
+ * @param addr[out] IPv4 address
  */
-u32 SocketBase::GetHostAddr() {
-    SOInAddr addr;
-
-    if (LibSO::GetHostID(addr) >= 0) {
-        return addr.raw;
-    }
-
-    // Fallback to loopback address
-    LibSO::INetPtoN("127.0.0.1", addr);
-    return addr.raw;
+void SocketBase::GetHostAddr(SockAddr4& addr) {
+    LibSO::GetHostID(addr);
 }
 
 /**
  * Binds socket to local address
  *
- * @param addr Local address
+ * @note Bind to port zero for a random port (written out)
+ * @param addr[in,out] Local address
  * @return Success
  */
-bool SocketBase::Bind(const SOSockAddr& addr) const {
-    K_ASSERT(mHandle >= 0);
+bool SocketBase::Bind(SockAddr& addr) const {
+    K_ASSERT(IsOpen());
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::Bind(mHandle, addr) >= 0;
+    // Choose a random port in the private range
+    if (addr.port == 0) {
+        // Retry up to 10 times in case the random port is in use
+        for (int i = 0; i < 10; i++) {
+            addr.port = Random().NextU32(49152, 65535);
+
+            if (LibSO::Bind(mHandle, addr) == SO_SUCCESS) {
+                return true;
+            }
+        }
+    }
+
+    return LibSO::Bind(mHandle, addr) == SO_SUCCESS;
 }
 
 /**
@@ -106,10 +83,10 @@ bool SocketBase::Bind(const SOSockAddr& addr) const {
  * @return Success
  */
 bool SocketBase::Listen(s32 backlog) const {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
     K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.");
 
-    return LibSO::Listen(mHandle, backlog) >= 0;
+    return LibSO::Listen(mHandle, backlog) == SO_SUCCESS;
 }
 
 /**
@@ -119,7 +96,7 @@ bool SocketBase::Listen(s32 backlog) const {
  * @return Success
  */
 bool SocketBase::SetBlocking(bool enable) const {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
 
     s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
 
@@ -133,16 +110,28 @@ bool SocketBase::SetBlocking(bool enable) const {
 }
 
 /**
+ * Toggle port reuse
+ *
+ * @param enable Whether to enable port reuse
+ * @return Success
+ */
+bool SocketBase::SetReuseAddr(bool enable) const {
+    s32 value = enable;
+    return LibSO::SetSockOpt(mHandle, SO_SOL_SOCKET, SO_SO_REUSEADDR, &value,
+                             sizeof(value)) == SO_SUCCESS;
+}
+
+/**
  * Stops socket from reading/writing
  *
  * @param how How to shutdown connection
  * @return Success
  */
 bool SocketBase::Shutdown(SOShutdownType how) const {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
     K_ASSERT(how == SO_SHUT_RD || how == SO_SHUT_WR || how == SO_SHUT_RDWR);
 
-    return LibSO::Shutdown(mHandle, how) >= 0;
+    return LibSO::Shutdown(mHandle, how) == SO_SUCCESS;
 }
 
 /**
@@ -151,7 +140,7 @@ bool SocketBase::Shutdown(SOShutdownType how) const {
  * @return Success
  */
 bool SocketBase::Close() {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
 
     // Attempt to close
     if (LibSO::Close(mHandle) < 0) {
@@ -164,28 +153,16 @@ bool SocketBase::Close() {
 }
 
 /**
- * Monitors status of socket descriptors
- *
- * @param fds Poll information
- * @param numfds Descriptor array length
- * @param timeout Timeout (OS time)
- * @return Success
- */
-bool SocketBase::Poll(SOPollFD fds[], u32 numfds, s64 timeout) const {
-    return LibSO::Poll(fds, numfds, timeout) >= 0;
-}
-
-/**
  * Gets endpoint of socket
  *
  * @param[out] addr Socket address
  * @return Success
  */
-bool SocketBase::GetSocketAddr(SOSockAddr& addr) const {
-    K_ASSERT(mHandle >= 0);
+bool SocketBase::GetSocketAddr(SockAddr& addr) const {
+    K_ASSERT(IsOpen());
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::GetSockName(mHandle, addr) >= 0;
+    return LibSO::GetSockName(mHandle, addr) == SO_SUCCESS;
 }
 
 /**
@@ -194,25 +171,25 @@ bool SocketBase::GetSocketAddr(SOSockAddr& addr) const {
  * @param[out] addr Peer address
  * @return Success
  */
-bool SocketBase::GetPeerAddr(SOSockAddr& addr) const {
-    K_ASSERT(mHandle >= 0);
+bool SocketBase::GetPeerAddr(SockAddr& addr) const {
+    K_ASSERT(IsOpen());
     K_ASSERT(mFamily == addr.in.family);
 
-    return LibSO::GetPeerName(mHandle, addr) >= 0;
+    return LibSO::GetPeerName(mHandle, addr) == SO_SUCCESS;
 }
 
 /**
  * Tests if socket can receive data
  */
 bool SocketBase::CanRecv() const {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
 
     SOPollFD fd[1];
     fd[0].fd = mHandle;
     fd[0].events = SO_POLLRDNORM;
     fd[0].revents = 0;
 
-    bool success = Poll(fd, LENGTHOF(fd), 0);
+    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0);
     return success && fd[0].events == fd[0].revents;
 }
 
@@ -220,14 +197,14 @@ bool SocketBase::CanRecv() const {
  * Tests if socket can send data
  */
 bool SocketBase::CanSend() const {
-    K_ASSERT(mHandle >= 0);
+    K_ASSERT(IsOpen());
 
     SOPollFD fd[1];
     fd[0].fd = mHandle;
     fd[0].events = SO_POLLWRNORM;
     fd[0].revents = 0;
 
-    bool success = Poll(fd, LENGTHOF(fd), 0);
+    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0);
     return success && fd[0].events == fd[0].revents;
 }
 
@@ -236,29 +213,66 @@ bool SocketBase::CanSend() const {
  *
  * @param buf Destination buffer
  * @param len Buffer size
- * @param[out] nrecv Number of bytes received, or -1 if error/blocking
- * @return Success or would-be-blocking
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Number of bytes received
  */
-bool SocketBase::RecvBytes(void* buf, u32 len, s32* nrecv) {
-    K_ASSERT(mHandle >= 0);
-    s32 result = RecvImpl(buf, len, NULL);
-    return ProcessResult(result, nrecv);
+Optional<u32> SocketBase::RecvBytes(void* buf, u32 len, Callback callback,
+                                    void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(buf != NULL);
+    K_ASSERT(len > 0);
+
+    // Implementation version is responsible for using the callback
+    u32 nrecv = 0;
+    SOResult result = RecvImpl(buf, len, nrecv, NULL, callback, arg);
+
+    // Success, return bytes read
+    if (result == SO_SUCCESS) {
+        return nrecv;
+    }
+
+    // Blocking is OK, just say zero bytes
+    if (result == SO_EWOULDBLOCK) {
+        return 0;
+    }
+
+    // Something went wrong!
+    return kiwi::nullopt;
 }
 
 /**
- * Receives bytes from specified connection
+ * Receives bytes and records sender address
  *
  * @param buf Destination buffer
  * @param len Buffer size
- * @param[out] addr Sender address
- * @param[out] nrecv Number of bytes received, or -1 if error/blocking
- * @return Success or would-be-blocking
+ * @param addr[out] Sender address
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Number of bytes received
  */
-bool SocketBase::RecvBytesFrom(void* buf, u32 len, SOSockAddr& addr,
-                               s32* nrecv) {
-    K_ASSERT(mHandle >= 0);
-    s32 result = RecvImpl(buf, len, &addr);
-    return ProcessResult(result, nrecv);
+Optional<u32> SocketBase::RecvBytesFrom(void* buf, u32 len, SockAddr& addr,
+                                        Callback callback, void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(buf != NULL);
+    K_ASSERT(len > 0);
+
+    // Implementation version is responsible for using the callback
+    u32 nrecv = 0;
+    SOResult result = RecvImpl(buf, len, nrecv, &addr, callback, arg);
+
+    // Success, return bytes read
+    if (result == SO_SUCCESS) {
+        return nrecv;
+    }
+
+    // Blocking is OK, just say zero bytes
+    if (result == SO_EWOULDBLOCK) {
+        return 0;
+    }
+
+    // Something went wrong!
+    return kiwi::nullopt;
 }
 
 /**
@@ -266,13 +280,32 @@ bool SocketBase::RecvBytesFrom(void* buf, u32 len, SOSockAddr& addr,
  *
  * @param buf Source buffer
  * @param len Buffer size
- * @param[out] nsend Number of bytes sent, or -1 if error/blocking
- * @return Success or would-be-blocking
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Number of bytes sent
  */
-bool SocketBase::SendBytes(const void* buf, u32 len, s32* nsend) {
-    K_ASSERT(mHandle >= 0);
-    s32 result = SendImpl(buf, len, NULL);
-    return ProcessResult(result, nsend);
+Optional<u32> SocketBase::SendBytes(const void* buf, u32 len, Callback callback,
+                                    void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(buf != NULL);
+    K_ASSERT(len > 0);
+
+    // Implementation version is responsible for using the callback
+    u32 nsend = 0;
+    SOResult result = SendImpl(buf, len, nsend, NULL, callback, arg);
+
+    // Success, return bytes read
+    if (result == SO_SUCCESS) {
+        return nsend;
+    }
+
+    // Blocking is OK, just say zero bytes
+    if (result == SO_EWOULDBLOCK) {
+        return 0;
+    }
+
+    // Something went wrong!
+    return kiwi::nullopt;
 }
 
 /**
@@ -281,14 +314,33 @@ bool SocketBase::SendBytes(const void* buf, u32 len, s32* nsend) {
  * @param buf Source buffer
  * @param len Buffer size
  * @param addr Destination address
- * @param[out] nsend Number of bytes sent, or -1 if error/blocking
- * @return Success or would-be-blocking
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Number of bytes sent
  */
-bool SocketBase::SendBytesTo(const void* buf, u32 len, const SOSockAddr& addr,
-                             s32* nsend) {
-    K_ASSERT(mHandle >= 0);
-    s32 result = SendImpl(buf, len, &addr);
-    return ProcessResult(result, nsend);
+Optional<u32> SocketBase::SendBytesTo(const void* buf, u32 len,
+                                      const SockAddr& addr, Callback callback,
+                                      void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(buf != NULL);
+    K_ASSERT(len > 0);
+
+    // Implementation version is responsible for using the callback
+    u32 nsend = 0;
+    SOResult result = SendImpl(buf, len, nsend, &addr, callback, arg);
+
+    // Success, return bytes read
+    if (result == SO_SUCCESS) {
+        return nsend;
+    }
+
+    // Blocking is OK, just say zero bytes
+    if (result == SO_EWOULDBLOCK) {
+        return 0;
+    }
+
+    // Something went wrong!
+    return kiwi::nullopt;
 }
 
 } // namespace kiwi

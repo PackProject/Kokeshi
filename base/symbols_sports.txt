@@ -213,7 +213,7 @@
     CreateView2D__13RPGrpRendererFUcP11RPGrpScreen=0x801af58c
     CorrectView__13RPGrpRendererFv=0x801af454
     sDrawPass__13RPGrpRenderer=0x804bdc0c
-    D_804BF615__13RPGrpRenderer=0x804bf615
+    sCurrentView__13RPGrpRenderer=0x804bf615
     sActiveScreen__13RPGrpRenderer=0x804bf61c
 #RPPrint
     RPPrint__FfffPCcUlb=0x801c38b8

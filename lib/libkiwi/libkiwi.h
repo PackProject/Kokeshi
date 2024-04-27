@@ -1,47 +1,53 @@
 #ifndef LIBKIWI_H
 #define LIBKIWI_H
-#include <libkiwi/core/kiwiColor.hpp>
-#include <libkiwi/core/kiwiController.hpp>
-#include <libkiwi/core/kiwiDvdStream.hpp>
-#include <libkiwi/core/kiwiIStream.hpp>
-#include <libkiwi/core/kiwiMemStream.hpp>
-#include <libkiwi/core/kiwiNandStream.hpp>
-#include <libkiwi/core/kiwiSceneHookMgr.hpp>
+
+#ifndef LIBKIWI_BIG_ENDIAN
+#define LIBKIWI_BIG_ENDIAN
+#endif
+
+#include <libkiwi/core/kiwiColor.h>
+#include <libkiwi/core/kiwiController.h>
+#include <libkiwi/core/kiwiDvdStream.h>
+#include <libkiwi/core/kiwiIStream.h>
+#include <libkiwi/core/kiwiMemStream.h>
+#include <libkiwi/core/kiwiNandStream.h>
+#include <libkiwi/core/kiwiSceneHookMgr.h>
+#include <libkiwi/core/kiwiThread.h>
+#include <libkiwi/gui/kiwiImGui.h>
+#include <libkiwi/gui/kiwiImGuiImplRvl.h>
 #include <libkiwi/kernel/kiwiAssert.h>
-#include <libkiwi/kernel/kiwiMemoryMgr.hpp>
+#include <libkiwi/kernel/kiwiMemoryMgr.h>
 #include <libkiwi/kernel/kiwiRuntime.h>
-#include <libkiwi/math/kiwiAlgorithm.hpp>
-#include <libkiwi/net/kiwiAsyncClient.hpp>
-#include <libkiwi/net/kiwiAsyncSocket.hpp>
-#include <libkiwi/net/kiwiPacket.hpp>
-#include <libkiwi/net/kiwiSocketBase.hpp>
-#include <libkiwi/net/kiwiSyncSocket.hpp>
-#include <libkiwi/prim/kiwiArray.hpp>
-#include <libkiwi/prim/kiwiLinkList.hpp>
-#include <libkiwi/prim/kiwiSTL.hpp>
-#include <libkiwi/prim/kiwiString.hpp>
-#include <libkiwi/rvl/kiwiLibGX.hpp>
-#include <libkiwi/rvl/kiwiLibSO.hpp>
-#include <libkiwi/util/kiwiAutoLock.hpp>
-#include <libkiwi/util/kiwiBuildTarget.hpp>
-#include <libkiwi/util/kiwiChecksum.hpp>
-#include <libkiwi/util/kiwiDynamicSingleton.hpp>
-#include <libkiwi/util/kiwiMapFile.hpp>
-#include <libkiwi/util/kiwiNonCopyable.hpp>
-#include <libkiwi/util/kiwiNw4rConsole.hpp>
-#include <libkiwi/util/kiwiNw4rDirectPrint.hpp>
-#include <libkiwi/util/kiwiNw4rException.hpp>
-#include <libkiwi/util/kiwiOverride.hpp>
-#include <libkiwi/util/kiwiRandom.hpp>
-#include <libkiwi/util/kiwiStaticSingleton.hpp>
+#include <libkiwi/math/kiwiAlgorithm.h>
+#include <libkiwi/net/kiwiAsyncSocket.h>
+#include <libkiwi/net/kiwiHttpRequest.h>
+#include <libkiwi/net/kiwiPacket.h>
+#include <libkiwi/net/kiwiReliableClient.h>
+#include <libkiwi/net/kiwiReliablePacket.h>
+#include <libkiwi/net/kiwiReliableSocket.h>
+#include <libkiwi/net/kiwiSocketBase.h>
+#include <libkiwi/net/kiwiSyncSocket.h>
+#include <libkiwi/prim/kiwiArray.h>
+#include <libkiwi/prim/kiwiBitCast.h>
+#include <libkiwi/prim/kiwiHashMap.h>
+#include <libkiwi/prim/kiwiLinkList.h>
+#include <libkiwi/prim/kiwiOptional.h>
+#include <libkiwi/prim/kiwiPair.h>
+#include <libkiwi/prim/kiwiSTL.h>
+#include <libkiwi/prim/kiwiString.h>
+#include <libkiwi/rvl/kiwiLibGX.h>
+#include <libkiwi/rvl/kiwiLibSO.h>
+#include <libkiwi/util/kiwiAutoLock.h>
+#include <libkiwi/util/kiwiBuildTarget.h>
+#include <libkiwi/util/kiwiChecksum.h>
+#include <libkiwi/util/kiwiDynamicSingleton.h>
+#include <libkiwi/util/kiwiMapFile.h>
+#include <libkiwi/util/kiwiNonCopyable.h>
+#include <libkiwi/util/kiwiNw4rConsole.h>
+#include <libkiwi/util/kiwiNw4rDirectPrint.h>
+#include <libkiwi/util/kiwiNw4rException.h>
+#include <libkiwi/util/kiwiOverride.h>
+#include <libkiwi/util/kiwiRandom.h>
+#include <libkiwi/util/kiwiStaticSingleton.h>
 #include <types.h>
-
-void* operator new(std::size_t size);
-void* operator new[](std::size_t size);
-
-void* operator new(std::size_t size, s32 align);
-void* operator new[](std::size_t size, s32 align);
-
-void operator delete(void* block);
-void operator delete[](void* block);
 #endif

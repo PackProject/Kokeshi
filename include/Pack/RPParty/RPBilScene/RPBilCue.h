@@ -18,9 +18,8 @@ public:
     };
 
 private:
-    RPUtlBaseFsm<RPBilCue>* mpStateMachine; // at 0x4
-
-    static RPBilCue* sInstance;
+    char _00[0x68];
+    RPUtlBaseFsm<RPBilCue>* mpStateMachine; // at 0x68
 };
 
 #endif

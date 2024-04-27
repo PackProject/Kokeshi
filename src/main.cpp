@@ -1,20 +1,24 @@
 #include <Pack/RPKernel.h>
+#include <Pack/RPUtility.h>
 #include <kokeshi.hpp>
 #include <libkiwi.h>
-#include <types.h>
 
 /**
  * Mod entrypoint
  */
 void KokeshiMain() {
-    // Setup libkiwi debugging utilities
 #ifndef NDEBUG
+    // Setup libkiwi debugging utilities
     kiwi::Nw4rException::CreateInstance();
     kiwi::MapFile::CreateInstance();
     kiwi::MapFile::GetInstance().Open(kokeshi::scMapfilePath,
-                                      kiwi::MapFile::LinkType_Relocatable);
+                                      kiwi::MapFile::ELinkType_Relocatable);
 #endif
-    // Your code goes here!
+
+    kiwi::LibSO::Initialize();
+    kiwi::ImGuiImplRvl::CreateInstance();
+    
+    // Your code here!
 
     // Enter game loop
     RPSysSystem::getInstance()->mainLoop();

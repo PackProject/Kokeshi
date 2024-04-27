@@ -23,9 +23,7 @@ enum IntersectionResult {
 struct PLANE {
     PLANE() {}
 
-    f32 Test(const VEC3& point) const {
-        return d + VEC3Dot(&n, &point);
-    }
+    f32 Test(const VEC3& point) const { return d + VEC3Dot(&n, &point); }
     void Set(const VEC3* p0, const VEC3* p1, const VEC3* p2);
 
     VEC3 n; // at 0x0

@@ -1,6 +1,7 @@
 #ifndef LIBKIWI_KERNEL_RUNTIME_H
 #define LIBKIWI_KERNEL_RUNTIME_H
-#include <libkiwi/math/kiwiAlgorithm.hpp>
+#include <libkiwi/math/kiwiAlgorithm.h>
+#include <revolution/OS.h>
 #include <types.h>
 
 namespace kiwi {
@@ -97,6 +98,19 @@ u32 GetDataSize() {
 #ifdef __cplusplus
 }
 #endif
+
+// Simulate a breakpoint for Dolphin debugging
+#define K_DEBUG_BREAK()                                                        \
+    {                                                                          \
+        BOOL __enabled__ = OSDisableInterrupts();                              \
+        K_LOG("************ BREAKPOINT! ************");                        \
+        K_LOG_EX("Source: " __FILE__ "(%d)", __LINE__);                        \
+        volatile int __x__ = 1;                                                \
+        do {                                                                   \
+            ;                                                                  \
+        } while (__x__);                                                       \
+        OSRestoreInterrupts(__enabled__);                                      \
+    }
 
 // Begin ASM block
 #define K_ASM_BEGIN asm volatile {

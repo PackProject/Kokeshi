@@ -12,6 +12,9 @@ public:
         return sInstance;
     }
 
+    void Calculate();
+    void Reset();
+
 private:
     RPBilMain();
     virtual ~RPBilMain();

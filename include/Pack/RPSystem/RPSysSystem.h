@@ -47,6 +47,10 @@ public:
         return EGG::Heap::free(mem, heap);
     }
 
+    EGG::Heap* getResourceHeap() const {
+        return mResourceHeap;
+    }
+
     static void initialize();                   // 80183be4
     static void create();                       // 80183ba0
     void setup0();                              // 80183a64

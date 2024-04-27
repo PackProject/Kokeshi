@@ -6,18 +6,24 @@ class RPUtlRandom {
 public:
     static void initialize();
     static u32 getU32() {
-        return calc() >> 16;
+        return calc();
     }
     static u32 getU32(u32 max) {
-        return getU32() % max;
-    }
-    static u32 getU32(u32 min, u32 max) {
-        return getU32() % (max - min + 1) + min;
+        return max * getF32();
     }
     static f32 getF32() {
-        return (f32)getU32() / 0x10000;
+        // Limited to u16 bounds
+        const u16 rnd =
+            static_cast<u16>(sFltRandMax & (getU32() >> sFltSeedShift));
+        // Convert to float
+        const f32 rnd_f = static_cast<f32>(rnd);
+        // Convert to percentage
+        return rnd_f / static_cast<f32>(sFltRandMax + 1);
     }
 
+    static u32 getSeed() {
+        return sSeed;
+    }
     static void setSeed(u32 s) {
         sSeed = s;
     }
@@ -30,6 +36,8 @@ private:
     }
 
     static const u32 sSeedStep = 69069;
+    static const u32 sFltRandMax = 0xFFFF;
+    static const u32 sFltSeedShift = 16;
     static u32 sSeed;
 };
 

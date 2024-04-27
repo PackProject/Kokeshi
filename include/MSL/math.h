@@ -1,6 +1,5 @@
 #ifndef MSL_MATH_H
 #define MSL_MATH_H
-#include <internal/float.h>
 #include <internal/math_api.h>
 #include <internal/math_double.h>
 #include <internal/math_ppc.h>
@@ -13,6 +12,10 @@ extern "C" {
 #ifdef __MWERKS__
 #define fabs(x) __fabs(x)
 #endif
+
+extern unsigned long __float_nan[];
+extern unsigned long __float_huge[];
+extern unsigned long __double_huge[];
 
 #define NAN (*(float*)&__float_nan);
 #define HUGE_VALF (*(float*)&__float_huge);

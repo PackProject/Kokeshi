@@ -25,19 +25,11 @@ struct VEC2 : _VEC2 {
         y = fy;
     }
 
-    operator f32*() {
-        return reinterpret_cast<f32*>(this);
-    }
-    operator const f32*() const {
-        return reinterpret_cast<const f32*>(this);
-    }
+    operator f32*() { return reinterpret_cast<f32*>(this); }
+    operator const f32*() const { return reinterpret_cast<const f32*>(this); }
 
-    VEC2 operator+(const VEC2& rhs) const {
-        return VEC2(x + rhs.x, y + rhs.y);
-    }
-    VEC2 operator-(const VEC2& rhs) const {
-        return VEC2(x - rhs.x, y - rhs.y);
-    }
+    VEC2 operator+(const VEC2& rhs) const { return VEC2(x + rhs.x, y + rhs.y); }
+    VEC2 operator-(const VEC2& rhs) const { return VEC2(x - rhs.x, y - rhs.y); }
 
     VEC2& operator+=(const VEC2& rhs) {
         x += rhs.x;
@@ -50,12 +42,8 @@ struct VEC2 : _VEC2 {
         return *this;
     }
 
-    bool operator==(const VEC2& rhs) const {
-        return x == rhs.x && y == rhs.y;
-    }
-    bool operator!=(const VEC2& rhs) const {
-        return x != rhs.x || y != rhs.y;
-    }
+    bool operator==(const VEC2& rhs) const { return x == rhs.x && y == rhs.y; }
+    bool operator!=(const VEC2& rhs) const { return x != rhs.x || y != rhs.y; }
 };
 
 /******************************************************************************
@@ -91,20 +79,12 @@ struct VEC3 : _VEC3 {
         z = p[2];
     }
 
-    operator Vec*() {
-        return reinterpret_cast<Vec*>(this);
-    }
-    operator const Vec*() const {
-        return reinterpret_cast<const Vec*>(this);
-    }
+    operator Vec*() { return reinterpret_cast<Vec*>(this); }
+    operator const Vec*() const { return reinterpret_cast<const Vec*>(this); }
 
-    f32 LenSq() const {
-        return x * x + y * y + z * z;
-    }
+    f32 LenSq() const { return x * x + y * y + z * z; }
 
-    VEC3 operator-() const {
-        return VEC3(-x, -y, -z);
-    }
+    VEC3 operator-() const { return VEC3(-x, -y, -z); }
 
     VEC3 operator+(const VEC3& rhs) const {
         VEC3 out;
@@ -138,9 +118,7 @@ struct VEC3 : _VEC3 {
         VEC3Scale(this, this, x);
         return *this;
     }
-    VEC3& operator/=(f32 x) {
-        return *this *= (1 / x);
-    }
+    VEC3& operator/=(f32 x) { return *this *= (1 / x); }
 
     bool operator==(const VEC3& rhs) const {
         return x == rhs.x && y == rhs.y && z == rhs.z;
@@ -209,12 +187,8 @@ struct MTX34 : _MTX34 {
     }
     // clang-format on
 
-    operator MtxRef() {
-        return mtx;
-    }
-    operator MtxRefConst() const {
-        return mtx;
-    }
+    operator MtxRef() { return mtx; }
+    operator MtxRefConst() const { return mtx; }
 };
 
 /******************************************************************************
@@ -244,12 +218,8 @@ struct MTX44 : _MTX44 {
 
     MTX44() {}
 
-    operator Mtx44Ref() {
-        return mtx;
-    }
-    operator Mtx44RefConst() const {
-        return mtx;
-    }
+    operator Mtx44Ref() { return mtx; }
+    operator Mtx44RefConst() const { return mtx; }
 };
 
 /******************************************************************************
@@ -272,9 +242,7 @@ struct QUAT : _QUAT {
     }
 
     // These are not real AFAIK. Do they really manually cast the QUAT?
-    operator Quaternion*() {
-        return reinterpret_cast<Quaternion*>(this);
-    }
+    operator Quaternion*() { return reinterpret_cast<Quaternion*>(this); }
     operator const Quaternion*() const {
         return reinterpret_cast<const Quaternion*>(this);
     }
@@ -446,9 +414,7 @@ inline f32 VEC3DistSq(const VEC3* a, const VEC3* b) {
     return PSVECSquareDistance(*a, *b);
 }
 
-inline f32 VEC3Len(const VEC3* vec) {
-    return PSVECMag(*vec);
-}
+inline f32 VEC3Len(const VEC3* vec) { return PSVECMag(*vec); }
 
 inline VEC3* VEC3Normalize(VEC3* out, const VEC3* in) {
     PSVECNormalize(*in, *out);

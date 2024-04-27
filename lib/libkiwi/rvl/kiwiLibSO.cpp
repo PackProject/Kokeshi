@@ -4,8 +4,6 @@
 
 namespace kiwi {
 
-s32 LibSO::sDeviceHandle = -1;
-
 /**
  * IOS socket control codes
  */
@@ -15,8 +13,9 @@ enum {
     Ioctl_Close = 3,
     Ioctl_Connect = 4,
     Ioctl_Fcntl = 5,
-    Ioctl_GetPeerName = 7,
+    Ioctl_GetPeerName = 6,
     Ioctl_GetSocketName = 7,
+    Ioctl_SetSockOpt = 9,
     Ioctl_Listen = 10,
     Ioctl_Poll = 11,
     Ioctl_RecvFrom = 12,
@@ -24,20 +23,31 @@ enum {
     Ioctl_Shutdown = 14,
     Ioctl_Create = 15,
     Ioctl_GetHostID = 16,
+    Ioctl_INetAtoN = 21,
 };
+
+s32 LibSO::sDeviceHandle = -1;
+SOResult LibSO::sLastError = SO_SUCCESS;
 
 /**
  * Accesses IOS IP device for socket operation
+ *
  * @note Please call this before other LibSO functions
  */
 void LibSO::Initialize() {
-    // Prevent double initialization
     if (sDeviceHandle >= 0) {
         return;
     }
 
     sDeviceHandle = IOS_Open("/dev/net/ip/top", IPC_OPEN_NONE);
     K_ASSERT_EX(sDeviceHandle >= 0, "Could not access IOS IP device");
+}
+
+/**
+ * Determine the most recent error code
+ */
+SOResult LibSO::GetLastError() {
+    return sLastError;
 }
 
 /**
@@ -49,24 +59,36 @@ void LibSO::Initialize() {
  */
 s32 LibSO::Socket(SOProtoFamily family, SOSockType type) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(family == SO_PF_INET || family == SO_PF_INET6,
-                "Unsupported protocol family");
-    K_ASSERT_EX(type == SO_SOCK_STREAM || type == SO_SOCK_DGRAM,
-                "Unsupported socket type");
 
-    // Setup args for ioctl
-    struct {
+    K_ASSERT_EX(family == SO_PF_INET || family == SO_PF_INET6,
+                "Invalid protocol family (%d)", family);
+
+    K_ASSERT_EX(type == SO_SOCK_STREAM || type == SO_SOCK_DGRAM,
+                "Invalid socket type (%d)", type);
+
+    struct Args {
         s32 family;   // at 0x0
         s32 type;     // at 0x4
         s32 protocol; // at 0x8
-    } args ALIGN(32);
+    };
 
-    args.family = family;
-    args.type = type;
-    // Only IPPROTO_IP is allowed by IOS
-    args.protocol = SO_IPPROTO_IP;
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Create, &args, sizeof(args), NULL, 0);
+    args->family = family;
+    args->type = type;
+
+    // IOS must auto-detect protocol
+    args->protocol = SO_IPPROTO_IP;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Create, args, sizeof(Args), NULL, 0);
+
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
+
+    delete args;
+    return result;
 }
 
 /**
@@ -75,13 +97,26 @@ s32 LibSO::Socket(SOProtoFamily family, SOSockType type) {
  * @param socket Socket descriptor
  * @return IOS error code
  */
-s32 LibSO::Close(SOSocket socket) {
+SOResult LibSO::Close(SOSocket socket) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
-    // Setup args for ioctl
-    s32 fd ALIGN(32) = socket;
+    struct Args {
+        s32 fd; // at 0x0
+    };
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Close, &fd, sizeof(fd), NULL, 0);
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Close, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
 }
 
 /**
@@ -91,19 +126,28 @@ s32 LibSO::Close(SOSocket socket) {
  * @param backlog Maximum pending connections (default 5)
  * @return IOS error code
  */
-s32 LibSO::Listen(SOSocket socket, s32 backlog) {
+SOResult LibSO::Listen(SOSocket socket, s32 backlog) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
-    // Setup args for ioctl
-    struct {
+    struct Args {
         s32 fd;      // at 0x0
         s32 backlog; // at 0x4
-    } args ALIGN(32);
+    };
 
-    args.fd = socket;
-    args.backlog = backlog;
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Listen, &args, sizeof(args), NULL, 0);
+    args->fd = socket;
+    args->backlog = backlog;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Listen, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
 }
 
 /**
@@ -113,26 +157,41 @@ s32 LibSO::Listen(SOSocket socket, s32 backlog) {
  * @param[in,out] addr Remote address
  * @return Socket descriptor or IOS error code
  */
-s32 LibSO::Accept(SOSocket socket, SOSockAddr& addr) {
+s32 LibSO::Accept(SOSocket socket, SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup args for ioctl
-    s32 fd ALIGN(32) = socket;
-    SOSockAddr peer ALIGN(32);
-    peer.len = addr.len;
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
+
+    struct Args {
+        s32 fd; // at 0x0
+    };
+
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SockAddr* out = new (32, EMemory_MEM2) SockAddr();
+    K_ASSERT(out != NULL);
+
+    // Address length is specified by input
+    out->len = addr.len;
 
     // Result >= 0 == peer descriptor
-    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Accept, &fd, sizeof(fd), &peer,
-                           peer.len);
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Accept, args, sizeof(Args), out,
+                           out->len);
 
-    // Copy out results (if no error)
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
+
     if (result >= 0) {
-        std::memcpy(&addr, &peer, peer.len);
+        std::memcpy(&addr, out, out->len);
     }
 
+    delete args;
+    delete out;
     return result;
 }
 
@@ -140,29 +199,38 @@ s32 LibSO::Accept(SOSocket socket, SOSockAddr& addr) {
  * Binds a name to a socket
  *
  * @param socket Socket descriptor
- * @param addr Local address
+ * @param addr[in,out] Local address (zero for random port)
  * @return IOS error code
  */
-s32 LibSO::Bind(SOSocket socket, const SOSockAddr& addr) {
+SOResult LibSO::Bind(SOSocket socket, SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup args for ioctl
-    struct {
-        s32 fd;          // at 0x0
-        BOOL hasDest;    // at 0x4
-        SOSockAddr dest; // at 0x8
-    } args ALIGN(32);
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
 
-    args.fd = socket;
-    args.hasDest = TRUE;
+    K_ASSERT(addr.port != 0);
 
-    // Copy in arguments
-    std::memcpy(&args.dest, &addr, addr.len);
+    struct Args {
+        s32 fd;        // at 0x0
+        BOOL hasDest;  // at 0x4
+        SockAddr dest; // at 0x8
+    };
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Bind, &args, sizeof(args), NULL, 0);
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+    args->hasDest = TRUE;
+    args->dest = addr;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Bind, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
 }
 
 /**
@@ -170,30 +238,35 @@ s32 LibSO::Bind(SOSocket socket, const SOSockAddr& addr) {
  *
  * @param socket Socket descriptor
  * @param addr Remote address
- * @param len Address length (sock addr structure size)
  * @return IOS error code
  */
-s32 LibSO::Connect(SOSocket socket, const SOSockAddr& addr) {
+SOResult LibSO::Connect(SOSocket socket, const SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup args for ioctl
-    struct {
-        s32 fd;          // at 0x0
-        BOOL hasDest;    // at 0x4
-        SOSockAddr dest; // at 0x8
-    } args ALIGN(32);
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
 
-    args.fd = socket;
-    args.hasDest = TRUE;
+    struct Args {
+        s32 fd;        // at 0x0
+        BOOL hasDest;  // at 0x4
+        SockAddr dest; // at 0x8
+    };
 
-    // Copy in arguments
-    std::memcpy(&args.dest, &addr, addr.len);
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Connect, &args, sizeof(args), NULL,
-                     0);
+    args->fd = socket;
+    args->hasDest = TRUE;
+    args->dest = addr;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Connect, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
 }
 
 /**
@@ -201,28 +274,42 @@ s32 LibSO::Connect(SOSocket socket, const SOSockAddr& addr) {
  *
  * @param socket Socket descriptor
  * @param[in,out] addr Local address
- * @param len Address length (sock addr structure size)
  * @return IOS error code
  */
-s32 LibSO::GetSockName(SOSocket socket, SOSockAddr& addr) {
+SOResult LibSO::GetSockName(SOSocket socket, SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup args for ioctl
-    s32 fd ALIGN(32) = socket;
-    SOSockAddr self ALIGN(32);
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
 
-    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetSocketName, &fd, sizeof(fd),
-                           &self, addr.len);
+    struct Args {
+        s32 fd; // at 0x0
+    };
 
-    // Copy out results (if no error)
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SockAddr* self = new (32, EMemory_MEM2) SockAddr();
+    K_ASSERT(self != NULL);
+
+    self->len = addr.len;
+
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetSocketName, args,
+                           sizeof(Args), self, self->len);
+
+    sLastError = static_cast<SOResult>(result);
+
     if (result >= 0) {
-        std::memcpy(&addr, &self, addr.len);
+        std::memcpy(&addr, self, self->len);
     }
 
-    return result;
+    delete args;
+    delete self;
+    return sLastError;
 }
 
 /**
@@ -230,29 +317,41 @@ s32 LibSO::GetSockName(SOSocket socket, SOSockAddr& addr) {
  *
  * @param socket Socket descriptor
  * @param[in,out] addr Remote address
- * @param len Address length (sock addr structure size)
  * @return IOS error code
  */
-s32 LibSO::GetPeerName(SOSocket socket, SOSockAddr& addr) {
+SOResult LibSO::GetPeerName(SOSocket socket, SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup args for ioctl
-    s32 fd ALIGN(32) = socket;
-    SOSockAddr peer ALIGN(32);
-    peer.len = addr.len;
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
 
-    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetPeerName, &fd, sizeof(fd),
-                           &peer, peer.len);
+    struct Args {
+        s32 fd; // at 0x0
+    };
 
-    // Copy out results (if no error)
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SockAddr* peer = new (32, EMemory_MEM2) SockAddr();
+    K_ASSERT(peer != NULL);
+
+    peer->len = addr.len;
+
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetPeerName, args, sizeof(Args),
+                           peer, peer->len);
+
+    sLastError = static_cast<SOResult>(result);
+
     if (result >= 0) {
-        std::memcpy(&addr, &peer, peer.len);
+        std::memcpy(&addr, peer, peer->len);
     }
 
-    return result;
+    delete args;
+    return sLastError;
 }
 
 /**
@@ -260,14 +359,14 @@ s32 LibSO::GetPeerName(SOSocket socket, SOSockAddr& addr) {
  *
  * @param socket Socket descriptor
  * @param dst Destination buffer
- * @param n Number of bytes to read
+ * @param len Number of bytes to read
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::Read(SOSocket socket, void* dst, u32 n) {
+s32 LibSO::Read(SOSocket socket, void* dst, u32 len) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
 
-    return Recv(socket, dst, n, 0);
+    return Recv(socket, dst, len, 0);
 }
 
 /**
@@ -275,15 +374,15 @@ s32 LibSO::Read(SOSocket socket, void* dst, u32 n) {
  *
  * @param socket Socket descriptor
  * @param dst Destination buffer
- * @param n Number of bytes to read
+ * @param len Number of bytes to read
  * @param flags Operation flags
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::Recv(SOSocket socket, void* dst, u32 n, u32 flags) {
+s32 LibSO::Recv(SOSocket socket, void* dst, u32 len, u32 flags) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
 
-    return RecvImpl(socket, dst, n, flags, NULL);
+    return RecvImpl(socket, dst, len, flags, NULL);
 }
 
 /**
@@ -291,20 +390,20 @@ s32 LibSO::Recv(SOSocket socket, void* dst, u32 n, u32 flags) {
  *
  * @param socket Socket descriptor
  * @param dst Destination buffer
- * @param n Number of bytes to read
+ * @param len Number of bytes to read
  * @param flags Operation flags
  * @param[out] addr Sender address
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::RecvFrom(SOSocket socket, void* dst, u32 n, u32 flags,
-                    SOSockAddr& addr) {
+s32 LibSO::RecvFrom(SOSocket socket, void* dst, u32 len, u32 flags,
+                    SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    return RecvImpl(socket, dst, n, flags, &addr);
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
+
+    return RecvImpl(socket, dst, len, flags, &addr);
 }
 
 /**
@@ -312,14 +411,14 @@ s32 LibSO::RecvFrom(SOSocket socket, void* dst, u32 n, u32 flags,
  *
  * @param socket Socket descriptor
  * @param src Source buffer
- * @param n Number of bytes to write
+ * @param len Number of bytes to write
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::Write(SOSocket socket, const void* src, u32 n) {
+s32 LibSO::Write(SOSocket socket, const void* src, u32 len) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
 
-    return Send(socket, src, n, 0);
+    return Send(socket, src, len, 0);
 }
 
 /**
@@ -327,15 +426,15 @@ s32 LibSO::Write(SOSocket socket, const void* src, u32 n) {
  *
  * @param socket Socket descriptor
  * @param src Source buffer
- * @param n Number of bytes to write
+ * @param len Number of bytes to write
  * @param flags Operation flags
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::Send(SOSocket socket, const void* src, u32 n, u32 flags) {
+s32 LibSO::Send(SOSocket socket, const void* src, u32 len, u32 flags) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
 
-    return SendImpl(socket, src, n, flags, NULL);
+    return SendImpl(socket, src, len, flags, NULL);
 }
 
 /**
@@ -343,20 +442,20 @@ s32 LibSO::Send(SOSocket socket, const void* src, u32 n, u32 flags) {
  *
  * @param socket Socket descriptor
  * @param src Source buffer
- * @param n Number of bytes to write
+ * @param len Number of bytes to write
  * @param flags Operation flags
- * @param addr Destination address
+ * @param addr[in] Destination address
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::SendTo(SOSocket socket, const void* src, u32 n, u32 flags,
-                  const SOSockAddr& addr) {
+s32 LibSO::SendTo(SOSocket socket, const void* src, u32 len, u32 flags,
+                  const SockAddr& addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
-    K_ASSERT_EX(addr.len == sizeof(SOSockAddrIn) ||
-                    addr.len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    return SendImpl(socket, src, n, flags, &addr);
+    K_ASSERT_EX(addr.len == sizeof(SockAddr4) || addr.len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr.len);
+
+    return SendImpl(socket, src, len, flags, &addr);
 }
 
 /**
@@ -364,63 +463,78 @@ s32 LibSO::SendTo(SOSocket socket, const void* src, u32 n, u32 flags,
  *
  * @param socket Socket descriptor
  * @param dst Destination buffer
- * @param n Number of bytes to read
+ * @param len Number of bytes to read
  * @param flags Operation flags
  * @param[out] addr Sender address
  * @return Number of bytes read, or IOS error code
  */
-s32 LibSO::RecvImpl(SOSocket socket, void* dst, u32 n, u32 flags,
-                    SOSockAddr* addr) {
+s32 LibSO::RecvImpl(SOSocket socket, void* dst, u32 len, u32 flags,
+                    SockAddr* addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(dst != NULL);
-    K_ASSERT_EX(addr == NULL || addr->len == sizeof(SOSockAddrIn) ||
-                    addr->len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup vectors for ioctl
+    K_ASSERT_EX(addr == NULL || addr->len == sizeof(SockAddr4) ||
+                    addr->len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr->len);
+
     enum {
-        V_ARGS,   // I/O vector for ioctl args
-        V_BUFFER, // I/O vector for user buffer
-        V_FROM,   // I/O vector for source address
-        V_MAX,    // Total I/O vector count
+        V_IARGS, // I/O vector for ioctl args
+        V_OBUFF, // I/O vector for user buffer
+        V_OADDR, // I/O vector for source address
+
+        V_MAX, // Total I/O vector count
 
         V_NUM_IN = 1, // Total input I/O vector count
         V_NUM_OUT = 2 // Total output I/O vector count
     };
-    IPCIOVector* vectors = new (32) IPCIOVector[V_MAX];
+
+    // Must be in MEM2, and must be 32-byte aligned
+    IPCIOVector* vectors = new (32, EMemory_MEM2) IPCIOVector[V_MAX];
+    K_ASSERT(vectors != NULL);
 
     // Setup args for ioctl
-    struct {
+    struct Args {
         s32 fd;    // at 0x0
         u32 flags; // at 0x4
-    } args ALIGN(32);
+    };
 
-    args.fd = socket;
-    args.flags = flags;
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+    args->flags = flags;
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SockAddr* from = new (32, EMemory_MEM2) SockAddr();
+    K_ASSERT(from != NULL);
 
     // Input vector 1: Ioctl args
-    vectors[V_ARGS].base = &args;
-    vectors[V_ARGS].length = sizeof(args);
+    vectors[V_IARGS].base = args;
+    vectors[V_IARGS].length = sizeof(Args);
 
     // Output vector 1: Destination buffer
-    vectors[V_BUFFER].base = dst;
-    vectors[V_BUFFER].length = n;
+    vectors[V_OBUFF].base = dst;
+    vectors[V_OBUFF].length = len;
 
     // Output vector 2: Source address
-    SOSockAddr from ALIGN(32);
     if (addr != NULL) {
-        std::memcpy(&from, addr, addr->len);
-        vectors[V_FROM].base = &from;
-        vectors[V_FROM].length = addr->len;
+        *from = *addr;
+        vectors[V_OADDR].base = from;
+        vectors[V_OADDR].length = from->len;
     } else {
-        vectors[V_FROM].base = NULL;
-        vectors[V_FROM].length = 0;
+        vectors[V_OADDR].base = NULL;
+        vectors[V_OADDR].length = 0;
     }
 
-    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_RecvFrom, V_NUM_IN,
-                            V_NUM_OUT, vectors);
+    s32 result =
+        IOS_Ioctlv(sDeviceHandle, Ioctl_RecvFrom, V_NUM_IN, V_NUM_OUT, vectors);
+
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 
     delete[] vectors;
+    delete args;
+    delete from;
     return result;
 }
 
@@ -429,58 +543,70 @@ s32 LibSO::RecvImpl(SOSocket socket, void* dst, u32 n, u32 flags,
  *
  * @param socket Socket descriptor
  * @param src Source buffer
- * @param n Number of bytes to write
+ * @param len Number of bytes to write
  * @param flags Operation flags
  * @param addr Recipient address
  * @return Number of bytes written, or IOS error code
  */
-s32 LibSO::SendImpl(SOSocket socket, const void* src, u32 n, u32 flags,
-                    const SOSockAddr* addr) {
+s32 LibSO::SendImpl(SOSocket socket, const void* src, u32 len, u32 flags,
+                    const SockAddr* addr) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
     K_ASSERT(src != NULL);
-    K_ASSERT_EX(addr == NULL || addr->len == sizeof(SOSockAddrIn) ||
-                    addr->len == sizeof(SOSockAddrIn6),
-                "Unsupported address size specified");
 
-    // Setup vectors for ioctl
+    K_ASSERT_EX(addr == NULL || addr->len == sizeof(SockAddr4) ||
+                    addr->len == sizeof(SockAddr6),
+                "Invalid address length (%d)", addr->len);
+
     enum {
-        V_BUFFER, // I/O vector for user buffer
-        V_ARGS,   // I/O vector for ioctl args
-        V_MAX,    // Total I/O vector count
+        V_IBUFF, // I/O vector for user buffer
+        V_IARGS, // I/O vector for ioctl args
+
+        V_MAX, // Total I/O vector count
+
+        V_NUM_IN = 2, // Total input I/O vector count
     };
-    IPCIOVector* vectors = new (32) IPCIOVector[V_MAX];
 
-    // Setup args for ioctl
-    struct {
-        s32 fd;          // at 0x0
-        u32 flags;       // at 0x4
-        BOOL hasDest;    // at 0x8
-        SOSockAddr dest; // at 0xC
-    } args ALIGN(32);
+    // Must be in MEM2, and must be 32-byte aligned
+    IPCIOVector* vectors = new (32, EMemory_MEM2) IPCIOVector[V_MAX];
+    K_ASSERT(vectors != NULL);
 
-    args.fd = socket;
-    args.flags = flags;
+    struct Args {
+        s32 fd;        // at 0x0
+        u32 flags;     // at 0x4
+        BOOL hasDest;  // at 0x8
+        SockAddr dest; // at 0xC
+    };
+
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+    args->flags = flags;
+
+    // Input vector 1: Source buffer
+    vectors[V_IBUFF].base = const_cast<void*>(src);
+    vectors[V_IBUFF].length = len;
 
     // Input vector 2: Ioctl args
-    vectors[V_ARGS].base = &args;
-    vectors[V_ARGS].length = sizeof(args);
+    vectors[V_IARGS].base = args;
+    vectors[V_IARGS].length = sizeof(Args);
 
     // Copy in destination address
     if (addr != NULL) {
-        args.hasDest = TRUE;
-        std::memcpy(&args.dest, addr, addr->len);
+        args->hasDest = TRUE;
+        args->dest = *addr;
     } else {
-        args.hasDest = FALSE;
+        args->hasDest = FALSE;
     }
 
-    // Input vector 1: Source buffer
-    vectors[V_BUFFER].base = const_cast<void*>(src);
-    vectors[V_BUFFER].length = n;
-
     // Request send
-    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_SendTo, V_MAX, 0, vectors);
+    s32 result = IOS_Ioctlv(sDeviceHandle, Ioctl_SendTo, V_NUM_IN, 0, vectors);
+
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 
     delete[] vectors;
+    delete args;
     return result;
 }
 
@@ -490,29 +616,37 @@ s32 LibSO::SendImpl(SOSocket socket, const void* src, u32 n, u32 flags,
  * @param socket Socket descriptor
  * @param cmd Command
  * @param ... Command argument
- * @return Command return value, os IOS error code
+ * @return Command return value, or IOS error code
  */
-s32 LibSO::Fcntl(SOSocket socket, s32 cmd, ...) {
+s32 LibSO::Fcntl(SOSocket socket, SOFcntlCmd cmd, ...) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
-    // Get argument
     std::va_list list;
     va_start(list, cmd);
     void* arg = va_arg(list, void*);
     va_end(list);
 
-    // Setup args for ioctl
-    struct {
+    struct Args {
         s32 fd;    // at 0x0
         s32 cmd;   // at 0x4
         void* arg; // at 0x8
-    } args ALIGN(32);
+    };
 
-    args.fd = socket;
-    args.cmd = cmd;
-    args.arg = arg;
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Fcntl, &args, sizeof(args), NULL, 0);
+    args->fd = socket;
+    args->cmd = cmd;
+    args->arg = arg;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Fcntl, args, sizeof(Args), NULL, 0);
+
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
+
+    delete args;
+    return result;
 }
 
 /**
@@ -522,118 +656,270 @@ s32 LibSO::Fcntl(SOSocket socket, s32 cmd, ...) {
  * @param how How to shutdown connection
  * @return IOS error code
  */
-s32 LibSO::Shutdown(SOSocket socket, SOShutdownType how) {
+SOResult LibSO::Shutdown(SOSocket socket, SOShutdownType how) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
-    // Setup args for ioctl
-    struct {
+    struct Args {
         s32 fd;   // at 0x0
         s32 type; // at 0x4
-    } args ALIGN(32);
+    };
 
-    args.fd = socket;
-    args.type = how;
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
 
-    return IOS_Ioctl(sDeviceHandle, Ioctl_Shutdown, &args, sizeof(args), NULL,
-                     0);
+    args->fd = socket;
+    args->type = how;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_Shutdown, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
 }
 
 /**
- * Wait for specific events on specified socket file descriptors
+ * Wait for events on socket file descriptors
  *
- * @param[in, out] fds Socket descriptor array
+ * @param[in,out] fds Socket descriptor array
  * @param numfds Socket descriptor array size
  * @param timeout Timeout for blocking
  * @return Number of socket results written out, or IOS error code
  */
 s32 LibSO::Poll(SOPollFD fds[], u32 numfds, s64 timeout) {
     K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
+    K_ASSERT(fds != NULL);
+    K_ASSERT(numfds > 0);
 
-    // Setup args for ioctl
-    s64 msec ALIGN(32) = OS_TICKS_TO_MSEC(timeout);
-    SOPollFD* buffer ALIGN(32) = new (32) SOPollFD[numfds];
+    struct Args {
+        s64 msec;
+    };
 
-    // Copy in specified socket descriptors
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->msec = OS_TICKS_TO_MSEC(timeout);
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SOPollFD* buffer = new (32, EMemory_MEM2) SOPollFD[numfds];
+    K_ASSERT(buffer != NULL);
+
     std::memcpy(buffer, fds, numfds * sizeof(SOPollFD));
 
-    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Poll, &msec, sizeof(msec),
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_Poll, args, sizeof(Args),
                            buffer, numfds * sizeof(SOPollFD));
 
-    // Copy out poll result if successful
+    sLastError = result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
+
     if (result >= 0) {
         std::memcpy(fds, buffer, numfds * sizeof(SOPollFD));
     }
 
+    delete args;
     delete buffer;
     return result;
 }
 
 /**
- * Converts a string to an IPv4 address
+ * @brief Convert hostname to IPv4 address
+ *
+ * @param name Hostname
+ * @param[out] addr Socket address
+ * @return IOS error code
+ */
+bool LibSO::INetAtoN(String name, SockAddr4& addr) {
+    K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
+
+    u32 len = name.Length();
+
+    // Must be in MEM2, and must be 32-byte aligned
+    char* in = new (32, EMemory_MEM2) char[len + 1];
+    K_ASSERT(in != NULL);
+
+    std::strncpy(in, name, len);
+    in[len] = '\0';
+
+    // Must be in MEM2, and must be 32-byte aligned
+    SOInAddr* out = new (32, EMemory_MEM2) SOInAddr();
+    K_ASSERT(out != NULL);
+
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_INetAtoN, in, len, out,
+                           sizeof(SOInAddr));
+
+    sLastError = result == 1 ? SO_SUCCESS : SO_EINVAL;
+
+    if (result == 1) {
+        addr.addr.raw = out->raw;
+    }
+
+    delete in;
+    delete out;
+    return result == 1;
+}
+
+/**
+ * Converts a string to a socket address
  *
  * @param str Address string
- * @param[out] addr Address binary
+ * @param[out] addr Socket address
  * @return Success
  */
-bool LibSO::INetPtoN(String str, SOInAddr& addr) {
-    return std::sscanf(str, "%d.%d.%d.%d", &addr.octets[0], &addr.octets[1],
-                       &addr.octets[2],
-                       &addr.octets[3]) == LENGTHOF(addr.octets);
+bool LibSO::INetPtoN(String str, SockAddr& addr) {
+    bool success;
+
+    switch (addr.len) {
+    case sizeof(SockAddr4):
+        success = std::sscanf(str, "%d.%d.%d.%d", &addr.in.addr.octets[0],
+                              &addr.in.addr.octets[1], &addr.in.addr.octets[2],
+                              &addr.in.addr.octets[3]) ==
+                  LENGTHOF(addr.in.addr.octets);
+        break;
+
+    case sizeof(SockAddr6):
+        success =
+            std::sscanf(str, "%hx:%hx:%hx:%hx:%hx:%hx:%hx:%hx",
+                        &addr.in6.addr.groups[0], &addr.in6.addr.groups[1],
+                        &addr.in6.addr.groups[2], &addr.in6.addr.groups[3],
+                        &addr.in6.addr.groups[4], &addr.in6.addr.groups[5],
+                        &addr.in6.addr.groups[6], &addr.in6.addr.groups[7]) ==
+            LENGTHOF(addr.in6.addr.groups);
+        break;
+
+    default:
+        success = false;
+        K_ASSERT_EX(false, "Invalid SockAddr length (%d)", addr.len);
+        break;
+    }
+
+    sLastError = success ? SO_SUCCESS : SO_EINVAL;
+    return success;
 }
 
 /**
- * Converts a string to an IPv6 address
+ * Converts a socket address to a string
  *
- * @param str Address string
- * @param[out] addr Address binary
- * @return Success
- */
-bool LibSO::INetPtoN(String str, SOInAddr6& addr) {
-    return std::sscanf(str, "%hx:%hx:%hx:%hx:%hx:%hx:%hx:%hx", &addr.groups[0],
-                       &addr.groups[1], &addr.groups[2], &addr.groups[3],
-                       &addr.groups[4], &addr.groups[5], &addr.groups[6],
-                       &addr.groups[7]) == LENGTHOF(addr.groups);
-}
-
-/**
- * Converts an IPv4 address to a string
- *
- * @param addr Address binary
+ * @param addr Socket address
  * @return Address string
  */
-String LibSO::INetNtoP(const SOInAddr& addr) {
-    return Format("%d.%d.%d.%d", addr.octets[0], addr.octets[1], addr.octets[2],
-                  addr.octets[3]);
-}
+String LibSO::INetNtoP(const SockAddr& addr) {
+    switch (addr.len) {
+    case sizeof(SockAddr4):
+        sLastError = SO_SUCCESS;
+        return Format("%d.%d.%d.%d", addr.in.addr.octets[0],
+                      addr.in.addr.octets[1], addr.in.addr.octets[2],
+                      addr.in.addr.octets[3]);
 
-/**
- * Converts an IPv6 address to a string
- *
- * @param addr Address binary
- * @return Address string
- */
-String LibSO::INetNtoP(const SOInAddr6& addr) {
-    return Format("%hx:%hx:%hx:%hx:%hx:%hx:%hx:%hx", addr.groups[0],
-                  addr.groups[1], addr.groups[2], addr.groups[3],
-                  addr.groups[4], addr.groups[5], addr.groups[6],
-                  addr.groups[7]);
+    case sizeof(SockAddr6):
+        sLastError = SO_SUCCESS;
+        return Format("%hx:%hx:%hx:%hx:%hx:%hx:%hx:%hx",
+                      addr.in6.addr.groups[0], addr.in6.addr.groups[1],
+                      addr.in6.addr.groups[2], addr.in6.addr.groups[3],
+                      addr.in6.addr.groups[4], addr.in6.addr.groups[5],
+                      addr.in6.addr.groups[6], addr.in6.addr.groups[7]);
+
+    default:
+        sLastError = SO_EINVAL;
+        K_ASSERT_EX(false, "Invalid SockAddr length (%d)", addr.len);
+        return "";
+    }
 }
 
 /**
  * Gets the host machine's IPv4 address
  *
  * @param[out] addr Host address
+ */
+void LibSO::GetHostID(SockAddr4& addr) {
+    K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
+
+    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetHostID, NULL, 0, NULL, 0);
+    addr.addr.raw = static_cast<u32>(result);
+    addr.port = 0;
+
+    sLastError = SO_SUCCESS;
+}
+
+/**
+ * @brief Get socket option
+ *
+ * @param socket Socket descriptor
+ * @param level Option level
+ * @param opt Option name
+ * @param[out] val Option value
+ * @param len Buffer size
  * @return IOS error code
  */
-s32 LibSO::GetHostID(SOInAddr& addr) {
-    s32 result = IOS_Ioctl(sDeviceHandle, Ioctl_GetHostID, NULL, 0, NULL, 0);
+SOResult LibSO::GetSockOpt(SOSocket socket, SOSockOptLevel level, SOSockOpt opt,
+                           void* val, u32 len) {
+    K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
 
-    // Copy out IP if successful
-    if (result >= 0) {
-        addr.raw = static_cast<u32>(result);
+    K_ASSERT_EX(false, "Not implemented");
+    sLastError = SO_SUCCESS;
+    return SO_SUCCESS;
+}
+
+/**
+ * @brief Set socket option
+ *
+ * @param socket Socket descriptor
+ * @param level Option level
+ * @param opt Option name
+ * @param val Option value
+ * @param len Buffer size
+ * @return IOS error code
+ */
+SOResult LibSO::SetSockOpt(SOSocket socket, SOSockOptLevel level, SOSockOpt opt,
+                           const void* val, u32 len) {
+    K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
+    K_ASSERT(socket >= 0);
+    K_ASSERT(val != NULL);
+    K_ASSERT(len > 0);
+
+    struct Args {
+        s32 fd;          // at 0x0
+        s32 level;       // at 0x4
+        s32 opt;         // at 0x8
+        const void* val; // at 0xC
+        u32 len;         // at 0x10
+    };
+
+    // Must be in MEM2, and must be 32-byte aligned
+    Args* args = new (32, EMemory_MEM2) Args();
+    K_ASSERT(args != NULL);
+
+    args->fd = socket;
+    args->level = level;
+    args->opt = opt;
+    args->val = val;
+    args->len = len;
+
+    s32 result =
+        IOS_Ioctl(sDeviceHandle, Ioctl_SetSockOpt, args, sizeof(Args), NULL, 0);
+
+    sLastError = static_cast<SOResult>(result);
+
+    delete args;
+    return sLastError;
+}
+
+/**
+ * @brief Wait until the local IP address has been assigned
+ */
+void LibSO::WaitForDHCP() {
+    K_ASSERT_EX(sDeviceHandle >= 0, "Please call LibSO::Initialize");
+
+    SockAddr4 addr;
+    GetHostID(addr);
+
+    while (addr.addr.raw == 0) {
+        OSSleepTicks(OS_MSEC_TO_TICKS(10));
+        GetHostID(addr);
     }
 
-    return result;
+    sLastError = SO_SUCCESS;
 }
 
 } // namespace kiwi

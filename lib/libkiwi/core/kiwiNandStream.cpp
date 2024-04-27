@@ -6,10 +6,9 @@ namespace kiwi {
  * @brief Open stream to NAND file
  *
  * @param path File path
- * @param create Create file if it doesn't exist
  * @return Success
  */
-bool NandStream::Open(const char* path, bool create) {
+bool NandStream::Open(const char* path) {
     NANDAccessType type;
     s32 result;
 
@@ -32,7 +31,8 @@ bool NandStream::Open(const char* path, bool create) {
     result = NANDOpen(path, &mFileInfo, type);
 
     // Doesn't exist, but we should create it
-    if (result == NAND_RESULT_NOEXISTS && create) {
+    if (result == NAND_RESULT_NOEXISTS &&
+        (mOpenMode == EOpenMode_Write || mOpenMode == EOpenMode_RW)) {
         // Release descriptor
         Close();
 

@@ -9,11 +9,20 @@ extern "C" {
 inline float acosf(float x) {
     return acos(x);
 }
+inline float atan2f(float y, float x) {
+    return atan2(y, x);
+}
 inline float ceilf(float x) {
     return ceil(x);
 }
 inline float cosf(float x) {
     return cos(x);
+}
+inline float logf(float x) {
+    return log(x);
+}
+inline float powf(float x, float y) {
+    return pow(x, y);
 }
 inline float sinf(float x) {
     return sin(x);

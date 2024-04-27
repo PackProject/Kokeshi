@@ -1,128 +1,148 @@
+#include <climits>
 #include <libkiwi.h>
 
 namespace kiwi {
 
 /**
- * Constructor
- *
- * @param family Socket protocol family
- * @param type Socket type
- */
-SyncSocket::SyncSocket(SOProtoFamily family, SOSockType type)
-    : SocketBase(family, type) {}
-
-/**
- * Constructor
- *
- * @param socket Socket file descriptor
- * @param type Socket protocol family
- * @param type Socket type
- */
-SyncSocket::SyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type)
-    : SocketBase(socket, family, type) {}
-
-/**
- * Destructor
- */
-SyncSocket::~SyncSocket() {}
-
-/**
  * Connects to another socket
  *
  * @param addr Remote address
+ * @param callback Connection callback
+ * @param arg Callback user argument
  * @return Success
  */
-bool SyncSocket::Connect(const SOSockAddr& addr) {
-    K_ASSERT(mHandle >= 0);
-    K_ASSERT(mFamily == addr.in.family);
+bool SyncSocket::Connect(const SockAddr& addr, Callback callback, void* arg) {
+    K_ASSERT(IsOpen());
 
-    return LibSO::Connect(mHandle, addr) >= 0;
+    // Blocking call
+    bool success = LibSO::Connect(mHandle, addr) == SO_SUCCESS;
+
+    if (callback != NULL) {
+        callback(LibSO::GetLastError(), arg);
+    }
+
+    return success;
 }
 
 /**
  * Accepts remote connection
  *
+ * @param callback Acceptance callback
+ * @param arg Callback user argument
  * @return New socket
  */
-SyncSocket* SyncSocket::Accept() {
-    K_ASSERT(mHandle >= 0);
-    K_WARN(mType == SO_SOCK_DGRAM, "Accept won't do anything for dgram.");
+SyncSocket* SyncSocket::Accept(AcceptCallback callback, void* arg) {
+    K_ASSERT(IsOpen());
 
-    SOSockAddr addr;
-    s32 result = LibSO::Accept(mHandle, addr);
+    SyncSocket* peer = NULL;
+    kiwi::SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
 
-    // Result >= 0 is the peer socket descriptor
-    return result >= 0 ? new SyncSocket(result, mFamily, mType) : NULL;
+    // Blocking call
+    s32 fd = LibSO::Accept(mHandle, addr);
+
+    // Result code is the peer descriptor
+    if (fd > 0) {
+        peer = new SyncSocket(fd, mFamily, mType);
+        K_ASSERT(peer != NULL);
+    }
+
+    if (callback != NULL) {
+        callback(LibSO::GetLastError(), peer, addr, arg);
+    }
+
+    return peer;
 }
 
 /**
- * Receives data from specified connection
+ * Receives data and records sender address
  *
  * @param dst Destination buffer
  * @param len Buffer size
+ * @param[out] nrecv Number of bytes received
  * @param[out] addr Sender address
- * @return Bytes received (< 0 if failure)
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Socket library result
  */
-s32 SyncSocket::RecvImpl(void* dst, u32 len, SOSockAddr* addr) {
-    K_ASSERT(mHandle >= 0);
+SOResult SyncSocket::RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
+                              Callback callback, void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(dst != NULL);
+    K_ASSERT(len > 0 && len < ULONG_MAX);
 
-    // No partial packet
-    if (mRecvPacket.IsEmpty()) {
-        // Try reading header for new packet
-        Packet::Header header;
-        s32 result = LibSO::Read(mHandle, &header, sizeof(Packet::Header));
+    s32 result;
+    kiwi::SockAddr4 peer; // TODO: Will forcing ipv4 cause problems?
 
-        // Something here, but not a packet
-        if (result != sizeof(Packet::Header)) {
-            K_WARN_EX(result != 0, "Found extraneous data: %d bytes", result);
-            // Discard the data
-            return 0;
+    nrecv = 0;
+    while (nrecv < len) {
+        // Blocking call
+        result = LibSO::RecvFrom(mHandle, dst, len - nrecv, 0, peer);
+        if (result < 0) {
+            goto _exit;
         }
 
-        mRecvPacket.Set(header);
+        nrecv += result;
     }
 
-    K_WARN_EX(mRecvPacket.WriteRemain() > len,
-              "Requested %d bytes which is smaller than the packet (%d)", len,
-              mRecvPacket.WriteRemain());
+    K_ASSERT_EX(nrecv <= len, "Overflow???");
 
-    // Read packet over socket
-    while (!mRecvPacket.IsWriteComplete()) {
-        mRecvPacket.Recv(mHandle);
+_exit:
+    if (addr != NULL) {
+        *addr = peer;
     }
 
-    // Copy out packet data
-    return mRecvPacket.Read(dst, len);
+    if (callback != NULL) {
+        callback(LibSO::GetLastError(), arg);
+    }
+
+    // Successful if the last transaction resulted in some amount of bytes read
+    return result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 }
 
 /**
  * Sends data to specified connection
  *
- * @param src Source buffer
+ * @param dst Destination buffer
  * @param len Buffer size
- * @param addr Destination address
- * @return Bytes sent (< 0 if failure)
+ * @param[out] nsend Number of bytes sent
+ * @param[out] addr Sender address
+ * @param callback Completion callback
+ * @param arg Callback user argument
+ * @return Socket library result
  */
-s32 SyncSocket::SendImpl(const void* src, u32 len,
-                         const SOSockAddr* addr) {
-    K_ASSERT(mHandle >= 0);
-    K_ASSERT(mSendPacket.IsEmpty());
+SOResult SyncSocket::SendImpl(const void* src, u32 len, u32& nsend,
+                              const SockAddr* addr, Callback callback,
+                              void* arg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(src != NULL);
+    K_ASSERT(len > 0 && len < ULONG_MAX);
 
-    // Setup new packet
-    Packet::Header header;
-    header.capacity = len;
-    mSendPacket.Set(header, addr);
+    s32 result;
 
-    // Write packet data
-    mSendPacket.Write(src, len);
-    K_ASSERT(mSendPacket.IsWriteComplete());
+    nsend = 0;
+    while (nsend < len) {
+        // Blocking calls
+        if (addr != NULL) {
+            result = LibSO::SendTo(mHandle, src, len - nsend, 0, *addr);
+        } else {
+            result = LibSO::Send(mHandle, src, len - nsend, 0);
+        }
 
-    // Send packet over socket
-    while (!mSendPacket.IsReadComplete()) {
-        return mRecvPacket.Send(mHandle);
+        if (result < 0) {
+            goto _exit;
+        }
+
+        nsend += result;
     }
 
-    return len;
+    K_ASSERT_EX(nsend <= len, "Overflow???");
+
+_exit:
+    if (callback != NULL) {
+        callback(LibSO::GetLastError(), arg);
+    }
+
+    return result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 }
 
 } // namespace kiwi

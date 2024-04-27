@@ -1,6 +1,6 @@
+#include <cstdio>
 #include <libkiwi.h>
 
-namespace kiwi {
 namespace ksl {
 
 /**
@@ -205,6 +205,52 @@ u32 strtoul(const char* str, char** endptr, int base) {
 }
 
 /**
+ * Converts string to double value
+ *
+ * @param str String to convert
+ * @return f64 Resulting value
+ */
+f64 atof(const char* str) {
+    K_ASSERT(str != NULL);
+
+    // Skip whitespace
+    while (*str == ' ') {
+        ++str;
+    }
+
+    // Convert value
+    f64 value;
+    int num = std::sscanf("%lf", str, &value);
+
+    // Failure -> zero
+    if (num != 1) {
+        return 0.0l;
+    }
+
+    return value;
+}
+
+/**
+ * @brief Sort helper
+ *
+ * @param ptr Array base
+ * @param count Number of elements
+ * @param size Element size
+ * @param comp Compare function
+ */
+void qsort(void* ptr, u32 count, u32 size, QSortFunc comp) {
+    // K_ASSERT(ptr != NULL);
+    K_ASSERT(comp != NULL);
+
+    // Nothing to sort
+    if (count < 1) {
+        return;
+    }
+
+    ;
+}
+
+/**
  * Concatenates wide-char strings, up to the specified limit of
  * characters
  *
@@ -307,4 +353,3 @@ const wchar_t* wcsstr(const wchar_t* str, const wchar_t* seq) {
 }
 
 } // namespace ksl
-} // namespace kiwi
