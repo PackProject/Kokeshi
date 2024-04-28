@@ -104,7 +104,7 @@ void NandStream::SeekImpl(ESeekDir dir, s32 offset) {
     }
 
     result = NANDSeek(&mFileInfo, offset, mode);
-    K_WARN_EX(result != NAND_RESULT_OK, "NANDSeek failed (%d)", result);
+    K_WARN_EX(result != NAND_RESULT_OK, "NANDSeek failed (%d)\n", result);
 }
 
 /**
@@ -144,7 +144,7 @@ s32 NandStream::PeekImpl(void* dst, u32 size) {
     s32 n = ReadImpl(dst, size);
     if (n > 0) {
         s32 result = NANDSeek(&mFileInfo, -n, NAND_SEEK_CUR);
-        K_WARN_EX(result < 0, "Seek back failed (%d)", result);
+        K_WARN_EX(result < 0, "Seek back failed (%d)\n", result);
     }
 
     return n;

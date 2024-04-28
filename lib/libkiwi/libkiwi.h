@@ -6,6 +6,7 @@
 #endif
 
 #include <libkiwi/core/kiwiColor.h>
+#include <libkiwi/core/kiwiConsoleOut.h>
 #include <libkiwi/core/kiwiController.h>
 #include <libkiwi/core/kiwiDvdStream.h>
 #include <libkiwi/core/kiwiIStream.h>

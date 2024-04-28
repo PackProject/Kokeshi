@@ -11,11 +11,11 @@ namespace {
  */
 void LogHeap(const char* name, EGG::Heap* heap) {
     if (heap == NULL) {
-        K_LOG_EX("[%s] NULL ->", name);
+        K_LOG_EX("[%s] NULL ->\n", name);
         return;
     }
 
-    K_LOG_EX("[%s] %p-> %.2fKB free", name, heap,
+    K_LOG_EX("[%s] %p-> %.2fKB free\n", name, heap,
              OS_MEM_B_TO_KB(static_cast<f32>(heap->getAllocatableSize())));
 }
 

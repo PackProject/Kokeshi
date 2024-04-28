@@ -16,7 +16,7 @@ void kiwi_log(const char* msg, ...) {
     std::vsnprintf(msgbuf, sizeof(msgbuf), msg, list);
     va_end(list);
 
-    OSReport("%s\n", msgbuf);
+    OSReport(msgbuf);
 }
 
 /**

@@ -65,6 +65,16 @@ public:
 
     /**
      * Constructor
+     * @details Character constructor
+     *
+     * @param c Character
+     */
+    StringImpl(char c) : mpBuffer(NULL), mCapacity(0), mLength(0) {
+        Assign(c);
+    }
+
+    /**
+     * Constructor
      * @details Reserve space
      *
      * @param n Number of characters to reserve
@@ -353,12 +363,22 @@ inline String ToHexString(const String& t) {
     K_ASSERT_EX(false, "Please reconsider...");
     return t;
 }
+inline String ToString(char c) {
+    return String(c);
+}
 inline String ToString(const char* t) {
     return String(t);
 }
 inline String ToHexString(const char* t) {
     K_ASSERT_EX(false, "Please reconsider...");
     return String(t);
+}
+
+/**
+ * @brief Placeholder string conversion
+ */
+template <typename T> inline String ToString(const T& t) {
+    return Format("<object at %p>", &t);
 }
 
 #undef K_TO_STRING_FMT_DEF

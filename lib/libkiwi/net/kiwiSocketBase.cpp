@@ -84,7 +84,7 @@ bool SocketBase::Bind(SockAddr& addr) const {
  */
 bool SocketBase::Listen(s32 backlog) const {
     K_ASSERT(IsOpen());
-    K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.");
+    K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.\n");
 
     return LibSO::Listen(mHandle, backlog) == SO_SUCCESS;
 }

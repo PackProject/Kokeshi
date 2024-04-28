@@ -36,7 +36,7 @@ void* CreateFB(const GXRenderModeObj* mode) {
 
     // Force allocation from OS arena
     if (fb == NULL) {
-        K_LOG("Can't get framebuffer from heap");
+        K_LOG("Can't get framebuffer from heap\n");
         fb = static_cast<u8*>(OSGetArenaHi()) - size;
         OSSetArenaHi(fb);
     }

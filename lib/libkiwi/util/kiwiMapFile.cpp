@@ -38,7 +38,7 @@ void MapFile::Open(String path, ELinkType type) {
         EGG::DvdRipper::ALLOC_HEAD, 0, NULL, NULL));
 
     if (mpMapBuffer == NULL) {
-        K_LOG_EX("Map file (%s) could not be opened!", path.CStr());
+        K_LOG_EX("Map file (%s) could not be opened!\n", path.CStr());
         return;
     }
 

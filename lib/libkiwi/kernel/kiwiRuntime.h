@@ -103,8 +103,8 @@ u32 GetDataSize() {
 #define K_DEBUG_BREAK()                                                        \
     {                                                                          \
         BOOL __enabled__ = OSDisableInterrupts();                              \
-        K_LOG("************ BREAKPOINT! ************");                        \
-        K_LOG_EX("Source: " __FILE__ "(%d)", __LINE__);                        \
+        K_LOG("************ BREAKPOINT! ************\n");                      \
+        K_LOG_EX("Source: " __FILE__ "(%d)", __LINE__ "\n");                   \
         volatile int __x__ = 1;                                                \
         do {                                                                   \
             ;                                                                  \

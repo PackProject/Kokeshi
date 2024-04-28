@@ -157,7 +157,7 @@ Nw4rException::Nw4rException()
 
     // Auto-detect render mode
     mpRenderMode = LibGX::GetDefaultRenderMode();
-    K_WARN(mpRenderMode == NULL, "No render mode!");
+    K_WARN(mpRenderMode == NULL, "No render mode!\n");
 }
 
 /**
@@ -547,7 +547,8 @@ void Nw4rException::PrintSymbol(const void* addr) {
      * should always return a result. However, to prevent the exception handler
      * from itself throwing an exception we do not assert this.
      */
-    K_WARN_EX(sym == NULL, "Symbol missing(?) from module link map: reloc %08X",
+    K_WARN_EX(sym == NULL,
+              "Symbol missing(?) from module link map: reloc %08X\n",
               textOffset);
 
     // Symbol doesn't exist in map file
