@@ -10,6 +10,7 @@ from os.path import join, exists, split
 from shutil import copyfile, copytree
 from subprocess import run, PIPE
 from hashlib import sha1
+from threading import Thread
 
 #
 # Configuration
@@ -239,6 +240,17 @@ def compile(path: str, flags: str) -> bool:
     return result.returncode == 0
 
 
+def compile_thread_func(path: str, flags: str, results: list):
+    """Thread function helper for compile()
+
+    Args:
+        path (str): Source file path
+        flags (str): Compiler flags
+        results (list): Output list
+    """
+    results.append(compile(path, flags))
+
+
 def link(files: list[str], flags: str) -> bool:
     """Attempt to link object files
 
@@ -332,10 +344,21 @@ def build_loader(args) -> bool:
     ])
 
     # Compile source files
+    threads = []
+    success = []
     for f in srcs:
-        if not compile(f, cflags):
-            print("[FATAL] Error while compiling Kamek loader.")
-            return False
+        t = Thread(target=compile_thread_func, args=(f, cflags, success))
+        threads.append(t)
+        t.start()
+
+    # Join threads
+    for t in threads:
+        t.join()
+
+    # Validate return codes
+    if False in success:
+        print("[FATAL] Error while compiling Kamek loader.")
+        return False
 
     #
     # Link step
@@ -396,10 +419,21 @@ def build_module(args) -> bool:
     ])
 
     # Compile source files
+    threads = []
+    success = []
     for f in srcs:
-        if not compile(f, cflags):
-            print("[FATAL] Error while compiling your module.")
-            return False
+        t = Thread(target=compile_thread_func, args=(f, cflags, success))
+        threads.append(t)
+        t.start()
+
+    # Join threads
+    for t in threads:
+        t.join()
+
+    # Validate return codes
+    if False in success:
+        print("[FATAL] Error while compiling your module.")
+        return False
 
     #
     # Link step
