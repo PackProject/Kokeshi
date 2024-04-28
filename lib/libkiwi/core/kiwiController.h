@@ -62,21 +62,21 @@ public:
      * Gets buttons held during the most recent frame
      */
     u32 Hold() const {
-        return getCoreStatus(0)->hold;
+        return Raw().hold;
     }
 
     /**
      * Gets buttons released during the most recent frame
      */
     u32 Release() const {
-        return getCoreStatus(0)->release;
+        return Raw().release;
     }
 
     /**
      * Gets buttons triggered during the most recent frame
      */
     u32 Trig() const {
-        return getCoreStatus(0)->trig;
+        return Raw().trig;
     }
 
     /**
@@ -102,7 +102,7 @@ public:
     static CtrlMgr& GetInstance() {
         EGG::CoreControllerMgr* base = EGG::CoreControllerMgr::getInstance();
         K_ASSERT(base != NULL);
-        return static_cast<CtrlMgr&>(*base);
+        return *static_cast<CtrlMgr*>(base);
     }
 
     WiiCtrl& GetWiiCtrl(EPlayer i) {
@@ -111,7 +111,7 @@ public:
         EGG::CoreController* base = getNthController(i);
         K_ASSERT(base != NULL);
 
-        return static_cast<WiiCtrl&>(*base);
+        return *static_cast<WiiCtrl*>(base);
     }
 };
 
