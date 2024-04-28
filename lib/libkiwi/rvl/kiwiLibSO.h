@@ -263,7 +263,7 @@ struct SockAddr6 : public SOSockAddrIn6 {
 /**
  * @brief Convert socket address to string
  */
-template <> inline String ToString(const SockAddr& t) {
+inline String ToString(const SockAddr& t) {
     return Format("%s:%d", LibSO::INetNtoP(t).CStr(), t.port);
 }
 

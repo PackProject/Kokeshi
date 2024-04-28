@@ -186,6 +186,24 @@ public:
         return (*this == c) == false;
     }
 
+    friend StringImpl operator+(const StringImpl& lhs, const StringImpl& rhs) {
+        StringImpl str = lhs;
+        str += rhs;
+        return str;
+    }
+
+    friend StringImpl operator+(const StringImpl& lhs, const T* rhs) {
+        StringImpl str = lhs;
+        str += rhs;
+        return str;
+    }
+
+    friend StringImpl operator+(const StringImpl& lhs, T rhs) {
+        StringImpl str = lhs;
+        str += rhs;
+        return str;
+    }
+
 private:
     void Reserve(u32 n);
     void Shrink();
@@ -215,28 +233,6 @@ public:
 
 typedef StringImpl<char> String;
 typedef StringImpl<wchar_t> WString;
-
-template <typename T>
-inline StringImpl<T> operator+(const StringImpl<T>& lhs,
-                               const StringImpl<T>& rhs) {
-    StringImpl<T> str = lhs;
-    str += rhs;
-    return str;
-}
-
-template <typename T>
-inline StringImpl<T> operator+(const StringImpl<T>& lhs, const T* rhs) {
-    StringImpl<T> str = lhs;
-    str += rhs;
-    return str;
-}
-
-template <typename T>
-inline StringImpl<T> operator+(const StringImpl<T>& lhs, T rhs) {
-    StringImpl<T> str = lhs;
-    str += rhs;
-    return str;
-}
 
 /**
  * Creates a new string from format arguments
@@ -303,15 +299,12 @@ template <typename T> inline hash_t Hash(const StringImpl<T>& key) {
 }
 
 // String conversion. Specialize these for custom types
-template <typename T> inline String ToString(const T& t);
-template <typename T> inline String ToHexString(const T& t);
-
 #define K_TO_STRING_FMT_DEF(T, fmt, val)                                       \
-    template <> inline String ToString<T>(const T& t) {                        \
+    inline String ToString(const T& t) {                                       \
         return Format(fmt, val);                                               \
     }
 #define K_TO_HEX_STRING_FMT_DEF(T, fmt, val)                                   \
-    template <> inline String ToHexString<T>(const T& t) {                     \
+    inline String ToHexString(const T& t) {                                    \
         return Format(fmt, val);                                               \
     }
 
@@ -343,22 +336,29 @@ K_TO_HEX_STRING_FMT_DEF(f64, "0x%016X", BitCast<u64>(t));
 /**
  * @brief Convert boolean to string
  */
-template <> inline String ToString<bool>(const bool& t) {
+inline String ToString(const bool& t) {
     return t ? "true" : "false";
 }
-template <> inline String ToHexString<bool>(const bool& t) {
+inline String ToHexString(const bool& t) {
     return t ? "0x01" : "0x00";
 }
 
 /**
  * @brief Convert string to string :D
  */
-template <> inline String ToString<String>(const String& t) {
+inline String ToString(const String& t) {
     return t;
 }
-template <> inline String ToHexString<String>(const String& t) {
+inline String ToHexString(const String& t) {
     K_ASSERT_EX(false, "Please reconsider...");
     return t;
+}
+inline String ToString(const char* t) {
+    return String(t);
+}
+inline String ToHexString(const char* t) {
+    K_ASSERT_EX(false, "Please reconsider...");
+    return String(t);
 }
 
 #undef K_TO_STRING_FMT_DEF
