@@ -15,15 +15,16 @@ void KokeshiMain() {
                                       kiwi::MapFile::ELinkType_Relocatable);
 #endif
 
-    kiwi::LibSO::Initialize();
-    kiwi::ImGuiImplRvl::CreateInstance();
-    
-    // Your code here!
+    kiwi::LibSO::Initialize();            // Initialize socket library
+    kiwi::ImGuiImplRvl::CreateInstance(); // Initialize ImGui
 
-    // Enter game loop
-    RPSysSystem::getInstance()->mainLoop();
-    // Main function should never return
-    ASSERT(false);
+    // ====================================================
+    // Your code goes here!
+    kiwi::cout << "Hello world!" << kiwi::endl;
+    // ====================================================
+
+    RPSysSystem::getInstance()->mainLoop(); // Enter game loop
+    ASSERT(false);                          // Main function should never return
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183f04, KokeshiMain), // Wii Sports
                 KM_BRANCH(0x80183b3c, KokeshiMain), // Wii Play
