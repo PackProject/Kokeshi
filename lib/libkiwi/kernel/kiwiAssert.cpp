@@ -34,7 +34,13 @@ void kiwi_fail_assert(const char* file, int line, const char* msg, ...) {
     kiwi::Nw4rException::GetInstance().FailAssert(file, line, msgbuf);
 }
 // clang-format off
+// Catch EGG_ASSERT
 KOKESHI_BY_PACK(KM_BRANCH(0x800a1f08, kiwi_fail_assert), // Wii Sports
                 KM_BRANCH(0x800a17d8, kiwi_fail_assert), // Wii Play
+                KOKESHI_NOTIMPLEMENTED);                 // Wii Sports Resort
+                
+// Catch OSPanic
+KOKESHI_BY_PACK(KM_BRANCH(0x800eefa8, kiwi_fail_assert), // Wii Sports
+                KM_BRANCH(0x800eec30, kiwi_fail_assert), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                 // Wii Sports Resort
 // clang-format on
