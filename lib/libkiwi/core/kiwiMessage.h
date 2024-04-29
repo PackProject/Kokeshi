@@ -11,7 +11,7 @@ namespace kiwi {
 class Message : IBinary {
 private:
     static const u32 scKind = 'KMSG';
-    static const u32 scVersion = KIWI_VERSION(1, 0);
+    static const u32 scVersion = K_VERSION(1, 0);
 
     /**
      * @brief Message descriptor

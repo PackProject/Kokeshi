@@ -23,11 +23,14 @@
 #include <libkiwi/kernel/kiwiRuntime.h>
 #include <libkiwi/math/kiwiAlgorithm.h>
 #include <libkiwi/net/kiwiAsyncSocket.h>
+#include <libkiwi/net/kiwiEmuRichPresence.h>
 #include <libkiwi/net/kiwiHttpRequest.h>
+#include <libkiwi/net/kiwiIRichPresence.h>
 #include <libkiwi/net/kiwiPacket.h>
 #include <libkiwi/net/kiwiReliableClient.h>
 #include <libkiwi/net/kiwiReliablePacket.h>
 #include <libkiwi/net/kiwiReliableSocket.h>
+#include <libkiwi/net/kiwiRvlRichPresence.h>
 #include <libkiwi/net/kiwiSocketBase.h>
 #include <libkiwi/net/kiwiSyncSocket.h>
 #include <libkiwi/prim/kiwiArray.h>

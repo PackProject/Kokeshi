@@ -1,5 +1,5 @@
-#ifndef KIWI_CORE_I_BINARY_H
-#define KIWI_CORE_I_BINARY_H
+#ifndef LIBKIWI_CORE_I_BINARY_H
+#define LIBKIWI_CORE_I_BINARY_H
 #include <libkiwi/kernel/kiwiAssert.h>
 #include <libkiwi/prim/kiwiString.h>
 #include <types.h>
@@ -7,7 +7,7 @@
 /**
  * @brief Helper for creating version numbers
  */
-#define KIWI_VERSION(major, minor) ((major << 8) | minor)
+#define K_VERSION(major, minor) ((major << 8) | minor)
 
 namespace kiwi {
 
