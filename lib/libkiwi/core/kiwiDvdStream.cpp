@@ -8,9 +8,7 @@ namespace kiwi {
  * @param path File path
  * @return Success
  */
-bool DvdStream::Open(const char* path) {
-    K_ASSERT(path != NULL);
-
+bool DvdStream::Open(const String& path) {
     // Close existing file
     if (mIsOpen) {
         Close();

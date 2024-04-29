@@ -23,7 +23,7 @@ public:
      * @param mode Open mode
      * @param create Create file if it doesn't exist
      */
-    explicit DvdStream(const char* path) : FileStream(EOpenMode_Read) {
+    explicit DvdStream(const String& path) : FileStream(EOpenMode_Read) {
         Open(path);
     }
 
@@ -36,7 +36,7 @@ public:
         }
     }
 
-    bool Open(const char* path);
+    bool Open(const String& path);
     virtual void Close();
 
     virtual u32 GetSize() const;

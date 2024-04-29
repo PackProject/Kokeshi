@@ -24,7 +24,7 @@ MapFile::~MapFile() {
  * @param path Map file path
  * @param type Module linkage type
  */
-void MapFile::Open(String path, ELinkType type) {
+void MapFile::Open(const String& path, ELinkType type) {
     K_ASSERT(type != ELinkType_None);
 
     // Close existing map file

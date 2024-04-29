@@ -43,9 +43,9 @@ public:
     static SOResult Shutdown(SOSocket socket, SOShutdownType how);
     static s32 Poll(SOPollFD fds[], u32 numfds, s64 timeout);
 
-    static bool INetAtoN(String str, SockAddr4& addr);
+    static bool INetAtoN(const String& str, SockAddr4& addr);
 
-    static bool INetPtoN(String str, SockAddr& addr);
+    static bool INetPtoN(const String& str, SockAddr& addr);
     static String INetNtoP(const SockAddr& addr);
 
     static void GetHostID(SockAddr4& addr);
@@ -137,7 +137,7 @@ struct SockAddr4 : public SOSockAddrIn {
      * @param host IPv4 address OR hostname
      * @param _port Port
      */
-    SockAddr4(String host, u16 _port = 0) {
+    SockAddr4(const String& host, u16 _port = 0) {
         len = sizeof(SOSockAddrIn);
         family = SO_AF_INET;
         port = _port;
@@ -217,7 +217,7 @@ struct SockAddr6 : public SOSockAddrIn6 {
      * @param _addr IPv6 address (string)
      * @param _port Port
      */
-    SockAddr6(String _addr, u16 _port = 0) {
+    SockAddr6(const String& _addr, u16 _port = 0) {
         len = sizeof(SOSockAddrIn6);
         family = SO_AF_INET6;
         port = _port;

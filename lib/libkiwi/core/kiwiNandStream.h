@@ -22,7 +22,7 @@ public:
      * @param path File path
      * @param mode Open mode
      */
-    NandStream(const char* path, EOpenMode mode) : FileStream(mode) {
+    NandStream(const String& path, EOpenMode mode) : FileStream(mode) {
         Open(path);
     }
 
@@ -35,7 +35,7 @@ public:
         }
     }
 
-    bool Open(const char* path);
+    bool Open(const String& path);
     virtual void Close();
 
     virtual u32 GetSize() const;

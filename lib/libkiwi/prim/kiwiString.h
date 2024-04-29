@@ -346,10 +346,10 @@ K_TO_HEX_STRING_FMT_DEF(f64, "0x%016X", BitCast<u64>(t));
 /**
  * @brief Convert boolean to string
  */
-inline String ToString(const bool& t) {
+inline String ToString(bool t) {
     return t ? "true" : "false";
 }
-inline String ToHexString(const bool& t) {
+inline String ToHexString(bool t) {
     return t ? "0x01" : "0x00";
 }
 

@@ -8,11 +8,9 @@ namespace kiwi {
  * @param path File path
  * @return Success
  */
-bool NandStream::Open(const char* path) {
+bool NandStream::Open(const String& path) {
     NANDAccessType type;
     s32 result;
-
-    K_ASSERT(path != NULL);
 
     // Close existing file
     if (mIsOpen) {

@@ -9,8 +9,10 @@
 #include <libkiwi/core/kiwiConsoleOut.h>
 #include <libkiwi/core/kiwiController.h>
 #include <libkiwi/core/kiwiDvdStream.h>
+#include <libkiwi/core/kiwiIBinary.h>
 #include <libkiwi/core/kiwiIStream.h>
 #include <libkiwi/core/kiwiMemStream.h>
+#include <libkiwi/core/kiwiMessage.h>
 #include <libkiwi/core/kiwiNandStream.h>
 #include <libkiwi/core/kiwiSceneHookMgr.h>
 #include <libkiwi/core/kiwiThread.h>

@@ -47,7 +47,7 @@ public:
         return mpMapBuffer != NULL && mIsUnpacked;
     }
 
-    void Open(String path, ELinkType type);
+    void Open(const String& path, ELinkType type);
     void Close();
 
     const Symbol* QueryTextSymbol(const void* addr);

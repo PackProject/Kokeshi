@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_MATH_ALGORITHM_H
 #define LIBKIWI_MATH_ALGORITHM_H
-#include <types.h>
 #include <nw4r/math.h>
+#include <types.h>
 
 namespace kiwi {
 namespace {
@@ -64,15 +64,18 @@ inline std::ptrdiff_t PtrDistance(const void* start, const void* end) {
 /**
  * Add offset to pointer
  */
-inline const void* AddToPtr(const void* ptr, s32 ofs) {
+inline void* AddToPtr(void* ptr, std::ptrdiff_t ofs) {
+    return static_cast<char*>(ptr) + ofs;
+}
+inline const void* AddToPtr(const void* ptr, std::ptrdiff_t ofs) {
     return static_cast<const char*>(ptr) + ofs;
 }
-
-/**
- * Add offset to pointer
- */
-inline void* AddToPtr(void* ptr, s32 ofs) {
-    return static_cast<char*>(ptr) + ofs;
+template <typename T> inline T* AddToPtr(void* ptr, std::ptrdiff_t ofs) {
+    return reinterpret_cast<T*>(static_cast<char*>(ptr) + ofs);
+}
+template <typename T>
+inline const T* AddToPtr(const void* ptr, std::ptrdiff_t ofs) {
+    return reinterpret_cast<const T*>(static_cast<const char*>(ptr) + ofs);
 }
 
 } // namespace
