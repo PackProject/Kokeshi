@@ -5,17 +5,18 @@ namespace {
 
 /**
  * @brief Print heap information
+ * @note DON'T USE STRING HERE IT ALLOCATES MEMORY
  *
  * @param name Heap name
  * @param heap Heap object
  */
-void LogHeap(const String& name, EGG::Heap* heap) {
+void LogHeap(const char* name, EGG::Heap* heap) {
     if (heap == NULL) {
-        K_LOG_EX("[%s] NULL ->\n", name.CStr());
+        K_LOG_EX("[%s] NULL ->\n", name);
         return;
     }
 
-    K_LOG_EX("[%s] %p-> %.2fKB free\n", name.CStr(), heap,
+    K_LOG_EX("[%s] %p-> %.2fKB free\n", name, heap,
              OS_MEM_B_TO_KB(static_cast<f32>(heap->getAllocatableSize())));
 }
 

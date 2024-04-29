@@ -63,9 +63,7 @@ static inline u32 resolveAddress(u32 text, u32 address) {
     static inline const u8* kHandle##name(const u8* input, u32 text,           \
                                           u32 address)
 #define kDispatchCommand(name)                                                 \
-    case k##name:                                                              \
-        input = kHandle##name(input, text, address);                           \
-        break
+    case k##name: input = kHandle##name(input, text, address); break
 
 kCommandHandler(Addr32) {
     u32 target = resolveAddress(text, *(const u32*)input);
@@ -174,6 +172,25 @@ void loadKamekBinary(const loaderFunctions* funcs, const void* binary,
 
     u32 textSize = header->codeSize + header->bssSize;
     u32 text = (u32)funcs->kamekAlloc(textSize, true);
+
+    OSReport("\n\n");
+    OSReport("=================================\n");
+    OSReport("\n");
+    OSReport("[ Kamek Module Info ]\n");
+    OSReport("\n");
+    OSReport("    textStart:  %08X\n", text);
+    OSReport("    textSize:   %08X\n", header->codeSize);
+    OSReport("    bssStart:   %08X\n", text + header->codeSize);
+    OSReport("    bssSize:    %08X\n", header->bssSize);
+    OSReport("    ctorsStart: %08X\n", header->ctorStart);
+    OSReport("    ctorsSize:  %08X\n", header->ctorEnd - header->ctorStart);
+    OSReport("\n");
+    OSReport("MODULE BASE ADDRESS: %p\n", text);
+    OSReport("For tools/make_dolphin_map.py\n");
+    OSReport("\n");
+    OSReport("=================================\n");
+    OSReport("\n\n");
+
     if (!text)
         kamekError("FATAL ERROR: Out of code memory");
 
@@ -221,8 +238,7 @@ void loadKamekBinary(const loaderFunctions* funcs, const void* binary,
             kDispatchCommand(CondWrite8);
             kDispatchCommand(Branch);
             kDispatchCommand(BranchLink);
-        default:
-            OSReport("Unknown command: %d\n", cmd);
+        default: OSReport("Unknown command: %d\n", cmd);
         }
 
         cacheInvalidateAddress(address);
