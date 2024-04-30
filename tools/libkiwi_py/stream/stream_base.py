@@ -211,4 +211,4 @@ class StreamBase(ABC):
         endian = ("<", ">")[self._endian]
         t = "d" if len(data) == 8 else "f"
         arr = unpack(f"{endian}{t}", data)
-        return bytes(arr)
+        return arr[0]

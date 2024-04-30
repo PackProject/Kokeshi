@@ -32,7 +32,6 @@ class FileStream(StreamBase):
 
     def write(self, data: bytes):
         """Write bytes to stream"""
-        assert not self.eof(), "End-of-file while writing"
         assert self._open_mode == OpenMode.Write, "Not for this openmode"
 
         # No file open
@@ -43,12 +42,13 @@ class FileStream(StreamBase):
 
     def eof(self) -> bool:
         """Check whether the stream has hit the end-of-file"""
-        if self._open_mode == OpenMode.Read:
-            return not self._file.readable()
-        elif self._open_mode == OpenMode.Write:
-            return not self._file.writable()
+        if self._open_mode == OpenMode.Write:
+            return False
 
-        return False
+        # Try to peek one byte
+        dummy = self._file.read(1)
+        self._file.seek(-1, 1)
+        return len(dummy) == 0
 
     def seek(self, origin: int, offset: int):
         """Seek the stream position"""
