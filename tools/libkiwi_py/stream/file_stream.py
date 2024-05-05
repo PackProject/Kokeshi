@@ -28,7 +28,10 @@ class FileStream(StreamBase):
         if self._file == None:
             return bytes()
 
-        return self._file.read(size)
+        result = self._file.read(size)
+        assert len(result) == size, "End-of-file while reading"
+
+        return result
 
     def write(self, data: bytes):
         """Write bytes to stream"""
@@ -47,8 +50,12 @@ class FileStream(StreamBase):
 
         # Try to peek one byte
         dummy = self._file.read(1)
+        if len(dummy) == 0:
+            return True
+
+        # Undo read operation
         self._file.seek(-1, 1)
-        return len(dummy) == 0
+        return False
 
     def seek(self, origin: int, offset: int):
         """Seek the stream position"""
