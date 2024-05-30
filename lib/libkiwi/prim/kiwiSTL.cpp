@@ -212,26 +212,6 @@ f64 atof(const char* str) {
 }
 
 /**
- * @brief Sort helper
- *
- * @param ptr Array base
- * @param count Number of elements
- * @param size Element size
- * @param comp Compare function
- */
-void qsort(void* ptr, u32 count, u32 size, QSortFunc comp) {
-    // K_ASSERT(ptr != NULL);
-    K_ASSERT(comp != NULL);
-
-    // Nothing to sort
-    if (count < 1) {
-        return;
-    }
-
-    ;
-}
-
-/**
  * Concatenates wide-char strings, up to the specified limit of
  * characters
  *

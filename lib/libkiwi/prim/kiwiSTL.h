@@ -21,9 +21,6 @@ s32 strtol(const char* str, char** endptr = NULL, int base = 0);
 u32 strtoul(const char* str, char** endptr = NULL, int base = 0);
 f64 atof(const char* str);
 
-typedef BOOL (*QSortFunc)(const void* a, const void* b);
-void qsort(void* ptr, u32 count, u32 size, QSortFunc comp);
-
 // cwchar
 wchar_t* wcsncat(wchar_t* dst, const wchar_t* src, size_t maxlen);
 int wcsncmp(const wchar_t* wcs1, const wchar_t* wcs2, size_t maxlen);
