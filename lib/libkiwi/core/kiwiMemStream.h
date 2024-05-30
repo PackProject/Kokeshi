@@ -161,4 +161,6 @@ private:
 
 } // namespace kiwi
 
+#undef IO_FUNC_DECL
+
 #endif
