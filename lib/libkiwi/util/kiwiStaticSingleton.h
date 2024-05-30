@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_UTIL_STATIC_SINGLETON_H
 #define LIBKIWI_UTIL_STATIC_SINGLETON_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
-#include <types.h>
 
 namespace kiwi {
 

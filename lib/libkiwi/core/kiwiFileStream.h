@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_CORE_FILE_STREAM_H
 #define LIBKIWI_CORE_FILE_STREAM_H
 #include <libkiwi/core/kiwiIStream.h>
-#include <types.h>
+#include <libkiwi/k_types.h>
 
 namespace kiwi {
 
@@ -27,11 +27,17 @@ public:
      */
     virtual ~FileStream() {}
 
+    /**
+     * @brief Tests whether the stream has hit the end-of-file
+     */
+    virtual bool IsEOF() const {
+        return mPosition >= GetSize();
+    }
+
     virtual u32 GetSize() const = 0;
 
 protected:
-    // File access type
-    EOpenMode mOpenMode;
+    EOpenMode mOpenMode; // File access type
 };
 
 } // namespace kiwi

@@ -33,12 +33,6 @@ public:
         mEnterFns = new StateFunc[mNumState];
         mCalcFns = new StateFunc[mNumState];
         mExitFns = new StateFunc[mNumState];
-
-        for (int i = 0; i < mNumState; i++) {
-            mEnterFns[i] = NULL;
-            mCalcFns[i] = NULL;
-            mExitFns[i] = NULL;
-        }
     }
 
     /**
@@ -104,12 +98,13 @@ public:
         return false;
     }
 
+private:
     /**
      * @brief Enter the current state
      */
     void EnterState() {
         if (mEnterFns[mState] != NULL) {
-            (*mObject->mEnterFns[mState])();
+            (mObject->*mEnterFns[mState])();
         }
     }
 
@@ -118,7 +113,7 @@ public:
      */
     void CalcState() {
         if (mCalcFns[mState] != NULL) {
-            (*mObject->mCalcFns[mState])();
+            (mObject->*mCalcFns[mState])();
         }
     }
 
@@ -127,7 +122,7 @@ public:
      */
     void ExitState() {
         if (mExitFns[mState] != NULL) {
-            (*mObject->mExitFns[mState])();
+            (mObject->*mExitFns[mState])();
         }
     }
 

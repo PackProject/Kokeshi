@@ -1,9 +1,9 @@
 #ifndef LIBKIWI_CORE_CONTROLLER_H
 #define LIBKIWI_CORE_CONTROLLER_H
 #include <egg/core.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
 #include <revolution/WPAD.h>
-#include <types.h>
 
 namespace kiwi {
 

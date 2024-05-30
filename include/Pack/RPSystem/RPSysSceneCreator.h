@@ -146,7 +146,7 @@ public:
 public:
     // @address 80184e10
     static RPSysSceneCreator* CreateInstance(EGG::Heap* heap);
-    static RPSysSceneCreator* getInstance() {
+    static RPSysSceneCreator* GetInstance() {
         return sInstance;
     }
 
@@ -173,7 +173,13 @@ public:
      * @brief Create a Sports Pack scene
      * @address 80184000
      */
+#ifdef PACK_SPORTS
     EGG::Scene* createSportsScene(s32 sceneID);
+#elif PACK_PLAY
+    EGG::Scene* createPartyScene(s32 sceneID);
+#elif PACK_RESORT
+    EGG::Scene* createWS2Scene(s32 sceneID);
+#endif
 
     // @address 801845f4
     s32 getCreateType(s32 sceneID);

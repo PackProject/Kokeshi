@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_NET_RVL_RICH_PRESENCE_H
 #define LIBKIWI_NET_RVL_RICH_PRESENCE_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/net/kiwiIRichPresence.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -10,7 +10,7 @@ namespace kiwi {
  */
 class RvlRichPresence : public IRichPresence {
 public:
-    RvlRichPresence(const String& client);
+    explicit RvlRichPresence(const String& client);
     virtual ~RvlRichPresence();
 
     virtual bool IsConnected() const;

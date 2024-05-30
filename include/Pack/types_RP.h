@@ -1,6 +1,11 @@
 #ifndef TYPES_RP_H
 #define TYPES_RP_H
+#include <egg/prim/eggAssert.h>
 #include <types.h>
+
+#ifndef RP_GET_INSTANCE
+#define RP_GET_INSTANCE(T) T::GetInstance()
+#endif
 
 // Provides year, month, month day
 typedef u16 RPTime16;

@@ -1,16 +1,8 @@
 #ifndef LIBKIWI_CORE_I_STREAM_H
 #define LIBKIWI_CORE_I_STREAM_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
-#include <types.h>
-
-/**
- * @brief Declare stream functions by type
- */
-#define IO_FUNC_DECL(T)                                                        \
-    T Read_##T();                                                              \
-    T Write_##T(T value);                                                      \
-    T Peek_##T();
 
 namespace kiwi {
 
@@ -27,7 +19,7 @@ public:
     /**
      * @brief Constructor
      */
-    IStream() : mIsOpen(false) {}
+    IStream() : mIsOpen(false), mPosition(0) {}
 
     /**
      * @brief Destructor
@@ -35,6 +27,7 @@ public:
     virtual ~IStream() {}
 
     virtual void Close() = 0;
+    virtual bool IsEOF() const = 0;
 
     /**
      * @brief Check whether stream is available to use
@@ -69,34 +62,25 @@ public:
     /**
      * Required byte-alignment
      */
-    virtual s32 GetAlign() const {
+    virtual s32 GetSizeAlign() const {
         return 1;
     }
-    bool IsAlign(const void* ptr) const {
-        return reinterpret_cast<u32>(ptr) % GetAlign() == 0;
+    virtual s32 GetOffsetAlign() const {
+        return 1;
+    }
+    virtual s32 GetBufferAlign() const {
+        return 1;
     }
 
-    /**
-     * Primitive types
-     */
-    IO_FUNC_DECL(u8);
-    IO_FUNC_DECL(s8);
-    IO_FUNC_DECL(u16);
-    IO_FUNC_DECL(s16);
-    IO_FUNC_DECL(u32);
-    IO_FUNC_DECL(s32);
-    IO_FUNC_DECL(u64);
-    IO_FUNC_DECL(s64);
-    IO_FUNC_DECL(f32);
-    IO_FUNC_DECL(f64);
-    IO_FUNC_DECL(bool);
-
-    /**
-     * User types
-     */
-    String Read_string();
-    void Write_string(const String& str);
-    String Peek_string();
+    bool IsSizeAlign(u32 size) const {
+        return size % GetSizeAlign() == 0;
+    }
+    bool IsOffsetAlign(u32 offset) const {
+        return offset % GetOffsetAlign() == 0;
+    }
+    bool IsBufferAlign(const void* ptr) const {
+        return reinterpret_cast<u32>(ptr) % GetBufferAlign() == 0;
+    }
 
 protected:
     virtual void SeekImpl(ESeekDir dir, s32 offset) = 0;
@@ -105,10 +89,8 @@ protected:
     virtual s32 PeekImpl(void* dst, u32 size) = 0;
 
 protected:
-    // Stream open flag
-    bool mIsOpen;
-    // Position in data
-    u32 mPosition;
+    bool mIsOpen;  // Stream open flag
+    u32 mPosition; // Position in data
 };
 
 } // namespace kiwi

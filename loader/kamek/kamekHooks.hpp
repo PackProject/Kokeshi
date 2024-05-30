@@ -8,6 +8,9 @@
 #define KAMEK_HOOKS_H
 #include <kamekTypes.hpp>
 
+#define __CONCAT(x, y) x##y
+#define CONCAT(x, y) __CONCAT(x, y)
+
 // allow Kamek hooks to be defined from C++ source files
 #pragma section ".kamek"
 
@@ -99,7 +102,7 @@
 // KM_INJECT_MF
 //   Create dummy function to call a member function.
 #define _KM_INJECT_MF(cls, func)                                               \
-    UNKWORD KM_TRAMP_##cls##_##func(void* arg, ...) {                          \
+    UNKWORD CONCAT(KM_TRAMP_##cls##_##func, __LINE__)(void* arg, ...) {        \
         typedef UNKWORD (cls::*cls##_fun_t)(...);                              \
         const cls##_fun_t mem_fun = (cls##_fun_t)(&cls::func);                 \
         cls* self = reinterpret_cast<cls*>(arg);                               \
@@ -111,9 +114,9 @@
 //   function).
 #define KM_BRANCH_MF(addr, cls, func)                                          \
     _KM_INJECT_MF(cls, func);                                                  \
-    KM_BRANCH(addr, KM_TRAMP_##cls##_##func);
+    KM_BRANCH(addr, CONCAT(KM_TRAMP_##cls##_##func, __LINE__));
 #define KM_CALL_MF(addr, cls, func)                                            \
     _KM_INJECT_MF(cls, func);                                                  \
-    KM_CALL(addr, KM_TRAMP_##cls##_##func);
+    KM_CALL(addr, CONCAT(KM_TRAMP_##cls##_##func, __LINE__));
 
 #endif

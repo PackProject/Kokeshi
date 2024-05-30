@@ -77,7 +77,7 @@ typedef struct OSBI2 {
     u32 trackSize;        // at 0x14
     u32 countryCode;      // at 0x18
     u32 WORD_0x1C;
-    u32 WORD_0x20;
+    u32 lastInsert;
     u32 padSpec;            // at 0x24
     u32 totalTextDataLimit; // at 0x28
     u32 simulatedMem2Size;  // at 0x2C
@@ -113,12 +113,13 @@ OS_DEF_GLOBAL_VAR(u32, CPU_CLOCK_SPEED,                    0x800000FC);
 // clang-format off
 OS_DEF_GLOBAL_ARR(void*, EXCEPTION_TABLE, [15],          0x80003000);
 OS_DEF_GLOBAL_VAR(void*, INTR_HANDLER_TABLE,             0x80003040);
-OS_DEF_GLOBAL_ARR(volatile s32, EXI_800030C0, [],        0x800030C0);
+OS_DEF_GLOBAL_ARR(volatile s32, EXI_LAST_INSERT, [],     0x800030C0);
 OS_DEF_GLOBAL_VAR(void*, FIRST_REL,                      0x800030C8);
 OS_DEF_GLOBAL_VAR(void*, LAST_REL,                       0x800030CC);
 OS_DEF_GLOBAL_VAR(void*, REL_NAME_TABLE,                 0x800030D0);
 OS_DEF_GLOBAL_VAR(u32, DOL_TOTAL_TEXT_DATA,              0x800030D4);
 OS_DEF_GLOBAL_VAR(s64, SYSTEM_TIME,                      0x800030D8);
+OS_DEF_GLOBAL_VAR(u8, PAD_FLAGS,                         0x800030E3);
 OS_DEF_GLOBAL_VAR(u16, GC_PAD_3_BTN,                     0x800030E4);
 OS_DEF_GLOBAL_VAR(volatile u16, DVD_DEVICE_CODE,         0x800030E6);
 OS_DEF_GLOBAL_VAR(u8, BI2_DEBUG_FLAG,                    0x800030E8);

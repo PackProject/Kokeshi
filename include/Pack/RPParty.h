@@ -7,5 +7,11 @@
 #include <RPParty/RPBilScene/RPBilCue.h>
 #include <RPParty/RPBilScene/RPBilCueManager.h>
 #include <RPParty/RPBilScene/RPBilMain.h>
+#include <RPParty/RPBilScene/RPBilScene.h>
+#include <RPParty/RPPartyCommonData.h>
+#include <RPParty/RPPartyGameMgr.h>
+#include <RPParty/RPPartyMenuScene.h>
+#include <RPParty/RPPartyPlayerData.h>
+#include <RPParty/RPPartyTitleScene.h>
 
 #endif

@@ -1,17 +1,17 @@
 #ifndef EGG_MATH_QUAT_H
 #define EGG_MATH_QUAT_H
-#include "eggVector.h"
 #include "types_egg.h"
 
 namespace EGG {
+
+// Forward declaration
+class Vector3f;
 
 Quatf operator*(const Quatf& lhs, const Vector3f& rhs);
 Quatf operator*(const Quatf& lhs, const Quatf& rhs);
 
 struct Quatf {
     Quatf() {}
-    Quatf(f32 _w, Vector3f vec) : x(vec.x), y(vec.y), z(vec.z), w(_w) {}
-
     ~Quatf() {}
 
     void setAxisRotation(const Vector3f&, f32);

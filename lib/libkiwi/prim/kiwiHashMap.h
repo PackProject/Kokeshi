@@ -1,7 +1,8 @@
 #ifndef LIBKIWI_PRIM_HASHMAP_H
 #define LIBKIWI_PRIM_HASHMAP_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiLinkList.h>
-#include <types.h>
+#include <libkiwi/prim/kiwiOptional.h>
 
 namespace kiwi {
 
@@ -37,7 +38,7 @@ private:
         /**
          * @brief Constructor
          */
-        Bucket() : key(TKey()), value(TValue()), used(false), chained(NULL) {}
+        Bucket() : used(false), chained(NULL) {}
 
         /**
          * @brief Destructor
@@ -48,14 +49,11 @@ private:
         }
 
         // Key/value pair
-        TKey key;
-        TValue value;
+        Optional<TKey> key;
+        Optional<TValue> value;
 
-        // Bucket is in use
-        bool used;
-
-        // Chains
-        Bucket* chained;
+        bool used;       // Bucket is in use
+        Bucket* chained; // Chains
     };
 
 public:
@@ -84,38 +82,7 @@ public:
         /**
          * Pre-increment operator
          */
-        ConstIterator& operator++() {
-            // Can't iterate
-            if (mpIter == NULL) {
-                return *this;
-            }
-
-            // Increment
-            mpIter = mpIter->chained;
-
-            // Find next non-empty chain
-            while (true) {
-                // End of chain, advance to next bucket
-                if (mpIter == NULL) {
-                    if (++mIndex >= mCapacity) {
-                        break;
-                    }
-
-                    mpIter = &mpBuckets[mIndex];
-                }
-
-                // Did we find an item?
-                K_ASSERT(mpIter != NULL);
-                if (mpIter->used) {
-                    break;
-                }
-
-                // Keep searching
-                mpIter = mpIter->chained;
-            }
-
-            return *this;
-        }
+        ConstIterator& operator++();
         /**
          * Post-increment operator
          */
@@ -130,14 +97,14 @@ public:
          */
         const TKey& Key() const {
             K_ASSERT(mpIter != NULL);
-            return mpIter->key;
+            return *mpIter->key;
         }
         /**
          * Get value from this element
          */
         const TValue& Value() const {
             K_ASSERT(mpIter != NULL);
-            return mpIter->value;
+            return *mpIter->value;
         }
 
         /**
@@ -184,6 +151,13 @@ public:
     }
 
     /**
+     * @brief Constructor
+     *
+     * @param other Map to copy
+     */
+    TMap(const TMap& other);
+
+    /**
      * @brief Destructor
      */
     ~TMap() {
@@ -198,7 +172,7 @@ public:
      * @return Existing value, or new entry
      */
     TValue& operator[](const TKey& key) {
-        return Create(key).value;
+        return *Create(key).value;
     }
 
     /**
@@ -218,24 +192,7 @@ public:
      * @param[out] removed Removed value
      * @return Success
      */
-    bool Remove(const TKey& key, TValue* removed = NULL) {
-        Bucket* bucket = Search(key);
-
-        // Can't remove, doesn't exist
-        if (bucket == NULL) {
-            return false;
-        }
-
-        // Write out value about to be removed
-        if (removed != NULL) {
-            *removed = bucket->value;
-        }
-
-        // Just mark as unused
-        bucket->used = false;
-        mSize--;
-        return true;
-    }
+    bool Remove(const TKey& key, TValue* removed = NULL);
 
     /**
      * @brief Look for the value corresponding to a key
@@ -245,7 +202,7 @@ public:
      */
     TValue* Find(const TKey& key) const {
         Bucket* bucket = Search(key);
-        return bucket != NULL ? &bucket->value : NULL;
+        return bucket != NULL ? &*bucket->value : NULL;
     }
 
     /**
@@ -312,77 +269,20 @@ public:
     }
 
 private:
-    /**
-     * @brief Find key in hashmap
-     *
-     * @param key Key
-     */
-    Bucket* Search(const TKey& key) const {
-        // Calculate bucket index
-        u32 i = Hash(key) % mCapacity;
-
-        // Iterate through chains
-        for (Bucket* it = &mpBuckets[i]; it != NULL; it = it->chained) {
-            // Unused entry
-            if (!it->used) {
-                continue;
-            }
-
-            // Matches key
-            if (it->key == key) {
-                return it;
-            }
-        }
-
-        return NULL;
-    }
-
-    /**
-     * @brief Create key in hashmap
-     *
-     * @param key Key
-     */
-    Bucket& Create(const TKey& key) {
-        // Calculate bucket index
-        u32 i = Hash(key) % mCapacity;
-
-        // Iterate through chains
-        Bucket* last = NULL;
-        for (Bucket* it = &mpBuckets[i]; it != NULL; it = it->chained) {
-            // Unused entry
-            if (!it->used) {
-                // Override this entry
-                it->key = key;
-                it->used = true;
-                mSize++;
-                return *it;
-            }
-
-            // Matches key
-            if (it->key == key) {
-                return *it;
-            }
-
-            last = it;
-        }
-
-        // Chain new bucket
-        K_ASSERT(last != NULL);
-        last->chained = new Bucket();
-        K_ASSERT(last->chained != NULL);
-
-        last->chained->key = key;
-        last->chained->used = true;
-        mSize++;
-        return *last->chained;
-    }
+    Bucket* Search(const TKey& key) const;
+    Bucket& Create(const TKey& key);
 
 private:
-    u32 mSize;
-    u32 mCapacity;
-    Bucket* mpBuckets;
+    u32 mSize;         // Number of elements
+    u32 mCapacity;     // Maximum number of elements
+    Bucket* mpBuckets; // Element buckets
 };
 
 } // namespace kiwi
+
+// Implementation header
+#ifndef LIBKIWI_PRIM_HASHMAP_IMPL_HPP
+#include <libkiwi/prim/kiwiHashMapImpl.hpp>
+#endif
 
 #endif

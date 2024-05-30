@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_UTIL_AUTOLOCK_H
 #define LIBKIWI_UTIL_AUTOLOCK_H
+#include <libkiwi/k_types.h>
 #include <revolution/OS.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -22,8 +22,7 @@ public:
     void Unlock();
 
 private:
-    // Locked object
-    T& mObject;
+    T& mObject; // Locked object
 };
 
 /**
@@ -54,8 +53,7 @@ public:
     }
 
 private:
-    // Interrupt status
-    BOOL mEnabled;
+    BOOL mEnabled; // Interrupt status
 };
 
 } // namespace kiwi

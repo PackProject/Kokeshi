@@ -1,8 +1,9 @@
 #ifndef LIBKIWI_PRIM_STRING_H
 #define LIBKIWI_PRIM_STRING_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiBitCast.h>
 #include <libkiwi/prim/kiwiHashMap.h>
-#include <types.h>
+#include <libkiwi/prim/kiwiVector.h>
 
 namespace kiwi {
 
@@ -39,7 +40,7 @@ public:
      */
     StringImpl(const StringImpl& str, u32 pos, u32 len = npos)
         : mpBuffer(NULL), mCapacity(0), mLength(0) {
-        Assign(str.Substr(pos, len));
+        Assign(str.SubStr(pos, len));
     }
 
     /**
@@ -92,7 +93,7 @@ public:
             return;
         }
 
-        delete mpBuffer;
+        delete[] mpBuffer;
         mpBuffer = NULL;
     }
 
@@ -147,11 +148,18 @@ public:
     }
 
     void Clear();
-    StringImpl Substr(u32 pos = 0, u32 len = npos) const;
+    StringImpl SubStr(u32 pos = 0, u32 len = npos) const;
 
     u32 Find(const StringImpl& str, u32 pos = 0) const;
     u32 Find(const T* s, u32 pos = 0) const;
     u32 Find(T c, u32 pos = 0) const;
+
+    bool StartsWith(const StringImpl& str) const;
+    bool StartsWith(const T* s) const;
+    bool EndsWith(const StringImpl& str) const;
+    bool EndsWith(const T* s) const;
+
+    TVector<StringImpl> Split(const StringImpl& delim) const;
 
     StringImpl& operator+=(const StringImpl& str) {
         Append(str);
@@ -227,12 +235,9 @@ private:
     void Append(T c);
 
 private:
-    // String buffer
-    T* mpBuffer;
-    // Allocated buffer size
-    u32 mCapacity;
-    // String length
-    u32 mLength;
+    T* mpBuffer;   // String buffer
+    u32 mCapacity; // Buffer size
+    u32 mLength;   // String length (not including null terminator)
 
     // Static string for empty StringImpls
     static const T* scEmptyCStr;

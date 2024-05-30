@@ -2,7 +2,7 @@
 #define LIBKIWI_PRIM_STL_H
 #include <cstdio>
 #include <cstring>
-#include <types.h>
+#include <libkiwi/k_types.h>
 
 namespace ksl {
 
@@ -17,8 +17,8 @@ char* strchr(const char* str, char c);
 size_t strnlen(const char* str, size_t maxlen);
 
 // cstdlib
-s32 strtol(const char* str, char** endptr, int base);
-u32 strtoul(const char* str, char** endptr, int base);
+s32 strtol(const char* str, char** endptr = NULL, int base = 0);
+u32 strtoul(const char* str, char** endptr = NULL, int base = 0);
 f64 atof(const char* str);
 
 typedef BOOL (*QSortFunc)(const void* a, const void* b);

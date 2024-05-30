@@ -25,7 +25,7 @@ public:
 public:
     // @address 80188280
     static RPSysDvdStatus* CreateInstance(EGG::Heap* heap);
-    static RPSysDvdStatus* getInstance() {
+    static RPSysDvdStatus* GetInstance() {
         return sInstance;
     }
 

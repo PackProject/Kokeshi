@@ -12,9 +12,11 @@ public:
     enum E_RESULT { RESULT_NONE, RESULT_WAIT, RESULT_YES, RESULT_NO };
 
 public:
-    static RPSysSystemWinMgr* getInstance() {
+    static RPSysSystemWinMgr* GetInstance() {
         return sInstance;
     }
+
+    void createSystemWindow();
 
     void setSystemWindow(E_WINDOW_TYPE type, u32 group, RPSysMessage* msg,
                          int argc, ...);

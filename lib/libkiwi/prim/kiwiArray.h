@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_PRIM_ARRAY_H
 #define LIBKIWI_PRIM_ARRAY_H
-#include <libkiwi/kernel/kiwiAssert.h>
-#include <types.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 
 namespace kiwi {
 
@@ -13,6 +13,10 @@ namespace kiwi {
  */
 template <typename T, u32 N> class TArray {
 public:
+    u32 Length() const {
+        return N;
+    }
+
     T& At(int i) {
         K_ASSERT(i >= 0 && i < N);
         return mData[i];
@@ -38,8 +42,7 @@ public:
     }
 
 private:
-    // Internal array
-    T mData[N];
+    T mData[N]; // Internal array
 };
 
 /**
@@ -51,6 +54,10 @@ private:
  */
 template <typename T, u32 M, u32 N> class TArray2D {
 public:
+    u32 Length() const {
+        return M;
+    }
+
     TArray<T, N>& At(int i) {
         K_ASSERT(i >= 0 && i < N);
         return mData[i];
@@ -95,8 +102,7 @@ public:
     }
 
 private:
-    // Internal array
-    TArray<T, N> mData[M];
+    TArray<T, N> mData[M]; // Internal array
 };
 
 } // namespace kiwi

@@ -4,8 +4,10 @@
 #include <RPKernel/IRPSysHostIOSocket.h>
 #include <RPKernel/RPSysAvatar.h>
 #include <RPKernel/RPSysCursorDrawMgr.h>
+#include <RPKernel/RPSysEffectMgr.h>
 #include <RPKernel/RPSysFile.h>
 #include <RPKernel/RPSysFrameCtrl.h>
+#include <RPKernel/RPSysHomeMenuMgr.h>
 #include <RPKernel/RPSysKokeshiGenInfo.h>
 #include <RPKernel/RPSysKokeshiIcon.h>
 #include <RPKernel/RPSysKokeshiLocation.h>
@@ -21,6 +23,7 @@
 #include <RPKernel/RPSysMessage.h>
 #include <RPKernel/RPSysSystemWinMgr.h>
 #include <RPKernel/RPSysTextWriter.h>
+#include <RPKernel/RPSysTutorialWinMgr.h>
 #include <RPKernel/RPSysWideTextWriter.h>
 
 #endif

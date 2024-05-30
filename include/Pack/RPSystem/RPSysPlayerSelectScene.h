@@ -5,7 +5,7 @@
 
 /**
  * @brief Pack Project player select scene
- * @note Stub class for SceneCreatorEx
+ * @note Stub class for SceneCreator
  */
 class RPSysPlayerSelectScene : public RPSysScene {
 public:

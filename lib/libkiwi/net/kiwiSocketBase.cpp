@@ -12,7 +12,8 @@ SocketBase::SocketBase(SOProtoFamily family, SOSockType type)
     : mHandle(-1), mFamily(family), mType(type) {
     // Create IOS socket
     mHandle = LibSO::Socket(mFamily, mType);
-    K_ASSERT_EX(IsOpen(), "Failed to create socket");
+    K_ASSERT_EX(IsOpen(), "Failed to create socket (%d)",
+                LibSO::GetLastError());
 
     // By default, enable port reuse
     bool success = SetReuseAddr(true);
@@ -87,6 +88,16 @@ bool SocketBase::Listen(s32 backlog) const {
     K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.\n");
 
     return LibSO::Listen(mHandle, backlog) == SO_SUCCESS;
+}
+
+/**
+ * Tests whether socket is blocking
+ */
+bool SocketBase::IsBlocking() const {
+    K_ASSERT(IsOpen());
+
+    s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
+    return (flags & SO_O_NONBLOCK) == 0;
 }
 
 /**

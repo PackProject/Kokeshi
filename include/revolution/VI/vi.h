@@ -26,10 +26,9 @@ typedef enum {
 } VITvFormat;
 
 typedef enum VIScanMode {
-    VI_SCAN_MODE_NON_INT,
     VI_SCAN_MODE_INT,
-    VI_SCAN_MODE_PROG,
-    VI_SCAN_MODE_3,
+    VI_SCAN_MODE_DS,
+    VI_SCAN_MODE_PROG
 } VIScanMode;
 
 typedef enum VIXfbMode {

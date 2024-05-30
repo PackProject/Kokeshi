@@ -35,15 +35,13 @@ bool NandStream::Open(const String& path) {
         Close();
 
         // Try to create file
-        result = NANDCreate(path, NAND_PERM_RWALL, 0);
-        if (result != NAND_RESULT_OK) {
+        if (NANDCreate(path, NAND_PERM_RWALL, 0) != NAND_RESULT_OK) {
             Close();
             return false;
         }
 
         // Need to open again
-        result = NANDOpen(path, &mFileInfo, type);
-        if (result != NAND_RESULT_OK) {
+        if (NANDOpen(path, &mFileInfo, type) != NAND_RESULT_OK) {
             Close();
             return false;
         }

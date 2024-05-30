@@ -6,7 +6,7 @@
 
 /**
  * @brief Pack Project nunchuk scene
- * @note Stub class for SceneCreatorEx
+ * @note Stub class for SceneCreator
  */
 class RPSysNunchukScene : public RPSysScene, public IRPSysHostIOSocket {
 public:

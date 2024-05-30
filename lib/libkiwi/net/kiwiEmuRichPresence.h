@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_NET_EMU_RICH_PRESENCE_H
 #define LIBKIWI_NET_EMU_RICH_PRESENCE_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/net/kiwiIRichPresence.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -10,7 +10,7 @@ namespace kiwi {
  */
 class EmuRichPresence : public IRichPresence {
 public:
-    EmuRichPresence(const String& client);
+    explicit EmuRichPresence(const String& client);
     virtual ~EmuRichPresence();
 
     virtual bool IsConnected() const;
@@ -20,8 +20,7 @@ public:
     virtual void UpdatePresence() const;
 
 private:
-    // Handle to Dolphin device
-    s32 mHandle;
+    s32 mHandle; // Handle to Dolphin device
 };
 
 } // namespace kiwi

@@ -2,8 +2,14 @@
 #define EGG_CORE_SCENE_H
 #include "types_egg.h"
 
+#include <egg/core/eggDisposer.h>
+
 namespace EGG {
-class Scene {
+class Scene
+#ifdef PACK_RESORT
+    : public Disposer
+#endif
+{
 public:
     Scene();
 

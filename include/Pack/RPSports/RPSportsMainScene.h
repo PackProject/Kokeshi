@@ -5,7 +5,7 @@
 
 /**
  * @brief Sports Pack menu scene
- * @note Stub class for SceneCreatorEx
+ * @note Stub class for SceneCreator
  */
 class RPSportsMainScene : public RPSysScene {
 public:

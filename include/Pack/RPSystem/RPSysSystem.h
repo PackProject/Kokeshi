@@ -25,7 +25,7 @@
  */
 class RPSysSystem {
 public:
-    static RPSysSystem* getInstance() {
+    static RPSysSystem* GetInstance() {
         return sInstance;
     }
 

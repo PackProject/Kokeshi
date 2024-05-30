@@ -12,6 +12,12 @@ namespace ut {
 
 template <typename T> class TextWriterBase : public CharWriter {
 public:
+    enum DrawFlag {
+        DrawFlag_AlignCenterY = 0x100,
+        DrawFlag_AlignCenterX = 0x10,
+    };
+
+public:
     static T* GetBuffer() {
         return mFormatBuffer;
     }
@@ -61,7 +67,10 @@ public:
     }
 
     void SetDrawFlag(u32 flag) {
-        mDrawFlag = flag;
+        mDrawFlag |= flag;
+    }
+    u32 GetDrawFlag() const {
+        return mDrawFlag;
     }
     bool IsDrawFlagSet(u32 mask, u32 flag) const {
         return (mDrawFlag & mask) == flag;

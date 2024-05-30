@@ -40,6 +40,10 @@ CFLAGS_COMMON = " ".join([
     "-sdata2 0",            # We can't use small data sections in relocatable code
 ])
 
+# Flags applied only to the module
+CFLAGS_MODULE = " ".join([
+])
+
 # Flags applied for debug target
 CFLAGS_DEBUG = " ".join([
 ])
@@ -326,7 +330,8 @@ def build_loader(args) -> bool:
     objs = [src_to_obj(f) for f in srcs]
 
     inc_dirs = search_dirs(SRC_DIR, recursive=False) + \
-        search_dirs(INCLUDE_DIR, recursive=False)
+        search_dirs(INCLUDE_DIR, recursive=False) + \
+        search_dirs(LIBRARY_DIR, recursive=False)
     inc_dirs.append(LOADER_DIR)
 
     # Loader compiler flags
@@ -396,8 +401,9 @@ def build_module(args) -> bool:
     #
 
     # Identify module files
-    srcs = search_files(SRC_DIR, SRC_EXTENSIONS) + \
-        search_files(LIBRARY_DIR, SRC_EXTENSIONS)
+    # NOTE: Make sure library files are linked BEFORE module files
+    srcs = search_files(LIBRARY_DIR, SRC_EXTENSIONS) + \
+        search_files(SRC_DIR, SRC_EXTENSIONS)
     objs = [src_to_obj(f) for f in srcs]
 
     inc_dirs = search_dirs(SRC_DIR, recursive=False) + search_dirs(
@@ -408,6 +414,8 @@ def build_module(args) -> bool:
     cflags = ' '.join([
         # Common flags
         CFLAGS_COMMON,
+        # Module flags
+        CFLAGS_MODULE,
         # Pack definition
         f"-DPACK_{args.game.upper()}",
         # Build target flags (release/debug)

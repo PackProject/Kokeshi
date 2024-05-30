@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_NET_RELIABLE_PACKET_H
 #define LIBKIWI_NET_RELIABLE_PACKET_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/net/kiwiPacket.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -26,14 +26,14 @@ struct KUDPHeader {
 
     // Identifier string
     static const u32 KUDP_MAGIC = 'KUv0';
-};
 
-/**
- * Packet flags
- */
-enum EFlags {
-    // This packet is only a fragment of the message, and there are more
-    EFlags_MoreFragments = (1 << 0),
+    /**
+     * Packet flags
+     */
+    enum EFlags {
+        // This packet is only a fragment of the message, and there are more
+        EFlags_MoreFragments = (1 << 0),
+    };
 };
 
 /**

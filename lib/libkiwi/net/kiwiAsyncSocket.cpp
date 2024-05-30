@@ -298,8 +298,7 @@ SOResult AsyncSocket::RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
                                Callback callback, void* arg) {
     K_ASSERT(IsOpen());
     K_ASSERT(dst != NULL);
-    K_ASSERT(len > 0 && len < ULONG_MAX);
-    K_ASSERT_EX(callback != NULL, "Please provide a receive callback");
+    K_ASSERT_EX(!IsStack(dst), "Don't use stack memory for async");
 
     // Packet to hold incoming data
     Packet* packet = new Packet(len);
@@ -331,7 +330,7 @@ SOResult AsyncSocket::SendImpl(const void* src, u32 len, u32& nsend,
                                void* arg) {
     K_ASSERT(IsOpen());
     K_ASSERT(src != NULL);
-    K_ASSERT(len > 0 && len < ULONG_MAX);
+    K_ASSERT_EX(!IsStack(src), "Don't use stack memory for async");
 
     // Packet to hold incoming data
     Packet* packet = new Packet(len, addr);

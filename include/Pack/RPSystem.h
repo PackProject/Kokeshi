@@ -10,6 +10,8 @@
 #include <RPSystem/RPSysLytBackButton.h>
 #include <RPSystem/RPSysLytMenuCommon.h>
 #include <RPSystem/RPSysNunchukScene.h>
+#include <RPSystem/RPSysPauseMgr.h>
+#include <RPSystem/RPSysPlayerMgr.h>
 #include <RPSystem/RPSysPlayerSelectScene.h>
 #include <RPSystem/RPSysProjectLocal.h>
 #include <RPSystem/RPSysQueuedScene.h>

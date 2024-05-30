@@ -10,10 +10,8 @@ namespace {
  * @brief Gets the currently active RP scene
  */
 RPSysScene* GetCurrentScene() {
-    RPSysSceneMgr* m = RPSysSceneMgr::getInstance();
-    K_ASSERT(m != NULL);
-
-    return static_cast<RPSysScene*>(m->getCurrentScene());
+    return static_cast<RPSysScene*>(
+        RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentScene());
 }
 
 } // namespace
@@ -133,8 +131,8 @@ void SceneHookMgr::OnSceneCalculate() {
     }
 
     // Run scene logic
-    RPSysSceneMgr::getInstance()->updateState();
-    RPSysSceneMgr::getInstance()->SceneManager::calcCurrentScene();
+    RP_GET_INSTANCE(RPSysSceneMgr)->updateState();
+    RP_GET_INSTANCE(RPSysSceneMgr)->SceneManager::calcCurrentScene();
 
     // Hooks after scene logic
     for (TList<ISceneHook>::Iterator it = GetInstance().mGlobalHooks.Begin();

@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_CORE_I_BINARY_H
 #define LIBKIWI_CORE_I_BINARY_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
-#include <types.h>
 
 /**
  * @brief Helper for creating version numbers

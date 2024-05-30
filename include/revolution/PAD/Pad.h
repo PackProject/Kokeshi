@@ -11,7 +11,11 @@ typedef struct PADStatus {
 
 extern u32 __PADSpec;
 
-BOOL __PADDisableRecalibration(BOOL);
+typedef enum {
+    PAD_FLAG_NO_RECALIBRATE = (1 << 6),
+} PADFlag;
+
+BOOL __PADDisableRecalibration(BOOL disable);
 
 #ifdef __cplusplus
 }

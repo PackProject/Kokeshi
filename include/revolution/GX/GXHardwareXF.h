@@ -169,24 +169,21 @@ typedef enum {
 #define GX_XF_COLOR0CNTRL_DIFFUSEATTN_SZ 2
 #define GX_XF_COLOR0CNTRL_DIFFUSEATTN_MASK (((1 << 2) - 1) << 31 - 24)
 #define GX_XF_GET_COLOR0CNTRL_DIFFUSEATTN(reg) GX_BITGET(reg, 23, 2)
-#define GX_XF_SET_COLOR0CNTRL_DIFFUSEATTN(reg, x)                              \
-    ((reg) = GX_BITSET(reg, 23, 2, x))
+#define GX_XF_SET_COLOR0CNTRL_DIFFUSEATTN(reg, x) ((reg) = GX_BITSET(reg, 23, 2, x))
 // ATTNENABLE [22:22] (1)
 #define GX_XF_COLOR0CNTRL_ATTNENABLE_ST 22
 #define GX_XF_COLOR0CNTRL_ATTNENABLE_END 22
 #define GX_XF_COLOR0CNTRL_ATTNENABLE_SZ 1
 #define GX_XF_COLOR0CNTRL_ATTNENABLE_MASK (((1 << 1) - 1) << 31 - 22)
 #define GX_XF_GET_COLOR0CNTRL_ATTNENABLE(reg) GX_BITGET(reg, 22, 1)
-#define GX_XF_SET_COLOR0CNTRL_ATTNENABLE(reg, x)                               \
-    ((reg) = GX_BITSET(reg, 22, 1, x))
+#define GX_XF_SET_COLOR0CNTRL_ATTNENABLE(reg, x) ((reg) = GX_BITSET(reg, 22, 1, x))
 // ATTNSELECT [21:21] (1)
 #define GX_XF_COLOR0CNTRL_ATTNSELECT_ST 21
 #define GX_XF_COLOR0CNTRL_ATTNSELECT_END 21
 #define GX_XF_COLOR0CNTRL_ATTNSELECT_SZ 1
 #define GX_XF_COLOR0CNTRL_ATTNSELECT_MASK (((1 << 1) - 1) << 31 - 21)
 #define GX_XF_GET_COLOR0CNTRL_ATTNSELECT(reg) GX_BITGET(reg, 21, 1)
-#define GX_XF_SET_COLOR0CNTRL_ATTNSELECT(reg, x)                               \
-    ((reg) = GX_BITSET(reg, 21, 1, x))
+#define GX_XF_SET_COLOR0CNTRL_ATTNSELECT(reg, x) ((reg) = GX_BITSET(reg, 21, 1, x))
 // LMASKLO [17:20] (4)
 #define GX_XF_COLOR0CNTRL_LMASKLO_ST 17
 #define GX_XF_COLOR0CNTRL_LMASKLO_END 20
@@ -329,6 +326,7 @@ typedef enum {
 #define GX_XF_DUALTEX_NORMALIZE_MASK (((1 << 1) - 1) << 31 - 23)
 #define GX_XF_GET_DUALTEX_NORMALIZE(reg) GX_BITGET(reg, 23, 1)
 #define GX_XF_SET_DUALTEX_NORMALIZE(reg, x) ((reg) = GX_BITSET(reg, 23, 1, x))
+
 
 #ifdef __cplusplus
 }

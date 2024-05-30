@@ -269,8 +269,7 @@ typedef enum {
 #define GX_BP_GENMODE_NUMINDSTAGES_SZ 3
 #define GX_BP_GENMODE_NUMINDSTAGES_MASK (((1 << 3) - 1) << 31 - 15)
 #define GX_BP_GET_GENMODE_NUMINDSTAGES(reg) GX_BITGET(reg, 13, 3)
-#define GX_BP_SET_GENMODE_NUMINDSTAGES(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 13, 3, x))
+#define GX_BP_SET_GENMODE_NUMINDSTAGES(reg, x) ((reg) = GX_BITSET(reg, 13, 3, x))
 // COPLANAR [12:12] (1) - Toggle co-planar ("Z freeze" according to Dolphin)
 #define GX_BP_GENMODE_COPLANAR_ST 12
 #define GX_BP_GENMODE_COPLANAR_END 12
@@ -498,17 +497,14 @@ typedef enum {
 #define GX_BP_LINEPTWIDTH_POINTOFS_SZ 3
 #define GX_BP_LINEPTWIDTH_POINTOFS_MASK (((1 << 3) - 1) << 31 - 12)
 #define GX_BP_GET_LINEPTWIDTH_POINTOFS(reg) GX_BITGET(reg, 10, 3)
-#define GX_BP_SET_LINEPTWIDTH_POINTOFS(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 10, 3, x))
-// ADJUST_AR [9:9] (1) - Interlacing: adjust for pixels having aspect ratio of
-// 1/2
+#define GX_BP_SET_LINEPTWIDTH_POINTOFS(reg, x) ((reg) = GX_BITSET(reg, 10, 3, x))
+// ADJUST_AR [9:9] (1) - Interlacing: adjust for pixels having aspect ratio of 1/2
 #define GX_BP_LINEPTWIDTH_ADJUST_AR_ST 9
 #define GX_BP_LINEPTWIDTH_ADJUST_AR_END 9
 #define GX_BP_LINEPTWIDTH_ADJUST_AR_SZ 1
 #define GX_BP_LINEPTWIDTH_ADJUST_AR_MASK (((1 << 1) - 1) << 31 - 9)
 #define GX_BP_GET_LINEPTWIDTH_ADJUST_AR(reg) GX_BITGET(reg, 9, 1)
-#define GX_BP_SET_LINEPTWIDTH_ADJUST_AR(reg, x)                                \
-    ((reg) = GX_BITSET(reg, 9, 1, x))
+#define GX_BP_SET_LINEPTWIDTH_ADJUST_AR(reg, x) ((reg) = GX_BITSET(reg, 9, 1, x))
 
 /**
  * BP register 0x25 - ras1_ss0
@@ -650,8 +646,7 @@ typedef enum {
 #define GX_BP_SU_SSIZE_USEPOINTOFS_SZ 1
 #define GX_BP_SU_SSIZE_USEPOINTOFS_MASK (((1 << 1) - 1) << 31 - 12)
 #define GX_BP_GET_SU_SSIZE_USEPOINTOFS(reg) GX_BITGET(reg, 12, 1)
-#define GX_BP_SET_SU_SSIZE_USEPOINTOFS(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 12, 1, x))
+#define GX_BP_SET_SU_SSIZE_USEPOINTOFS(reg, x) ((reg) = GX_BITSET(reg, 12, 1, x))
 
 /**
  * BP register 0x40 - ZMode
@@ -687,16 +682,14 @@ typedef enum {
 #define GX_BP_BLENDMODE_BLEND_ENABLE_SZ 1
 #define GX_BP_BLENDMODE_BLEND_ENABLE_MASK (((1 << 1) - 1) << 31 - 31)
 #define GX_BP_GET_BLENDMODE_BLEND_ENABLE(reg) GX_BITGET(reg, 31, 1)
-#define GX_BP_SET_BLENDMODE_BLEND_ENABLE(reg, x)                               \
-    ((reg) = GX_BITSET(reg, 31, 1, x))
+#define GX_BP_SET_BLENDMODE_BLEND_ENABLE(reg, x) ((reg) = GX_BITSET(reg, 31, 1, x))
 // LOGIC_OP_ENABLE [30:30] (1)
 #define GX_BP_BLENDMODE_LOGIC_OP_ENABLE_ST 30
 #define GX_BP_BLENDMODE_LOGIC_OP_ENABLE_END 30
 #define GX_BP_BLENDMODE_LOGIC_OP_ENABLE_SZ 1
 #define GX_BP_BLENDMODE_LOGIC_OP_ENABLE_MASK (((1 << 1) - 1) << 31 - 30)
 #define GX_BP_GET_BLENDMODE_LOGIC_OP_ENABLE(reg) GX_BITGET(reg, 30, 1)
-#define GX_BP_SET_BLENDMODE_LOGIC_OP_ENABLE(reg, x)                            \
-    ((reg) = GX_BITSET(reg, 30, 1, x))
+#define GX_BP_SET_BLENDMODE_LOGIC_OP_ENABLE(reg, x) ((reg) = GX_BITSET(reg, 30, 1, x))
 // DITHER [29:29] (1)
 #define GX_BP_BLENDMODE_DITHER_ST 29
 #define GX_BP_BLENDMODE_DITHER_END 29
@@ -710,32 +703,28 @@ typedef enum {
 #define GX_BP_BLENDMODE_COLOR_UPDATE_SZ 1
 #define GX_BP_BLENDMODE_COLOR_UPDATE_MASK (((1 << 1) - 1) << 31 - 28)
 #define GX_BP_GET_BLENDMODE_COLOR_UPDATE(reg) GX_BITGET(reg, 28, 1)
-#define GX_BP_SET_BLENDMODE_COLOR_UPDATE(reg, x)                               \
-    ((reg) = GX_BITSET(reg, 28, 1, x))
+#define GX_BP_SET_BLENDMODE_COLOR_UPDATE(reg, x) ((reg) = GX_BITSET(reg, 28, 1, x))
 // ALPHA_UPDATE [27:27] (1)
 #define GX_BP_BLENDMODE_ALPHA_UPDATE_ST 27
 #define GX_BP_BLENDMODE_ALPHA_UPDATE_END 27
 #define GX_BP_BLENDMODE_ALPHA_UPDATE_SZ 1
 #define GX_BP_BLENDMODE_ALPHA_UPDATE_MASK (((1 << 1) - 1) << 31 - 27)
 #define GX_BP_GET_BLENDMODE_ALPHA_UPDATE(reg) GX_BITGET(reg, 27, 1)
-#define GX_BP_SET_BLENDMODE_ALPHA_UPDATE(reg, x)                               \
-    ((reg) = GX_BITSET(reg, 27, 1, x))
+#define GX_BP_SET_BLENDMODE_ALPHA_UPDATE(reg, x) ((reg) = GX_BITSET(reg, 27, 1, x))
 // DST_FACTOR [24:26] (3)
 #define GX_BP_BLENDMODE_DST_FACTOR_ST 24
 #define GX_BP_BLENDMODE_DST_FACTOR_END 26
 #define GX_BP_BLENDMODE_DST_FACTOR_SZ 3
 #define GX_BP_BLENDMODE_DST_FACTOR_MASK (((1 << 3) - 1) << 31 - 26)
 #define GX_BP_GET_BLENDMODE_DST_FACTOR(reg) GX_BITGET(reg, 24, 3)
-#define GX_BP_SET_BLENDMODE_DST_FACTOR(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 24, 3, x))
+#define GX_BP_SET_BLENDMODE_DST_FACTOR(reg, x) ((reg) = GX_BITSET(reg, 24, 3, x))
 // SRC_FACTOR [21:23] (3)
 #define GX_BP_BLENDMODE_SRC_FACTOR_ST 21
 #define GX_BP_BLENDMODE_SRC_FACTOR_END 23
 #define GX_BP_BLENDMODE_SRC_FACTOR_SZ 3
 #define GX_BP_BLENDMODE_SRC_FACTOR_MASK (((1 << 3) - 1) << 31 - 23)
 #define GX_BP_GET_BLENDMODE_SRC_FACTOR(reg) GX_BITGET(reg, 21, 3)
-#define GX_BP_SET_BLENDMODE_SRC_FACTOR(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 21, 3, x))
+#define GX_BP_SET_BLENDMODE_SRC_FACTOR(reg, x) ((reg) = GX_BITSET(reg, 21, 3, x))
 // SUBTRACT [20:20] (1)
 #define GX_BP_BLENDMODE_SUBTRACT_ST 20
 #define GX_BP_BLENDMODE_SUBTRACT_END 20
@@ -749,8 +738,7 @@ typedef enum {
 #define GX_BP_BLENDMODE_LOGIC_MODE_SZ 4
 #define GX_BP_BLENDMODE_LOGIC_MODE_MASK (((1 << 4) - 1) << 31 - 19)
 #define GX_BP_GET_BLENDMODE_LOGIC_MODE(reg) GX_BITGET(reg, 16, 4)
-#define GX_BP_SET_BLENDMODE_LOGIC_MODE(reg, x)                                 \
-    ((reg) = GX_BITSET(reg, 16, 4, x))
+#define GX_BP_SET_BLENDMODE_LOGIC_MODE(reg, x) ((reg) = GX_BITSET(reg, 16, 4, x))
 
 /**
  * BP register 0x42 - DstAlpha
@@ -794,8 +782,7 @@ typedef enum {
 #define GX_BP_ZCONTROL_Z_FMT_MASK (((1 << 3) - 1) << 31 - 28)
 #define GX_BP_GET_ZCONTROL_Z_FMT(reg) GX_BITGET(reg, 26, 3)
 #define GX_BP_SET_ZCONTROL_Z_FMT(reg, x) ((reg) = GX_BITSET(reg, 26, 3, x))
-// BEFORE_TEX [25:25] (1) - Determines whether Z-buffering occurs before or
-// after texturing
+// BEFORE_TEX [25:25] (1) - Determines whether Z-buffering occurs before or after texturing
 #define GX_BP_ZCONTROL_BEFORE_TEX_ST 25
 #define GX_BP_ZCONTROL_BEFORE_TEX_END 25
 #define GX_BP_ZCONTROL_BEFORE_TEX_SZ 1
@@ -842,8 +829,7 @@ typedef enum {
 /**
  * BP register 0x68 - FieldMode
  */
-// TEX_LOD [31:31] (1) - Adjust vertex tex LOD computation to account for
-// interlacing
+// TEX_LOD [31:31] (1) - Adjust vertex tex LOD computation to account for interlacing
 #define GX_BP_FIELDMODE_TEX_LOD_ST 31
 #define GX_BP_FIELDMODE_TEX_LOD_END 31
 #define GX_BP_FIELDMODE_TEX_LOD_SZ 1
@@ -983,6 +969,7 @@ typedef enum {
 #define GX_BP_FOGCOLOR_RGB_MASK (((1 << 24) - 1) << 31 - 31)
 #define GX_BP_GET_FOGCOLOR_RGB(reg) GX_BITGET(reg, 8, 24)
 #define GX_BP_SET_FOGCOLOR_RGB(reg, x) ((reg) = GX_BITSET(reg, 8, 24, x))
+
 
 #ifdef __cplusplus
 }

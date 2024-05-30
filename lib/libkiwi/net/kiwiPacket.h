@@ -1,11 +1,11 @@
 #ifndef LIBKIWI_NET_PACKET_H
 #define LIBKIWI_NET_PACKET_H
 #include <climits>
+#include <libkiwi/k_types.h>
 #include <libkiwi/math/kiwiAlgorithm.h>
 #include <libkiwi/prim/kiwiOptional.h>
-#include <libkiwi/rvl/kiwiLibSO.h>
+#include <libkiwi/support/kiwiLibSO.h>
 #include <revolution/OS.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -140,8 +140,7 @@ protected:
     s32 mReadOffset;
     s32 mWriteOffset;
 
-    // Sender (recv) or recipient (send)
-    SockAddr mAddress;
+    SockAddr mAddress; // Sender (recv) or recipient (send)
 };
 
 } // namespace kiwi

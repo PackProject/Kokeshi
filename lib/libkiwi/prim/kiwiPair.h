@@ -1,6 +1,6 @@
 #ifndef LIBKIWI_PRIM_PAIR_H
 #define LIBKIWI_PRIM_PAIR_H
-#include <types.h>
+#include <libkiwi/k_types.h>
 
 namespace kiwi {
 

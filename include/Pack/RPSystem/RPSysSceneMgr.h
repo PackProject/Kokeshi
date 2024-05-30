@@ -24,7 +24,7 @@ public:
     };
 
 public:
-    static RPSysSceneMgr* getInstance() {
+    static RPSysSceneMgr* GetInstance() {
         return sInstance;
     }
 

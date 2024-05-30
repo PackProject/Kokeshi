@@ -21,10 +21,10 @@ public:
     void setSystemSeFadeInFrame(s16 frame);
 
     bool startSound(u32 id) {
-        return startSound(&mSndHandle, id);
+        return RPSndAudioMgr::startSound(&mSndHandle, id);
     }
     bool startSound(const char* name) {
-        return startSound(&mSndHandle, name);
+        return RPSndAudioMgr::startSound(&mSndHandle, name);
     }
 
     void stopAllSoud();

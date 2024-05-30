@@ -1,6 +1,49 @@
 #include <libkiwi.h>
 
+/**
+ * @brief Define stream functions by type
+ */
+#define IO_FUNC_DEF(T)                                                         \
+    T MemStream::Read_##T() {                                                  \
+        T* ptr;                                                                \
+        T value = static_cast<T>(0);                                           \
+                                                                               \
+        s32 n = Read(&value, sizeof(T));                                       \
+        K_ASSERT(n > 0);                                                       \
+                                                                               \
+        return value;                                                          \
+    }                                                                          \
+                                                                               \
+    void MemStream::Write_##T(T value) {                                       \
+        T* ptr;                                                                \
+                                                                               \
+        s32 n = Write(&value, sizeof(T));                                      \
+        K_ASSERT(n > 0);                                                       \
+    }                                                                          \
+                                                                               \
+    T MemStream::Peek_##T() {                                                  \
+        T* ptr;                                                                \
+        T value = static_cast<T>(0);                                           \
+                                                                               \
+        s32 n = Peek(&value, sizeof(T));                                       \
+        K_ASSERT(n > 0);                                                       \
+                                                                               \
+        return value;                                                          \
+    }
+
 namespace kiwi {
+
+IO_FUNC_DEF(u8);
+IO_FUNC_DEF(s8);
+IO_FUNC_DEF(u16);
+IO_FUNC_DEF(s16);
+IO_FUNC_DEF(u32);
+IO_FUNC_DEF(s32);
+IO_FUNC_DEF(u64);
+IO_FUNC_DEF(s64);
+IO_FUNC_DEF(f32);
+IO_FUNC_DEF(f64);
+IO_FUNC_DEF(bool);
 
 /**
  * @brief Seek stream
@@ -59,6 +102,54 @@ s32 MemStream::WriteImpl(const void* src, u32 size) {
  */
 s32 MemStream::PeekImpl(void* dst, u32 size) {
     return ReadImpl(dst, size);
+}
+
+/**
+ * @brief Read string from the stream
+ */
+String MemStream::Read_string() {
+    static int sTextBufferPos = 0;
+    static char sTextBuffer[0x400];
+
+    // Form string in work buffer
+    while (sTextBufferPos < LENGTHOF(sTextBuffer)) {
+        char ch = Read_s8();
+        sTextBuffer[sTextBufferPos++] = ch;
+
+        // Null terminator
+        if (ch == '\0') {
+            break;
+        }
+
+        // End-of-file
+        if (IsEOF()) {
+            break;
+        }
+    }
+
+    // No matter what happened, null terminator should be at the end
+    sTextBuffer[sTextBufferPos] = '\0';
+    return String(sTextBuffer);
+}
+
+/**
+ * @brief Write string to the stream
+ *
+ * @param str String to write
+ */
+void MemStream::Write_string(const String& str) {
+    Write(str.CStr(), str.Length());
+    Write_s8(0x00);
+}
+
+/**
+ * @brief Peek string in the stream
+ */
+String MemStream::Peek_string() {
+    // Just seek back
+    String str = Read_string();
+    Seek(ESeekDir_Current, -str.Length());
+    return str;
 }
 
 } // namespace kiwi

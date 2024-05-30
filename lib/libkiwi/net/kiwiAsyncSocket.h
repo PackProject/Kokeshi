@@ -1,11 +1,11 @@
 #ifndef LIBKIWI_NET_ASYNC_SOCKET_H
 #define LIBKIWI_NET_ASYNC_SOCKET_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/net/kiwiPacket.h>
 #include <libkiwi/net/kiwiSocketBase.h>
 #include <libkiwi/prim/kiwiLinkList.h>
 #include <libkiwi/prim/kiwiOptional.h>
 #include <revolution/OS.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -50,10 +50,8 @@ private:
 private:
     static const u32 THREAD_STACK_SIZE = 0x4000;
 
-    // Current async task
-    volatile EState mState;
-    // Peer address
-    SockAddr mPeer;
+    volatile EState mState; // Current async task
+    SockAddr mPeer;         // Peer address
 
     // Active packet jobs
     TList<RecvJob> mRecvJobs;
@@ -72,8 +70,7 @@ private:
     static bool sSocketThreadCreated;
     static u8 sSocketThreadStack[THREAD_STACK_SIZE];
 
-    // Active async sockets
-    static TList<AsyncSocket> sSocketList;
+    static TList<AsyncSocket> sSocketList; // Active async sockets
 };
 
 } // namespace kiwi

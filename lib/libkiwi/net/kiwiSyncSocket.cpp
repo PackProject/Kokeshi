@@ -14,8 +14,8 @@ namespace kiwi {
 bool SyncSocket::Connect(const SockAddr& addr, Callback callback, void* arg) {
     K_ASSERT(IsOpen());
 
-    // Blocking call
-    bool success = LibSO::Connect(mHandle, addr) == SO_SUCCESS;
+    s32 result = LibSO::Connect(mHandle, addr);
+    bool success = result == SO_SUCCESS || result == SO_EISCONN;
 
     if (callback != NULL) {
         callback(LibSO::GetLastError(), arg);
@@ -37,7 +37,6 @@ SyncSocket* SyncSocket::Accept(AcceptCallback callback, void* arg) {
     SyncSocket* peer = NULL;
     kiwi::SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
 
-    // Blocking call
     s32 fd = LibSO::Accept(mHandle, addr);
 
     // Result code is the peer descriptor
@@ -75,12 +74,12 @@ SOResult SyncSocket::RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
 
     nrecv = 0;
     while (nrecv < len) {
-        // Blocking call
         result = LibSO::RecvFrom(mHandle, dst, len - nrecv, 0, peer);
-        if (result < 0) {
+        if (result <= 0) {
             goto _exit;
         }
 
+        dst = AddToPtr(dst, result);
         nrecv += result;
     }
 
@@ -121,7 +120,6 @@ SOResult SyncSocket::SendImpl(const void* src, u32 len, u32& nsend,
 
     nsend = 0;
     while (nsend < len) {
-        // Blocking calls
         if (addr != NULL) {
             result = LibSO::SendTo(mHandle, src, len - nsend, 0, *addr);
         } else {

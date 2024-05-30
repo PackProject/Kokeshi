@@ -17,7 +17,7 @@ bool DvdStream::Open(const String& path) {
     // Try to locate file on disc
     s32 entrynum = DVDConvertPathToEntrynum(path);
     if (entrynum < 0) {
-        K_LOG_EX("Can't find DVD file: %s\n", path);
+        K_LOG_EX("Can't find DVD file: %s\n", path.CStr());
         return false;
     }
 
@@ -97,9 +97,7 @@ s32 DvdStream::WriteImpl(const void* src, u32 size) {
  * @return s32 Number of bytes peeked, or error code
  */
 s32 DvdStream::PeekImpl(void* dst, u32 size) {
-    s32 n = ReadImpl(dst, size);
-    mPosition -= n;
-    return n;
+    return ReadImpl(dst, size);
 }
 
 } // namespace kiwi

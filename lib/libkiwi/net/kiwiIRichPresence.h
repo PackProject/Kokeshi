@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_NET_I_RICH_PRESENCE_H
 #define LIBKIWI_NET_I_RICH_PRESENCE_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
 #include <revolution/OS.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -16,7 +16,7 @@ public:
      *
      * @param client Client app ID
      */
-    IRichPresence(const String& client)
+    explicit IRichPresence(const String& client)
         : mClient(client),
           mStartTime(0),
           mEndTime(0),
@@ -82,8 +82,7 @@ public:
     }
 
 protected:
-    // Client ID
-    String mClient;
+    String mClient; // Client ID
 
     // Presence info
     String mDetails;

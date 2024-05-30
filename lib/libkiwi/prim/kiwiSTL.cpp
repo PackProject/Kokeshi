@@ -89,44 +89,17 @@ size_t strnlen(const char* str, size_t maxlen) {
  * @param str String to convert
  * @param[out] endptr Pointer to string data after the converted number
  * @param base Number base (specify 0 to auto-detect)
- *
- * @copyright Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. [rescinded 22 July 1999]
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
  */
 s32 strtol(const char* str, char** endptr, int base) {
     K_ASSERT(str != NULL);
 
     // Trim leading whitespace
     while (*str == ' ') {
-        if (*str == '\0') {
-            return 0;
-        }
         str++;
+    }
+
+    if (*str == '\0') {
+        return 0;
     }
 
     // Sign (positive by default)
@@ -134,7 +107,9 @@ s32 strtol(const char* str, char** endptr, int base) {
     if (*str == '-') {
         positive = false;
         str++;
-    } else if (*str == '+') {
+    }
+    // Can still specify '+' though
+    else if (*str == '+') {
         str++;
     }
 
@@ -158,7 +133,11 @@ s32 strtol(const char* str, char** endptr, int base) {
         }
     }
 
-    K_ASSERT_EX(base != 0, "Failed to auto-detect base");
+    // Assume decimal
+    if (base == 0) {
+        base = 10;
+    }
+
     K_ASSERT_EX(2 <= base <= 36, "Invalid base");
 
     // Parse digits
@@ -170,6 +149,8 @@ s32 strtol(const char* str, char** endptr, int base) {
             ret *= base;
             ret += digit - '0';
         } else if (isalpha(digit)) {
+            K_ASSERT(base > 10);
+
             // Uppercase
             if (isupper(digit)) {
                 ret *= base;
@@ -220,7 +201,7 @@ f64 atof(const char* str) {
 
     // Convert value
     f64 value;
-    int num = std::sscanf("%lf", str, &value);
+    int num = std::sscanf(str, "%lf", &value);
 
     // Failure -> zero
     if (num != 1) {

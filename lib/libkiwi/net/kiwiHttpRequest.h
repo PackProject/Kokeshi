@@ -1,16 +1,29 @@
 #ifndef LIBKIWI_NET_HTTP_REQUEST_H
 #define LIBKIWI_NET_HTTP_REQUEST_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/net/kiwiSyncSocket.h>
 #include <libkiwi/prim/kiwiHashMap.h>
 #include <libkiwi/prim/kiwiOptional.h>
 #include <libkiwi/prim/kiwiString.h>
-#include <types.h>
 
 namespace kiwi {
 
 /**
- * @brief HTTP Status code
+ * @brief HTTP error
+ */
+enum EHttpErr {
+    EHttpErr_Success, // OK
+
+    EHttpErr_CantConnect, // Can't connect to the server
+    EHttpErr_BadResponse, // Malformed server response
+    EHttpErr_TimedOut,    // Connection timed out
+    EHttpErr_Closed,      // Connection closed
+    EHttpErr_Socket,      // Misc. socket error
+};
+
+/**
+ * @brief HTTP status code
  */
 enum EHttpStatus {
     // TODO: Determine which additional codes are useful here
@@ -42,18 +55,12 @@ struct HttpResponse {
     /**
      * @brief Constructor
      */
-    HttpResponse() : status(EHttpStatus_OK), body(NULL) {}
+    HttpResponse() : status(EHttpStatus_OK) {}
 
-    /**
-     * @brief Destructor
-     */
-    ~HttpResponse() {
-        delete body;
-    }
-
+    EHttpErr error;              // Error code
     EHttpStatus status;          // Status code
     TMap<String, String> header; // Response header
-    const char* body;            // Response body/payload
+    String body;                 // Response body/payload
 };
 
 /**
@@ -75,20 +82,33 @@ public:
     /**
      * @brief Request response callback
      *
-     * @param response Request response
+     * @param resp Request response
      * @param arg Callback user argument
      */
-    typedef void (*ResponseCallback)(const Optional<HttpResponse>& response,
-                                     void* arg);
+    typedef void (*ResponseCallback)(const HttpResponse& resp, void* arg);
 
 public:
-    HttpRequest(const String& host);
+    explicit HttpRequest(const String& host);
 
     /**
      * @brief Destructor
      */
     ~HttpRequest() {
+        K_ASSERT_EX(
+            mpResponseCallback == NULL,
+            "Don't destroy this object while async request is pending.");
+
         delete mpSocket;
+        mpSocket = NULL;
+    }
+
+    /**
+     * @brief Set the maximum state duration before timeout
+     *
+     * @param timeOut Time-out period, in milliseconds
+     */
+    void SetTimeOut(u32 timeOut) {
+        mTimeOut = OS_MSEC_TO_TICKS(timeOut);
     }
 
     /**
@@ -110,6 +130,10 @@ public:
     void SetParameter(const String& name, const String& value) {
         mParams.Insert(name, value);
     }
+    template <typename T>
+    void SetParameter(const String& name, const T& value) {
+        SetParameter(name, kiwi::ToString(value));
+    }
 
     /**
      * @brief Change the requested resource
@@ -120,13 +144,18 @@ public:
         mURI = uri;
     }
 
-    const Optional<HttpResponse>& Send(EMethod method = EMethod_GET);
+    const HttpResponse& Send(EMethod method = EMethod_GET);
     void SendAsync(ResponseCallback callback, void* arg = NULL,
                    EMethod method = EMethod_GET);
 
 private:
     typedef TMap<String, String>::ConstIterator ParamIterator;
     typedef TMap<String, String>::ConstIterator HeaderIterator;
+
+    /**
+     * @brief Default connection timeout, in milliseconds
+     */
+    static const u32 DEFAULT_TIMEOUT_MS = 2000;
 
 private:
     void SendImpl();
@@ -135,19 +164,17 @@ private:
     bool Receive();
 
 private:
-    EMethod mMethod;      // Request method
-    String mHostName;     // Server host name
-    String mURI;          // Requested resource
-    SyncSocket* mpSocket; // Connection to server
+    EMethod mMethod;  // Request method
+    String mHostName; // Server host name
+    String mURI;      // Requested resource
 
-    char* mpWorkMemory;  // Work memory for receive
-    u32 mWorkMemorySize; // Work memory buffer size
-    u32 mWorkMemoryPos;  // Work memory buffer position
+    SyncSocket* mpSocket; // Connection to server
+    u32 mTimeOut;         // Connection timeout
 
     TMap<String, String> mParams; // URL parameters
     TMap<String, String> mHeader; // Header fields
 
-    Optional<HttpResponse> mResponse;    // Server response
+    HttpResponse mResponse;              // Server response
     ResponseCallback mpResponseCallback; // Response callback
     void* mpResponseCallbackArg;         // Callback user argument
 };

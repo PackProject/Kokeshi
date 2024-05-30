@@ -38,7 +38,7 @@ public:
 public:
     // @address 8018a8a4
     static RPSysSaveDataMgr* CreateInstance(EGG::Heap* heap);
-    static RPSysSaveDataMgr* getInstance() {
+    static RPSysSaveDataMgr* GetInstance() {
         return sInstance;
     }
 

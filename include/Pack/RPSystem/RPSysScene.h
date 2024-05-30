@@ -15,60 +15,78 @@
  */
 class RPSysScene : public EGG::Scene, public IRPGrpDrawObject {
 public:
-    // @address 80185404
+#ifdef PACK_RESORT
+    /**
+     * @brief Scene type
+     */
+    enum EKind{
+        EKind_System = 'SYS_',
+        EKind_Base = 'BASE',
+        EKind_Game = 'GAME',
+        EKind_Sequence = 'SEQ_',
+    };
+
+    /**
+     * @brief Island time
+     */
+    enum ETime{
+        ETime_Day,
+        ETime_Evening,
+        ETime_Night,
+        ETime_Auto,
+    };
+#endif
+
     RPSysScene();
-    // @address 80183fa8
     virtual ~RPSysScene() {}
 
-    // @address 80185094
     virtual void calc();
-    // @address 80185048
     virtual void draw();
-    // @address 80185304
     virtual void enter();
-    // @address 80184f90
     virtual void exit();
-    // @address 8018522c
     virtual void reinit();
-    // @address 80185168
     virtual void incoming_childDestroy();
-    // @address 80185008
     virtual void outgoing_childCreate();
 
     /**
      * @brief Access debug heap
-     * @address 8018558c
      */
     virtual EGG::Heap* getDebugHeap();
 
+#ifdef PACK_RESORT
+    virtual EKind getKind();
+#endif
+
     /**
      * @brief Callback for pause/unpause
-     * @address 80185594
      * @param pauseOn True = enter, false = exit
      */
     virtual void pauseCallBack(bool pauseOn);
 
+#ifdef PACK_RESORT
+    virtual ETime getIslandTime();
+#endif
+
     /**
      * @brief Setup scene members
-     * @address 80185400
      */
     virtual void Configure();
+
     /**
      * @brief Load required scene resources
-     * @address 80185598
      */
     virtual void LoadResource();
-    // @address 80185228
     virtual void Reset();
-    // @address 80185164
     virtual void Calculate();
-    // @address 80185004
     virtual void Exit();
+
+#ifdef PACK_RESORT
+    virtual void CalculateMPlus();
+#endif
 
     /**
      * @brief Async task
      * @details Called by taskAsyncFunc
-     * @address 8018559c
      */
     virtual void taskAsync();
 
@@ -207,6 +225,9 @@ public:
     /**@}*/
 
 private:
+#ifdef PACK_RESORT
+    char dummy[0x80 - 0x38]; // 0x38
+#else
     // @brief Scene renderer (becomes global on scene enter)
     RPGrpRenderer* mRenderer; // at 0x2C
     // @brief Common draw functionality
@@ -220,6 +241,7 @@ private:
     u32 mFlags; // at 0x3C
     // @brief Scene ID set by scene creator
     int mCreatorSceneId; // at 0x40
+#endif
 
     // @brief Debug heap (unused)
     static EGG::Heap* sDebugHeap; // 804bf4d0

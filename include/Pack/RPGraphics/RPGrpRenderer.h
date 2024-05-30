@@ -35,6 +35,8 @@ public:
     void CreateView2D(u8, RPGrpScreen*);
     void CorrectView();
 
+    static void SetEfbClearColor(u8 r, u8 g, u8 b);
+
     static EDrawPass GetDrawPass() {
         return sDrawPass;
     }

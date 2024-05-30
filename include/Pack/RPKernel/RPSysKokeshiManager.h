@@ -7,6 +7,16 @@ public:
     enum GenType {
 
     };
+
+public:
+    static RPSysKokeshiManager* GetInstance() {
+        return sInstance;
+    }
+
+    void LoadStaticResource();
+
+private:
+    static RPSysKokeshiManager* sInstance;
 };
 
 #endif

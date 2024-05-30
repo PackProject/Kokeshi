@@ -19,7 +19,7 @@ public:
     virtual const char* GetBinaryType() const = 0; // at 0x10
     virtual u32 GetBinarySize() const {
         return sizeof(T::Bin);
-    };                                 // at 0x14
+    }; // at 0x14
     virtual u8 GetVersion() const = 0; // at 0x18
 
     void SetBinary(const void* bin) {

@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_CORE_DVD_STREAM_H
 #define LIBKIWI_CORE_DVD_STREAM_H
 #include <libkiwi/core/kiwiFileStream.h>
+#include <libkiwi/k_types.h>
 #include <revolution/DVD.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -54,7 +54,16 @@ public:
         return true;
     }
 
-    virtual s32 GetAlign() const {
+    /**
+     * Required byte-alignment
+     */
+    virtual s32 GetSizeAlign() const {
+        return 32;
+    }
+    virtual s32 GetOffsetAlign() const {
+        return 4;
+    }
+    virtual s32 GetBufferAlign() const {
         return 32;
     }
 
@@ -65,8 +74,7 @@ private:
     virtual s32 PeekImpl(void* dst, u32 size);
 
 private:
-    // DVD handle
-    DVDFileInfo mFileInfo;
+    DVDFileInfo mFileInfo; // DVD handle
 };
 
 } // namespace kiwi

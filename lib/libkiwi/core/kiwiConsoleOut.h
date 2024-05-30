@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_CORE_CONSOLE_OUT_H
 #define LIBKIWI_CORE_CONSOLE_OUT_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
-#include <types.h>
 
 namespace kiwi {
 namespace detail {
@@ -12,9 +12,6 @@ namespace detail {
  */
 class ConsoleOut : private NonCopyable {
 public:
-    ConsoleOut() {}
-    ~ConsoleOut() {}
-
     /**
      * @brief Output pipe operator
      *

@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_PRIM_LINKLIST_H
 #define LIBKIWI_PRIM_LINKLIST_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -24,12 +24,9 @@ private:
      */
     explicit TListNode(T* elem) : mpNext(NULL), mpPrev(NULL), mpElement(elem) {}
 
-    // Next node in the linked-list
-    TListNode<T>* mpNext;
-    // Previous node in the linked-list
-    TListNode<T>* mpPrev;
-    // Underlying element
-    T* mpElement;
+    TListNode<T>* mpNext; // Next node in the linked-list
+    TListNode<T>* mpPrev; // Previous node in the linked-list
+    T* mpElement;         // Underlying element
 };
 
 /**
@@ -325,23 +322,7 @@ public:
      * @param node Node to insert
      * @return Iterator to new node
      */
-    Iterator Insert(Iterator iter, TListNode<T>* node) {
-        K_ASSERT(node != NULL);
-
-        TListNode<T>* next = iter.mpNode;
-        TListNode<T>* prev = next->mpPrev;
-
-        // prev <- node -> next
-        node->mpNext = next;
-        node->mpPrev = prev;
-        // prev <-> node <-> next
-        next->mpPrev = node;
-        prev->mpNext = node;
-
-        mSize++;
-
-        return Iterator(node);
-    }
+    Iterator Insert(Iterator iter, TListNode<T>* node);
 
     /**
      * Erases node at iterator
@@ -360,25 +341,7 @@ public:
      * @param node Node to erase
      * @return Iterator to next node
      */
-    Iterator Erase(TListNode<T>* node) {
-        K_ASSERT(node != NULL);
-
-        TListNode<T>* next = node->mpNext;
-        TListNode<T>* prev = node->mpPrev;
-
-        // Remove connections to node
-        next->mpPrev = prev;
-        prev->mpNext = next;
-        // Isolate node
-        node->mpNext = NULL;
-        node->mpPrev = NULL;
-        // Free memory
-        delete node;
-
-        mSize--;
-
-        return Iterator(next);
-    }
+    Iterator Erase(TListNode<T>* node);
 
     /**
      * Erases range of nodes
@@ -387,20 +350,7 @@ public:
      * @param end End of range (exclusive)
      * @return Iterator to end of range
      */
-    Iterator Erase(Iterator begin, Iterator end) {
-        TListNode<T>* pCur = begin.mpNode;
-        TListNode<T>* pEnd = end.mpNode;
-
-        while (pCur != pEnd) {
-            // Preserve next node before erasing pointers
-            TListNode<T>* pNext = pCur->mpNext;
-            // Erase current node
-            Erase(pCur);
-            pCur = pNext;
-        }
-
-        return Iterator(pEnd);
-    }
+    Iterator Erase(Iterator begin, Iterator end);
 
     /**
      * Removes first occurrence of element from list
@@ -416,12 +366,15 @@ public:
     }
 
 private:
-    // List size
-    u32 mSize;
-    // List end node
-    TListNode<T> mEndNode;
+    u32 mSize;             // List size
+    TListNode<T> mEndNode; // List end node
 };
 
 } // namespace kiwi
+
+// Implementation header
+#ifndef LIBKIWI_PRIM_LINKLIST_IMPL_HPP
+#include <libkiwi/prim/kiwiLinkListImpl.hpp>
+#endif
 
 #endif

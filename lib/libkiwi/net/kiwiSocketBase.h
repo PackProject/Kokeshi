@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_NET_SOCKET_BASE_H
 #define LIBKIWI_NET_SOCKET_BASE_H
+#include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiOptional.h>
-#include <libkiwi/rvl/kiwiLibSO.h>
-#include <types.h>
+#include <libkiwi/support/kiwiLibSO.h>
 
 namespace kiwi {
 
@@ -50,6 +50,7 @@ public:
 
     bool Bind(SockAddr& addr = SockAddr4()) const;
     bool Listen(s32 backlog = SOMAXCONN) const;
+    bool IsBlocking() const;
     bool SetBlocking(bool enable) const;
     bool SetReuseAddr(bool enable) const;
     bool Shutdown(SOShutdownType how) const;
@@ -120,12 +121,9 @@ private:
                               void* arg) = 0;
 
 protected:
-    // Socket file descriptor
-    SOSocket mHandle;
-    // Socket protocol family
-    SOProtoFamily mFamily;
-    // Socket type
-    SOSockType mType;
+    SOSocket mHandle;      // File descriptor
+    SOProtoFamily mFamily; // Protocol family
+    SOSockType mType;      // Socket type
 };
 
 } // namespace kiwi

@@ -1,7 +1,7 @@
 #ifndef LIBKIWI_MATH_ALGORITHM_H
 #define LIBKIWI_MATH_ALGORITHM_H
+#include <libkiwi/k_types.h>
 #include <nw4r/math.h>
-#include <types.h>
 
 namespace kiwi {
 namespace {

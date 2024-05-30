@@ -1,7 +1,7 @@
 #ifndef KIWI_CORE_MESSAGE_H
 #define KIWI_CORE_MESSAGE_H
 #include <libkiwi/core/kiwiIBinary.h>
-#include <types.h>
+#include <libkiwi/k_types.h>
 
 namespace kiwi {
 
@@ -34,7 +34,7 @@ private:
     };
 
 public:
-    Message(const void* bin);
+    explicit Message(const void* bin);
     virtual ~Message();
 
     /**
@@ -69,12 +69,9 @@ private:
     virtual void SerializeImpl(Header& header) const;
 
 private:
-    // Binary file header
-    Header* mpHeader;
-    // Message descriptor block
-    const DESCBlock* mpDescBlock;
-    // Message data pool block
-    const DATABlock* mpDataBlock;
+    Header* mpHeader;             // Binary file header
+    const DESCBlock* mpDescBlock; // Message descriptor block
+    const DATABlock* mpDataBlock; // Message data pool block
 };
 
 } // namespace kiwi

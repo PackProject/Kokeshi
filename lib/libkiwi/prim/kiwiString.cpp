@@ -31,7 +31,7 @@ template <typename T> void StringImpl<T>::Clear() {
     }
 
     // Delete string buffer
-    delete mpBuffer;
+    delete[] mpBuffer;
     mpBuffer = NULL;
 
     // Update size/length
@@ -49,7 +49,7 @@ template <typename T> void StringImpl<T>::Clear() {
  * @param len Substring size
  */
 template <typename T>
-StringImpl<T> StringImpl<T>::Substr(u32 pos, u32 len) const {
+StringImpl<T> StringImpl<T>::SubStr(u32 pos, u32 len) const {
     K_ASSERT(pos <= mLength);
 
     // Empty string if the substring begins at the end
@@ -63,11 +63,12 @@ StringImpl<T> StringImpl<T>::Substr(u32 pos, u32 len) const {
     // Create C-style substring
     T* buffer = new T[len + 1];
     StrNCpy(buffer, mpBuffer + pos, len);
+    buffer[len] = '\0';
 
     // Construct string wrapper
     StringImpl<T> str = StringImpl(buffer);
 
-    delete buffer;
+    delete[] buffer;
     return str;
 }
 
@@ -146,6 +147,85 @@ template <typename T> u32 StringImpl<T>::Find(T c, u32 pos) const {
 }
 
 /**
+ * Whether this string starts with the specified prefix
+ *
+ * @param str Prefix sequence
+ */
+template <typename T>
+bool StringImpl<T>::StartsWith(const StringImpl<T>& str) const {
+    return Find(str) == 0;
+}
+
+/**
+ * Whether this string starts with the specified prefix
+ *
+ * @param s Prefix sequence
+ */
+template <typename T> bool StringImpl<T>::StartsWith(const T* s) const {
+    K_ASSERT(s != NULL);
+    return Find(s) == 0;
+}
+
+/**
+ * Whether this string ends with the specified suffix
+ *
+ * @param str Suffix sequence
+ */
+template <typename T>
+bool StringImpl<T>::EndsWith(const StringImpl<T>& str) const {
+    size_t pos = mLength - str.Length();
+    return Find(str, pos) == pos;
+}
+
+/**
+ * Whether this string ends with the specified suffix
+ *
+ * @param str Suffix sequence
+ */
+template <typename T> bool StringImpl<T>::EndsWith(const T* s) const {
+    K_ASSERT(s != NULL);
+
+    size_t pos = mLength - StrLen(s);
+    return Find(s, pos) == pos;
+}
+
+/**
+ * Split this string into tokens by the specified delimiter
+ *
+ * @param str Delimiter sequence
+ * @return List of tokens (may be empty)
+ */
+template <typename T>
+TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& delim) const {
+    K_ASSERT(delim.Length() > 0);
+
+    TVector<StringImpl> tokens;
+
+    // Search window
+    u32 start = 0;
+    u32 end = 0;
+
+    while (start < mLength) {
+        // Next occurrence in search window
+        end = Find(delim, start);
+
+        // No more occurrences in the string
+        if (end == npos) {
+            break;
+        }
+
+        // Split off token
+        tokens.PushBack(SubStr(start, end - start));
+        // Search window now ignores previous characters
+        start = end + delim.Length();
+    }
+
+    // Push back very last token
+    tokens.PushBack(SubStr(start));
+    return tokens;
+}
+
+/**
  * Tests for equality between string and specified data
  *
  * @param str String to compare against
@@ -193,7 +273,7 @@ template <typename T> void StringImpl<T>::Reserve(u32 n) {
 
     // Delete old data
     if (mpBuffer != scEmptyCStr) {
-        delete mpBuffer;
+        delete[] mpBuffer;
     }
 
     // Set new configuration

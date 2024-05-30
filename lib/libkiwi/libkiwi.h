@@ -1,26 +1,32 @@
 #ifndef LIBKIWI_H
 #define LIBKIWI_H
 
-#ifndef LIBKIWI_BIG_ENDIAN
-#define LIBKIWI_BIG_ENDIAN
-#endif
-
 #include <libkiwi/core/kiwiColor.h>
 #include <libkiwi/core/kiwiConsoleOut.h>
 #include <libkiwi/core/kiwiController.h>
 #include <libkiwi/core/kiwiDvdStream.h>
+#include <libkiwi/core/kiwiFileRipper.h>
 #include <libkiwi/core/kiwiIBinary.h>
+#include <libkiwi/core/kiwiIScene.h>
 #include <libkiwi/core/kiwiIStream.h>
 #include <libkiwi/core/kiwiMemStream.h>
+#include <libkiwi/core/kiwiMemoryMgr.h>
 #include <libkiwi/core/kiwiMessage.h>
 #include <libkiwi/core/kiwiNandStream.h>
+#include <libkiwi/core/kiwiRuntime.h>
+#include <libkiwi/core/kiwiSPR.h>
+#include <libkiwi/core/kiwiSceneCreator.h>
 #include <libkiwi/core/kiwiSceneHookMgr.h>
 #include <libkiwi/core/kiwiThread.h>
-#include <libkiwi/gui/kiwiImGui.h>
-#include <libkiwi/gui/kiwiImGuiImplRvl.h>
-#include <libkiwi/kernel/kiwiAssert.h>
-#include <libkiwi/kernel/kiwiMemoryMgr.h>
-#include <libkiwi/kernel/kiwiRuntime.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/debug/kiwiDebugPrint.h>
+#include <libkiwi/debug/kiwiGeckoDebugger.h>
+#include <libkiwi/debug/kiwiIDebugger.h>
+#include <libkiwi/debug/kiwiMapFile.h>
+#include <libkiwi/debug/kiwiNw4rConsole.h>
+#include <libkiwi/debug/kiwiNw4rDirectPrint.h>
+#include <libkiwi/debug/kiwiNw4rException.h>
+#include <libkiwi/debug/kiwiStackChecker.h>
 #include <libkiwi/math/kiwiAlgorithm.h>
 #include <libkiwi/net/kiwiAsyncSocket.h>
 #include <libkiwi/net/kiwiEmuRichPresence.h>
@@ -40,20 +46,25 @@
 #include <libkiwi/prim/kiwiOptional.h>
 #include <libkiwi/prim/kiwiPair.h>
 #include <libkiwi/prim/kiwiSTL.h>
+#include <libkiwi/prim/kiwiSmartPtr.h>
 #include <libkiwi/prim/kiwiString.h>
-#include <libkiwi/rvl/kiwiLibGX.h>
-#include <libkiwi/rvl/kiwiLibSO.h>
+#include <libkiwi/prim/kiwiVector.h>
+#include <libkiwi/support/kiwiLibGX.h>
+#include <libkiwi/support/kiwiLibSO.h>
 #include <libkiwi/util/kiwiAutoLock.h>
 #include <libkiwi/util/kiwiBuildTarget.h>
 #include <libkiwi/util/kiwiChecksum.h>
 #include <libkiwi/util/kiwiDynamicSingleton.h>
-#include <libkiwi/util/kiwiMapFile.h>
+#include <libkiwi/util/kiwiGlobalInstance.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
-#include <libkiwi/util/kiwiNw4rConsole.h>
-#include <libkiwi/util/kiwiNw4rDirectPrint.h>
-#include <libkiwi/util/kiwiNw4rException.h>
 #include <libkiwi/util/kiwiOverride.h>
 #include <libkiwi/util/kiwiRandom.h>
 #include <libkiwi/util/kiwiStaticSingleton.h>
-#include <types.h>
+#include <libkiwi/util/kiwiWatch.h>
+#include <libkiwi/util/kiwiWorkBuffer.h>
+
+// Order important from here
+
+#include <libkiwi/k_config.h>
+#include <libkiwi/k_types.h>
 #endif

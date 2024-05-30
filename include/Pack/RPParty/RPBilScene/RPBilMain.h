@@ -12,6 +12,9 @@ public:
         return sInstance;
     }
 
+    RP_UTL_FSM_STATE_DECL(AFTERSHOT);
+    RP_UTL_FSM_STATE_DECL(FOUL);
+
     void Calculate();
     void Reset();
 

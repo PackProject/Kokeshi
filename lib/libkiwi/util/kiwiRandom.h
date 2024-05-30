@@ -1,8 +1,8 @@
 #ifndef LIBKIWI_UTIL_RANDOM_H
 #define LIBKIWI_UTIL_RANDOM_H
-#include <libkiwi/kernel/kiwiAssert.h>
+#include <libkiwi/debug/kiwiAssert.h>
+#include <libkiwi/k_types.h>
 #include <revolution/OS.h>
-#include <types.h>
 
 namespace kiwi {
 
@@ -133,8 +133,7 @@ private:
     }
 
 private:
-    // Random seed
-    u32 mSeed;
+    u32 mSeed; // Random seed
 };
 
 /**

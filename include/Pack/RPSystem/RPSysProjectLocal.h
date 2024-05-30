@@ -48,7 +48,7 @@ public:
 public:
     // @address 801863a4
     static RPSysProjectLocal* CreateInstance(EGG::Heap* heap);
-    static RPSysProjectLocal* getInstance() {
+    static RPSysProjectLocal* GetInstance() {
         return sInstance;
     }
 

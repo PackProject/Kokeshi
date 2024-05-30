@@ -14,7 +14,7 @@
  */
 class RPSysGameConfig : public RPSysTagParameters {
 public:
-    static RPSysGameConfig* getInstance() {
+    static RPSysGameConfig* GetInstance() {
         return sInstance;
     }
     // @address 801866e0
