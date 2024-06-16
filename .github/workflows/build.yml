@@ -1,0 +1,24 @@
+name: Build code
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+        
+    - name: Download compilers
+      run: |
+        curl -L '${{ secrets.COMPILERS }}' | bsdtar -xvf- -C tools
+        mv tools/Wii/1.7 tools
+
+    - name: Build the code
+      run: make
