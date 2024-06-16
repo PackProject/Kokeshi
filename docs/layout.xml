@@ -4,7 +4,7 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
-    <tab type="user" url="@ref md_docs_2_c_o_n_t_r_i_b_u_t_i_n_g" title="Contributing"/>
+    <tab type="user" url="@ref md_docs_2CONTRIBUTING" title="Contributing"/>
     <tab type="topics" visible="yes" title="Modules" intro="Here is a list of all documented modules with brief descriptions:"/>
     <tab type="namespacelist" visible="yes" title="Namespaces" intro=""/>
     <tab type="classlist" visible="yes" title=""/>
