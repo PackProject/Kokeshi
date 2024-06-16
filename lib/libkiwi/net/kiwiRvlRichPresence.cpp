@@ -5,25 +5,18 @@ namespace kiwi {
 /**
  * @brief Constructor
  *
- * @param client Client app ID
+ * @param rClient Client app ID
  */
-RvlRichPresence::RvlRichPresence(const String& client) : IRichPresence(client) {
-    K_LOG("RvlRichPresence::RvlRichPresence");
-    UpdateClient();
-}
-
-/**
- * @brief Destructor
- */
-RvlRichPresence::~RvlRichPresence() {
-    K_LOG("RvlRichPresence::~RvlRichPresence");
+RvlRichPresence::RvlRichPresence(const String& rClient)
+    : IRichPresence(rClient) {
+    K_LOG("Not yet implemented\n");
 }
 
 /**
  * @brief Whether there is an ongoing connection the RPC host
  */
 bool RvlRichPresence::IsConnected() const {
-    K_LOG("RvlRichPresence::IsConnected");
+    K_LOG("Not yet implemented\n");
     return true;
 }
 
@@ -31,7 +24,7 @@ bool RvlRichPresence::IsConnected() const {
  * @brief Retreive the current Unix epoch time (in seconds)
  */
 u64 RvlRichPresence::GetTimeNow() const {
-    K_LOG("RvlRichPresence::IsConnected");
+    K_LOG("Not yet implemented\n");
     return 0;
 }
 
@@ -39,24 +32,14 @@ u64 RvlRichPresence::GetTimeNow() const {
  * @brief Update Discord client/app ID
  */
 void RvlRichPresence::UpdateClient() const {
-    K_LOG("RvlRichPresence::UpdateClient");
-
-    if (!IsConnected()) {
-        K_LOG("Not connected to rvl_rpc_host!");
-        return;
-    }
+    K_LOG("Not yet implemented\n");
 }
 
 /**
  * @brief Update Discord presence status
  */
 void RvlRichPresence::UpdatePresence() const {
-    K_LOG("RvlRichPresence::UpdatePresence");
-
-    if (!IsConnected()) {
-        K_LOG("Not connected to rvl_rpc_host!");
-        return;
-    }
+    K_LOG("Not yet implemented\n");
 }
 
 } // namespace kiwi

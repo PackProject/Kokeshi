@@ -1,0 +1,104 @@
+/*
+
+COLOR OVERRIDES
+
+*/
+
+/* Color theme (light mode) */
+html {
+    --primary-color: #17bec4 !important;
+    --primary-dark-color: #337d80 !important;
+    --primary-light-color: #70e9e3 !important;
+
+    --page-background-color: #ffffff !important;
+    --page-foreground-color: #2f5053 !important;
+    --page-secondary-foreground-color: #6f8d8e !important;
+
+    --note-color: #e4fffe !important;
+    --note-color-dark: #18c4c4 !important;
+    --note-color-darker: #275c59 !important;
+}
+
+/* Color theme (dark mode) */
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        --primary-color: #19d2c9 !important;
+        --primary-dark-color: #86a9c4 !important;
+        --primary-light-color: #47a9ac !important;
+
+        --page-background-color: #1c1f1f !important;
+        --page-foreground-color: #d2dede !important;
+        --page-secondary-foreground-color: #859999 !important;
+
+        --note-color: #164e50 !important;
+        --note-color-dark: #19ccd2 !important;
+        --note-color-darker: #dcfaf7 !important;
+    }
+}
+
+
+/*
+
+STYLE OVERRIDES
+
+*/
+
+/* Highlight hovered elements */
+#nav-tree a:hover,
+a:hover {
+    color: #000000 !important;
+    text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+
+        #nav-tree a:hover,
+        a:hover {
+            color: #ffffff !important;
+            text-decoration: underline;
+        }
+    }
+}
+
+/* Black letters in icons */
+.icon {
+    color: black;
+}
+
+/* Add borders around brief descriptions */
+td.mdescLeft {
+    border-left: 1px solid var(--separator-color);
+    border-bottom: 1px solid var(--separator-color);
+    border-top: 1px solid var(--separator-color);
+    border-radius: 0 0 0 var(--border-radius-small);
+}
+
+/* Add borders around brief descriptions */
+td.mdescRight {
+    border-right: 1px solid var(--separator-color);
+    border-bottom: 1px solid var(--separator-color);
+    border-top: 1px solid var(--separator-color);
+    border-radius: 0 0 var(--border-radius-small) 0;
+}
+
+/* Add borders around brief descriptions */
+table.memberdecls .memItemLeft {
+    border-radius: var(--border-radius-small) 0 0 0;
+}
+
+/* Add borders around brief descriptions */
+table.memberdecls .memItemRight {
+    border-radius: 0 var(--border-radius-small) 0 0;
+}
+
+/* Turn icons just a little bit */
+.icona {
+    rotate: -15deg;
+}
+
+/*
+
+STYLE ANIMATIONS
+
+*/

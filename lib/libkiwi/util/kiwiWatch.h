@@ -4,6 +4,8 @@
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
  * @brief Watch timer
@@ -34,6 +36,7 @@ private:
     s32 mStartTick;
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

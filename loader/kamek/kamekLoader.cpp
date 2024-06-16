@@ -157,6 +157,9 @@ inline void cacheInvalidateAddress(u32 address) {
 
 void loadKamekBinary(const loaderFunctions* funcs, const void* binary,
                      u32 binaryLength) {
+    kokeshi::sModuleInfo.start = const_cast<void*>(binary);
+    kokeshi::sModuleInfo.size = binaryLength;
+
     const KBHeader* header = (const KBHeader*)binary;
     if (header->magic1 != 'Kame' || header->magic2 != 'k\0')
         kamekError("FATAL ERROR: Corrupted file, please check your game's "

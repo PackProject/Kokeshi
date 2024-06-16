@@ -1,37 +1,55 @@
 #ifndef LIBKIWI_PRIM_SMART_PTR_H
 #define LIBKIWI_PRIM_SMART_PTR_H
+#include <algorithm>
 #include <libkiwi/debug/kiwiAssert.h>
 #include <libkiwi/k_types.h>
+#include <libkiwi/util/kiwiNonCopyable.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_prim
+//! @{
 
 /**
  * @brief "Smart" / scoped pointer (equivalent to std::unique_ptr)
  */
-template <typename T> class SmartPtr {
+template <typename T> class SmartPtr : private NonCopyable {
 public:
     /**
      * @brief Constructor
      *
      * @details Empty pointer
      */
-    SmartPtr() : mpData(NULL) {}
+    SmartPtr() : mpData(nullptr) {}
 
     /**
      * @brief Constructor
+     * @details Value constructor
      *
-     * @param ptr Pointer
+     * @param pPtr Pointer
      */
-    SmartPtr(const T* ptr) : mpData(ptr) {}
+    SmartPtr(T* pPtr) : mpData(pPtr) {}
 
     /**
      * @brief Constructor
+     * @details Copy constructor
      *
-     * @param ptr Smart pointer
+     * @param rOther Smart pointer
      */
-    SmartPtr(SmartPtr& other) : mpData(NULL) {
-        *this = other;
+    SmartPtr(SmartPtr& rOther) : mpData(nullptr) {
+        *this = rOther;
     }
+
+#ifdef LIBKIWI_CPP1X
+    /**
+     * @brief Constructor
+     * @details Move constructor
+     *
+     * @param rOther Smart pointer
+     */
+    SmartPtr(SmartPtr&& rOther) : mpData(nullptr) {
+        *this = std::move(rOther);
+    }
+#endif
 
     /**
      * @brief Destructor
@@ -41,35 +59,36 @@ public:
     }
 
     /**
-     * @brief Move assignment
+     * @brief Pointer assignment
      *
-     * @param ptr Pointer
+     * @param pPtr Pointer
      */
-    SmartPtr& operator=(const T* ptr) {
-        // Release memory for old object
-        Destroy();
-
-        // Nothing special required to take ownership
-        mpData = ptr;
-
+    SmartPtr& operator=(T* pPtr) {
+        Assign(pPtr);
         return *this;
     }
 
     /**
      * @brief Move assignment
      *
-     * @param other Smart pointer
+     * @param rOther Smart pointer
      */
-    SmartPtr& operator=(SmartPtr& other) {
-        // Release memory for old object
-        Destroy();
-
-        // Move pointer to take ownership
-        mpData = other.mpData;
-        other.mpData = NULL;
-
+    SmartPtr& operator=(SmartPtr& rOther) {
+        Move(rOther);
         return *this;
     }
+
+#ifdef LIBKIWI_CPP1X
+    /**
+     * @brief Move assignment
+     *
+     * @param rOther Smart pointer
+     */
+    SmartPtr& operator=(SmartPtr&& rOther) {
+        Move(rOther);
+        return *this;
+    }
+#endif
 
     /**
      * @brief Access held pointer
@@ -88,10 +107,8 @@ public:
      * @brief Destroy and release object
      */
     void Destroy() {
-        if (mpData != NULL) {
-            delete mpData;
-            mpData = NULL;
-        }
+        delete mpData;
+        mpData = nullptr;
     }
 
     /**
@@ -101,56 +118,60 @@ public:
      */
     T* Release() const {
         T* old = mpData;
-        mpData = NULL;
+        mpData = nullptr;
         return old;
     }
 
-    /**
-     * @brief Boolean conversion operator
-     */
-    operator bool() const {
-        return Get() != NULL;
-    }
+    // clang-format off
+    operator bool() const { return Get() != nullptr; }
 
-    /**
-     * @brief Dereference pointer
-     */
-    T& operator*() {
-        K_ASSERT(mpData != NULL);
-        return *Get();
-    }
-    /**
-     * @brief Dereference pointer (read-only)
-     */
-    const T& operator*() const {
-        K_ASSERT(mpData != NULL);
-        return *Get();
-    }
+    T*       operator->()       { return Get(); }
+    const T* operator->() const { return Get(); }
 
-    /**
-     * @brief Dereference pointer
-     */
-    T& operator->() {
-        K_ASSERT(mpData != NULL);
-        return *Get();
-    }
-    /**
-     * @brief Dereference pointer (read-only)
-     */
-    const T& operator->() const {
-        K_ASSERT(mpData != NULL);
-        return *Get();
-    }
+    T& operator*()             { K_ASSERT(mpData != nullptr); return *Get(); }
+    const T& operator*() const { K_ASSERT(mpData != nullptr); return *Get(); }
+    // clang-format on
 
 private:
-    // Do not allow copying smart pointers (const disallows moving)
-    SmartPtr(const SmartPtr& other) : mpData(NULL) {
-        K_ASSERT(false);
+    /**
+     * @brief Assign primitive pointer value
+     *
+     * @param pPtr Primitive pointer
+     */
+    void Assign(T* pPtr) {
+        // Release memory for old object
+        Destroy();
+
+        mpData = pPtr;
     }
-    SmartPtr& operator=(const SmartPtr& other) {
-        K_ASSERT(false);
-        return *this;
+
+    /**
+     * @brief Move value from other smart pointer
+     *
+     * @param rOther Smart pointer
+     */
+    void Move(SmartPtr& rOther) {
+        // Release memory for old object
+        Destroy();
+
+        mpData = nullptr;
+        std::swap(mpData, rOther.mpData);
     }
+
+#ifdef LIBKIWI_CPP1X
+    /**
+     * @brief Move value from other smart pointer
+     *
+     * @param rOther Smart pointer
+     */
+    void Move(SmartPtr&& rOther) {
+        // Release memory for old object
+        Destroy();
+
+        mpData = nullptr;
+        std::swap(mpData, rOther.mpData);
+    }
+#endif
 
 private:
     // Object owned by this smart pointer
@@ -167,6 +188,7 @@ template <typename T> SmartPtr<T> MakeSmartPtr() {
 }
 
 } // namespace
+//! @}
 } // namespace kiwi
 
 #endif

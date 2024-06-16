@@ -2,12 +2,15 @@
 #define LIBKIWI_NET_HTTP_REQUEST_H
 #include <libkiwi/debug/kiwiAssert.h>
 #include <libkiwi/k_types.h>
-#include <libkiwi/net/kiwiSyncSocket.h>
 #include <libkiwi/prim/kiwiHashMap.h>
-#include <libkiwi/prim/kiwiOptional.h>
 #include <libkiwi/prim/kiwiString.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_net
+//! @{
+
+// Forward declarations
+class SyncSocket;
 
 /**
  * @brief HTTP error
@@ -64,7 +67,7 @@ struct HttpResponse {
 };
 
 /**
- * @brief HTTP 1.1 request wrapper
+ * @brief HTTP (1.1) request wrapper
  */
 class HttpRequest {
 public:
@@ -82,28 +85,32 @@ public:
     /**
      * @brief Request response callback
      *
-     * @param resp Request response
-     * @param arg Callback user argument
+     * @param rResp Request response
+     * @param pArg Callback user argument
      */
-    typedef void (*ResponseCallback)(const HttpResponse& resp, void* arg);
+    typedef void (*ResponseCallback)(const HttpResponse& rResp, void* pArg);
 
 public:
-    explicit HttpRequest(const String& host);
+    /**
+     * @brief Constructor
+     *
+     * @param rHost Server hostname
+     */
+    explicit HttpRequest(const String& rHost);
 
     /**
      * @brief Destructor
      */
     ~HttpRequest() {
         K_ASSERT_EX(
-            mpResponseCallback == NULL,
+            mpResponseCallback == nullptr,
             "Don't destroy this object while async request is pending.");
 
         delete mpSocket;
-        mpSocket = NULL;
     }
 
     /**
-     * @brief Set the maximum state duration before timeout
+     * @brief Sets the maximum state duration before timeout
      *
      * @param timeOut Time-out period, in milliseconds
      */
@@ -112,58 +119,76 @@ public:
     }
 
     /**
-     * @brief Add/update a request header field
+     * @brief Adds/updates a request header field
      *
-     * @param name Field name
-     * @param value Field value
+     * @param rName Field name
+     * @param rValue Field value
      */
-    void SetHeaderField(const String& name, const String& value) {
-        mHeader.Insert(name, value);
+    void SetHeaderField(const String& rName, const String& rValue) {
+        mHeader.Insert(rName, rValue);
     }
 
     /**
-     * @brief Add/update a URL parameter
+     * @brief Adds/updates a URL parameter
      *
-     * @param name Parameter name
-     * @param value Parameter value
+     * @param rName Parameter name
+     * @param rValue Parameter value
      */
-    void SetParameter(const String& name, const String& value) {
-        mParams.Insert(name, value);
-    }
     template <typename T>
-    void SetParameter(const String& name, const T& value) {
-        SetParameter(name, kiwi::ToString(value));
+    void SetParameter(const String& rName, const T& rValue) {
+        SetParameter(rName, kiwi::ToString(rValue));
     }
 
     /**
-     * @brief Change the requested resource
+     * @brief Changes the requested resource
      *
-     * @param uri URI value
+     * @param rURI URI value
      */
-    void SetURI(const String& uri) {
-        mURI = uri;
+    void SetURI(const String& rURI) {
+        mURI = rURI;
     }
 
+    /**
+     * @brief Sends request synchronously
+     *
+     * @param method Request method
+     * @return Server response
+     */
     const HttpResponse& Send(EMethod method = EMethod_GET);
-    void SendAsync(ResponseCallback callback, void* arg = NULL,
+
+    /**
+     * @brief Sends request asynchronously
+     *
+     * @param pCallback Response callback
+     * @param pArg Callback user argument
+     * @param method Request method
+     */
+    void SendAsync(ResponseCallback pCallback, void* pArg = nullptr,
                    EMethod method = EMethod_GET);
 
 private:
-    typedef TMap<String, String>::ConstIterator ParamIterator;
-    typedef TMap<String, String>::ConstIterator HeaderIterator;
-
     /**
-     * @brief Default connection timeout, in milliseconds
+     * @brief Sends request (internal implementation)
      */
-    static const u32 DEFAULT_TIMEOUT_MS = 2000;
-
-private:
     void SendImpl();
 
+    /**
+     * @brief Sends request data
+     *
+     * @return Success
+     */
     bool Request();
+    /**
+     * @brief Receives response data
+     *
+     * @return Successs
+     */
     bool Receive();
 
 private:
+    // Default connection timeout, in milliseconds
+    static const u32 scDefaultTimeOut = 2000;
+
     EMethod mMethod;  // Request method
     String mHostName; // Server host name
     String mURI;      // Requested resource
@@ -177,8 +202,12 @@ private:
     HttpResponse mResponse;              // Server response
     ResponseCallback mpResponseCallback; // Response callback
     void* mpResponseCallbackArg;         // Callback user argument
+
+    static const char* sMethodNames[EMethod_Max]; // HTTP request method names
+    static const char* sProtocolVer;              // HTTP protocol version
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

@@ -1,12 +1,14 @@
-#ifndef LIBKIWI_UTIL_NONCOPYABLE_H
-#define LIBKIWI_UTIL_NONCOPYABLE_H
+#ifndef LIBKIWI_UTIL_NON_COPYABLE_H
+#define LIBKIWI_UTIL_NON_COPYABLE_H
 #include <libkiwi/debug/kiwiAssert.h>
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
- * Non-copyable mix-in
+ * @brief Non-copyable mix-in
  */
 class NonCopyable {
 protected:
@@ -23,6 +25,7 @@ private:
     }
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

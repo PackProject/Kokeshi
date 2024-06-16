@@ -26,18 +26,19 @@ LOADER_ADDR = 0x80001900
 
 # Flags applied to all source files
 CFLAGS_COMMON = " ".join([
-    "-proc gekko",          # Gekko processor
-    "-i .",                 # Root include directory
+    "-proc gekko",                # Gekko processor
+    "-i .",                       # Root include directory
     "-I-",
-    "-Cpp_exceptions off",  # Disable C++ exceptions
-    "-enum int",            # Force 4-byte enumerations
-    "-O4,s",                # Max optimization level, focus on small code size
-    "-use_lmw_stmw on",     # Use lmw/stmw for stack frames to save code size
-    "-fp fmadd",            # Use compact floating-point instructions to save code size
-    "-rostr",               # Place strings in rodata
-    "-RTTI off",            # Disable RTTI to save module size
-    "-sdata 0",             # We can't use small data sections in relocatable code
-    "-sdata2 0",            # We can't use small data sections in relocatable code
+    "-Cpp_exceptions off",        # Disable C++ exceptions
+    "-enum int",                  # Force 4-byte enumerations
+    "-O4,s",                      # Max optimization level, focus on small code size
+    "-use_lmw_stmw on",           # Use lmw/stmw for stack frames to save code size
+    "-fp fmadd",                  # Use compact floating-point instructions to save code size
+    "-rostr",                     # Place strings in rodata
+    "-RTTI off",                  # Disable RTTI to save module size
+    "-sdata 0",                   # We can't use small data sections in relocatable code
+    "-sdata2 0",                  # We can't use small data sections in relocatable code
+    "-pragma \"cpp1x on\"",       # Enable C++11 features
 ])
 
 # Flags applied only to the module

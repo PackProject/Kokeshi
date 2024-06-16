@@ -1,10 +1,11 @@
 #include <cstdio>
+#include <cstring>
 #include <libkiwi.h>
 
 namespace ksl {
 
 /**
- * Tests if character is a decimal digit
+ * @brief Tests whether character is a decimal digit
  *
  * @param c Character
  */
@@ -13,7 +14,7 @@ bool isdigit(char c) {
 }
 
 /**
- * Tests if character is alphabetic
+ * @brief Tests whether character is alphabetic
  *
  * @param c Character
  */
@@ -22,7 +23,7 @@ bool isalpha(char c) {
 }
 
 /**
- * Tests if character is uppercase
+ * @brief Tests whether character is uppercase
  *
  * @param c Character
  */
@@ -31,7 +32,7 @@ bool isupper(char c) {
 }
 
 /**
- * Tests if character is lowercase
+ * @brief Tests whether character is lowercase
  *
  * @param c Character
  */
@@ -40,42 +41,41 @@ bool islower(char c) {
 }
 
 /**
- * Finds first occurrence of character in string
+ * @brief Finds first occurrence of the specified character in the string
  *
- * @param str String to search
+ * @param pStr String to search
  * @param c Character to search for
- * @return Pointer to occurrence (NULL if not found)
  */
-char* strchr(const char* str, char c) {
-    if (str == NULL) {
-        return NULL;
+char* strchr(const char* pStr, char c) {
+    if (pStr == nullptr) {
+        return nullptr;
     }
 
-    for (; *str != '\0'; str++) {
-        if (*str == c) {
-            return const_cast<char*>(str);
+    for (; *pStr != '\0'; pStr++) {
+        if (*pStr == c) {
+            return const_cast<char*>(pStr);
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
- * Gets string length, up to specified limit
+ * @brief Determines string length (up to the specified limit)
+ * @note Null terminator not included
  *
- * @param str String to check
+ * @param pStr String to check
  * @param maxlen Maximum length
- * @return Length of string (not including null terminator)
  */
-size_t strnlen(const char* str, size_t maxlen) {
+size_t strnlen(const char* pStr, size_t maxlen) {
     size_t len = 0;
 
-    if (str == NULL) {
+    if (pStr == nullptr) {
         return 0;
     }
 
     for (; len < maxlen; len++) {
-        if (*str++ == '\0') {
+        if (*pStr++ == '\0') {
             break;
         }
     }
@@ -84,38 +84,38 @@ size_t strnlen(const char* str, size_t maxlen) {
 }
 
 /**
- * Converts string to signed long
+ * @brief Converts string to signed long
  *
- * @param str String to convert
- * @param[out] endptr Pointer to string data after the converted number
+ * @param pStr String to convert
+ * @param[out] pEndPtr Pointer to string data after the converted number
  * @param base Number base (specify 0 to auto-detect)
  */
-s32 strtol(const char* str, char** endptr, int base) {
-    K_ASSERT(str != NULL);
+s32 strtol(const char* pStr, char** pEndPtr, int base) {
+    K_ASSERT(pStr != nullptr);
 
     // Trim leading whitespace
-    while (*str == ' ') {
-        str++;
+    while (*pStr == ' ') {
+        pStr++;
     }
 
-    if (*str == '\0') {
+    if (*pStr == '\0') {
         return 0;
     }
 
     // Sign (positive by default)
     bool positive = true;
-    if (*str == '-') {
+    if (*pStr == '-') {
         positive = false;
-        str++;
+        pStr++;
     }
     // Can still specify '+' though
-    else if (*str == '+') {
-        str++;
+    else if (*pStr == '+') {
+        pStr++;
     }
 
     // Check prefix
-    char c0 = *str;
-    char c1 = *str + 1;
+    char c0 = *pStr;
+    char c1 = *pStr + 1;
 
     // Auto-detect base
     // If base is octal/hex, just check for optional prefix
@@ -123,13 +123,13 @@ s32 strtol(const char* str, char** endptr, int base) {
         // Valid hex prefix
         if (c0 == '0' && (c1 == 'x' || c1 == 'X')) {
             base = 16;
-            str += sizeof('0x');
+            pStr += sizeof('0x');
         }
     } else if (base == 0 || base == 8) {
         // Valid octal prefix
         if (c0 == '0') {
             base = 8;
-            str += sizeof('0');
+            pStr += sizeof('0');
         }
     }
 
@@ -142,8 +142,8 @@ s32 strtol(const char* str, char** endptr, int base) {
 
     // Parse digits
     s32 ret = 0;
-    for (; *str != '\0'; str++) {
-        char digit = *str;
+    for (; *pStr != '\0'; pStr++) {
+        char digit = *pStr;
 
         if (isdigit(digit)) {
             ret *= base;
@@ -164,8 +164,8 @@ s32 strtol(const char* str, char** endptr, int base) {
         }
         // Conversion end
         else {
-            if (endptr != NULL) {
-                *endptr = const_cast<char*>(str);
+            if (pEndPtr != nullptr) {
+                *pEndPtr = const_cast<char*>(pStr);
             }
             break;
         }
@@ -175,33 +175,32 @@ s32 strtol(const char* str, char** endptr, int base) {
 }
 
 /**
- * Converts string to unsigned long
+ * @brief Converts string to unsigned long
  *
- * @param str String to convert
- * @param[out] endptr Pointer to string data after the converted number
+ * @param pStr String to convert
+ * @param[out] pEndPtr Pointer to string data after the converted number
  * @param base Number base (specify 0 to auto-detect)
  */
-u32 strtoul(const char* str, char** endptr, int base) {
-    return static_cast<u32>(strtol(str, endptr, base));
+u32 strtoul(const char* pStr, char** pEndPtr, int base) {
+    return static_cast<u32>(strtol(pStr, pEndPtr, base));
 }
 
 /**
- * Converts string to double value
+ * @brief Converts string to double value
  *
- * @param str String to convert
- * @return f64 Resulting value
+ * @param pStr String to convert
  */
-f64 atof(const char* str) {
-    K_ASSERT(str != NULL);
+f64 atof(const char* pStr) {
+    K_ASSERT(pStr != nullptr);
 
     // Skip whitespace
-    while (*str == ' ') {
-        ++str;
+    while (*pStr == ' ') {
+        ++pStr;
     }
 
     // Convert value
     f64 value;
-    int num = std::sscanf(str, "%lf", &value);
+    int num = std::sscanf(pStr, "%lf", &value);
 
     // Failure -> zero
     if (num != 1) {
@@ -212,88 +211,92 @@ f64 atof(const char* str) {
 }
 
 /**
- * Concatenates wide-char strings, up to the specified limit of
- * characters
+ * @brief Concatenates two wide-char strings (up to the specified character
+ * limit)
  *
- * @param dst String to concatenate to
- * @param src String to concatenate from
- * @param maxlen Concatenation limit, in bytes
- * @return wchar_t* Pointer to resulting string
+ * @param pwDst String to concatenate to
+ * @param pwSrc String to concatenate from
+ * @param maxlen Maximum number of characters to concatenate
  */
-wchar_t* wcsncat(wchar_t* dst, const wchar_t* src, size_t maxlen) {
+wchar_t* wcsncat(wchar_t* pwDst, const wchar_t* pwSrc, size_t maxlen) {
+    K_ASSERT(pwDst != nullptr);
+    K_ASSERT(pwSrc != nullptr);
+
     // Backup original argument
-    wchar_t* backup = dst;
+    wchar_t* pBackup = pwDst;
 
     // Find null terminator
-    while (*dst != L'\0') {
-        dst++;
+    while (*pwDst != L'\0') {
+        pwDst++;
     }
 
     // Append sequence
     while (maxlen-- > 0) {
-        *dst++ = *src++;
+        *pwDst++ = *pwSrc++;
 
         // Hit end of sequence
-        if (*src == L'\0') {
+        if (*pwSrc == L'\0') {
             break;
         }
     }
 
     // Null terminator
-    *dst = L'\0';
+    *pwDst = L'\0';
 
-    return backup;
+    return pBackup;
 }
 
 /**
- * Compares two wide-char strings, up to the specified limit of
- * characters
+ * @brief Compares two wide-char strings (up to the specified character limit)
  *
- * @param wcs1 String 1
- * @param wcs2 String 2
+ * @param pwStr1 String 1
+ * @param pwStr2 String 2
  * @param maxlen Maximum number of characters to compare
- * @return Relationship between the two strings
  */
-int wcsncmp(const wchar_t* wcs1, const wchar_t* wcs2, size_t maxlen) {
+int wcsncmp(const wchar_t* pwStr1, const wchar_t* pwStr2, size_t maxlen) {
+    K_ASSERT(pwStr1 != nullptr);
+    K_ASSERT(pwStr2 != nullptr);
+
     for (int i = 0; i < maxlen; i++) {
-        if (*wcs1 != *wcs2) {
-            return *wcs1 - *wcs2;
+        if (*pwStr1 != *pwStr2) {
+            return *pwStr1 - *pwStr2;
         }
 
-        if (*wcs1 == L'\0') {
+        if (*pwStr1 == L'\0') {
             return 0;
         }
 
-        wcs1++;
-        wcs2++;
+        pwStr1++;
+        pwStr2++;
     }
 
     return 0;
 }
 
 /**
- * Finds the first occurrence of a sequence in a string
+ * @brief Finds the first occurrence of a sequence in a wide-char string
  *
- * @param str String to search
- * @param seq Sequence to search for
- * @return Pointer to occurrence (NULL if not found)
+ * @param pwStr String to search
+ * @param pwSeq Sequence to search for
  */
-const wchar_t* wcsstr(const wchar_t* str, const wchar_t* seq) {
+const wchar_t* wcsstr(const wchar_t* pwStr, const wchar_t* pwSeq) {
+    K_ASSERT(pwStr != nullptr);
+
     // No sequence/empty sequence
-    if (seq == NULL || *seq == L'\0') {
-        return str;
+    if (pwSeq == nullptr || *pwSeq == L'\0') {
+        return pwStr;
     }
 
     // First character in sequence
-    wchar_t begin = *seq;
+    wchar_t begin = *pwSeq;
 
     // Check for sequence
-    while (*str != L'\0') {
+    while (*pwStr != L'\0') {
         // Matches beginning of sequence
-        if (*str == begin) {
+        if (*pwStr == begin) {
             // Backup original pointers
-            const wchar_t* check = str;
-            const wchar_t* expect = seq;
+            const wchar_t* check = pwStr;
+            const wchar_t* expect = pwSeq;
 
             // Look for rest of sequence
             while (*++check == *++expect) {
@@ -302,15 +305,15 @@ const wchar_t* wcsstr(const wchar_t* str, const wchar_t* seq) {
 
             // Did we hit the end?
             if (*expect == '\0') {
-                return str;
+                return pwStr;
             }
         }
 
         // Next character
-        str++;
+        pwStr++;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 } // namespace ksl

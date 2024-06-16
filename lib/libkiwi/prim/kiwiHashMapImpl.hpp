@@ -10,23 +10,23 @@
 namespace kiwi {
 
 /**
- * Pre-increment operator
+ * @brief Pre-increment operator
  */
 template <typename TKey, typename TValue>
 TMap<TKey, TValue>::ConstIterator&
 TMap<TKey, TValue>::ConstIterator::operator++() {
     // Can't iterate
-    if (mpIter == NULL) {
+    if (mpIter == nullptr) {
         return *this;
     }
 
     // Increment
-    mpIter = mpIter->chained;
+    mpIter = mpIter->pChained;
 
     // Find next non-empty chain
     while (true) {
         // End of chain, advance to next bucket
-        if (mpIter == NULL) {
+        if (mpIter == nullptr) {
             if (++mIndex >= mCapacity) {
                 break;
             }
@@ -35,13 +35,13 @@ TMap<TKey, TValue>::ConstIterator::operator++() {
         }
 
         // Did we find an item?
-        K_ASSERT(mpIter != NULL);
+        K_ASSERT(mpIter != nullptr);
         if (mpIter->used) {
             break;
         }
 
         // Keep searching
-        mpIter = mpIter->chained;
+        mpIter = mpIter->pChained;
     }
 
     return *this;
@@ -49,22 +49,21 @@ TMap<TKey, TValue>::ConstIterator::operator++() {
 
 /**
  * @brief Constructor
+ * @details Copy constructor
  *
- * @param other Map to copy
+ * @param rOther Map to copy
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::TMap(const TMap& other) {
-    // Copy capacity
-    mCapacity = other.mCapacity;
+TMap<TKey, TValue>::TMap(const TMap& rOther) : mCapacity(rOther.mCapacity) {
     K_ASSERT(mCapacity > 0);
     K_ASSERT(mCapacity < HASH_MAX);
 
     // Create buckets for copy
     mpBuckets = new Bucket[mCapacity];
-    K_ASSERT(mpBuckets != NULL);
+    K_ASSERT(mpBuckets != nullptr);
 
     // Re-insert all members
-    for (ConstIterator it = other.Begin(); it != other.End(); ++it) {
+    for (ConstIterator it = rOther.Begin(); it != rOther.End(); ++it) {
         Insert(it.Key(), it.Value());
     }
 }
@@ -72,26 +71,26 @@ TMap<TKey, TValue>::TMap(const TMap& other) {
 /**
  * @brief Remove a key
  *
- * @param key Key
- * @param[out] removed Removed value
+ * @param rKey Key
+ * @param[out] pRemoved Removed value
  * @return Success
  */
 template <typename TKey, typename TValue>
-bool TMap<TKey, TValue>::Remove(const TKey& key, TValue* removed) {
-    Bucket* bucket = Search(key);
+bool TMap<TKey, TValue>::Remove(const TKey& rKey, TValue* pRemoved) {
+    Bucket* pBucket = Search(rKey);
 
     // Can't remove, doesn't exist
-    if (bucket == NULL) {
+    if (pBucket == nullptr) {
         return false;
     }
 
     // Write out value about to be removed
-    if (removed != NULL) {
-        *removed = *bucket->value;
+    if (pRemoved != nullptr) {
+        *pRemoved = *pBucket->value;
     }
 
     // Just mark as unused
-    bucket->used = false;
+    pBucket->used = false;
     mSize--;
     return true;
 }
@@ -99,70 +98,70 @@ bool TMap<TKey, TValue>::Remove(const TKey& key, TValue* removed) {
 /**
  * @brief Find key in hashmap
  *
- * @param key Key
+ * @param rKey Key
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::Bucket* TMap<TKey, TValue>::Search(const TKey& key) const {
+TMap<TKey, TValue>::Bucket* TMap<TKey, TValue>::Search(const TKey& rKey) const {
     // Calculate bucket index
-    u32 i = Hash(key) % mCapacity;
+    u32 i = Hash(rKey) % mCapacity;
 
     // Iterate through chains
-    for (Bucket* it = &mpBuckets[i]; it != NULL; it = it->chained) {
+    for (Bucket* pIt = &mpBuckets[i]; pIt != nullptr; pIt = pIt->pChained) {
         // Unused entry
-        if (!it->used) {
+        if (!pIt->used) {
             continue;
         }
 
         // Matches key
-        if (*it->key == key) {
-            return it;
+        if (*pIt->key == rKey) {
+            return pIt;
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
  * @brief Create key in hashmap
  *
- * @param key Key
+ * @param rKey Key
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::Bucket& TMap<TKey, TValue>::Create(const TKey& key) {
+TMap<TKey, TValue>::Bucket& TMap<TKey, TValue>::Create(const TKey& rKey) {
     // Calculate bucket index
-    u32 i = Hash(key) % mCapacity;
+    u32 i = Hash(rKey) % mCapacity;
 
     // Iterate through chains
-    Bucket* last = NULL;
-    for (Bucket* it = &mpBuckets[i]; it != NULL; it = it->chained) {
+    Bucket* pLast = nullptr;
+    for (Bucket* pIt = &mpBuckets[i]; pIt != nullptr; pIt = pIt->pChained) {
         // Unused entry
-        if (!it->used) {
+        if (!pIt->used) {
             // Override this entry
-            it->key = key;
-            it->value.Emplace();
-            it->used = true;
+            pIt->key = rKey;
+            pIt->value.Emplace();
+            pIt->used = true;
             mSize++;
-            return *it;
+            return *pIt;
         }
 
         // Matches key
-        if (*it->key == key) {
-            return *it;
+        if (*pIt->key == rKey) {
+            return *pIt;
         }
 
-        last = it;
+        pLast = pIt;
     }
 
     // Chain new bucket
-    K_ASSERT(last != NULL);
-    last->chained = new Bucket();
-    K_ASSERT(last->chained != NULL);
+    K_ASSERT(pLast != nullptr);
+    pLast->pChained = new Bucket();
+    K_ASSERT(pLast->pChained != nullptr);
 
-    last->chained->key = key;
-    last->chained->value.Emplace();
-    last->chained->used = true;
+    pLast->pChained->key = rKey;
+    pLast->pChained->value.Emplace();
+    pLast->pChained->used = true;
     mSize++;
-    return *last->chained;
+    return *pLast->pChained;
 }
 
 } // namespace kiwi

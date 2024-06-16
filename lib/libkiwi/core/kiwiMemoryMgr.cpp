@@ -1,165 +1,257 @@
+#include <egg/core.h>
 #include <libkiwi.h>
 
 namespace kiwi {
 namespace {
 
 /**
- * @brief Print heap information
- * @note DON'T USE STRING HERE IT ALLOCATES MEMORY
+ * @brief Prints heap information
  *
- * @param name Heap name
- * @param heap Heap object
+ * @param pName Heap name
+ * @param pHeap Heap object
  */
-void LogHeap(const char* name, EGG::Heap* heap) {
-    if (heap == NULL) {
-        K_LOG_EX("[%s] NULL ->\n", name);
+void LogHeap(const char* pName, EGG::Heap* pHeap) {
+    if (pHeap == nullptr) {
+        K_LOG_EX("[%s] nullptr ->\n", pName);
         return;
     }
 
-    K_LOG_EX("[%s] %p-> %.2fKB free\n", name, heap,
-             OS_MEM_B_TO_KB(static_cast<f32>(heap->getAllocatableSize())));
+    K_LOG_EX("[%s] %p-> %.2fKB free\n", pName, pHeap,
+             OS_MEM_B_TO_KB(static_cast<f32>(pHeap->getAllocatableSize())));
 }
 
 /**
- * @brief Catch erroneous double-frees
+ * @brief Catches erroneous double-frees
  *
- * @param block Target of delete operation
+ * @param pBlock Target of delete operation
  */
-void CheckDoubleFree(const void* block) {
-    // NULL delete is OK
-    if (block == NULL) {
+void CheckDoubleFree(const void* pBlock) {
+#ifndef NDEBUG
+    // nullptr delete is OK
+    if (pBlock == nullptr) {
         return;
     }
 
     // Catch invalid pointers while we're here
-    K_ASSERT(OSIsMEM1Region(block) || OSIsMEM2Region(block));
+    K_ASSERT(OSIsMEM1Region(pBlock) || OSIsMEM2Region(pBlock));
 
     // Sanity check, should always be ExpHeap
-    MEMiHeapHead* handle = MEMFindContainHeap(block);
-    K_ASSERT(handle != NULL);
-    K_ASSERT(handle->magic == 'EXPH');
+    MEMiHeapHead* pHandle = MEMFindContainHeap(pBlock);
+    K_ASSERT(pHandle != nullptr);
+    K_ASSERT(pHandle->magic == 'EXPH');
 
     // Check that the block is still marked as used
-    MEMiExpHeapMBlock* memBlock = static_cast<MEMiExpHeapMBlock*>(
-        AddToPtr(memBlock, -sizeof(MEMiExpHeapMBlock)));
-    K_ASSERT_EX(memBlock->state == 'UD', "Double free!");
+    MEMiExpHeapMBlock* pMBlock = static_cast<MEMiExpHeapMBlock*>(
+        AddToPtr(pMBlock, -sizeof(MEMiExpHeapMBlock)));
+    K_ASSERT_EX(pMBlock->state == 'UD', "Double free!");
+#endif
 }
 
 } // namespace
 
 /**
- * Constructor
+ * @brief Constructor
  */
 MemoryMgr::MemoryMgr() {
     // clang-format off
-    mpHeapMEM1 = EGG::ExpHeap::create(scHeapSize, RPSysSystem::getSystemHeap(), 0);
-    LogHeap("RPSysSystem:System", RPSysSystem::getSystemHeap());
-    LogHeap("libkiwi:MEM1", mpHeapMEM1);
-
-    K_ASSERT(mpHeapMEM1 != NULL);
-    K_ASSERT(OSIsMEM1Region(mpHeapMEM1));
-
+    mpHeapMEM1 = EGG::ExpHeap::create(scHeapSize, RP_GET_INSTANCE(RPSysSystem)->getSystemHeap(),   0);
     mpHeapMEM2 = EGG::ExpHeap::create(scHeapSize, RP_GET_INSTANCE(RPSysSystem)->getResourceHeap(), 0);
-    LogHeap("RPSysSystem:Resource", RP_GET_INSTANCE(RPSysSystem)->getResourceHeap());
-    LogHeap("libkiwi:MEM2", mpHeapMEM2);
 
-    K_ASSERT(mpHeapMEM2 != NULL);
-    K_ASSERT(OSIsMEM2Region(mpHeapMEM2));
+    LogHeap("RPSysSystem:System",   RP_GET_INSTANCE(RPSysSystem)->getSystemHeap());
+    LogHeap("RPSysSystem:Resource", RP_GET_INSTANCE(RPSysSystem)->getResourceHeap());
+    LogHeap("libkiwi:MEM1",         mpHeapMEM1);
+    LogHeap("libkiwi:MEM2",         mpHeapMEM2);
     // clang-format on
+
+    K_ASSERT(mpHeapMEM1 != nullptr);
+    K_ASSERT(mpHeapMEM2 != nullptr);
+    K_ASSERT(OSIsMEM1Region(mpHeapMEM1));
+    K_ASSERT(OSIsMEM2Region(mpHeapMEM2));
 }
 
 /**
- * Destructor
+ * @brief Destructor
  */
 MemoryMgr::~MemoryMgr() {
     delete mpHeapMEM1;
-    mpHeapMEM1 = NULL;
-
     delete mpHeapMEM2;
-    mpHeapMEM2 = NULL;
 }
 
 /**
- * Allocates a block of memory
+ * @brief Gets the heap corresponding to the specified memory region
+ *
+ * @param memory Target memory region
+ */
+EGG::Heap* MemoryMgr::GetHeap(EMemory memory) const {
+    K_ASSERT(memory < EMemory_Max);
+
+    EGG::Heap* pHeap = memory == EMemory_MEM1 ? mpHeapMEM1 : mpHeapMEM2;
+    K_ASSERT(pHeap != nullptr);
+
+    return pHeap;
+}
+
+/**
+ * @brief Allocates a block of memory
  *
  * @param size Block size
  * @param align Block alignment
  * @param memory Target memory region
  * @return void* Pointer to allocated block
  */
-void* MemoryMgr::Alloc(u32 size, s32 align, EMemory memory) {
-    K_ASSERT(memory < EMemory_Max);
-    K_ASSERT(mpHeapMEM1 != NULL && mpHeapMEM2 != NULL);
+void* MemoryMgr::Alloc(u32 size, s32 align, EMemory memory) const {
+    void* pBlock = GetHeap(memory)->alloc(size, align);
+    K_ASSERT_EX(pBlock != nullptr, "Out of memory (alloc %d)", size);
 
-    EGG::Heap* heap = memory == EMemory_MEM1 ? mpHeapMEM1 : mpHeapMEM2;
-    void* block = heap->alloc(size, align);
+    K_ASSERT(memory == EMemory_MEM1 ? OSIsMEM1Region(pBlock)
+                                    : OSIsMEM2Region(pBlock));
 
-    K_ASSERT_EX(block != NULL, "Out of memory (alloc %d)", size);
-    K_ASSERT(memory == EMemory_MEM1 ? OSIsMEM1Region(block)
-                                    : OSIsMEM2Region(block));
-
-    return block;
+    return pBlock;
 }
 
 /**
- * Frees a block of memory
+ * @brief Frees a block of memory
  *
- * @param block Block
+ * @param pBlock Block
  */
-void MemoryMgr::Free(void* block) {
-    K_ASSERT(mpHeapMEM1 != NULL && mpHeapMEM2 != NULL);
-    CheckDoubleFree(block);
-    EGG::Heap::free(block, NULL);
+void MemoryMgr::Free(void* pBlock) const {
+    CheckDoubleFree(pBlock);
+    EGG::Heap::free(pBlock, nullptr);
 }
 
 /**
- * Gets total size of available heap memory
+ * @brief Gets total size of available heap memory
  *
  * @param memory Target memory region
  */
-u32 MemoryMgr::GetFreeSize(EMemory memory) {
-    K_ASSERT(memory < EMemory_Max);
-    K_ASSERT(mpHeapMEM1 != NULL && mpHeapMEM2 != NULL);
+u32 MemoryMgr::GetFreeSize(EMemory memory) const {
+    return GetHeap(memory)->getAllocatableSize();
+}
 
-    EGG::Heap* heap = memory == EMemory_MEM1 ? mpHeapMEM1 : mpHeapMEM2;
-    return heap->getAllocatableSize();
+/**
+ * @brief Tests whether an address points to an allocation from this manager
+ *
+ * @param pAddr Memory address
+ */
+bool MemoryMgr::IsHeapMemory(const void* pAddr) const {
+    K_ASSERT(mpHeapMEM1 != nullptr && mpHeapMEM2 != nullptr);
+
+    // Check MEM1 heap
+    if (pAddr >= mpHeapMEM1->getStartAddress() &&
+        pAddr < mpHeapMEM1->getEndAddress()) {
+        return true;
+    }
+
+    // Check MEM2 heap
+    if (pAddr >= mpHeapMEM2->getStartAddress() &&
+        pAddr < mpHeapMEM2->getEndAddress()) {
+        return true;
+    }
+
+    return false;
 }
 
 } // namespace kiwi
 
-void* operator new(std::size_t size) {
+/**
+ * @brief Allocates a block of memory
+ *
+ * @param size Block size
+ * @return Pointer to allocated block
+ */
+void* operator new(size_t size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4, kiwi::EMemory_MEM1);
 }
-void* operator new[](std::size_t size) {
+/**
+ * @brief Allocates a block of memory for an array
+ *
+ * @param size Block size
+ * @return Pointer to allocated block
+ */
+void* operator new[](size_t size) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4, kiwi::EMemory_MEM1);
 }
 
-void* operator new(std::size_t size, s32 align) {
+/**
+ * @brief Allocates a block of memory
+ *
+ * @param size Block size
+ * @param align Block address alignment
+ * @return Pointer to allocated block
+ */
+void* operator new(size_t size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align,
                                                 kiwi::EMemory_MEM1);
 }
-void* operator new[](std::size_t size, s32 align) {
+/**
+ * @brief Allocates a block of memory for an array
+ *
+ * @param size Block size
+ * @param align Block address alignment
+ * @return Pointer to allocated block
+ */
+void* operator new[](size_t size, s32 align) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align,
                                                 kiwi::EMemory_MEM1);
 }
 
-void* operator new(std::size_t size, kiwi::EMemory memory) {
+/**
+ * @brief Allocates a block of memory
+ *
+ * @param size Block size
+ * @param memory Target memory region
+ * @return Pointer to allocated block
+ */
+void* operator new(size_t size, kiwi::EMemory memory) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4, memory);
 }
-void* operator new[](std::size_t size, kiwi::EMemory memory) {
+/**
+ * @brief Allocates a block of memory for an array
+ *
+ * @param size Block size
+ * @param memory Target memory region
+ * @return Pointer to allocated block
+ */
+void* operator new[](size_t size, kiwi::EMemory memory) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, 4, memory);
 }
 
-void* operator new(std::size_t size, s32 align, kiwi::EMemory memory) {
+/**
+ * @brief Allocates a block of memory
+ *
+ * @param size Block size
+ * @param align Block address alignment
+ * @param memory Target memory region
+ * @return Pointer to allocated block
+ */
+void* operator new(size_t size, s32 align, kiwi::EMemory memory) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align, memory);
 }
-void* operator new[](std::size_t size, s32 align, kiwi::EMemory memory) {
+/**
+ * @brief Allocates a block of memory for an array
+ *
+ * @param size Block size
+ * @param align Block address alignment
+ * @param memory Target memory region
+ * @return Pointer to allocated block
+ */
+void* operator new[](size_t size, s32 align, kiwi::EMemory memory) {
     return kiwi::MemoryMgr::GetInstance().Alloc(size, align, memory);
 }
 
-void operator delete(void* block) {
-    kiwi::MemoryMgr::GetInstance().Free(block);
+/**
+ * @brief Frees a block of memory
+ *
+ * @param pBlock Block
+ */
+void operator delete(void* pBlock) {
+    kiwi::MemoryMgr::GetInstance().Free(pBlock);
 }
-void operator delete[](void* block) {
-    kiwi::MemoryMgr::GetInstance().Free(block);
+/**
+ * @brief Frees a block of memory used by an array
+ *
+ * @param pBlock Block
+ */
+void operator delete[](void* pBlock) {
+    kiwi::MemoryMgr::GetInstance().Free(pBlock);
 }

@@ -27,6 +27,7 @@
 #include <libkiwi/debug/kiwiNw4rDirectPrint.h>
 #include <libkiwi/debug/kiwiNw4rException.h>
 #include <libkiwi/debug/kiwiStackChecker.h>
+#include <libkiwi/fun/kiwiGameCorruptor.h>
 #include <libkiwi/math/kiwiAlgorithm.h>
 #include <libkiwi/net/kiwiAsyncSocket.h>
 #include <libkiwi/net/kiwiEmuRichPresence.h>
@@ -44,20 +45,25 @@
 #include <libkiwi/prim/kiwiHashMap.h>
 #include <libkiwi/prim/kiwiLinkList.h>
 #include <libkiwi/prim/kiwiOptional.h>
-#include <libkiwi/prim/kiwiPair.h>
 #include <libkiwi/prim/kiwiSTL.h>
 #include <libkiwi/prim/kiwiSmartPtr.h>
 #include <libkiwi/prim/kiwiString.h>
 #include <libkiwi/prim/kiwiVector.h>
 #include <libkiwi/support/kiwiLibGX.h>
+#include <libkiwi/support/kiwiLibOS.h>
 #include <libkiwi/support/kiwiLibSO.h>
 #include <libkiwi/util/kiwiAutoLock.h>
+#include <libkiwi/util/kiwiBitUtil.h>
 #include <libkiwi/util/kiwiBuildTarget.h>
 #include <libkiwi/util/kiwiChecksum.h>
 #include <libkiwi/util/kiwiDynamicSingleton.h>
+#include <libkiwi/util/kiwiExtView.h>
 #include <libkiwi/util/kiwiGlobalInstance.h>
+#include <libkiwi/util/kiwiIosDevice.h>
+#include <libkiwi/util/kiwiIosObject.h>
+#include <libkiwi/util/kiwiIosVector.h>
 #include <libkiwi/util/kiwiNonCopyable.h>
-#include <libkiwi/util/kiwiOverride.h>
+#include <libkiwi/util/kiwiPtrUtil.h>
 #include <libkiwi/util/kiwiRandom.h>
 #include <libkiwi/util/kiwiStaticSingleton.h>
 #include <libkiwi/util/kiwiWatch.h>
@@ -65,6 +71,5 @@
 
 // Order important from here
 
-#include <libkiwi/k_config.h>
 #include <libkiwi/k_types.h>
 #endif

@@ -4,6 +4,8 @@
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
  * @brief Running 32-bit checksum
@@ -22,7 +24,7 @@ public:
      * @param size Size of data
      */
     void Process(const void* data, u32 size) {
-        K_ASSERT(data != NULL);
+        K_ASSERT(data != nullptr);
 
         const u8* p = static_cast<const u8*>(data);
 
@@ -64,6 +66,7 @@ private:
     u32 mSumInv; // Inverse sum
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

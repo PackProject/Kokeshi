@@ -2,10 +2,11 @@
 #define LIBKIWI_CORE_CONTROLLER_H
 #include <egg/core.h>
 #include <libkiwi/k_types.h>
-#include <libkiwi/util/kiwiNonCopyable.h>
-#include <revolution/WPAD.h>
+#include <libkiwi/util/kiwiExtView.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
  * @brief Player IDs
@@ -20,101 +21,97 @@ enum EPlayer {
 };
 
 /**
- * EGG controller wrapper
+ * @brief Controller buttons (type agnostic)
  */
-class WiiCtrl : public EGG::CoreController, private NonCopyable {
-public:
-    enum EButton {
-        EButton_None = 0,
+enum EButton {
+    EButton_Up = (1 << 0),
+    EButton_Down = (1 << 1),
+    EButton_Left = (1 << 2),
+    EButton_Right = (1 << 3),
+    EButton_A = (1 << 4),
+    EButton_B = (1 << 5),
+    EButton_1 = (1 << 6),
+    EButton_2 = (1 << 7),
+    EButton_Minus = (1 << 8),
+    EButton_Plus = (1 << 9),
+    EButton_Home = (1 << 10),
+};
 
-        EButton_A = (1 << 11),
-        EButton_B = (1 << 10),
-
-        EButton_Up = (1 << 3),
-        EButton_Down = (1 << 2),
-        EButton_Left = (1 << 0),
-        EButton_Right = (1 << 1),
-
-        EButton_1 = (1 << 9),
-        EButton_2 = (1 << 8),
-
-        EButton_Minus = (1 << 12),
-        EButton_Plus = (1 << 4),
-
-        EButton_Home = (1 << 15),
-
-        EButton_DPad = EButton_Up | EButton_Down | EButton_Left | EButton_Right,
-
-        EButton_Any = EButton_A | EButton_B | EButton_Up | EButton_Down |
-                      EButton_Left | EButton_Right | EButton_1 | EButton_2 |
-                      EButton_Minus | EButton_Plus | EButton_Home
-    };
-
+/**
+ * @brief Wii Remote controller
+ * @extview{EGG::CoreController}
+ */
+class WiiCtrl : public ExtView<EGG::CoreController> {
 public:
     /**
-     * Tests whether the controller is connected
+     * @brief Tests whether the controller is connected
      */
-    bool Connected() const {
+    bool IsConnected() const {
         return getReadLength() > 0;
     }
 
     /**
-     * Gets buttons held during the most recent frame
+     * @brief Tests whether specific buttons were held down last frame
+     *
+     * @param buttons Button mask
      */
-    u32 Hold() const {
-        return Raw().hold;
+    bool IsHold(u32 buttons) const {
+        u32 mask = ConvertMask(buttons);
+        return (GetStatus().hold & mask) == mask;
+    }
+    /**
+     * @brief Tests whether specific buttons were released last frame
+     *
+     * @param buttons Button mask
+     */
+    bool IsRelease(u32 buttons) const {
+        u32 mask = ConvertMask(buttons);
+        return (GetStatus().release & mask) == mask;
+    }
+    /**
+     * @brief Tests whether specific buttons were triggered (pressed) last frame
+     *
+     * @param buttons Button mask
+     */
+    bool IsTrig(u32 buttons) const {
+        u32 mask = ConvertMask(buttons);
+        return (GetStatus().trig & mask) == mask;
     }
 
+private:
     /**
-     * Gets buttons released during the most recent frame
+     * @brief Converts generic (EButton) mask to button mask for KPAD
+     *
+     * @param mask Generic (EButton) mask
+     * @return u32 KPAD button mask
      */
-    u32 Release() const {
-        return Raw().release;
-    }
+    static u32 ConvertMask(u32 mask);
 
     /**
-     * Gets buttons triggered during the most recent frame
+     * @brief Gets KPAD data (read-only)
      */
-    u32 Trig() const {
-        return Raw().trig;
-    }
-
-    /**
-     * Gets KPAD data
-     */
-    KPADStatus& Raw() {
-        return *reinterpret_cast<KPADStatus*>(getCoreStatus(0));
-    }
-
-    /**
-     * Gets KPAD data
-     */
-    const KPADStatus& Raw() const {
+    const KPADStatus& GetStatus() const {
         return *reinterpret_cast<KPADStatus*>(getCoreStatus(0));
     }
 };
 
 /**
- * EGG controller manager wrapper
+ * @brief Controller manager
+ * @extview{EGG::CoreControllerMgr}
  */
-class CtrlMgr : protected EGG::CoreControllerMgr, private NonCopyable {
+class CtrlMgr : public ExtView<EGG::CoreControllerMgr> {
 public:
-    static CtrlMgr& GetInstance() {
-        EGG::CoreControllerMgr* base = EGG::CoreControllerMgr::getInstance();
-        K_ASSERT(base != NULL);
-        return *static_cast<CtrlMgr*>(base);
-    }
+    K_EXTVIEW_GET_INSTANCE(CtrlMgr, EGG::CoreControllerMgr::getInstance);
 
-    WiiCtrl& GetWiiCtrl(EPlayer i) {
-        K_ASSERT(i < EPlayer_Max);
-
-        EGG::CoreController* base = getNthController(i);
-        K_ASSERT(base != NULL);
-
-        return *static_cast<WiiCtrl*>(base);
-    }
+    /**
+     * @brief Gets Wii Remote controller by player index
+     *
+     * @param i Player index
+     */
+    const WiiCtrl& GetWiiCtrl(EPlayer i);
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

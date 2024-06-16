@@ -1,14 +1,12 @@
 #include <cstring>
 #include <libkiwi.h>
-#include <revolution/EXI.h>
-#include <revolution/OS.h>
 
 namespace kiwi {
 
 K_DYNAMIC_SINGLETON_IMPL(GeckoDebugger);
 
 /**
- * @brief Attach the debugger (USB Gecko)
+ * @brief Attaches the debugger (USB Gecko)
  *
  * @return Success
  */
@@ -22,25 +20,28 @@ bool GeckoDebugger::Attach() {
  * @brief EXI input pending callback
  *
  * @param chan EXI channel
- * @param ctx Interrupt context
+ * @param pCtx Interrupt context
  */
-void GeckoDebugger::ExiCallback(EXIChannel chan, OSContext* ctx) {
-    DynamicSingleton::GetInstance().Calculate();
+void GeckoDebugger::ExiCallback(EXIChannel chan, OSContext* pCtx) {
+#pragma unused(chan)
+#pragma unused(pCtx)
+
+    GetInstance().Calculate();
 }
 
 /**
- * @brief Read data sent to the debugger
+ * @brief Reads data sent to the debugger
  *
- * @param dst Destination buffer
+ * @param pDst Destination buffer
  * @param size Read length
  * @return Number of bytes read
  */
-Optional<u32> GeckoDebugger::Read(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
+Optional<u32> GeckoDebugger::Read(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
     K_ASSERT(size > 0);
 
     // Lock this device while we use it
-    if (!EXILock(EXI_CHAN_0, EXI_DEV_EXT, NULL)) {
+    if (!EXILock(EXI_CHAN_0, EXI_DEV_EXT, nullptr)) {
         return kiwi::nullopt;
     }
 
@@ -54,11 +55,12 @@ Optional<u32> GeckoDebugger::Read(void* dst, u32 size) {
 
     // Prepare DMA
     u32 imm = 0xA0000000; // Read command
-    success = success && EXIImm(EXI_CHAN_0, &imm, sizeof(u32), EXI_WRITE, NULL);
+    success =
+        success && EXIImm(EXI_CHAN_0, &imm, sizeof(u32), EXI_WRITE, nullptr);
     success = success && EXISync(EXI_CHAN_0);
 
     // Read data
-    success = success && EXIImmEx(EXI_CHAN_0, dst, size, EXI_READ);
+    success = success && EXIImmEx(EXI_CHAN_0, pDst, size, EXI_READ);
     success = success && EXISync(EXI_CHAN_0);
 
     // Unlock this device when we are done
@@ -69,18 +71,18 @@ Optional<u32> GeckoDebugger::Read(void* dst, u32 size) {
 }
 
 /**
- * @brief Write data over the debugger
+ * @brief Writes data over the debugger
  *
- * @param src Source buffer
+ * @param pSrc Source buffer
  * @param size Write length
  * @return Number of bytes read
  */
-Optional<u32> GeckoDebugger::Write(const void* src, u32 size) {
-    K_ASSERT(src != NULL);
+Optional<u32> GeckoDebugger::Write(const void* pSrc, u32 size) {
+    K_ASSERT(pSrc != nullptr);
     K_ASSERT(size > 0);
 
     // Lock this device while we use it
-    if (!EXILock(EXI_CHAN_0, EXI_DEV_EXT, NULL)) {
+    if (!EXILock(EXI_CHAN_0, EXI_DEV_EXT, nullptr)) {
         return kiwi::nullopt;
     }
 
@@ -94,12 +96,13 @@ Optional<u32> GeckoDebugger::Write(const void* src, u32 size) {
 
     // Prepare DMA
     u32 imm = 0xB0000000; // Write command
-    success = success && EXIImm(EXI_CHAN_0, &imm, sizeof(u32), EXI_WRITE, NULL);
+    success =
+        success && EXIImm(EXI_CHAN_0, &imm, sizeof(u32), EXI_WRITE, nullptr);
     success = success && EXISync(EXI_CHAN_0);
 
     // Write data
     success = success &&
-              EXIImmEx(EXI_CHAN_0, const_cast<void*>(src), size, EXI_WRITE);
+              EXIImmEx(EXI_CHAN_0, const_cast<void*>(pSrc), size, EXI_WRITE);
     success = success && EXISync(EXI_CHAN_0);
 
     // Unlock this device when we are done

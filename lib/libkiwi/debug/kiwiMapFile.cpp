@@ -1,5 +1,4 @@
 #include <cstring>
-#include <egg/core.h>
 #include <libkiwi.h>
 
 namespace kiwi {
@@ -7,35 +6,36 @@ namespace kiwi {
 K_DYNAMIC_SINGLETON_IMPL(MapFile);
 
 /**
- * Constructor
+ * @brief Constructor
  */
 MapFile::MapFile()
-    : mLinkType(ELinkType_None), mpMapBuffer(NULL), mIsUnpacked(false) {}
+    : mLinkType(ELinkType_None), mpMapBuffer(nullptr), mIsUnpacked(false) {}
 
 /**
- * Destructor
+ * @brief Destructor
  */
 MapFile::~MapFile() {
     Close();
 }
 
 /**
- * Opens a map file from the DVD
- * @param path Map file path
+ * @brief Opens a map file from the DVD
+ *
+ * @param rPath Map file path
  * @param type Module linkage type
  */
-void MapFile::Open(const String& path, ELinkType type) {
+void MapFile::Open(const String& rPath, ELinkType type) {
     K_ASSERT(type != ELinkType_None);
 
     // Close existing map file
-    if (mpMapBuffer != NULL) {
+    if (mpMapBuffer != nullptr) {
         Close();
     }
 
     // Try to open file on the DVD
-    mpMapBuffer = static_cast<char*>(FileRipper::Rip(path, EStorage_DVD));
-    if (mpMapBuffer == NULL) {
-        K_LOG_EX("Map file (%s) could not be opened!\n", path.CStr());
+    mpMapBuffer = static_cast<char*>(FileRipper::Rip(rPath, EStorage_DVD));
+    if (mpMapBuffer == nullptr) {
+        K_LOG_EX("Map file (%s) could not be opened!\n", rPath.CStr());
         return;
     }
 
@@ -44,7 +44,7 @@ void MapFile::Open(const String& path, ELinkType type) {
 }
 
 /**
- * Closes map file
+ * @brief Closes map file
  */
 void MapFile::Close() {
     TList<Symbol>::Iterator it = mSymbols.Begin();
@@ -55,84 +55,79 @@ void MapFile::Close() {
     }
 
     delete mpMapBuffer;
-    mpMapBuffer = NULL;
+    mpMapBuffer = nullptr;
 
     mIsUnpacked = false;
 }
 
 /**
- * Queries text section symbol
- * @param addr Symbol address
+ * @brief Queries text section symbol
+ *
+ * @param pAddr Symbol address
  */
-const MapFile::Symbol* MapFile::QueryTextSymbol(const void* addr) {
+const MapFile::Symbol* MapFile::QueryTextSymbol(const void* pAddr) const {
     if (!IsAvailable()) {
-        return NULL;
+        return nullptr;
     }
 
-    TList<Symbol>::Iterator it = mSymbols.Begin();
+    TList<Symbol>::ConstIterator it = mSymbols.Begin();
     for (; it != mSymbols.End(); it++) {
         // Resolve the symbol's address
-        const void* symb = it->type == ELinkType_Static
-                               ? it->addr
-                               : AddToPtr(GetTextStart(), it->offset);
+        const void* pResolved =
+            it->type == ELinkType_Static
+                ? it->pAddr
+                : AddToPtr(GetModuleTextStart(), it->offset);
 
         // Determine if the specified address falls within the symbol
-        if (PtrDistance(symb, addr) < it->size) {
+        if (PtrDistance(pResolved, pAddr) < it->size) {
             return &*it;
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
- * Unpacks loaded map file
+ * @brief Unpacks loaded map file
  */
 void MapFile::Unpack() {
-    // Don't unpack twice
-    if (IsAvailable()) {
-        return;
-    }
-
-    // Nothing to unpack
-    if (mpMapBuffer == NULL) {
-        return;
-    }
+    K_ASSERT(mpMapBuffer != nullptr);
 
     // Skip map file header (2 lines)
-    char* map = mpMapBuffer;
+    char* pIt = mpMapBuffer;
     for (int i = 0; i < 2; i++) {
-        map = ksl::strchr(map, '\n') + 1;
+        pIt = ksl::strchr(pIt, '\n') + 1;
     }
 
     // Parse lines
-    for (char* next = map; (next = ksl::strchr(map, '\n')); map = next + 1) {
+    for (char* pEndl = pIt; (pEndl = ksl::strchr(pIt, '\n')); pIt = pEndl + 1) {
         Symbol* sym = new Symbol();
+        K_ASSERT(sym != nullptr);
 
         // Location
         if (mLinkType == ELinkType_Static) {
-            sym->addr = reinterpret_cast<void*>(ksl::strtoul(map, &map, 16));
+            sym->pAddr = reinterpret_cast<void*>(ksl::strtoul(pIt, &pIt, 16));
         } else {
-            sym->offset = ksl::strtoul(map, &map, 16);
+            sym->offset = ksl::strtoul(pIt, &pIt, 16);
         }
 
         // Linkage
         sym->type = mLinkType;
 
         // Size
-        sym->size = ksl::strtoul(map, &map, 16);
+        sym->size = ksl::strtoul(pIt, &pIt, 16);
 
         // Trim whitespace from name
-        while (*map == ' ') {
-            map++;
+        while (*pIt == ' ') {
+            pIt++;
         }
-        sym->name = map;
+        sym->pName = pIt;
 
         // Terminate symbol string
-        *next = '\0';
+        *pEndl = '\0';
         // Remove carriage return
-        if (*(next - 1) == '\r') {
-            *(next - 1) = '\0';
+        if (*(pEndl - 1) == '\r') {
+            *(pEndl - 1) = '\0';
         }
 
         mSymbols.PushBack(sym);

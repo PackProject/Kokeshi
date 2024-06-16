@@ -2,13 +2,9 @@
 #define LIBKIWI_CORE_SPR_H
 #include <libkiwi/k_types.h>
 
-/**
- * Special-purpose register functions
- */
-
 #define REG_R(reg)                                                                   \
     /* clang-format off */                                                        \
-    inline u32 Mf##reg() {                                                        \
+    K_INLINE u32 Mf##reg() {                                                        \
         register u32 x;                                                           \
         asm volatile {                                                            \
             mf##reg x                                                             \
@@ -19,7 +15,7 @@
 
 #define REG_W(reg)                                                                   \
     /* clang-format off */                                                        \
-    inline void Mt##reg(register u32 x) {                                         \
+    K_INLINE void Mt##reg(register u32 x) {                                         \
         asm volatile {                                                            \
             mt##reg x                                                             \
         }                                                                         \
@@ -33,15 +29,17 @@ REG_RW(cr)
 REG_RW(ctr)
 
 /**
- * DABR
- * Data Address Breakpoint Register
+ * @name DABR
+ * @brief Data Address Breakpoint Register
  */
+/**@{*/
 REG_RW(dabr)
 // clang-format off
 #define DABR_DR (1 << (31 - 31)) // Data read enable
 #define DABR_DW (1 << (31 - 30)) // Data write enable
 #define DABR_BT (1 << (31 - 29)) // Breakpoint translation enable
 // clang-format on
+/**@}*/
 
 REG_RW(dar)
 
@@ -64,9 +62,10 @@ REG_RW(dbat3u)
 REG_RW(dec)
 
 /**
- * DSISR
- * DSI Exception Status Register
+ * @name DSISR
+ * @brief DSI Exception Status Register
  */
+/**@{*/
 REG_RW(dsisr)
 // clang-format off
 #define DSISR_DIRECT (1 << (31 - 0))  // Direct-store error exception
@@ -74,14 +73,16 @@ REG_RW(dsisr)
 #define DSISR_ACCESS (1 << (31 - 4))  // Memory access
 #define DSISR_DABR   (1 << (31 - 10)) // DABR match occurred
 // clang-format on
+/**@}*/
 
 REG_RW(ear)
 
 /**
- * FPSCR
- * Floating-Point Status and Control Register
+ * @name FPSCR
+ * @brief Floating-Point Status and Control Register
  */
-inline u32 Mffpscr() {
+/**@{*/
+K_INLINE u32 Mffpscr() {
     register u64 fpscr;
 
     // clang-format off
@@ -94,7 +95,7 @@ inline u32 Mffpscr() {
     return fpscr;
 }
 
-inline void Mtfpscr(register u32 val) {
+K_INLINE void Mtfpscr(register u32 val) {
     register struct {
         f32 pad;
         f32 data;
@@ -104,7 +105,8 @@ inline void Mtfpscr(register u32 val) {
     asm {
         li r4, 0
         stw val, fpscr.data
-        stw r4, fpscr.pad
+        stw r4,  fpscr.pad
+        
         lfd f31, fpscr.pad
         mtfs f31
     }
@@ -139,6 +141,7 @@ inline void Mtfpscr(register u32 val) {
 #define FPSCR_NI       (1       << (31 - 29)) // Floating-point non-IEEE mode
 #define FPSCR_RN       (0b11    << (31 - 31)) // Floating-point rounding control
 // clang-format on
+/**@}*/
 
 REG_RW(gqr0)
 
@@ -157,9 +160,10 @@ REG_RW(gqr6)
 REG_RW(gqr7)
 
 /**
- * HID0
- * Hardware Implementation-Dependent Register 0
+ * @name HID0
+ * @brief Hardware Implementation-Dependent Register 0
  */
+/**@{*/
 REG_RW(hid0)
 // clang-format off
 #define HID0_EMCP   (1 << (31 - 0))  // Enable MCP
@@ -189,11 +193,13 @@ REG_RW(hid0)
 #define HID0_BHT    (1 << (31 - 29)) // Branch history table enable
 #define HID0_NOOPTI (1 << (31 - 31)) // No-op the data cache touch instructions
 // clang-format on
+/**@}*/
 
 /**
- * HID1
- * Hardware Implementation-Dependent Register 1
+ * @name HID1
+ * @brief Hardware Implementation-Dependent Register 1
  */
+/**@{*/
 REG_RW(hid1)
 // clang-format off
 #define HID1_PC0 (1 << (31 - 0)) // PLL configuration bits (read-only)
@@ -202,11 +208,13 @@ REG_RW(hid1)
 #define HID1_PC3 (1 << (31 - 3)) // PLL configuration bits (read-only)
 #define HID1_PC4 (1 << (31 - 4)) // PLL configuration bits (read-only)
 // clang-format on
+/**@}*/
 
 /**
- * HID2
- * Hardware Implementation-Dependent Register 2
+ * @name HID2
+ * @brief Hardware Implementation-Dependent Register 2
  */
+/**@{*/
 REG_RW(hid2)
 // clang-format off
 #define HID2_WPE    (1      << (31 - 1))  // Write pipe enable
@@ -222,11 +230,13 @@ REG_RW(hid2)
 #define HID2_DCMEE  (1      << (31 - 14)) // DMA cache miss error enable
 #define HID2_DQOEE  (1      << (31 - 15)) // DMA queue overflow error enable
 // clang-format on
+/**@}*/
 
 /**
- * HID4
- * Hardware Implementation-Dependent Register 4
+ * @name HID4
+ * @brief Hardware Implementation-Dependent Register 4
  */
+/**@{*/
 // clang-format off
 #define HID4_H4A      (1    << (31 - 0))  // Unknown
 #define HID4_L2FM     (0b11 << (31 - 2))  // L2 fetch mode
@@ -239,6 +249,7 @@ REG_RW(hid2)
 #define HID4_L2_CCFI  (1    << (31 - 11)) // L2CFI - L2 complete castout prior to L2 flash invalidate
 #define HID4_PSS2_CTL (1    << (31 - 12)) // Paired-singles control bit 2
 // clang-format on
+/**@}*/
 
 REG_RW(iabr)
 
@@ -261,9 +272,10 @@ REG_RW(ibat3u)
 REG_RW(ictc)
 
 /**
- * L2CR
- * L2 Control Register
+ * @name L2CR
+ * @brief L2 Control Register
  */
+/**@{*/
 REG_RW(l2cr)
 // clang-format off
 #define L2CR_L2E  (1 << (31 - 0))  // L2 enable
@@ -274,6 +286,7 @@ REG_RW(l2cr)
 #define L2CR_L2TS (1 << (31 - 13)) // L2 test support
 #define L2CR_L2IP (1 << (31 - 31)) // L2 global invalidate in progress (read only)
 // clang-format on
+/**@}*/
 
 REG_RW(lr)
 
@@ -282,9 +295,10 @@ REG_RW(mmcr0)
 REG_RW(mmcr1)
 
 /**
- * MSR
- * Machine Status Register
+ * @name MSR
+ * @brief Machine Status Register
  */
+/**@{*/
 REG_RW(msr)
 // clang-format off
 #define MSR_POW (1 << (31 - 13)) // Power management enable
@@ -304,11 +318,13 @@ REG_RW(msr)
 #define MSR_RI  (1 << (31 - 30)) // Indicates whether system reset or machine check exception is recoverable
 #define MSR_LE  (1 << (31 - 31)) // Little-endian mode enable
 // clang-format on
+/**@}*/
 
 /**
- * PMC1-PMC4
- * Performance Monitor Counter Registers
+ * @name PMC1-PMC4
+ * @brief Performance Monitor Counter Registers
  */
+/**@{*/
 REG_RW(pmc1)
 REG_RW(pmc2)
 REG_RW(pmc3)
@@ -316,16 +332,19 @@ REG_RW(pmc4)
 // clang-format off
 #define PMC_OV (1 << (31 - 0)) // Overflow
 // clang-format on
+/**@}*/
 
 /**
- * PVR
- * Processor Version Register
+ * @name PVR
+ * @brief Processor Version Register
  */
+/**@{*/
 REG_R(pvr)
 // clang-format off
 #define PVR_VER (0xFFFF0000) // A 16-bit number that uniquely identifies a particular processor version
 #define PVR_REV (0x0000FFFF) // A 16-bit number that distinguishes between various releases of a particular version (that is, an engineering change level)
 // clang-format on
+/**@}*/
 
 REG_RW(sdr1)
 
@@ -368,14 +387,16 @@ REG_R(upmc4)
 REG_R(usia)
 
 /**
- * WPAR
- * Write Pipe Address Register
+ * @name WPAR
+ * @brief Write Pipe Address Register
  */
+/**@{*/
 REG_RW(wpar)
 // clang-format off
 #define WPAR_GB_ADDR (0x07FFFFFF << (31 - 26)) // High order address bits of the data to be gathered
 #define WPAR_BNE     (1          << (31 - 31)) // Buffer not empty (read only)
 // clang-format on
+/**@}*/
 
 REG_RW(xer)
 

@@ -1,10 +1,9 @@
-/**
- * Kokeshi
- *
- * Framework for injecting custom code into Pack Project titles
- *
- * Available for use under MIT license
- */
+//
+// Kokeshi
+//
+// Framework for injecting custom code into Pack Project titles
+// Available for use under MIT license
+//
 
 #include <Pack/RPSystem.h>
 #include <cstdio>
@@ -14,23 +13,20 @@
 namespace kokeshi {
 namespace {
 
-/**
- * @brief Memory interface for the Kamek loader
- */
+//! Memory interface for the Kamek loader
 const kamek::loaderFunctions cLoaderFunctions = {Alloc, Free};
 
 /**
- * @brief Log message
+ * @brief Logs message to the console
+ * @note Re-implements OSReport, which is stubbed out in retail builds
  *
- * @details Re-implements OSReport (stubbed out in retail games)
- *
- * @param msg Message/format string
+ * @param pMsg Message/format string
  * @param ... Format parameters
  */
-void Report(const char* msg, ...) {
+void Report(const char* pMsg, ...) {
     std::va_list list;
-    va_start(list, msg);
-    std::vprintf(msg, list);
+    va_start(list, pMsg);
+    std::vprintf(pMsg, list);
     va_end(list);
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
@@ -38,7 +34,7 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
                 KOKESHI_NOTIMPLEMENTED);       // Wii Sports Resort
 
 /**
- * @brief Load module and apply patches
+ * @brief Loads Kamek module and applies patches
  */
 void Load() {
     kamek::loadKamekBinaryFromDisc(&cLoaderFunctions, scModulePath);
@@ -50,12 +46,12 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load), // Wii Sports
 } // namespace
 
 /**
- * @brief Allocate memory
+ * @brief Allocates memory
  *
  * @param size Block size
  * @param sys Use system (MEM1) heap
  */
-void* Alloc(std::size_t size, bool sys) {
+void* Alloc(size_t size, bool sys) {
     return RP_GET_INSTANCE(RPSysSystem)
         ->alloc(sys ? RPSysSystem::getRootHeapMem1()
                     : RPSysSystem::getRootHeapMem2(),
@@ -63,16 +59,16 @@ void* Alloc(std::size_t size, bool sys) {
 }
 
 /**
- * @brief Free memory
+ * @brief Frees memory
  *
- * @param block Memory block
+ * @param pBlock Memory block
  * @param sys Use system (MEM1) heap
  */
-void Free(void* block, bool sys) {
+void Free(void* pBlock, bool sys) {
     return RP_GET_INSTANCE(RPSysSystem)
         ->free(sys ? RPSysSystem::getRootHeapMem1()
                    : RPSysSystem::getRootHeapMem2(),
-               block);
+               pBlock);
 }
 
 } // namespace kokeshi

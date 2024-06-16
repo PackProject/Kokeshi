@@ -3,7 +3,7 @@
 namespace kiwi {
 
 /**
- * Allocates packet buffer
+ * @brief Allocates message buffer of the specified size
  *
  * @param size Packet size
  */
@@ -12,32 +12,33 @@ void Packet::Alloc(u32 size) {
     K_ASSERT_EX(size < GetMaxContent(), "Must be fragmented!");
 
     // Free existing message
-    if (mpBuffer != NULL) {
+    if (mpBuffer != nullptr) {
         Free();
     }
 
     // Protocol may have memory overhead
     mBufferSize = size + GetOverhead();
+
     mpBuffer = new u8[mBufferSize];
-    K_ASSERT(mpBuffer != NULL);
+    K_ASSERT(mpBuffer != nullptr);
 
     Clear();
 }
 
 /**
- * Releases packet buffer
+ * @brief Releases message buffer
  */
 void Packet::Free() {
     AutoMutexLock lock(mBufferMutex);
 
     delete mpBuffer;
-    mpBuffer = NULL;
+    mpBuffer = nullptr;
 
     Clear();
 }
 
 /**
- * Clear existing state
+ * @brief Clears existing state
  */
 void Packet::Clear() {
     AutoMutexLock lock(mBufferMutex);
@@ -47,15 +48,15 @@ void Packet::Clear() {
 }
 
 /**
- * Reads data from packet buffer
+ * @brief Reads data from message buffer
  *
- * @param dst Data destination
+ * @param pDst Data destination
  * @param n Data size
  *
  * @return Number of bytes read
  */
-u32 Packet::Read(void* dst, u32 n) {
-    K_ASSERT(mpBuffer != NULL);
+u32 Packet::Read(void* pDst, u32 n) {
+    K_ASSERT(mpBuffer != nullptr);
     K_ASSERT(n <= GetMaxContent());
 
     AutoMutexLock lock(mBufferMutex);
@@ -64,23 +65,22 @@ u32 Packet::Read(void* dst, u32 n) {
     n = Min(n, ReadRemain());
 
     // Copy data from buffer
-    std::memcpy(dst, mpBuffer + mReadOffset, n);
+    std::memcpy(pDst, mpBuffer + mReadOffset, n);
     mReadOffset += n;
 
     return n;
 }
 
 /**
- * Writes data to packet buffer
+ * @brief Writes data to message buffer
  *
- * @param src Data source
+ * @param pSrc Data source
  * @param n Data size
  *
  * @return Number of bytes written
  */
-
-u32 Packet::Write(const void* src, u32 n) {
-    K_ASSERT(mpBuffer != NULL);
+u32 Packet::Write(const void* pSrc, u32 n) {
+    K_ASSERT(mpBuffer != nullptr);
     K_ASSERT(n <= GetMaxContent());
 
     AutoMutexLock lock(mBufferMutex);
@@ -89,21 +89,22 @@ u32 Packet::Write(const void* src, u32 n) {
     n = Min(n, WriteRemain());
 
     // Copy data to buffer
-    std::memcpy(mpBuffer + mWriteOffset, src, n);
+    std::memcpy(mpBuffer + mWriteOffset, pSrc, n);
     mWriteOffset += n;
 
     return n;
 }
 
 /**
- * Receives data from socket
+ * @brief Receives message data from socket
  *
  * @param socket Socket descriptor
  *
  * @return Number of bytes received
  */
 Optional<u32> Packet::Recv(SOSocket socket) {
-    K_ASSERT(mpBuffer != NULL);
+    K_ASSERT(socket >= 0);
+    K_ASSERT(mpBuffer != nullptr);
 
     AutoMutexLock lock(mBufferMutex);
 
@@ -126,14 +127,15 @@ Optional<u32> Packet::Recv(SOSocket socket) {
 }
 
 /**
- * Writes data to socket
+ * @brief Writes message data to socket
  *
  * @param socket Socket descriptor
  *
  * @return Number of bytes sent
  */
 Optional<u32> Packet::Send(SOSocket socket) {
-    K_ASSERT(mpBuffer != NULL);
+    K_ASSERT(socket >= 0);
+    K_ASSERT(mpBuffer != nullptr);
 
     AutoMutexLock lock(mBufferMutex);
 

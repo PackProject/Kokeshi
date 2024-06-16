@@ -5,6 +5,8 @@
 #include <revolution/DVD.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
  * @brief DVD file stream
@@ -19,64 +21,117 @@ public:
     /**
      * @brief Constructor
      *
-     * @param path File path
-     * @param mode Open mode
-     * @param create Create file if it doesn't exist
+     * @param rPath File path
      */
-    explicit DvdStream(const String& path) : FileStream(EOpenMode_Read) {
-        Open(path);
+    explicit DvdStream(const String& rPath) : FileStream(EOpenMode_Read) {
+        Open(rPath);
     }
 
     /**
      * @brief Destructor
+     * @note The stream is automatically closed.
      */
     virtual ~DvdStream() {
-        if (mIsOpen) {
-            Close();
-        }
-    }
-
-    bool Open(const String& path);
-    virtual void Close();
-
-    virtual u32 GetSize() const;
-
-    virtual bool CanSeek() const {
-        return true;
-    }
-    virtual bool CanRead() const {
-        return true;
-    }
-    virtual bool CanWrite() const {
-        return false;
-    }
-    virtual bool CanPeek() const {
-        return true;
+        Close();
     }
 
     /**
-     * Required byte-alignment
+     * @brief Opens stream to DVD file
+     *
+     * @param rPath File path
+     * @return Success
+     */
+    bool Open(const String& rPath);
+    /**
+     * @brief Closes this stream
+     */
+    virtual void Close();
+
+    /**
+     * @brief Gets the size of the currently open file
+     */
+    virtual u32 GetSize() const;
+
+    /**
+     * @brief Tests whether this stream type supports seeking
+     */
+    virtual bool CanSeek() const {
+        return true;
+    }
+    /**
+     * @brief Tests whether this stream type supports reading
+     */
+    virtual bool CanRead() const {
+        return true;
+    }
+    /**
+     * @brief Tests whether this stream type supports writing
+     */
+    virtual bool CanWrite() const {
+        return false;
+    }
+
+    /**
+     * @brief Gets the size alignment required by this stream type
      */
     virtual s32 GetSizeAlign() const {
         return 32;
     }
+    /**
+     * @brief Gets the offset alignment required by this stream type
+     */
     virtual s32 GetOffsetAlign() const {
         return 4;
     }
+    /**
+     * @brief Gets the buffer alignment required by this stream type
+     */
     virtual s32 GetBufferAlign() const {
         return 32;
     }
 
 private:
+    /**
+     * @brief Advances this stream's position (internal implementation)
+     *
+     * @param dir Seek direction
+     * @param offset Seek offset
+     */
     virtual void SeekImpl(ESeekDir dir, s32 offset);
-    virtual s32 ReadImpl(void* dst, u32 size);
-    virtual s32 WriteImpl(const void* src, u32 size);
-    virtual s32 PeekImpl(void* dst, u32 size);
+
+    /**
+     * @brief Reads data from this stream (internal implementation)
+     *
+     * @param pDst Destination buffer
+     * @param size Number of bytes to read
+     * @return Number of bytes read, or DVD error code
+     */
+    virtual s32 ReadImpl(void* pDst, u32 size);
+
+    /**
+     * @brief Writes data to this stream (internal implementation)
+     *
+     * @param pSrc Source buffer
+     * @param size Number of bytes to write
+     * @return Number of bytes written, or DVD error code
+     */
+    virtual s32 WriteImpl(const void* pSrc, u32 size);
+
+    /**
+     * @brief Reads data from this stream without advancing the stream's
+     * position (internal implementation)
+     *
+     * @param pDst Destination buffer
+     * @param size Number of bytes to read
+     * @return Number of bytes read, or DVD error code
+     */
+    virtual s32 PeekImpl(void* pDst, u32 size);
 
 private:
-    DVDFileInfo mFileInfo; // DVD handle
+    DVDFileInfo mFileInfo; //!< DVD file handle
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

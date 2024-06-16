@@ -3,10 +3,13 @@
 
 namespace kiwi {
 
+/**
+ * @brief Initial guard value
+ */
 u32 StackChecker::sStackCheckGuard = 0;
 
 /**
- * @brief Initialize guard variable
+ * @brief Initialize initial guard value
  */
 void StackChecker::Initialize() {
     K_ASSERT(sStackCheckGuard == 0);

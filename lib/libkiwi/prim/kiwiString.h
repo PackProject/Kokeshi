@@ -6,86 +6,89 @@
 #include <libkiwi/prim/kiwiVector.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_prim
+//! @{
 
 /**
- * String wrapper
+ * @brief String wrapper
  */
 template <typename T> class StringImpl {
 public:
     /**
-     * Constructor
+     * @brief Constructor
      */
-    StringImpl() : mpBuffer(NULL), mCapacity(0), mLength(0) {
+    StringImpl() : mpBuffer(nullptr), mCapacity(0), mLength(0) {
         Clear();
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details Copy constructor
      *
-     * @param str String to copy
+     * @param rOther String to copy
      */
-    StringImpl(const StringImpl& str)
-        : mpBuffer(NULL), mCapacity(0), mLength(0) {
-        Assign(str);
+    StringImpl(const StringImpl& rOther)
+        : mpBuffer(nullptr), mCapacity(0), mLength(0) {
+        Assign(rOther);
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details Substring constructor
      *
-     * @param str String to copy
+     * @param rOther String to copy
      * @param pos Substring start index
      * @param len Substring length
      */
-    StringImpl(const StringImpl& str, u32 pos, u32 len = npos)
-        : mpBuffer(NULL), mCapacity(0), mLength(0) {
-        Assign(str.SubStr(pos, len));
+    StringImpl(const StringImpl& rOther, u32 pos, u32 len = npos)
+        : mpBuffer(nullptr), mCapacity(0), mLength(0) {
+        Assign(rOther.SubStr(pos, len));
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details C-style string constructor
      *
-     * @param s C-style string
+     * @param pStr C-style string
      */
-    StringImpl(const T* s) : mpBuffer(NULL), mCapacity(0), mLength(0) {
-        Assign(s);
+    StringImpl(const T* pStr) : mpBuffer(nullptr), mCapacity(0), mLength(0) {
+        Assign(pStr);
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details Buffer/sequence constructor
      *
-     * @param s Buffer/sequence
+     * @param pStr Buffer/sequence
      * @param n Number of characters to copy
      */
-    StringImpl(const T* s, u32 n) : mpBuffer(NULL), mCapacity(0), mLength(0) {
-        Assign(s, n);
+    StringImpl(const T* pStr, u32 n)
+        : mpBuffer(nullptr), mCapacity(0), mLength(0) {
+        Assign(pStr, n);
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details Character constructor
      *
      * @param c Character
      */
-    StringImpl(char c) : mpBuffer(NULL), mCapacity(0), mLength(0) {
+    StringImpl(char c) : mpBuffer(nullptr), mCapacity(0), mLength(0) {
         Assign(c);
     }
 
     /**
-     * Constructor
+     * @brief Constructor
      * @details Reserve space
      *
      * @param n Number of characters to reserve
      */
-    explicit StringImpl(u32 n) : mpBuffer(NULL), mCapacity(0), mLength(0) {
+    explicit StringImpl(u32 n) : mpBuffer(nullptr), mCapacity(0), mLength(0) {
         Reserve(n);
     }
 
     /**
-     * Destructor
+     * @brief Destructor
      */
     ~StringImpl() {
         // Don't delete static memory
@@ -94,39 +97,39 @@ public:
         }
 
         delete[] mpBuffer;
-        mpBuffer = NULL;
+        mpBuffer = nullptr;
     }
 
     /**
-     * Implicit conversion operator to C-style string
+     * @brief Implicit conversion operator to C-style string
      */
     operator const T*() const {
         return CStr();
     }
 
     /**
-     * Gets the length of the underlying string (not including term)
+     * @brief Gets the length of the underlying string (not including term)
      */
     u32 Length() const {
         return mLength;
     }
 
     /**
-     * Tests whether the string is empty
+     * @brief Tests whether the string is empty
      */
     bool Empty() const {
         return Length() == 0;
     }
 
     /**
-     * Gets the underlying C-style string
+     * @brief Gets the underlying C-style string
      */
     const T* CStr() const {
         return mpBuffer;
     }
 
     /**
-     * Accesses a character in the string
+     * @brief Accesses a character in the string
      *
      * @param i Character index
      * @return Reference to character
@@ -137,7 +140,7 @@ public:
     }
 
     /**
-     * Accesses a character in the string
+     * @brief Accesses a character in the string
      *
      * @param i Character index
      * @return Reference to character
@@ -147,62 +150,94 @@ public:
         return mpBuffer[i];
     }
 
+    /**
+     * @brief Clears string buffer (yields empty string)
+     */
     void Clear();
+
+    /**
+     * @brief Generates substring of this string
+     *
+     * @param pos Substring start position
+     * @param len Substring size
+     */
     StringImpl SubStr(u32 pos = 0, u32 len = npos) const;
 
-    u32 Find(const StringImpl& str, u32 pos = 0) const;
-    u32 Find(const T* s, u32 pos = 0) const;
+    /**
+     * @brief Finds first occurrence of sequence in string
+     *
+     * @param rStr Sequence to search for
+     * @param pos Search offset (from string start)
+     * @return Match position if found, otherwise npos
+     */
+    u32 Find(const StringImpl& rStr, u32 pos = 0) const;
+    /**
+     * @brief Finds first occurrence of sequence in string
+     *
+     * @param pStr Sequence to search for
+     * @param pos Search offset (from string start)
+     * @return Match position if found, otherwise npos
+     */
+    u32 Find(const T* pStr, u32 pos = 0) const;
+    /**
+     * @brief Finds first occurrence of sequence in string
+     *
+     * @param c Character to search for
+     * @param pos Search offset (from string start)
+     * @return Match position if found, otherwise npos
+     */
     u32 Find(T c, u32 pos = 0) const;
 
-    bool StartsWith(const StringImpl& str) const;
-    bool StartsWith(const T* s) const;
-    bool EndsWith(const StringImpl& str) const;
-    bool EndsWith(const T* s) const;
+    /**
+     * @brief Tests whether this string starts with the specified prefix
+     *
+     * @param rStr Prefix sequence
+     */
+    bool StartsWith(const StringImpl& rStr) const;
+    /**
+     * @brief Tests whether this string starts with the specified prefix
+     *
+     * @param pStr Prefix sequence
+     */
+    bool StartsWith(const T* pStr) const;
 
-    TVector<StringImpl> Split(const StringImpl& delim) const;
+    /**
+     * @brief Tests whether this string ends with the specified suffix
+     *
+     * @param rStr Suffix sequence
+     */
+    bool EndsWith(const StringImpl& rStr) const;
+    /**
+     * @brief Tests whether this string ends with the specified suffix
+     *
+     * @param pStr Suffix sequence
+     */
+    bool EndsWith(const T* pStr) const;
 
-    StringImpl& operator+=(const StringImpl& str) {
-        Append(str);
-        return *this;
-    }
-    StringImpl& operator+=(const T* s) {
-        K_ASSERT(s != NULL);
-        Append(s);
-        return *this;
-    }
-    StringImpl& operator+=(T c) {
-        Append(c);
-        return *this;
-    }
+    /**
+     * @brief Split this string into tokens by the specified delimiter
+     *
+     * @param rDelim Delimiter sequence
+     */
+    TVector<StringImpl> Split(const StringImpl& rDelim) const;
 
-    StringImpl& operator=(const StringImpl& str) {
-        Assign(str);
-        return *this;
-    }
-    StringImpl& operator=(const T* s) {
-        Assign(s);
-        return *this;
-    }
-    StringImpl& operator=(T c) {
-        Assign(c);
-        return *this;
-    }
+    // clang-format off
+    StringImpl& operator=(const StringImpl& rStr) { Assign(rStr); return *this; }
+    StringImpl& operator=(const T* pStr)          { K_ASSERT(pStr != nullptr); Assign(pStr); return *this; }
+    StringImpl& operator=(T c)                    { Assign(c); return *this; }
 
-    bool operator==(const StringImpl& str) const;
-    bool operator==(const T* s) const;
-    bool operator==(const T c) const {
-        return mLength == 1 && mpBuffer[0] == c;
-    }
+    StringImpl& operator+=(const StringImpl& rStr) { Append(rStr); return *this; }
+    StringImpl& operator+=(const T* pStr)          { K_ASSERT(pStr != nullptr); Append(pStr); return *this; }
+    StringImpl& operator+=(T c)                    { Append(c); return *this; }
 
-    bool operator!=(const StringImpl& str) const {
-        return (*this == str) == false;
-    }
-    bool operator!=(const T* s) const {
-        return (*this == s) == false;
-    }
-    bool operator!=(T c) const {
-        return (*this == c) == false;
-    }
+    bool operator==(const StringImpl& rStr) const;
+    bool operator==(const T* pStr) const;
+    bool operator==(const T c) const { return mLength == 1 && mpBuffer[0] == c; }
+
+    bool operator!=(const StringImpl& rStr) const { return (*this == rStr) == false; }
+    bool operator!=(const T* pStr) const          { return (*this == pStr) == false; }
+    bool operator!=(T c) const                    { return (*this == c)    == false; }
+    // clang-format on
 
     friend StringImpl operator+(const StringImpl& lhs, const StringImpl& rhs) {
         StringImpl str = lhs;
@@ -223,15 +258,54 @@ public:
     }
 
 private:
+    /**
+     * @brief Reserves string buffer of specified size
+     *
+     * @param n Number of characters to reserve (ignoring null terminator)
+     */
     void Reserve(u32 n);
+    /**
+     * @brief Shrinks buffer to fit string contents
+     */
     void Shrink();
 
-    void Assign(const StringImpl& str);
-    void Assign(const T* s, u32 n = npos);
+    /**
+     * @brief Assigns data to string
+     *
+     * @param rStr String to copy
+     */
+    void Assign(const StringImpl& rStr);
+    /**
+     * @brief Assigns data to string
+     *
+     * @param pStr C-style string to copy
+     * @param n Number of characters to copy
+     */
+    void Assign(const T* pStr, u32 n = npos);
+    /**
+     * @brief Assigns data to string
+     *
+     * @param c Character to write
+     */
     void Assign(T c);
 
-    void Append(const StringImpl& str);
-    void Append(const T* s);
+    /**
+     * @brief Appends a string to this string
+     *
+     * @param rStr String to append
+     */
+    void Append(const StringImpl& rStr);
+    /**
+     * @brief Appends a string to this string
+     *
+     * @param pStr C-style string to append
+     */
+    void Append(const T* pStr);
+    /**
+     * @brief Appends a character to this string
+     *
+     * @param c Character to append
+     */
     void Append(T c);
 
 private:
@@ -239,7 +313,7 @@ private:
     u32 mCapacity; // Buffer size
     u32 mLength;   // String length (not including null terminator)
 
-    // Static string for empty StringImpls
+    // Static string for empty String objects
     static const T* scEmptyCStr;
 
 public:
@@ -250,145 +324,157 @@ typedef StringImpl<char> String;
 typedef StringImpl<wchar_t> WString;
 
 /**
- * Creates a new string from format arguments
+ * @brief Creates a new string from format arguments
  *
- * @param fmt Format string
+ * @param rFmt Format string
  * @param args Format arguments
  */
 template <typename T>
-inline StringImpl<T> VFormat(const StringImpl<T>& fmt, std::va_list args) {
+K_INLINE StringImpl<T> VFormat(const StringImpl<T>& rFmt, std::va_list args) {
     char buffer[1024];
-    std::vsnprintf(buffer, sizeof(buffer), fmt, args);
+    std::vsnprintf(buffer, sizeof(buffer), rFmt, args);
+    return StringImpl<T>(buffer);
+}
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param pFmt Format C-style string
+ * @param args Format arguments
+ */
+template <typename T>
+K_INLINE StringImpl<T> VFormat(const T* pFmt, std::va_list args) {
+    char buffer[1024];
+    std::vsnprintf(buffer, sizeof(buffer), pFmt, args);
     return StringImpl<T>(buffer);
 }
 
 /**
- * Creates a new string from format arguments
+ * @brief Creates a new string from format arguments
  *
- * @param fmt Format C-style string
- * @param args Format arguments
- */
-template <typename T>
-inline StringImpl<T> VFormat(const T* fmt, std::va_list args) {
-    char buffer[1024];
-    std::vsnprintf(buffer, sizeof(buffer), fmt, args);
-    return StringImpl<T>(buffer);
-}
-
-/**
- * Creates a new string from format arguments
- *
- * @param fmt Format string
+ * @param rFmt Format string
  * @param ... Format arguments
  */
 template <typename T>
-inline StringImpl<T> Format(const StringImpl<T>& fmt, ...) {
+K_INLINE StringImpl<T> Format(const StringImpl<T>& rFmt, ...) {
     std::va_list list;
-    va_start(list, fmt);
-    StringImpl<T> str = VFormat(fmt, list);
+    va_start(list, rFmt);
+    StringImpl<T> str = VFormat(rFmt, list);
+    va_end(list);
+
+    return str;
+}
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param pFmt Format C-style string
+ * @param ... Format arguments
+ */
+template <typename T> K_INLINE StringImpl<T> Format(const T* pFmt, ...) {
+    std::va_list list;
+    va_start(list, pFmt);
+    StringImpl<T> str = VFormat(pFmt, list);
     va_end(list);
 
     return str;
 }
 
 /**
- * Creates a new string from format arguments
+ * @brief Hashes a key of any type
+ * @note Hash support for String types
  *
- * @param fmt Format C-style string
- * @param ... Format arguments
+ * @param rKey Key
  */
-template <typename T> inline StringImpl<T> Format(const T* fmt, ...) {
-    std::va_list list;
-    va_start(list, fmt);
-    StringImpl<T> str = VFormat(fmt, list);
-    va_end(list);
-
-    return str;
+template <typename T> K_INLINE hash_t Hash(const StringImpl<T>& rKey) {
+    return HashImpl(rKey.CStr(), rKey.Length() * sizeof(T));
 }
 
-/**
- * @brief String hash support
- */
-template <typename T> inline hash_t Hash(const StringImpl<T>& key) {
-    return HashImpl(key.CStr(), key.Length() * sizeof(T));
-}
-
-// String conversion. Specialize these for custom types
-#define K_TO_STRING_FMT_DEF(T, fmt, val)                                       \
-    inline String ToString(const T& t) {                                       \
-        return Format(fmt, val);                                               \
+#define TO_STRING_PRIM(T, pFmt, val)                                           \
+    K_INLINE String ToString(const T& x) {                                     \
+        return Format(pFmt, val);                                              \
     }
-#define K_TO_HEX_STRING_FMT_DEF(T, fmt, val)                                   \
-    inline String ToHexString(const T& t) {                                    \
-        return Format(fmt, val);                                               \
+#define TO_HEX_STRING_PRIM(T, pFmt, val)                                       \
+    K_INLINE String ToHexString(const T& x) {                                  \
+        return Format(pFmt, val);                                              \
     }
 
 /**
- * @brief Convert integer to string
+ * @name Integer conversion
  */
-K_TO_STRING_FMT_DEF(int, "%d", t);
-K_TO_STRING_FMT_DEF(s32, "%ld", t);
-K_TO_STRING_FMT_DEF(s64, "%lld", t);
-K_TO_HEX_STRING_FMT_DEF(int, "0x%08X", t);
-K_TO_HEX_STRING_FMT_DEF(s32, "0x%08X", t);
-K_TO_HEX_STRING_FMT_DEF(s64, "0x%016X", t);
+/**@{*/
+TO_STRING_PRIM(int, "%d", x);
+TO_STRING_PRIM(s32, "%ld", x);
+TO_STRING_PRIM(s64, "%lld", x);
+TO_HEX_STRING_PRIM(int, "0x%08X", x);
+TO_HEX_STRING_PRIM(s32, "0x%08X", x);
+TO_HEX_STRING_PRIM(s64, "0x%016X", x);
 
-K_TO_STRING_FMT_DEF(unsigned int, "%u", t);
-K_TO_STRING_FMT_DEF(u32, "%lu", t);
-K_TO_STRING_FMT_DEF(u64, "%llu", t);
-K_TO_HEX_STRING_FMT_DEF(unsigned int, "0x%08X", t);
-K_TO_HEX_STRING_FMT_DEF(u32, "0x%08X", t);
-K_TO_HEX_STRING_FMT_DEF(u64, "0x%016X", t);
-
-/**
- * @brief Convert decimal to string
- */
-K_TO_STRING_FMT_DEF(f32, "%f", t);
-K_TO_STRING_FMT_DEF(f64, "%f", t);
-K_TO_HEX_STRING_FMT_DEF(f32, "0x%08X", BitCast<u32>(t));
-K_TO_HEX_STRING_FMT_DEF(f64, "0x%016X", BitCast<u64>(t));
+TO_STRING_PRIM(unsigned int, "%u", x);
+TO_STRING_PRIM(u32, "%lu", x);
+TO_STRING_PRIM(u64, "%llu", x);
+TO_HEX_STRING_PRIM(unsigned int, "0x%08X", x);
+TO_HEX_STRING_PRIM(u32, "0x%08X", x);
+TO_HEX_STRING_PRIM(u64, "0x%016X", x);
+/**@}*/
 
 /**
- * @brief Convert boolean to string
+ * @name Decimal conversion
  */
-inline String ToString(bool t) {
-    return t ? "true" : "false";
-}
-inline String ToHexString(bool t) {
-    return t ? "0x01" : "0x00";
-}
+/**@{*/
+TO_STRING_PRIM(f32, "%f", x);
+TO_STRING_PRIM(f64, "%f", x);
+TO_HEX_STRING_PRIM(f32, "0x%08X", BitCast<u32>(x));
+TO_HEX_STRING_PRIM(f64, "0x%016X", BitCast<u64>(x));
+/**@}*/
 
 /**
- * @brief Convert string to string :D
+ * @name Boolean conversion
  */
-inline String ToString(const String& t) {
-    return t;
+/**@{*/
+K_INLINE String ToString(bool x) {
+    return x ? "true" : "false";
 }
-inline String ToHexString(const String& t) {
+K_INLINE String ToHexString(bool x) {
+    return x ? "0x01" : "0x00";
+}
+/**@}*/
+
+/**
+ * @name String(!) conversion
+ */
+/**@{*/
+K_INLINE String ToString(const String& x) {
+    return x;
+}
+K_INLINE String ToHexString(const String& x) {
     K_ASSERT_EX(false, "Please reconsider...");
-    return t;
+    return x;
 }
-inline String ToString(char c) {
-    return String(c);
+K_INLINE String ToString(char x) {
+    return String(x);
 }
-inline String ToString(const char* t) {
-    return String(t);
+K_INLINE String ToString(const char* x) {
+    return String(x);
 }
-inline String ToHexString(const char* t) {
+K_INLINE String ToHexString(const char* x) {
     K_ASSERT_EX(false, "Please reconsider...");
-    return String(t);
+    return String(x);
 }
+/**@}*/
 
 /**
- * @brief Placeholder string conversion
+ * @brief Placeholder string conversion for unsupported types
+ * @note Specialize this for your own types
+ *
+ * @param x Value to convert
  */
-template <typename T> inline String ToString(const T& t) {
-    return Format("<object at %p>", &t);
+template <typename T> K_INLINE String ToString(const T& x) {
+    return Format("<object at %p>", &x);
 }
 
-#undef K_TO_STRING_FMT_DEF
-#undef K_TO_HEX_STRING_FMT_DEF
+#undef TO_STRING_PRIM
+#undef TO_HEX_STRING_PRIM
 
+//! @}
 } // namespace kiwi
 
 #endif

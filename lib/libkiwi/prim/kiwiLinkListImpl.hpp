@@ -10,59 +10,59 @@
 namespace kiwi {
 
 /**
- * Inserts node at iterator
+ * @brief Inserts node at iterator
  *
  * @param iter Iterator at which to insert node
- * @param node Node to insert
+ * @param pNode Node to insert
  * @return Iterator to new node
  */
 template <typename T>
-TList<T>::Iterator TList<T>::Insert(Iterator iter, TListNode<T>* node) {
-    K_ASSERT(node != NULL);
+TList<T>::Iterator TList<T>::Insert(Iterator iter, TListNode<T>* pNode) {
+    K_ASSERT(pNode != nullptr);
 
-    TListNode<T>* next = iter.mpNode;
-    TListNode<T>* prev = next->mpPrev;
+    TListNode<T>* pNext = iter.mpNode;
+    TListNode<T>* pPrev = pNext->mpPrev;
 
-    // prev <- node -> next
-    node->mpNext = next;
-    node->mpPrev = prev;
-    // prev <-> node <-> next
-    next->mpPrev = node;
-    prev->mpNext = node;
+    // pPrev <- pNode -> pNext
+    pNode->mpNext = pNext;
+    pNode->mpPrev = pPrev;
+    // pPrev <-> pNode <-> pNext
+    pNext->mpPrev = pNode;
+    pPrev->mpNext = pNode;
 
     mSize++;
 
-    return Iterator(node);
+    return Iterator(pNode);
 }
 
 /**
- * Erases node from list
+ * @brief Erases node from list
  *
- * @param node Node to erase
+ * @param pNode Node to erase
  * @return Iterator to next node
  */
-template <typename T> TList<T>::Iterator TList<T>::Erase(TListNode<T>* node) {
-    K_ASSERT(node != NULL);
+template <typename T> TList<T>::Iterator TList<T>::Erase(TListNode<T>* pNode) {
+    K_ASSERT(pNode != nullptr);
 
-    TListNode<T>* next = node->mpNext;
-    TListNode<T>* prev = node->mpPrev;
+    TListNode<T>* pNext = pNode->mpNext;
+    TListNode<T>* pPrev = pNode->mpPrev;
 
     // Remove connections to node
-    next->mpPrev = prev;
-    prev->mpNext = next;
+    pNext->mpPrev = pPrev;
+    pPrev->mpNext = pNext;
     // Isolate node
-    node->mpNext = NULL;
-    node->mpPrev = NULL;
+    pNode->mpNext = nullptr;
+    pNode->mpPrev = nullptr;
     // Free memory
-    delete node;
+    delete pNode;
 
     mSize--;
 
-    return Iterator(next);
+    return Iterator(pNext);
 }
 
 /**
- * Erases range of nodes
+ * @brief Erases range of nodes
  *
  * @param begin Beginning of range (inclusive)
  * @param end End of range (exclusive)
@@ -70,15 +70,15 @@ template <typename T> TList<T>::Iterator TList<T>::Erase(TListNode<T>* node) {
  */
 template <typename T>
 TList<T>::Iterator TList<T>::Erase(Iterator begin, Iterator end) {
-    TListNode<T>* pCur = begin.mpNode;
+    TListNode<T>* pCurr = begin.mpNode;
     TListNode<T>* pEnd = end.mpNode;
 
-    while (pCur != pEnd) {
+    while (pCurr != pEnd) {
         // Preserve next node before erasing pointers
-        TListNode<T>* pNext = pCur->mpNext;
+        TListNode<T>* pNext = pCurr->mpNext;
         // Erase current node
-        Erase(pCur);
-        pCur = pNext;
+        Erase(pCurr);
+        pCurr = pNext;
     }
 
     return Iterator(pEnd);

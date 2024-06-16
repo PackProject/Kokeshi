@@ -1,78 +1,152 @@
 #ifndef LIBKIWI_NET_ASYNC_SOCKET_H
 #define LIBKIWI_NET_ASYNC_SOCKET_H
 #include <libkiwi/k_types.h>
-#include <libkiwi/net/kiwiPacket.h>
 #include <libkiwi/net/kiwiSocketBase.h>
 #include <libkiwi/prim/kiwiLinkList.h>
-#include <libkiwi/prim/kiwiOptional.h>
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_net
+//! @{
 
 /**
- * Asynchronous (non-blocking) socket
+ * @brief Asynchronous (non-blocking) socket
  */
 class AsyncSocket : public SocketBase {
 public:
+    /**
+     * @brief Constructor
+     *
+     * @param family Socket protocol family
+     * @param type Socket type
+     */
     AsyncSocket(SOProtoFamily family, SOSockType type);
-    virtual ~AsyncSocket();
 
-    virtual bool Connect(const SockAddr& addr, Callback callback = NULL,
-                         void* arg = NULL);
-    virtual AsyncSocket* Accept(AcceptCallback callback = NULL,
-                                void* arg = NULL);
+    /**
+     * @brief Destructor
+     */
+    virtual ~AsyncSocket() {
+        sSocketList.Remove(this);
+    }
+
+    /**
+     * @brief Connects to a peer
+     *
+     * @param rAddr Remote address
+     * @param pCallback Connection callback
+     * @param pArg Callback user argument
+     * @return Success
+     */
+    virtual bool Connect(const SockAddrAny& rAddr, Callback pCallback,
+                         void* pArg);
+
+    /**
+     * @brief Accepts a peer connection over a new socket
+     *
+     * @param pCallback Acceptance callback
+     * @param pArg Callback user argument
+     * @return New socket
+     */
+    virtual AsyncSocket* Accept(AcceptCallback pCallback, void* pArg);
 
 private:
     /**
-     * Async state
+     * @brief Async state
      */
     enum EState { EState_Thinking, EState_Connecting, EState_Accepting };
 
+    // Async receive operation
     class RecvJob;
+    // Async send operation
     class SendJob;
 
 private:
-    static void* ThreadFunc(void* arg);
+    /**
+     * @brief Socket thread function
+     *
+     * @param pArg Thread function argument
+     */
+    static void* ThreadFunc(void* pArg);
 
+    /**
+     * @brief Constructor
+     *
+     * @param socket Socket file descriptor
+     * @param type Socket protocol family
+     * @param type Socket type
+     */
     AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type);
 
+    /**
+     * @brief Prepares socket for async operation
+     */
     void Initialize();
+    /**
+     * @brief Processes pending socket tasks
+     */
     void Calc();
+
+    /**
+     * @brief Receives packet data over socket
+     */
     void CalcRecv();
+    /**
+     * @brief Sends packet data over socket
+     */
     void CalcSend();
 
-    virtual SOResult RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
-                              Callback callback, void* arg);
-    virtual SOResult SendImpl(const void* src, u32 len, u32& nsend,
-                              const SockAddr* addr, Callback callback,
-                              void* arg);
+    /**
+     * @brief Receives data and records sender address (internal implementation)
+     *
+     * @param pDst Destination buffer
+     * @param len Buffer size
+     * @param[out] rRecv Number of bytes received
+     * @param[out] pAddr Sender address
+     * @param pCallback Completion callback
+     * @param pArg Callback user argument
+     * @return Socket library result
+     */
+    virtual SOResult RecvImpl(void* pDst, u32 len, u32& rRecv,
+                              SockAddrAny* pAddr, Callback pCallback,
+                              void* pArg);
+
+    /**
+     * @brief Sends data to specified connection (internal implementation)
+     *
+     * @param pSrc Source buffer
+     * @param len Buffer size
+     * @param[out] rSend Number of bytes sent
+     * @param pAddr Sender address
+     * @param pCallback Completion callback
+     * @param pArg Callback user argument
+     * @return Socket library result
+     */
+    virtual SOResult SendImpl(const void* pSrc, u32 len, u32& rSend,
+                              const SockAddrAny* pAddr, Callback pCallback,
+                              void* pArg);
 
 private:
-    static const u32 THREAD_STACK_SIZE = 0x4000;
+    static const u32 scThreadStackSize = 0x4000;
 
     volatile EState mState; // Current async task
-    SockAddr mPeer;         // Peer address
+    SockAddrAny mPeer;      // Peer address
 
-    // Active packet jobs
-    TList<RecvJob> mRecvJobs;
-    TList<SendJob> mSendJobs;
+    TList<RecvJob> mRecvJobs; // Active receive jobs
+    TList<SendJob> mSendJobs; // Active send jobs
 
-    // Connect callback
-    Callback mpConnectCallback;
-    void* mpConnectCallbackArg;
+    Callback mpConnectCallback; // Connect callback
+    void* mpConnectCallbackArg; // Connect callback user argument
 
-    // Accept callback
-    AcceptCallback mpAcceptCallback;
-    void* mpAcceptCallbackArg;
+    AcceptCallback mpAcceptCallback; // Accept callback
+    void* mpAcceptCallbackArg;       // Accept callback user argument
 
-    // Thread for async socket operation
-    static OSThread sSocketThread;
-    static bool sSocketThreadCreated;
-    static u8 sSocketThreadStack[THREAD_STACK_SIZE];
-
-    static TList<AsyncSocket> sSocketList; // Active async sockets
+    static OSThread sSocketThread;                   // Socket manager thread
+    static bool sSocketThreadCreated;                // Thread guard
+    static u8 sSocketThreadStack[scThreadStackSize]; // Thread stack
+    static TList<AsyncSocket> sSocketList;           // Open async sockets
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

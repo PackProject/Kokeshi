@@ -49,7 +49,7 @@ public:
     }
 
     static bool IsDrawLayout() {
-        return sDrawPass == EDrawPass_Draw2D && sCurrentViewID == 1;
+        return sDrawPass == EDrawPass_Draw2D;
     }
 
 private:

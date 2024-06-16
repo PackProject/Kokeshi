@@ -3,7 +3,7 @@
 namespace kiwi {
 
 /**
- * Constructor
+ * @brief Constructor
  *
  * @param family Socket protocol family
  * @param type Socket type
@@ -21,7 +21,7 @@ SocketBase::SocketBase(SOProtoFamily family, SOSockType type)
 }
 
 /**
- * Constructor
+ * @brief Constructor
  *
  * @param socket Socket file descriptor
  * @param type Socket protocol family
@@ -33,7 +33,7 @@ SocketBase::SocketBase(SOSocket socket, SOProtoFamily family, SOSockType type)
 }
 
 /**
- * Destructor
+ * @brief Destructor
  */
 SocketBase::~SocketBase() {
     K_ASSERT(IsOpen());
@@ -43,55 +43,55 @@ SocketBase::~SocketBase() {
 }
 
 /**
- * Gets the console's IP address
+ * @brief Gets the console's IP address
  *
- * @param addr[out] IPv4 address
+ * @param rAddr[out] IPv4 address
  */
-void SocketBase::GetHostAddr(SockAddr4& addr) {
-    LibSO::GetHostID(addr);
+void SocketBase::GetHostAddr(SockAddr4& rAddr) {
+    LibSO::GetHostID(rAddr);
 }
 
 /**
- * Binds socket to local address
- *
+ * @brief Binds socket to local address
  * @note Bind to port zero for a random port (written out)
- * @param addr[in,out] Local address
+ *
+ * @param rAddr[in,out] Local address
  * @return Success
  */
-bool SocketBase::Bind(SockAddr& addr) const {
+bool SocketBase::Bind(SockAddrAny& rAddr) const {
     K_ASSERT(IsOpen());
-    K_ASSERT(mFamily == addr.in.family);
+    K_ASSERT(mFamily == rAddr.in.family);
 
     // Choose a random port in the private range
-    if (addr.port == 0) {
+    if (rAddr.port == 0) {
         // Retry up to 10 times in case the random port is in use
         for (int i = 0; i < 10; i++) {
-            addr.port = Random().NextU32(49152, 65535);
+            rAddr.port = Random().NextU32(49152, 65535);
 
-            if (LibSO::Bind(mHandle, addr) == SO_SUCCESS) {
+            if (LibSO::Bind(mHandle, rAddr) == SO_SUCCESS) {
                 return true;
             }
         }
     }
 
-    return LibSO::Bind(mHandle, addr) == SO_SUCCESS;
+    return LibSO::Bind(mHandle, rAddr) == SO_SUCCESS;
 }
 
 /**
- * Listens for incoming connections
+ * @brief Listens for incoming connections
  *
  * @param backlog Maximum pending connections
  * @return Success
  */
 bool SocketBase::Listen(s32 backlog) const {
     K_ASSERT(IsOpen());
-    K_WARN(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.\n");
+    K_WARN_EX(mType == SO_SOCK_DGRAM, "Listen won't do anything for dgram.\n");
 
     return LibSO::Listen(mHandle, backlog) == SO_SUCCESS;
 }
 
 /**
- * Tests whether socket is blocking
+ * @brief Tests whether socket is blocking
  */
 bool SocketBase::IsBlocking() const {
     K_ASSERT(IsOpen());
@@ -101,7 +101,7 @@ bool SocketBase::IsBlocking() const {
 }
 
 /**
- * Toggles socket blocking
+ * @brief Toggles socket blocking
  *
  * @param enable Whether to enable blocking
  * @return Success
@@ -110,7 +110,6 @@ bool SocketBase::SetBlocking(bool enable) const {
     K_ASSERT(IsOpen());
 
     s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
-
     if (enable) {
         flags &= ~SO_O_NONBLOCK;
     } else {
@@ -121,7 +120,7 @@ bool SocketBase::SetBlocking(bool enable) const {
 }
 
 /**
- * Toggle port reuse
+ * @brief Toggles port reuse
  *
  * @param enable Whether to enable port reuse
  * @return Success
@@ -133,7 +132,7 @@ bool SocketBase::SetReuseAddr(bool enable) const {
 }
 
 /**
- * Stops socket from reading/writing
+ * @brief Stops socket from reading/writing
  *
  * @param how How to shutdown connection
  * @return Success
@@ -146,7 +145,7 @@ bool SocketBase::Shutdown(SOShutdownType how) const {
 }
 
 /**
- * Closes socket
+ * @brief Closes socket
  *
  * @return Success
  */
@@ -164,33 +163,33 @@ bool SocketBase::Close() {
 }
 
 /**
- * Gets endpoint of socket
+ * @brief Gets endpoint of socket
  *
- * @param[out] addr Socket address
+ * @param[out] rAddr Socket address
  * @return Success
  */
-bool SocketBase::GetSocketAddr(SockAddr& addr) const {
+bool SocketBase::GetSocketAddr(SockAddrAny& rAddr) const {
     K_ASSERT(IsOpen());
-    K_ASSERT(mFamily == addr.in.family);
+    K_ASSERT(mFamily == rAddr.in.family);
 
-    return LibSO::GetSockName(mHandle, addr) == SO_SUCCESS;
+    return LibSO::GetSockName(mHandle, rAddr) == SO_SUCCESS;
 }
 
 /**
- * Gets endpoint of peer
+ * @brief Gets endpoint of peer
  *
- * @param[out] addr Peer address
+ * @param[out] rAddr Peer address
  * @return Success
  */
-bool SocketBase::GetPeerAddr(SockAddr& addr) const {
+bool SocketBase::GetPeerAddr(SockAddrAny& rAddr) const {
     K_ASSERT(IsOpen());
-    K_ASSERT(mFamily == addr.in.family);
+    K_ASSERT(mFamily == rAddr.in.family);
 
-    return LibSO::GetPeerName(mHandle, addr) == SO_SUCCESS;
+    return LibSO::GetPeerName(mHandle, rAddr) == SO_SUCCESS;
 }
 
 /**
- * Tests if socket can receive data
+ * @brief Tests whether socket can receive data
  */
 bool SocketBase::CanRecv() const {
     K_ASSERT(IsOpen());
@@ -205,7 +204,7 @@ bool SocketBase::CanRecv() const {
 }
 
 /**
- * Tests if socket can send data
+ * @brief Tests whether socket can send data
  */
 bool SocketBase::CanSend() const {
     K_ASSERT(IsOpen());
@@ -220,23 +219,23 @@ bool SocketBase::CanSend() const {
 }
 
 /**
- * Receives bytes from bound connection
+ * @brief Receives bytes from bound connection
  *
- * @param buf Destination buffer
+ * @param pDst Destination buffer
  * @param len Buffer size
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Number of bytes received
  */
-Optional<u32> SocketBase::RecvBytes(void* buf, u32 len, Callback callback,
-                                    void* arg) {
+Optional<u32> SocketBase::RecvBytes(void* pDst, u32 len, Callback pCallback,
+                                    void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(buf != NULL);
+    K_ASSERT(pDst != nullptr);
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nrecv = 0;
-    SOResult result = RecvImpl(buf, len, nrecv, NULL, callback, arg);
+    SOResult result = RecvImpl(pDst, len, nrecv, nullptr, pCallback, pArg);
 
     // Success, return bytes read
     if (result == SO_SUCCESS) {
@@ -253,24 +252,24 @@ Optional<u32> SocketBase::RecvBytes(void* buf, u32 len, Callback callback,
 }
 
 /**
- * Receives bytes and records sender address
+ * @brief Receives bytes and records sender address
  *
- * @param buf Destination buffer
+ * @param pDst Destination buffer
  * @param len Buffer size
- * @param addr[out] Sender address
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param rAddr[out] Sender address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Number of bytes received
  */
-Optional<u32> SocketBase::RecvBytesFrom(void* buf, u32 len, SockAddr& addr,
-                                        Callback callback, void* arg) {
+Optional<u32> SocketBase::RecvBytesFrom(void* pDst, u32 len, SockAddrAny& rAddr,
+                                        Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(buf != NULL);
+    K_ASSERT(pDst != nullptr);
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nrecv = 0;
-    SOResult result = RecvImpl(buf, len, nrecv, &addr, callback, arg);
+    SOResult result = RecvImpl(pDst, len, nrecv, &rAddr, pCallback, pArg);
 
     // Success, return bytes read
     if (result == SO_SUCCESS) {
@@ -287,23 +286,23 @@ Optional<u32> SocketBase::RecvBytesFrom(void* buf, u32 len, SockAddr& addr,
 }
 
 /**
- * Sends bytes to bound connection
+ * @brief Sends bytes to bound connection
  *
- * @param buf Source buffer
+ * @param pSrc Source buffer
  * @param len Buffer size
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Number of bytes sent
  */
-Optional<u32> SocketBase::SendBytes(const void* buf, u32 len, Callback callback,
-                                    void* arg) {
+Optional<u32> SocketBase::SendBytes(const void* pSrc, u32 len,
+                                    Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(buf != NULL);
+    K_ASSERT(pSrc != nullptr);
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nsend = 0;
-    SOResult result = SendImpl(buf, len, nsend, NULL, callback, arg);
+    SOResult result = SendImpl(pSrc, len, nsend, nullptr, pCallback, pArg);
 
     // Success, return bytes read
     if (result == SO_SUCCESS) {
@@ -320,25 +319,25 @@ Optional<u32> SocketBase::SendBytes(const void* buf, u32 len, Callback callback,
 }
 
 /**
- * Sends bytes to specified connection
+ * @brief Sends bytes to specified connection
  *
- * @param buf Source buffer
+ * @param pSrc Source buffer
  * @param len Buffer size
- * @param addr Destination address
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param rAddr Destination address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Number of bytes sent
  */
-Optional<u32> SocketBase::SendBytesTo(const void* buf, u32 len,
-                                      const SockAddr& addr, Callback callback,
-                                      void* arg) {
+Optional<u32> SocketBase::SendBytesTo(const void* pSrc, u32 len,
+                                      const SockAddrAny& rAddr,
+                                      Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(buf != NULL);
+    K_ASSERT(pSrc != nullptr);
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nsend = 0;
-    SOResult result = SendImpl(buf, len, nsend, &addr, callback, arg);
+    SOResult result = SendImpl(pSrc, len, nsend, &rAddr, pCallback, pArg);
 
     // Success, return bytes read
     if (result == SO_SUCCESS) {

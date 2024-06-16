@@ -4,135 +4,105 @@
 #include <revolution/IPC.h>
 
 namespace kiwi {
-namespace {
 
 /**
- * @brief Utility for initializing IOS vectors
- *
- * @param prim Primitive value
- * @param vec IOS I/O vector
- */
-template <typename T>
-inline void MakeIOVector(const T& prim, IPCIOVector& vec) {
-    vec.base = (void*)&prim;
-    vec.length = sizeof(T);
-}
-
-/**
- * @brief Utility for initializing IOS vectors (string version)
- *
- * @param str String
- * @param vec IOS I/O vector
- */
-template <>
-inline void MakeIOVector<String>(const String& str, IPCIOVector& vec) {
-    vec.base = (void*)str.CStr();
-    vec.length = str.Length();
-}
-
-/**
- * @brief Dolphin device IOCTL IDs
+ * @brief Dolphin device I/O control codes
  */
 enum {
-    IOCTLV_RPC_SET_CLIENT = 0x07,
-    IOCTLV_RPC_SET_PRESENCE = 0x08,
-    IOCTLV_RPC_RESET = 0x09,
-    IOCTLV_GET_SYSTEM_TIME = 0x0A,
+    // dev/dolphin
+    IoctlV_DiscordSetClient = 7,
+    IoctlV_DiscordSetPresence = 8,
+    IoctlV_DiscordReset = 9,
+    IoctlV_GetSystemTime = 10,
 };
-
-} // namespace
 
 /**
  * @brief Constructor
  *
- * @param client Client app ID
+ * @param rClient Client app ID
  */
-EmuRichPresence::EmuRichPresence(const String& client)
-    : IRichPresence(client), mHandle(-1) {
-    // Dolphin emulated device
-    mHandle = IOS_Open("/dev/dolphin", IPC_OPEN_NONE);
-
-    // Set client app ID
-    if (IsConnected()) {
-        UpdateClient();
-    }
+EmuRichPresence::EmuRichPresence(const String& rClient)
+    : IRichPresence(rClient) {
+    // Dolphin provides an emulated device
+    mDevDolphin.Open("/dev/dolphin");
 }
 
 /**
- * @brief Destructor
- */
-EmuRichPresence::~EmuRichPresence() {
-    if (IsConnected()) {
-        IOS_Close(mHandle);
-    }
-}
-
-/**
- * @brief Whether there is an ongoing connection the RPC host
- */
-bool EmuRichPresence::IsConnected() const {
-    return mHandle >= 0;
-}
-
-/**
- * @brief Retreive the current Unix epoch time (in seconds)
+ * @brief Retreives the current Unix epoch time (in seconds)
  */
 u64 EmuRichPresence::GetTimeNow() const {
     K_ASSERT(IsConnected());
 
-    u64 time = 0;
-    IPCIOVector output[1];
-    MakeIOVector(time, output[0]);
+    TVector<IosVector> input;
+    TVector<IosVector> output;
 
-    s32 result = IOS_Ioctlv(mHandle, IOCTLV_GET_SYSTEM_TIME, 0,
-                            LENGTHOF(output), output);
+    IosObject<u64> time;
+    output.PushBack(time);
+
+    s32 result = mDevDolphin.IoctlV(IoctlV_GetSystemTime, input, output);
+    K_ASSERT_EX(result >= 0, "IoctlV_GetSystemTime failed: %d", result);
 
     // Convert milliseconds to seconds
-    K_ASSERT_EX(result >= 0, "IOCTLV_GET_SYSTEM_TIME failed: %d", result);
-    return time / 1000;
+    return *time / 1000;
 }
 
 /**
- * @brief Update Discord client/app ID
+ * @brief Updates Discord client/app ID
  */
 void EmuRichPresence::UpdateClient() const {
     K_ASSERT(IsConnected());
 
-    IPCIOVector input[1];
-    MakeIOVector(mClient, input[0]);
+    TVector<IosVector> input;
+    TVector<IosVector> output;
 
-    s32 result =
-        IOS_Ioctlv(mHandle, IOCTLV_RPC_SET_CLIENT, LENGTHOF(input), 0, input);
-    K_ASSERT_EX(result >= 0, "IOCTLV_RPC_SET_CLIENT failed: %d", result);
+    IosString<char> client(mClient);
+    input.PushBack(client);
+
+    s32 result = mDevDolphin.IoctlV(IoctlV_DiscordSetClient, input, output);
+    K_ASSERT_EX(result >= 0, "IoctlV_DiscordSetClient failed: %d", result);
 }
 
 /**
- * @brief Update Discord presence status
+ * @brief Updates Discord presence status
  */
 void EmuRichPresence::UpdatePresence() const {
     K_ASSERT(IsConnected());
 
-    IPCIOVector input[10];
+    TVector<IosVector> input;
+    TVector<IosVector> output;
 
     // Presence info
-    MakeIOVector(mDetails, input[0]);
-    MakeIOVector(mState, input[1]);
-    // Large image
-    MakeIOVector(mLargeImageKey, input[2]);
-    MakeIOVector(mLargeImageText, input[3]);
-    // Small image
-    MakeIOVector(mSmallImageKey, input[4]);
-    MakeIOVector(mSmallImageText, input[5]);
-    // Gameplay timestamps
-    MakeIOVector(mStartTime, input[6]);
-    MakeIOVector(mEndTime, input[7]);
-    // Party size
-    MakeIOVector(mPartyNum, input[8]);
-    MakeIOVector(mPartyMax, input[9]);
+    IosString<char> details(mDetails);
+    IosString<char> state(mState);
+    input.PushBack(details);
+    input.PushBack(state);
 
-    s32 result =
-        IOS_Ioctlv(mHandle, IOCTLV_RPC_SET_PRESENCE, LENGTHOF(input), 0, input);
-    K_ASSERT_EX(result >= 0, "IOCTLV_RPC_SET_PRESENCE failed: %d", result);
+    // Large image
+    IosString<char> largeKey(mLargeImageKey);
+    IosString<char> largeText(mLargeImageText);
+    input.PushBack(largeKey);
+    input.PushBack(largeText);
+
+    // Small image
+    IosString<char> smallKey(mSmallImageKey);
+    IosString<char> smallText(mSmallImageText);
+    input.PushBack(smallKey);
+    input.PushBack(smallText);
+
+    // Gameplay timestamps
+    IosObject<u64> startTime(mStartTime);
+    IosObject<u64> endTime(mStartTime);
+    input.PushBack(startTime);
+    input.PushBack(endTime);
+
+    // Party size
+    IosObject<s32> partyNum(mPartyNum);
+    IosObject<s32> partyMax(mPartyMax);
+    input.PushBack(partyNum);
+    input.PushBack(partyMax);
+
+    s32 result = mDevDolphin.IoctlV(IoctlV_DiscordSetPresence, input, output);
+    K_ASSERT_EX(result >= 0, "IoctlV_DiscordSetPresence failed: %d", result);
 }
 
 } // namespace kiwi

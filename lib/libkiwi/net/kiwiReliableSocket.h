@@ -4,9 +4,12 @@
 #include <libkiwi/net/kiwiAsyncSocket.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_net
+//! @{
 
 class ReliableSocket : public AsyncSocket {};
 
+//! @}
 } // namespace kiwi
 
 #endif

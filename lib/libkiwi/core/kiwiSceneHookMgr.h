@@ -8,69 +8,71 @@
 #include <libkiwi/util/kiwiStaticSingleton.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 // Forward declarations
 class ISceneHook;
 
 /**
- * Scene hook manager
+ * @brief Scene hook manager
  */
 class SceneHookMgr : public StaticSingleton<SceneHookMgr> {
     friend class StaticSingleton<SceneHookMgr>;
 
 public:
     /**
-     * @brief Register new hook
+     * @brief Registers new hook
      *
-     * @param hook Scene hook
+     * @param rHook Scene hook
      * @param id Scene ID (-1 for all scenes)
      */
-    void AddHook(ISceneHook& hook, s32 id) {
-        if (id == -1) {
-            mGlobalHooks.PushBack(&hook);
-        } else {
-            K_ASSERT(id < ESceneID_Max);
-            mHookLists[id].PushBack(&hook);
-        }
-    }
+    void AddHook(ISceneHook& rHook, s32 id);
 
     /**
-     * @brief Unregister existing hook
+     * @brief Unregisters existing hook
      *
-     * @param hook Scene hook
+     * @param rHook Scene hook
      * @param id Scene ID (-1 for all scenes)
      */
-    void RemoveHook(ISceneHook& hook, s32 id) {
-        if (id == -1) {
-            mGlobalHooks.Remove(&hook);
-        } else {
-            K_ASSERT(id < ESceneID_Max);
-            mHookLists[id].Remove(&hook);
-        }
-    }
-
-    static void OnSceneEnter();
-    static void OnSceneReEnter();
-    static void OnSceneLoadResource();
-    static void OnSceneCalculate();
-    static void OnSceneExit();
-    static void OnScenePause();
-    static void OnSceneUnPause();
+    void RemoveHook(const ISceneHook& rHook, s32 id);
 
 private:
+    LIBKIWI_KAMEK_PUBLIC
+
+    /**
+     * @brief Enter state
+     */
+    static void DoEnter();
+    /**
+     * @brief Reset state
+     */
+    static void DoReset();
+    /**
+     * @brief LoadResource state
+     */
+    static void DoLoadResource();
+    /**
+     * @brief Calculate state
+     */
+    static void DoCalculate();
+    /**
+     * @brief Exit state
+     */
+    static void DoExit();
+    /**
+     * @brief Pause state
+     */
+    static void DoPause();
+    /**
+     * @brief Un-pause state
+     */
+    static void DoUnPause();
+
     /**
      * @brief Gets list of hooks for the current scene
      */
-    TList<ISceneHook>* GetActiveHooks() {
-        s32 id = RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID();
-
-        // Ignore custom scenes
-        if (id >= ESceneID_Max) {
-            return NULL;
-        }
-
-        return &mHookLists[id];
-    }
+    TList<ISceneHook>& GetActiveHooks();
 
 private:
     TArray<TList<ISceneHook>, ESceneID_Max> mHookLists; // Lists of scene hooks
@@ -78,7 +80,7 @@ private:
 };
 
 /**
- * Scene hook interface for extension of RP scenes
+ * @brief Scene hook interface
  */
 class ISceneHook {
 public:
@@ -88,7 +90,9 @@ public:
      * @param id Scene ID (-1 for all scenes)
      */
     explicit ISceneHook(s32 id) : mSceneID(id) {
-        K_ASSERT(id == -1 || id < ESceneID_Max);
+        K_ASSERT_EX(id == -1 || id < ESceneID_Max,
+                    "Only RP scenes and -1 (all) are supported");
+
         SceneHookMgr::GetInstance().AddHook(*this, mSceneID);
     }
 
@@ -101,50 +105,72 @@ public:
 
     /**
      * @brief Configure callback
+     * @details Ran once on initial scene setup
+     *
+     * @param pScene Current scene
      */
-    virtual void Configure(RPSysScene* scene) {}
-
-    /**
-     * @brief Reset callback (before game logic)
-     */
-    virtual void BeforeReset(RPSysScene* scene) {}
-
-    /**
-     * @brief Reset callback (after game logic)
-     */
-    virtual void AfterReset(RPSysScene* scene) {}
+    virtual void Configure(RPSysScene* pScene) {}
 
     /**
      * @brief LoadResource callback
+     * @details Ran once on asset loading
+     *
+     * @param pScene Current scene
      */
-    virtual void LoadResource(RPSysScene* scene) {}
+    virtual void LoadResource(RPSysScene* pScene) {}
+
+    /**
+     * @brief Reset callback (before game logic)
+     * @details Ran once on initial scene setup and on every restart
+     *
+     * @param pScene Current scene
+     */
+    virtual void BeforeReset(RPSysScene* pScene) {}
+    /**
+     * @brief Reset callback (after game logic)
+     * @details Ran once on initial scene setup and on every restart
+     *
+     * @param pScene Current scene
+     */
+    virtual void AfterReset(RPSysScene* pScene) {}
 
     /**
      * @brief Calculate callback (before game logic)
+     * @details Ran once per frame
+     *
+     * @param pScene Current scene
      */
-    virtual void BeforeCalculate(RPSysScene* scene) {}
-
+    virtual void BeforeCalculate(RPSysScene* pScene) {}
     /**
      * @brief Calculate callback (after game logic)
+     * @details Ran once per frame
+     *
+     * @param pScene Current scene
      */
-    virtual void AfterCalculate(RPSysScene* scene) {}
+    virtual void AfterCalculate(RPSysScene* pScene) {}
 
     /**
      * @brief Exit callback
+     * @details Ran once on scene exit (including restarts)
+     *
+     * @param pScene Current scene
      */
-    virtual void Exit(RPSysScene* scene) {}
+    virtual void Exit(RPSysScene* pScene) {}
 
     /**
      * @brief Pause callback
+     * @details Ran on pause menu open/close
      *
-     * @param enter Whether entering menu
+     * @param pScene Current scene
+     * @param enter Whether the pause menu is opening
      */
-    virtual void Pause(RPSysScene* scene, bool enter) {}
+    virtual void Pause(RPSysScene* pScene, bool enter) {}
 
 private:
     s32 mSceneID; // Scene to which this hook belongs
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

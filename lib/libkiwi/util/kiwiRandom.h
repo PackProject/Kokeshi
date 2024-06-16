@@ -5,6 +5,8 @@
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
  * @brief Random number generator
@@ -118,6 +120,13 @@ public:
     }
 
     /**
+     * @brief Roll coin-flip (50% chance)
+     */
+    bool CoinFlip() {
+        return Chance(0.5f);
+    }
+
+    /**
      * @brief Roll random sign
      */
     f32 Sign() {
@@ -141,6 +150,7 @@ private:
  */
 extern Random RNG;
 
+//! @}
 } // namespace kiwi
 
 #endif

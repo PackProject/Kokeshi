@@ -5,15 +5,16 @@
 #include <libkiwi/net/kiwiPacket.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_net
+//! @{
 
 /**
- * Reliable packet header
- *
- * @note Concepts adapted from PRUDP
+ * @brief Reliable packet header
+ * @note Concepts adapted from NEX PRUDP
  */
 struct KUDPHeader {
     /**
-     * Constructor
+     * @brief Constructor
      */
     KUDPHeader()
         : magic(KUDP_MAGIC), size(0), sequence(0), fragment(0), flags(0) {}
@@ -28,75 +29,82 @@ struct KUDPHeader {
     static const u32 KUDP_MAGIC = 'KUv0';
 
     /**
-     * Packet flags
+     * @brief Packet flags
      */
     enum EFlags {
-        // This packet is only a fragment of the message, and there are more
+        // This packet is only a message fragment, and there will be more
         EFlags_MoreFragments = (1 << 0),
     };
 };
 
 /**
- * Reliable UDP protocol (KUDP) packet
+ * @brief Reliable UDP protocol (KUDP) packet
  */
 class ReliablePacket : public Packet {
 public:
     /**
-     * Size constraints to avoid going over MTU
+     * @brief Message buffer limit to stay under MTU
      */
     static const u16 MAX_BUFFER_SIZE = 1000;
+    /**
+     * @brief Message content limit
+     */
     static const u16 MAX_CONTENT_SIZE = MAX_BUFFER_SIZE - sizeof(KUDPHeader);
 
 public:
     /**
-     * Constructor
+     * @brief Constructor
      *
      * @param size Packet buffer size
-     * @param dest Packet recipient
+     * @param pAddr Packet recipient
      */
-    ReliablePacket(u32 size, const SockAddr* dest = NULL)
-        : Packet(size, dest) {}
+    ReliablePacket(u32 size, const SockAddrAny* pAddr = nullptr)
+        : Packet(size, pAddr) {}
 
     /**
-     * Access KUDP protocol header
+     * @brief Accesses KUDP protocol header
      */
     KUDPHeader& GetHeader() {
-        K_ASSERT(mpBuffer != NULL);
+        K_ASSERT(mpBuffer != nullptr);
         return *reinterpret_cast<KUDPHeader*>(mpBuffer);
     }
+    /**
+     * @brief Accesses KUDP protocol header (read-only)
+     */
     const KUDPHeader& GetHeader() const {
-        K_ASSERT(mpBuffer != NULL);
+        K_ASSERT(mpBuffer != nullptr);
         return *reinterpret_cast<KUDPHeader*>(mpBuffer);
     }
 
     /**
-     * Largest allowable message buffer
+     * @brief Gets the maximum size of the message buffer
      */
     virtual u32 GetMaxBuffer() const {
         return MAX_BUFFER_SIZE;
     }
 
     /**
-     * Message content size
+     * @brief Gets the current size of the message payload
      */
     virtual u32 GetContentSize() const {
         return GetHeader().size;
     }
     /**
-     * Largest allowable message content
+     * @brief Gets the maximum size of the message payload
      */
     virtual u32 GetMaxContent() const {
         return MAX_CONTENT_SIZE;
     }
 
     /**
-     * Message buffer overhead
+     * @brief Gets the size of the message buffer overhead
      */
     virtual u32 GetOverhead() const {
         return sizeof(KUDPHeader);
     }
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

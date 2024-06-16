@@ -4,14 +4,16 @@
 #include <libkiwi/util/kiwiNonCopyable.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
- * Thread safe, statically allocated singleton
+ * @brief Thread safe, statically allocated singleton
  */
 template <typename T> class StaticSingleton : private NonCopyable {
 public:
     /**
-     * Gets reference to singleton object
+     * @brief Gets reference to singleton object
      */
     static T& GetInstance() {
         static T sInstance;
@@ -19,6 +21,7 @@ public:
     }
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

@@ -1,11 +1,10 @@
 #include <libkiwi.h>
 
 /**
- * @brief Define stream functions by type
+ * @brief Helper for defining stream functions for primitive types
  */
-#define IO_FUNC_DEF(T)                                                         \
+#define PRIM_DEF(T)                                                            \
     T MemStream::Read_##T() {                                                  \
-        T* ptr;                                                                \
         T value = static_cast<T>(0);                                           \
                                                                                \
         s32 n = Read(&value, sizeof(T));                                       \
@@ -15,14 +14,11 @@
     }                                                                          \
                                                                                \
     void MemStream::Write_##T(T value) {                                       \
-        T* ptr;                                                                \
-                                                                               \
         s32 n = Write(&value, sizeof(T));                                      \
         K_ASSERT(n > 0);                                                       \
     }                                                                          \
                                                                                \
     T MemStream::Peek_##T() {                                                  \
-        T* ptr;                                                                \
         T value = static_cast<T>(0);                                           \
                                                                                \
         s32 n = Peek(&value, sizeof(T));                                       \
@@ -33,20 +29,44 @@
 
 namespace kiwi {
 
-IO_FUNC_DEF(u8);
-IO_FUNC_DEF(s8);
-IO_FUNC_DEF(u16);
-IO_FUNC_DEF(s16);
-IO_FUNC_DEF(u32);
-IO_FUNC_DEF(s32);
-IO_FUNC_DEF(u64);
-IO_FUNC_DEF(s64);
-IO_FUNC_DEF(f32);
-IO_FUNC_DEF(f64);
-IO_FUNC_DEF(bool);
+/**
+ * @name Primitives
+ * @brief Read/Write/Peek for primitive types
+ */
+/**@{*/
+PRIM_DEF(u8);
+PRIM_DEF(s8);
+PRIM_DEF(u16);
+PRIM_DEF(s16);
+PRIM_DEF(u32);
+PRIM_DEF(s32);
+PRIM_DEF(u64);
+PRIM_DEF(s64);
+PRIM_DEF(f32);
+PRIM_DEF(f64);
+PRIM_DEF(bool);
+/**@}*/
 
 /**
- * @brief Seek stream
+ * @brief Opens stream to a memory buffer
+ *
+ * @param pBuffer Buffer
+ * @param size Buffer size
+ * @param owns Whether the stream owns the buffer
+ */
+void MemStream::Open(void* pBuffer, u32 size, bool owns) {
+    // Close existing buffer
+    Close();
+
+    mpBuffer = static_cast<u8*>(pBuffer);
+    mBufferSize = size;
+    mOwnsBuffer = owns;
+
+    mIsOpen = mpBuffer != nullptr;
+}
+
+/**
+ * @brief Advances this stream's position (internal implementation)
  *
  * @param dir Seek direction
  * @param offset Seek offset
@@ -66,46 +86,47 @@ void MemStream::SeekImpl(ESeekDir dir, s32 offset) {
 }
 
 /**
- * @brief Read data from the stream
+ * @brief Reads data from this stream (internal implementation)
  *
- * @param dst Destination buffer
+ * @param pDst Destination buffer
  * @param size Number of bytes to read
- * @return s32 Number of bytes read, or error code
+ * @return Number of bytes read, or error code
  */
-s32 MemStream::ReadImpl(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
+s32 MemStream::ReadImpl(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
 
-    std::memcpy(dst, mBufferData + mPosition, size);
+    std::memcpy(pDst, mpBuffer + mPosition, size);
     return size;
 }
 
 /**
- * @brief Write data to the stream
+ * @brief Writes data to this stream (internal implementation)
  *
- * @param src Source buffer
+ * @param pSrc Source buffer
  * @param size Number of bytes to write
- * @return s32 Number of bytes written, or error code
+ * @return Number of bytes written, or error code
  */
-s32 MemStream::WriteImpl(const void* src, u32 size) {
-    K_ASSERT(src != NULL);
+s32 MemStream::WriteImpl(const void* pSrc, u32 size) {
+    K_ASSERT(pSrc != nullptr);
 
-    std::memcpy(mBufferData + mPosition, src, size);
+    std::memcpy(mpBuffer + mPosition, pSrc, size);
     return size;
 }
 
 /**
- * @brief Peek data in the stream
+ * @brief Reads data from this stream without advancing the stream's
+ * position (internal implementation)
  *
- * @param dst Destination buffer
- * @param size Number of bytes to peek
- * @return s32 Number of bytes peeked, or error code
+ * @param pDst Destination buffer
+ * @param size Number of bytes to read
+ * @return Number of bytes read, or error code
  */
-s32 MemStream::PeekImpl(void* dst, u32 size) {
-    return ReadImpl(dst, size);
+s32 MemStream::PeekImpl(void* pDst, u32 size) {
+    return ReadImpl(pDst, size);
 }
 
 /**
- * @brief Read string from the stream
+ * @brief Reads a C-style string from this stream
  */
 String MemStream::Read_string() {
     static int sTextBufferPos = 0;
@@ -133,22 +154,22 @@ String MemStream::Read_string() {
 }
 
 /**
- * @brief Write string to the stream
+ * @brief Writes a C-style string to this stream
  *
- * @param str String to write
+ * @param rStr String
  */
-void MemStream::Write_string(const String& str) {
-    Write(str.CStr(), str.Length());
+void MemStream::Write_string(const String& rStr) {
+    Write(rStr.CStr(), rStr.Length());
     Write_s8(0x00);
 }
 
 /**
- * @brief Peek string in the stream
+ * @brief Reads a C-style string from this stream without advancing the
+ * stream's position
  */
 String MemStream::Peek_string() {
-    // Just seek back
     String str = Read_string();
-    Seek(ESeekDir_Current, -str.Length());
+    Seek(ESeekDir_Current, -(str.Length() + 1));
     return str;
 }
 

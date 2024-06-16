@@ -5,34 +5,118 @@
 #include <libkiwi/util/kiwiDynamicSingleton.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_debug
+//! @{
 
 /**
- * Reimplementation of NW4R's direct print system
+ * @brief Reimplementation of NW4R's direct print system
  */
 class Nw4rDirectPrint : public DynamicSingleton<Nw4rDirectPrint> {
     friend class DynamicSingleton<Nw4rDirectPrint>;
 
 public:
+    /**
+     * @brief Tests whether direct print is currently possible
+     */
     bool IsActive() const {
-        return mpBuffer != NULL;
+        return mpBuffer != nullptr;
     }
 
+    /**
+     * @brief Sets up XFB for printing
+     */
     void SetupXfb();
-    void ChangeXfb(void* buffer, u16 w, u16 h);
+
+    /**
+     * @brief Changes framebuffer information
+     *
+     * @param pXfb Framebuffer in memory
+     * @param w Framebuffer width
+     * @param h Framebuffer height
+     */
+    void ChangeXfb(void* pXfb, u16 w, u16 h);
+
+    /**
+     * @brief Erases framebuffer contents
+     *
+     * @param x X position
+     * @param y Y position
+     * @param w Width
+     * @param h Height
+     */
     void EraseXfb(s32 x, s32 y, s32 w, s32 h) const;
+
+    /**
+     * @brief Keeps main framebuffer copy updated via cache blocks
+     */
     void StoreCache() const;
-    void DrawString(s32 x, s32 y, const char* fmt, ...) const;
-    void SetColor(const Color rgb);
+
+    /**
+     * @brief Draws string to framebuffer
+     *
+     * @param x Text X position
+     * @param y Text Y position
+     * @param pMsg Format string
+     * @param ... Format arguments
+     */
+    void DrawString(s32 x, s32 y, const char* pMsg, ...) const;
+
+    /**
+     * @brief Sets framebuffer color
+     *
+     * @param rgb Color (RGB)
+     */
+    void SetColor(Color rgb);
 
 private:
+    /**
+     * @brief Constructor
+     */
     Nw4rDirectPrint();
-    ~Nw4rDirectPrint();
 
+    /**
+     * @brief Destructor
+     */
+    virtual ~Nw4rDirectPrint();
+
+    /**
+     * @brief Gets framebuffer dot/unit width (in pixels)
+     */
     s32 GetDotWidth() const;
+
+    /**
+     * @brief Gets framebuffer dot/unit height (in pixels)
+     */
     s32 GetDotHeight() const;
 
-    void DrawStringImpl(s32 x, s32 y, const char* str) const;
-    const char* DrawStringLine(s32 x, s32 y, const char* str, s32 maxlen) const;
+    /**
+     * @brief Draws string to framebuffer (internal implementation)
+     *
+     * @param x Text X position
+     * @param y Text Y position
+     * @param pMsg Text string
+     */
+    void DrawStringImpl(s32 x, s32 y, const char* pMsg) const;
+
+    /**
+     * @brief Draws line of string to framebuffer
+     *
+     * @param x String X position
+     * @param y String Y position
+     * @param pMsg Text string
+     * @param maxlen Max line width
+     * @return String contents after what was drawn
+     */
+    const char* DrawStringLine(s32 x, s32 y, const char* pMsg,
+                               s32 maxlen) const;
+
+    /**
+     * @brief Draws character to framebuffer
+     *
+     * @param x Character X position
+     * @param y Character Y position
+     * @param code Character code
+     */
     void DrawStringChar(s32 x, s32 y, s32 code) const;
 
 public:
@@ -69,6 +153,7 @@ private:
     static const u8 scAscii2Font[128];
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

@@ -1,11 +1,11 @@
 #include <cstring>
 #include <libkiwi.h>
-#include <revolution/EXI.h>
-#include <revolution/OS.h>
 
 namespace kiwi {
 
 K_GLOBAL_INSTANCE_IMPL(IDebugger);
+
+namespace {
 
 /**
  * @brief Debugger version (GeckoDotNet)
@@ -38,27 +38,27 @@ struct GeckoContext {
     /**
      * @brief Constructor
      *
-     * @param ctx OS context
+     * @param rCtx OS context
      * @param _dsisr DSISR register value
      * @param _dar DAR register value
      */
-    GeckoContext(const OSContext& ctx, u32 _dsisr, u32 _dar);
+    GeckoContext(const OSContext& rCtx, u32 _dsisr, u32 _dar);
 
     /**
-     * @brief Load OS context
+     * @brief Loads OS context
      *
-     * @param ctx OS context
+     * @param rCtx OS context
      * @param _dsisr DSISR register value
      * @param _dar DAR register value
      */
-    void Load(const OSContext& ctx, u32 _dsisr, u32 _dar);
+    void Load(const OSContext& rCtx, u32 _dsisr, u32 _dar);
 
     /**
-     * @brief Save to OS context
+     * @brief Saves to OS context
      *
-     * @param ctx OS context
+     * @param rCtx OS context
      */
-    void Save(OSContext& ctx) const;
+    void Save(OSContext& rCtx) const;
 };
 
 /**
@@ -73,78 +73,93 @@ GeckoContext::GeckoContext()
 /**
  * @brief Constructor
  *
- * @param ctx OS context
+ * @param rCtx OS context
  * @param _dsisr DSISR register value
  * @param _dar DAR register value
  */
-GeckoContext::GeckoContext(const OSContext& ctx, u32 _dsisr, u32 _dar) {
-    Load(ctx, _dsisr, _dar);
+GeckoContext::GeckoContext(const OSContext& rCtx, u32 _dsisr, u32 _dar) {
+    Load(rCtx, _dsisr, _dar);
 }
 
 /**
- * @brief Apply OS context
+ * @brief Applies OS context
  *
- * @param ctx OS context
+ * @param rCtx OS context
  * @param _dsisr DSISR register value
  * @param _dar DAR register value
  */
-void GeckoContext::Load(const OSContext& ctx, u32 _dsisr, u32 _dar) {
-    cr = ctx.cr;
-    xer = ctx.xer;
-    ctr = ctx.ctr;
-    srr0 = ctx.srr0;
-    srr1 = ctx.srr1;
-    lr = ctx.lr;
+void GeckoContext::Load(const OSContext& rCtx, u32 _dsisr, u32 _dar) {
+    cr = rCtx.cr;
+    xer = rCtx.xer;
+    ctr = rCtx.ctr;
+    srr0 = rCtx.srr0;
+    srr1 = rCtx.srr1;
+    lr = rCtx.lr;
 
     dsisr = _dsisr;
     dar = _dar;
 
-    std::memcpy(gprs, ctx.gprs, sizeof(gprs));
-    std::memcpy(fprs, ctx.fprs, sizeof(fprs));
+    std::memcpy(gprs, rCtx.gprs, sizeof(gprs));
+    std::memcpy(fprs, rCtx.fprs, sizeof(fprs));
 }
 
 /**
- * @brief Save to OS context
+ * @brief Saves to OS context
  *
- * @param ctx OS context
+ * @param rCtx OS context
  */
-void GeckoContext::Save(OSContext& ctx) const {
-    OSInitContext(&ctx, reinterpret_cast<void*>(srr0),
+void GeckoContext::Save(OSContext& rCtx) const {
+    OSInitContext(&rCtx, reinterpret_cast<void*>(srr0),
                   reinterpret_cast<void*>(gprs[1]));
 
-    ctx.cr = cr;
-    ctx.lr = lr;
-    ctx.ctr = ctr;
-    ctx.xer = xer;
-    ctx.fpscr = Mffpscr();
-    ctx.srr1 = srr1;
+    rCtx.cr = cr;
+    rCtx.lr = lr;
+    rCtx.ctr = ctr;
+    rCtx.xer = xer;
+    rCtx.fpscr = Mffpscr();
+    rCtx.srr1 = srr1;
 
-    std::memcpy(ctx.gprs, gprs, sizeof(ctx.gprs));
-    std::memcpy(ctx.fprs, fprs, sizeof(ctx.fprs));
+    std::memcpy(rCtx.gprs, gprs, sizeof(rCtx.gprs));
+    std::memcpy(rCtx.fprs, fprs, sizeof(rCtx.fprs));
 }
+
+} // namespace
 
 /**
  * @brief Breakpoint callback
+ *
+ * @param error Error type
+ * @param pCtx Exception context
+ * @param _dsisr DSISR value
+ * @param _dar DAR value
  */
-void IDebugger::BreakCallback(u8 error, OSContext* ctx, u32 _dsisr, u32 _dar,
+void IDebugger::BreakCallback(u8 error, OSContext* pCtx, u32 _dsisr, u32 _dar,
                               ...) {
-    K_ASSERT(ctx != NULL);
+    K_ASSERT(pCtx != nullptr);
     K_ASSERT(error == OS_ERR_IABR ||
              (error == OS_ERR_DSI && (_dsisr & DSISR_DABR)));
+
+    K_ASSERT_EX(false, "Not yet implemented");
 }
 
 /**
  * @brief Step trace callback
+ *
+ * @param error Error type
+ * @param pCtx Exception context
+ * @param _dsisr DSISR value
+ * @param _dar DAR value
  */
-void IDebugger::StepCallback(u8 error, OSContext* ctx, u32 _dsisr, u32 _dar,
+void IDebugger::StepCallback(u8 error, OSContext* pCtx, u32 _dsisr, u32 _dar,
                              ...) {
-    K_ASSERT(ctx != NULL);
+    K_ASSERT(pCtx != nullptr);
     K_ASSERT(error == OS_ERR_TRACE);
+
+    K_ASSERT_EX(false, "Not yet implemented");
 }
 
 /**
- * @brief Receive and process the next debugger command
- *
+ * @brief Receives and processes the next debugger command
  * @note Call this function when there is input pending
  */
 void IDebugger::Calculate() {
@@ -180,81 +195,81 @@ void IDebugger::Calculate() {
 }
 
 /**
- * @brief Write a 8-bit value to memory
+ * @brief Writes a 8-bit value to memory
  */
 void IDebugger::OnEvent_Write8() {
-    u8* dst = NULL;
+    u8* pDst = nullptr;
     u32 value = 0;
 
-    if (!ReadObj(dst) || !ReadObj(value)) {
+    if (!ReadObj(pDst) || !ReadObj(value)) {
         return;
     }
 
-    K_ASSERT(dst != NULL);
-    *dst = static_cast<u8>(value);
+    K_ASSERT(pDst != nullptr);
+    *pDst = static_cast<u8>(value);
 }
 
 /**
- * @brief Write a 16-bit value to memory
+ * @brief Writes a 16-bit value to memory
  */
 void IDebugger::OnEvent_Write16() {
-    u16* dst = NULL;
+    u16* pDst = nullptr;
     u32 value = 0;
 
-    if (!ReadObj(dst) || !ReadObj(value)) {
+    if (!ReadObj(pDst) || !ReadObj(value)) {
         return;
     }
 
-    K_ASSERT(dst != NULL);
-    *dst = static_cast<u16>(value);
+    K_ASSERT(pDst != nullptr);
+    *pDst = static_cast<u16>(value);
 }
 
 /**
- * @brief Write a 32-bit value to memory
+ * @brief Writes a 32-bit value to memory
  */
 void IDebugger::OnEvent_Write32() {
-    u32* dst = NULL;
+    u32* pDst = nullptr;
     u32 value = 0;
 
-    if (!ReadObj(dst) || !ReadObj(value)) {
+    if (!ReadObj(pDst) || !ReadObj(value)) {
         return;
     }
 
-    K_ASSERT(dst != NULL);
-    *dst = value;
+    K_ASSERT(pDst != nullptr);
+    *pDst = value;
 }
 
 /**
- * @brief Dump a range of memory
+ * @brief Dumps a range of memory
  */
 void IDebugger::OnEvent_ReadN() {
-    const void* start = NULL;
-    const void* end = NULL;
+    const void* pDst = nullptr;
+    const void* pEnd = nullptr;
 
-    if (!ReadObj(end) || !ReadObj(start)) {
+    if (!ReadObj(pEnd) || !ReadObj(pDst)) {
         return;
     }
 
-    K_ASSERT(end > start);
-    Write(start, PtrDistance(start, end));
+    K_ASSERT(pEnd > pDst);
+    Write(pDst, PtrDistance(pDst, pEnd));
 }
 
 /**
- * @brief Pause the program
+ * @brief Pauses the program
  */
 void IDebugger::OnEvent_Pause() {
     mExecState = EExecState_Paused;
 }
 
 /**
- * @brief Un-pause the program
+ * @brief Un-pauses the program
  */
 void IDebugger::OnEvent_UnPause() {
     mExecState = EExecState_UnPaused;
 }
 
 /**
- * @brief Set a PowerPC data breakpoint
+ * @brief Sets a PowerPC data breakpoint
  */
 void IDebugger::OnEvent_BreakPointData() {
     // Load breakpoint info
@@ -269,7 +284,7 @@ void IDebugger::OnEvent_BreakPointData() {
 }
 
 /**
- * @brief Set a PowerPC instruction breakpoint
+ * @brief Sets a PowerPC instruction breakpoint
  */
 void IDebugger::OnEvent_BreakPointCode() {
     // Load breakpoint info
@@ -284,7 +299,7 @@ void IDebugger::OnEvent_BreakPointCode() {
 }
 
 /**
- * @brief Read the breakpoint context
+ * @brief Reads the breakpoint context
  */
 void IDebugger::OnEvent_ReadContext() {
     GeckoContext ctx;
@@ -293,7 +308,7 @@ void IDebugger::OnEvent_ReadContext() {
 }
 
 /**
- * @brief Write the breakpoint context
+ * @brief Writes the breakpoint context
  */
 void IDebugger::OnEvent_WriteContext() {
     GeckoContext ctx;
@@ -302,7 +317,7 @@ void IDebugger::OnEvent_WriteContext() {
 }
 
 /**
- * @brief Cancel the active breakpoint
+ * @brief Cancels the active breakpoint
  */
 void IDebugger::OnEvent_CancelBreakPoint() {
     Mtdabr(0);
@@ -310,26 +325,29 @@ void IDebugger::OnEvent_CancelBreakPoint() {
 }
 
 /**
- * @brief Write file contents to memory
+ * @brief Writes file contents to memory
  */
 void IDebugger::OnEvent_WriteFile() {
     K_ASSERT_EX(false, "Not yet implemented");
 }
 
+/**
+ * @brief Steps forward one instruction
+ */
 void IDebugger::OnEvent_Step() {
     // Disable any further step traces
     mExecContext.srr1 &= ~MSR_SE;
 }
 
 /**
- * @brief Get the program execution status
+ * @brief Gets the program execution status
  */
 void IDebugger::OnEvent_GetStatus() {
     WriteObj<u8>(mExecState);
 }
 
 /**
- * @brief Set a Gecko breakpoint
+ * @brief Sets a Gecko breakpoint
  */
 void IDebugger::OnEvent_BreakPointExact() {
     // Load breakpoint info
@@ -344,7 +362,7 @@ void IDebugger::OnEvent_BreakPointExact() {
 }
 
 /**
- * @brief Get the debugger version
+ * @brief Gets the debugger version
  */
 void IDebugger::OnEvent_GetVersion() {
     WriteObj<u8>(EVersion_Rvl);

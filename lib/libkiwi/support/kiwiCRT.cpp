@@ -32,7 +32,7 @@ typedef void (*Destructor)(void* obj, s16 type);
  * @param dtor Destructor for each element
  */
 void __destroy_new_array(u8* array, Destructor dtor) {
-    if (array == NULL) {
+    if (array == nullptr) {
         return;
     }
 
@@ -40,7 +40,7 @@ void __destroy_new_array(u8* array, Destructor dtor) {
     const NewArrayHeader* header =
         reinterpret_cast<NewArrayHeader*>(array - sizeof(NewArrayHeader));
 
-    if (dtor != NULL) {
+    if (dtor != nullptr) {
         u32 size = header->size;
         u32 count = header->count;
 

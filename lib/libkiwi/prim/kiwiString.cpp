@@ -4,25 +4,28 @@
 
 namespace kiwi {
 
+/**
+ * @brief Static string for empty String objects
+ */
 template <> const char* StringImpl<char>::scEmptyCStr = "";
+/**
+ * @brief Static string for empty String objects
+ */
 template <> const wchar_t* StringImpl<wchar_t>::scEmptyCStr = L"";
 
-/**
- * char/wchar_t template helper functions
- */
 namespace {
 
-template <typename T> u32 StrLen(const T* s);
-template <typename T> T* StrNCat(T* dst, const T* src, u32 n);
-template <typename T> int StrNCmp(const T* s1, const T* s2, u32 n);
-template <typename T> T* StrNCpy(T* dst, const T* src, u32 n);
-template <typename T> const T* StrChr(const T* s, T c);
-template <typename T> const T* StrStr(const T* s1, const T* s2);
+template <typename T> u32 StrLen(const T* pStr);
+template <typename T> T* StrNCat(T* pDst, const T* pSrc, u32 n);
+template <typename T> int StrNCmp(const T* pStr1, const T* pStr2, u32 n);
+template <typename T> T* StrNCpy(T* pDst, const T* pSrc, u32 n);
+template <typename T> const T* StrChr(const T* pStr, T c);
+template <typename T> const T* StrStr(const T* pStr1, const T* pStr2);
 
 } // namespace
 
 /**
- * Clears string buffer (yields empty string)
+ * @brief Clears string buffer (yields empty string)
  */
 template <typename T> void StringImpl<T>::Clear() {
     // Don't delete static memory
@@ -32,7 +35,7 @@ template <typename T> void StringImpl<T>::Clear() {
 
     // Delete string buffer
     delete[] mpBuffer;
-    mpBuffer = NULL;
+    mpBuffer = nullptr;
 
     // Update size/length
     mCapacity = 0;
@@ -43,7 +46,7 @@ template <typename T> void StringImpl<T>::Clear() {
 }
 
 /**
- * Generates substring of this string
+ * @brief Generates substring of this string
  *
  * @param pos Substring start position
  * @param len Substring size
@@ -58,31 +61,31 @@ StringImpl<T> StringImpl<T>::SubStr(u32 pos, u32 len) const {
     }
 
     // Clamp substring length
-    len = kiwi::Min(len, mLength - pos);
+    len = Min(len, mLength - pos);
 
     // Create C-style substring
-    T* buffer = new T[len + 1];
-    StrNCpy(buffer, mpBuffer + pos, len);
-    buffer[len] = '\0';
+    T* pBuffer = new T[len + 1];
+    StrNCpy(pBuffer, mpBuffer + pos, len);
+    pBuffer[len] = '\0';
 
     // Construct string wrapper
-    StringImpl<T> str = StringImpl(buffer);
+    StringImpl<T> str = StringImpl(pBuffer);
 
-    delete[] buffer;
+    delete[] pBuffer;
     return str;
 }
 
 /**
- * Finds first occurrence of sequence in string
+ * @brief Finds first occurrence of sequence in string
  *
- * @param str Sequence to search for
+ * @param rStr Sequence to search for
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
 template <typename T>
-u32 StringImpl<T>::Find(const StringImpl<T>& str, u32 pos) const {
+u32 StringImpl<T>::Find(const StringImpl<T>& rStr, u32 pos) const {
     // Cannot match empty string
-    if (str.Empty()) {
+    if (rStr.Empty()) {
         return npos;
     }
 
@@ -91,18 +94,18 @@ u32 StringImpl<T>::Find(const StringImpl<T>& str, u32 pos) const {
         return npos;
     }
 
-    return Find(str.CStr(), pos);
+    return Find(rStr.CStr(), pos);
 }
 
 /**
- * Finds first occurrence of sequence in string
+ * @brief Finds first occurrence of sequence in string
  *
- * @param s Sequence to search for
+ * @param pStr Sequence to search for
  * @param pos Search offset (from string start)
  * @return Match position if found, otherwise npos
  */
-template <typename T> u32 StringImpl<T>::Find(const T* s, u32 pos) const {
-    K_ASSERT(s != NULL);
+template <typename T> u32 StringImpl<T>::Find(const T* pStr, u32 pos) const {
+    K_ASSERT(pStr != nullptr);
 
     // Cannot match past end of string
     if (pos >= mLength) {
@@ -110,19 +113,19 @@ template <typename T> u32 StringImpl<T>::Find(const T* s, u32 pos) const {
     }
 
     // Call down to C STL
-    const T* result = StrStr(mpBuffer + pos, s);
+    const T* pResult = StrStr(mpBuffer + pos, pStr);
 
     // Not found
-    if (result == NULL) {
+    if (pResult == nullptr) {
         return npos;
     }
 
     // Determine index by pointer arithmetic
-    return kiwi::PtrDistance(mpBuffer, result) / sizeof(T);
+    return PtrDistance(mpBuffer, pResult) / sizeof(T);
 }
 
 /**
- * Finds first occurrence of sequence in string
+ * @brief Finds first occurrence of sequence in string
  *
  * @param c Character to search for
  * @param pos Search offset (from string start)
@@ -135,69 +138,68 @@ template <typename T> u32 StringImpl<T>::Find(T c, u32 pos) const {
     }
 
     // Call down to C STL
-    const T* result = StrChr(mpBuffer + pos, c);
+    const T* pResult = StrChr(mpBuffer + pos, c);
 
     // Not found
-    if (result == NULL) {
+    if (pResult == nullptr) {
         return npos;
     }
 
     // Determine index by pointer arithmetic
-    return kiwi::PtrDistance(mpBuffer, result) / sizeof(T);
+    return PtrDistance(mpBuffer, pResult) / sizeof(T);
 }
 
 /**
- * Whether this string starts with the specified prefix
+ * @brief Tests whether this string starts with the specified prefix
  *
- * @param str Prefix sequence
+ * @param rStr Prefix sequence
  */
 template <typename T>
-bool StringImpl<T>::StartsWith(const StringImpl<T>& str) const {
-    return Find(str) == 0;
+bool StringImpl<T>::StartsWith(const StringImpl<T>& rStr) const {
+    return Find(rStr) == 0;
 }
 
 /**
- * Whether this string starts with the specified prefix
+ * @brief Tests whether this string starts with the specified prefix
  *
- * @param s Prefix sequence
+ * @param pStr Prefix sequence
  */
-template <typename T> bool StringImpl<T>::StartsWith(const T* s) const {
-    K_ASSERT(s != NULL);
-    return Find(s) == 0;
+template <typename T> bool StringImpl<T>::StartsWith(const T* pStr) const {
+    K_ASSERT(pStr != nullptr);
+    return Find(pStr) == 0;
 }
 
 /**
- * Whether this string ends with the specified suffix
+ * @brief Tests whether this string ends with the specified suffix
  *
- * @param str Suffix sequence
- */
-template <typename T>
-bool StringImpl<T>::EndsWith(const StringImpl<T>& str) const {
-    size_t pos = mLength - str.Length();
-    return Find(str, pos) == pos;
-}
-
-/**
- * Whether this string ends with the specified suffix
- *
- * @param str Suffix sequence
- */
-template <typename T> bool StringImpl<T>::EndsWith(const T* s) const {
-    K_ASSERT(s != NULL);
-
-    size_t pos = mLength - StrLen(s);
-    return Find(s, pos) == pos;
-}
-
-/**
- * Split this string into tokens by the specified delimiter
- *
- * @param str Delimiter sequence
- * @return List of tokens (may be empty)
+ * @param rStr Suffix sequence
  */
 template <typename T>
-TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& delim) const {
-    K_ASSERT(delim.Length() > 0);
+bool StringImpl<T>::EndsWith(const StringImpl<T>& rStr) const {
+    size_t pos = mLength - rStr.Length();
+    return Find(rStr, pos) == pos;
+}
+
+/**
+ * @brief Tests whether this string ends with the specified suffix
+ *
+ * @param pStr Suffix sequence
+ */
+template <typename T> bool StringImpl<T>::EndsWith(const T* pStr) const {
+    K_ASSERT(pStr != nullptr);
+
+    size_t pos = mLength - StrLen(pStr);
+    return Find(pStr, pos) == pos;
+}
+
+/**
+ * @brief Split this string into tokens by the specified delimiter
+ *
+ * @param rDelim Delimiter sequence
+ */
+template <typename T>
+TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& rDelim) const {
+    K_ASSERT(rDelim.Length() > 0);
 
     TVector<StringImpl> tokens;
 
@@ -207,7 +209,7 @@ TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& delim) const {
 
     while (start < mLength) {
         // Next occurrence in search window
-        end = Find(delim, start);
+        end = Find(rDelim, start);
 
         // No more occurrences in the string
         if (end == npos) {
@@ -217,7 +219,7 @@ TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& delim) const {
         // Split off token
         tokens.PushBack(SubStr(start, end - start));
         // Search window now ignores previous characters
-        start = end + delim.Length();
+        start = end + rDelim.Length();
     }
 
     // Push back very last token
@@ -226,35 +228,35 @@ TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& delim) const {
 }
 
 /**
- * Tests for equality between string and specified data
+ * @brief Tests for equality between string and specified data
  *
- * @param str String to compare against
+ * @param rStr String to compare against
  */
 template <typename T>
-bool StringImpl<T>::operator==(const StringImpl<T>& str) const {
+bool StringImpl<T>::operator==(const StringImpl<T>& rStr) const {
     // Don't bother comparing data if lengths are different
-    if (mLength != str.Length()) {
+    if (mLength != rStr.Length()) {
         return false;
     }
 
     // Compare string data
-    return StrNCmp(mpBuffer, str.CStr(), mLength) == 0;
+    return StrNCmp(mpBuffer, rStr.CStr(), mLength) == 0;
 }
 
 /**
- * Tests for equality between string and specified data
+ * @brief Tests for equality between string and specified data
  *
- * @param str C-style string to compare against
+ * @param pStr C-style string to compare against
  */
-template <typename T> bool StringImpl<T>::operator==(const T* s) const {
-    K_ASSERT(s != NULL);
+template <typename T> bool StringImpl<T>::operator==(const T* pStr) const {
+    K_ASSERT(pStr != nullptr);
 
     // Compare string data
-    return StrNCmp(mpBuffer, s, mLength) == 0;
+    return StrNCmp(mpBuffer, pStr, mLength) == 0;
 }
 
 /**
- * Reserves string buffer of specified size
+ * @brief Reserves string buffer of specified size
  *
  * @param n Number of characters to reserve (ignoring null terminator)
  */
@@ -265,11 +267,11 @@ template <typename T> void StringImpl<T>::Reserve(u32 n) {
     }
 
     // Reallocate buffer
-    T* buffer = new T[n + 1];
+    T* pBuffer = new T[n + 1];
 
     // Copy existing data
-    StrNCpy(buffer, mpBuffer, mLength);
-    buffer[mLength] = '\0';
+    StrNCpy(pBuffer, mpBuffer, mLength);
+    pBuffer[mLength] = '\0';
 
     // Delete old data
     if (mpBuffer != scEmptyCStr) {
@@ -277,12 +279,12 @@ template <typename T> void StringImpl<T>::Reserve(u32 n) {
     }
 
     // Set new configuration
-    mpBuffer = buffer;
+    mpBuffer = pBuffer;
     mCapacity = n + 1;
 }
 
 /**
- * Shrink buffer to fit string contents
+ * @brief Shrinks buffer to fit string contents
  */
 template <typename T> void StringImpl<T>::Shrink() {
     K_ASSERT(mCapacity > Length());
@@ -292,39 +294,37 @@ template <typename T> void StringImpl<T>::Shrink() {
 }
 
 /**
- * Assigns data to string
- * @note Data is copied, not owned
+ * @brief Assigns data to string
  *
- * @param str String to copy
+ * @param rStr String to copy
  */
-template <typename T> void StringImpl<T>::Assign(const StringImpl<T>& str) {
+template <typename T> void StringImpl<T>::Assign(const StringImpl<T>& rStr) {
     // Reserve string buffer
-    Reserve(str.Length());
+    Reserve(rStr.Length());
 
     // Copy data
-    StrNCpy(mpBuffer, str.CStr(), str.Length());
-    mLength = str.Length();
+    StrNCpy(mpBuffer, rStr.CStr(), rStr.Length());
+    mLength = rStr.Length();
 
     // Null terminator
     mpBuffer[mLength] = static_cast<T>(0);
 }
 
 /**
- * Assigns data to string
- * @note Data is copied, not owned
+ * @brief Assigns data to string
  *
- * @param s C-style string to copy
+ * @param pStr C-style string to copy
  * @param n Number of characters to copy
  */
-template <typename T> void StringImpl<T>::Assign(const T* s, u32 n) {
-    K_ASSERT(s != NULL);
+template <typename T> void StringImpl<T>::Assign(const T* pStr, u32 n) {
+    K_ASSERT(pStr != nullptr);
 
     // Reserve string buffer
-    u32 len = n != npos ? n : StrLen(s);
+    u32 len = n != npos ? n : StrLen(pStr);
     Reserve(len);
 
     // Copy data
-    StrNCpy(mpBuffer, s, len);
+    StrNCpy(mpBuffer, pStr, len);
     mLength = len;
 
     // Null terminator
@@ -332,7 +332,7 @@ template <typename T> void StringImpl<T>::Assign(const T* s, u32 n) {
 }
 
 /**
- * Assigns data to string
+ * @brief Assigns data to string
  *
  * @param c Character to write
  */
@@ -349,34 +349,34 @@ template <typename T> void StringImpl<T>::Assign(T c) {
 }
 
 /**
- * Appends a string to this string
+ * @brief Appends a string to this string
  *
- * @param str String to append
+ * @param rStr String to append
  */
-template <typename T> void StringImpl<T>::Append(const StringImpl<T>& str) {
+template <typename T> void StringImpl<T>::Append(const StringImpl<T>& rStr) {
     // Reserve string buffer
-    Reserve(mLength + str.Length());
+    Reserve(mLength + rStr.Length());
 
     // Concatenate data
-    StrNCat(mpBuffer, str.CStr(), str.Length());
-    mLength += str.Length();
+    StrNCat(mpBuffer, rStr.CStr(), rStr.Length());
+    mLength += rStr.Length();
 
     // Null terminator
     mpBuffer[mLength] = static_cast<T>(0);
 }
 
 /**
- * Appends a C-style string to this string
+ * @brief Appends a C-style string to this string
  *
- * @param s C-style string to append
+ * @param pStr C-style string to append
  */
-template <typename T> void StringImpl<T>::Append(const T* s) {
+template <typename T> void StringImpl<T>::Append(const T* pStr) {
     // Reserve string buffer
-    u32 len = StrLen(s);
+    u32 len = StrLen(pStr);
     Reserve(mLength + len);
 
     // Concatenate data
-    StrNCat(mpBuffer, s, len);
+    StrNCat(mpBuffer, pStr, len);
     mLength += len;
 
     // Null terminator
@@ -384,7 +384,7 @@ template <typename T> void StringImpl<T>::Append(const T* s) {
 }
 
 /**
- * Appends a character to this string
+ * @brief Appends a character to this string
  *
  * @param c Character to append
  */
@@ -405,62 +405,64 @@ namespace {
 /**
  * strlen wrapper function
  */
-template <> u32 StrLen<char>(const char* s) {
-    return std::strlen(s);
+template <> u32 StrLen<char>(const char* pStr) {
+    return std::strlen(pStr);
 }
-template <> u32 StrLen<wchar_t>(const wchar_t* s) {
-    return std::wcslen(s);
+template <> u32 StrLen<wchar_t>(const wchar_t* pStr) {
+    return std::wcslen(pStr);
 }
 
 /**
  * strncat wrapper function
  */
-template <> char* StrNCat(char* dst, const char* src, u32 n) {
-    return std::strncat(dst, src, n);
+template <> char* StrNCat(char* pDst, const char* pSrc, u32 n) {
+    return std::strncat(pDst, pSrc, n);
 }
-template <> wchar_t* StrNCat(wchar_t* dst, const wchar_t* src, u32 n) {
-    return ksl::wcsncat(dst, src, n);
+template <> wchar_t* StrNCat(wchar_t* pDst, const wchar_t* pSrc, u32 n) {
+    return ksl::wcsncat(pDst, pSrc, n);
 }
 
 /**
  * strncmp wrapper function
  */
-template <> int StrNCmp<char>(const char* s1, const char* s2, u32 n) {
-    return std::strncmp(s1, s2, n);
+template <> int StrNCmp<char>(const char* pStr1, const char* pStr2, u32 n) {
+    return std::strncmp(pStr1, pStr2, n);
 }
-template <> int StrNCmp<wchar_t>(const wchar_t* s1, const wchar_t* s2, u32 n) {
-    return ksl::wcsncmp(s1, s2, n);
+template <>
+int StrNCmp<wchar_t>(const wchar_t* pStr1, const wchar_t* pStr2, u32 n) {
+    return ksl::wcsncmp(pStr1, pStr2, n);
 }
 
 /**
  * strncpy wrapper function
  */
-template <> char* StrNCpy<char>(char* dst, const char* src, u32 n) {
-    return std::strncpy(dst, src, n);
+template <> char* StrNCpy<char>(char* pDst, const char* pSrc, u32 n) {
+    return std::strncpy(pDst, pSrc, n);
 }
-template <> wchar_t* StrNCpy<wchar_t>(wchar_t* dst, const wchar_t* src, u32 n) {
-    return std::wcsncpy(dst, src, n);
+template <>
+wchar_t* StrNCpy<wchar_t>(wchar_t* pDst, const wchar_t* pSrc, u32 n) {
+    return std::wcsncpy(pDst, pSrc, n);
 }
 
 /**
  * strchr wrapper function
  */
-template <> const char* StrChr<char>(const char* s, char c) {
-    return std::strchr(s, c);
+template <> const char* StrChr<char>(const char* pStr, char c) {
+    return std::strchr(pStr, c);
 }
-template <> const wchar_t* StrChr<wchar_t>(const wchar_t* s, wchar_t c) {
-    return std::wcschr(s, c);
+template <> const wchar_t* StrChr<wchar_t>(const wchar_t* pStr, wchar_t c) {
+    return std::wcschr(pStr, c);
 }
 
 /**
  * strstr wrapper function
  */
-template <> const char* StrStr<char>(const char* s1, const char* s2) {
-    return std::strstr(s1, s2);
+template <> const char* StrStr<char>(const char* pStr1, const char* pStr2) {
+    return std::strstr(pStr1, pStr2);
 }
 template <>
-const wchar_t* StrStr<wchar_t>(const wchar_t* s1, const wchar_t* s2) {
-    return ksl::wcsstr(s1, s2);
+const wchar_t* StrStr<wchar_t>(const wchar_t* pStr1, const wchar_t* pStr2) {
+    return ksl::wcsstr(pStr1, pStr2);
 }
 
 } // namespace

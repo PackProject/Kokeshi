@@ -1,53 +1,76 @@
-#include <climits>
 #include <libkiwi.h>
 
 namespace kiwi {
 
 /**
- * Async receive operation
+ * @brief Socket manager thread
+ */
+OSThread AsyncSocket::sSocketThread;
+
+/**
+ * @brief Thread guard
+ */
+bool AsyncSocket::sSocketThreadCreated = false;
+
+/**
+ * @brief Thread stack
+ */
+u8 AsyncSocket::sSocketThreadStack[scThreadStackSize];
+
+/**
+ * @brief Open async sockets
+ */
+TList<AsyncSocket> AsyncSocket::sSocketList;
+
+/**
+ * @brief Async receive operation
  */
 class AsyncSocket::RecvJob {
 public:
     /**
      * @brief Constructor
      *
-     * @param _packet Packet for this job
-     * @param _dst Destination address
-     * @param[out] _peer Peer address
-     * @param _callback Completion callback
-     * @param _arg Callback user argument
+     * @param pPacket Packet for this job
+     * @param pDst Destination address
+     * @param[out] pPeer Peer address
+     * @param pCallback Completion callback
+     * @param pArg Callback user argument
      */
-    RecvJob(Packet* _packet, void* _dst, SockAddr* _peer,
-            Callback _callback = NULL, void* _arg = NULL)
-        : packet(_packet), dst(_dst), callback(_callback), arg(_arg) {
-        K_ASSERT(packet != NULL);
-        K_ASSERT(dst != NULL);
+    RecvJob(Packet* pPacket, void* pDst, SockAddrAny* pPeer,
+            Callback pCallback = nullptr, void* pArg = nullptr)
+        : mpPacket(pPacket),
+          mpDst(pDst),
+          mpPeer(pPeer),
+          mpCallback(pCallback),
+          mpArg(pArg) {
+        K_ASSERT(mpPacket != nullptr);
+        K_ASSERT(mpDst != nullptr);
     }
 
     /**
      * @brief Destructor
      */
     ~RecvJob() {
-        delete packet;
-        packet = NULL;
+        delete mpPacket;
     }
 
     /**
-     * @brief Check whether the receive is complete
+     * @brief Tests whether the receive operation is complete
      */
     bool IsComplete() const {
-        K_ASSERT(packet != NULL);
-        return packet->IsWriteComplete();
+        K_ASSERT(mpPacket != nullptr);
+        return mpPacket->IsWriteComplete();
     }
 
     /**
-     * @brief Update job
+     * @brief Updates job using the specified socket
      *
      * @param socket Socket descriptor
      * @return Whether the job is complete
      */
     bool Calc(SOSocket socket) {
-        K_ASSERT(packet != NULL);
+        K_ASSERT(mpPacket != nullptr);
+        K_ASSERT(socket >= 0);
 
         // Nothing left to do
         if (IsComplete()) {
@@ -55,22 +78,23 @@ public:
         }
 
         // Update
-        packet->Recv(socket);
+        mpPacket->Recv(socket);
         bool done = IsComplete();
 
         // Write out data
         if (done) {
-            K_ASSERT(dst != NULL);
-            std::memcpy(dst, packet->GetContent(), packet->GetContentSize());
+            K_ASSERT(mpDst != nullptr);
+            std::memcpy(mpDst, mpPacket->GetContent(),
+                        mpPacket->GetContentSize());
 
             // Write peer information
-            if (peer != NULL) {
-                *peer = packet->GetPeer();
+            if (mpPeer != nullptr) {
+                *mpPeer = mpPacket->GetPeer();
             }
 
             // Notify user
-            if (callback != NULL) {
-                callback(LibSO::GetLastError(), arg);
+            if (mpCallback != nullptr) {
+                mpCallback(LibSO::GetLastError(), mpArg);
             }
         }
 
@@ -78,59 +102,55 @@ public:
     }
 
 private:
-    // Packet associated with this job
-    Packet* packet;
-    // Original read address
-    void* dst;
-    // Peer address
-    SOSockAddr* peer;
+    Packet* mpPacket;   // Packet to complete
+    void* mpDst;        // Where to store packet data
+    SOSockAddr* mpPeer; // Where to store peer address
 
-    // Completion callback
-    Callback callback;
-    void* arg;
+    Callback mpCallback; // Completion callback
+    void* mpArg;         // Completion callback user argument
 };
 
 /**
- * Async send operation
+ * @brief Async send operation
  */
 class AsyncSocket::SendJob {
 public:
     /**
      * @brief Constructor
      *
-     * @param _packet Packet for this job
-     * @param _callback Completion callback
-     * @param _arg Callback user argument
+     * @param pPacket Packet for this job
+     * @param pCallback Completion callback
+     * @param pArg Callback user argument
      */
-    SendJob(Packet* _packet, Callback _callback = NULL, void* _arg = NULL)
-        : packet(_packet), callback(_callback), arg(_arg) {
-        K_ASSERT(packet != NULL);
+    SendJob(Packet* pPacket, Callback pCallback = nullptr, void* pArg = nullptr)
+        : mpPacket(pPacket), mpCallback(pCallback), mpArg(pArg) {
+        K_ASSERT(mpPacket != nullptr);
     }
 
     /**
      * @brief Destructor
      */
     ~SendJob() {
-        delete packet;
-        packet = NULL;
+        delete mpPacket;
     }
 
     /**
-     * @brief Check whether the send is complete
+     * @brief Tests whether the send operation is complete
      */
     bool IsComplete() const {
-        K_ASSERT(packet != NULL);
-        return packet->IsReadComplete();
+        K_ASSERT(mpPacket != nullptr);
+        return mpPacket->IsReadComplete();
     }
 
     /**
-     * @brief Update job
+     * @brief Updates job using the specified socket
      *
      * @param socket Socket descriptor
      * @return Whether the job is complete
      */
     bool Calc(SOSocket socket) {
-        K_ASSERT(packet != NULL);
+        K_ASSERT(mpPacket != nullptr);
+        K_ASSERT(socket >= 0);
 
         // Nothing left to do
         if (IsComplete()) {
@@ -138,36 +158,31 @@ public:
         }
 
         // Update
-        packet->Send(socket);
+        mpPacket->Send(socket);
         bool done = IsComplete();
 
         // Fire callback
-        if (done && callback != NULL) {
-            callback(LibSO::GetLastError(), arg);
+        if (done && mpCallback != nullptr) {
+            mpCallback(LibSO::GetLastError(), mpArg);
         }
 
         return done;
     }
 
 private:
-    // Packet associated with this job
-    Packet* packet;
+    Packet* mpPacket; // Packet to complete
 
-    // Completion callback
-    Callback callback;
-    void* arg;
+    Callback mpCallback; // Completion callback
+    void* mpArg;         // Completion callback user argument
 };
 
-OSThread AsyncSocket::sSocketThread;
-bool AsyncSocket::sSocketThreadCreated = false;
-u8 AsyncSocket::sSocketThreadStack[THREAD_STACK_SIZE];
-TList<AsyncSocket> AsyncSocket::sSocketList;
-
 /**
- * Socket thread function
+ * @brief Socket thread function
+ *
+ * @param pArg Thread function argument
  */
-void* AsyncSocket::ThreadFunc(void* arg) {
-#pragma unused(arg)
+void* AsyncSocket::ThreadFunc(void* pArg) {
+#pragma unused(pArg)
 
     // Update all open sockets
     while (true) {
@@ -178,11 +193,11 @@ void* AsyncSocket::ThreadFunc(void* arg) {
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
- * Constructor
+ * @brief Constructor
  *
  * @param family Socket protocol family
  * @param type Socket type
@@ -190,15 +205,15 @@ void* AsyncSocket::ThreadFunc(void* arg) {
 AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
     : SocketBase(family, type),
       mState(EState_Thinking),
-      mpConnectCallback(NULL),
-      mpConnectCallbackArg(NULL),
-      mpAcceptCallback(NULL),
-      mpAcceptCallbackArg(NULL) {
+      mpConnectCallback(nullptr),
+      mpConnectCallbackArg(nullptr),
+      mpAcceptCallback(nullptr),
+      mpAcceptCallbackArg(nullptr) {
     Initialize();
 }
 
 /**
- * Constructor
+ * @brief Constructor
  *
  * @param socket Socket file descriptor
  * @param type Socket protocol family
@@ -207,15 +222,15 @@ AsyncSocket::AsyncSocket(SOProtoFamily family, SOSockType type)
 AsyncSocket::AsyncSocket(SOSocket socket, SOProtoFamily family, SOSockType type)
     : SocketBase(socket, family, type),
       mState(EState_Thinking),
-      mpConnectCallback(NULL),
-      mpConnectCallbackArg(NULL),
-      mpAcceptCallback(NULL),
-      mpAcceptCallbackArg(NULL) {
+      mpConnectCallback(nullptr),
+      mpConnectCallbackArg(nullptr),
+      mpAcceptCallback(nullptr),
+      mpAcceptCallbackArg(nullptr) {
     Initialize();
 }
 
 /**
- * Prepares socket for async operation
+ * @brief Prepares socket for async operation
  */
 void AsyncSocket::Initialize() {
     // Make socket non-blocking
@@ -227,7 +242,7 @@ void AsyncSocket::Initialize() {
 
     // Thread must exist if there is an open socket
     if (!sSocketThreadCreated) {
-        OSCreateThread(&sSocketThread, ThreadFunc, NULL,
+        OSCreateThread(&sSocketThread, ThreadFunc, nullptr,
                        sSocketThreadStack + sizeof(sSocketThreadStack),
                        sizeof(sSocketThreadStack), OS_PRIORITY_MAX, 0);
 
@@ -237,120 +252,48 @@ void AsyncSocket::Initialize() {
 }
 
 /**
- * Destructor
- */
-AsyncSocket::~AsyncSocket() {
-    sSocketList.Remove(this);
-}
-
-/**
- * Connects to another socket
+ * @brief Connects to a peer
  *
- * @param addr Remote address
- * @param callback Connection callback
- * @param arg Callback user argument
+ * @param rAddr Remote address
+ * @param pCallback Connection callback
+ * @param pArg Callback user argument
  * @return Success
  */
-bool AsyncSocket::Connect(const SockAddr& addr, Callback callback, void* arg) {
+bool AsyncSocket::Connect(const SockAddrAny& rAddr, Callback pCallback,
+                          void* pArg) {
     K_ASSERT(IsOpen());
 
     mState = EState_Connecting;
-    mPeer = addr;
+    mPeer = rAddr;
 
-    mpConnectCallback = callback;
-    mpConnectCallbackArg = arg;
+    mpConnectCallback = pCallback;
+    mpConnectCallbackArg = pArg;
 
     // Connect doesn't actually happen on this thread
     return false;
 }
 
 /**
- * Accepts remote connection
+ * @brief Accepts a peer connection over a new socket
  *
- * @param callback Acceptance callback
- * @param arg Callback user argument
+ * @param pCallback Acceptance callback
+ * @param pArg Callback user argument
  * @return New socket
  */
-AsyncSocket* AsyncSocket::Accept(AcceptCallback callback, void* arg) {
+AsyncSocket* AsyncSocket::Accept(AcceptCallback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
 
     mState = EState_Accepting;
 
-    mpAcceptCallback = callback;
-    mpAcceptCallbackArg = arg;
+    mpAcceptCallback = pCallback;
+    mpAcceptCallbackArg = pArg;
 
     // Accept doesn't actually happen on this thread
-    return NULL;
+    return nullptr;
 }
 
 /**
- * Receives data and records sender address
- *
- * @param dst Destination buffer
- * @param len Buffer size
- * @param[out] nrecv Number of bytes received
- * @param[out] addr Sender address
- * @param callback Completion callback
- * @param arg Callback user argument
- * @return Socket library result
- */
-SOResult AsyncSocket::RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
-                               Callback callback, void* arg) {
-    K_ASSERT(IsOpen());
-    K_ASSERT(dst != NULL);
-    K_ASSERT_EX(!IsStack(dst), "Don't use stack memory for async");
-
-    // Packet to hold incoming data
-    Packet* packet = new Packet(len);
-    K_ASSERT(packet != NULL);
-
-    // Asynchronous job
-    RecvJob* job = new RecvJob(packet, dst, addr, callback, arg);
-    K_ASSERT(job != NULL);
-    mRecvJobs.PushBack(job);
-
-    // Receive doesn't actually happen on this thread
-    nrecv = 0;
-    return SO_EWOULDBLOCK;
-}
-
-/**
- * Sends data to specified connection
- *
- * @param dst Destination buffer
- * @param len Buffer size
- * @param[out] nsend Number of bytes sent
- * @param[out] addr Sender address
- * @param callback Completion callback
- * @param arg Callback user argument
- * @return Socket library result
- */
-SOResult AsyncSocket::SendImpl(const void* src, u32 len, u32& nsend,
-                               const SockAddr* addr, Callback callback,
-                               void* arg) {
-    K_ASSERT(IsOpen());
-    K_ASSERT(src != NULL);
-    K_ASSERT_EX(!IsStack(src), "Don't use stack memory for async");
-
-    // Packet to hold incoming data
-    Packet* packet = new Packet(len, addr);
-    K_ASSERT(packet != NULL);
-
-    // Store data inside packet
-    packet->Write(src, len);
-
-    // Asynchronous job
-    SendJob* job = new SendJob(packet, callback, arg);
-    K_ASSERT(job != NULL);
-    mSendJobs.PushBack(job);
-
-    // Send doesn't actually happen on this thread
-    nsend = 0;
-    return SO_EWOULDBLOCK;
-}
-
-/**
- * Process pending tasks
+ * @brief Processes pending socket tasks
  */
 void AsyncSocket::Calc() {
     s32 result;
@@ -385,16 +328,16 @@ void AsyncSocket::Calc() {
         // Report non-blocking results
         if (result != SO_EWOULDBLOCK) {
             // Peer connection
-            AsyncSocket* socket = NULL;
+            AsyncSocket* pSocket = nullptr;
 
             // Result code is the peer descriptor
             if (result >= 0) {
-                AsyncSocket* socket = new AsyncSocket(result, mFamily, mType);
-                K_ASSERT(socket != NULL);
+                pSocket = new AsyncSocket(result, mFamily, mType);
+                K_ASSERT(pSocket != nullptr);
             }
 
             mState = EState_Thinking;
-            mpAcceptCallback(LibSO::GetLastError(), socket, mPeer,
+            mpAcceptCallback(LibSO::GetLastError(), pSocket, mPeer,
                              mpAcceptCallbackArg);
         }
         break;
@@ -402,7 +345,7 @@ void AsyncSocket::Calc() {
 }
 
 /**
- * Receives packet data over socket
+ * @brief Receives packet data over socket
  */
 void AsyncSocket::CalcRecv() {
     K_ASSERT(IsOpen());
@@ -413,19 +356,19 @@ void AsyncSocket::CalcRecv() {
     }
 
     // Find next incomplete job (FIFO)
-    RecvJob& job = mRecvJobs.Front();
-    K_ASSERT_EX(!job.IsComplete(), "Completed job should be removed");
+    RecvJob& rJob = mRecvJobs.Front();
+    K_ASSERT_EX(!rJob.IsComplete(), "Completed job should be removed");
 
     // Attempt to complete job
-    if (job.Calc(mHandle)) {
+    if (rJob.Calc(mHandle)) {
         // Remove from queue
         mRecvJobs.PopFront();
-        delete &job;
+        delete &rJob;
     }
 }
 
 /**
- * Sends packet data over socket
+ * @brief Sends packet data over socket
  */
 void AsyncSocket::CalcSend() {
     K_ASSERT(IsOpen());
@@ -436,15 +379,82 @@ void AsyncSocket::CalcSend() {
     }
 
     // Find next incomplete job (FIFO)
-    SendJob& job = mSendJobs.Front();
-    K_ASSERT_EX(!job.IsComplete(), "Completed job should be removed");
+    SendJob& rJob = mSendJobs.Front();
+    K_ASSERT_EX(!rJob.IsComplete(), "Completed job should be removed");
 
     // Attempt to complete job
-    if (job.Calc(mHandle)) {
+    if (rJob.Calc(mHandle)) {
         // Remove from queue
         mSendJobs.PopFront();
-        delete &job;
+        delete &rJob;
     }
+}
+
+/**
+ * @brief Receives data and records sender address (internal implementation)
+ *
+ * @param pDst Destination buffer
+ * @param len Buffer size
+ * @param[out] rRecv Number of bytes received
+ * @param[out] pAddr Sender address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
+ * @return Socket library result
+ */
+SOResult AsyncSocket::RecvImpl(void* pDst, u32 len, u32& rRecv,
+                               SockAddrAny* pAddr, Callback pCallback,
+                               void* pArg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(pDst != nullptr);
+    K_ASSERT_EX(!PtrUtil::IsStack(pDst), "Don't use stack memory for async");
+
+    // Packet to hold incoming data
+    Packet* pPacket = new Packet(len);
+    K_ASSERT(pPacket != nullptr);
+
+    // Asynchronous job
+    RecvJob* pJob = new RecvJob(pPacket, pDst, pAddr, pCallback, pArg);
+    K_ASSERT(pJob != nullptr);
+    mRecvJobs.PushBack(pJob);
+
+    // Receive doesn't actually happen on this thread
+    rRecv = 0;
+    return SO_EWOULDBLOCK;
+}
+
+/**
+ * @brief Sends data to specified connection (internal implementation)
+ *
+ * @param pSrc Source buffer
+ * @param len Buffer size
+ * @param[out] rSend Number of bytes sent
+ * @param pAddr Sender address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
+ * @return Socket library result
+ */
+SOResult AsyncSocket::SendImpl(const void* pSrc, u32 len, u32& rSend,
+                               const SockAddrAny* pAddr, Callback pCallback,
+                               void* pArg) {
+    K_ASSERT(IsOpen());
+    K_ASSERT(pSrc != nullptr);
+    K_ASSERT_EX(!PtrUtil::IsStack(pSrc), "Don't use stack memory for async");
+
+    // Packet to hold incoming data
+    Packet* pPacket = new Packet(len, pAddr);
+    K_ASSERT(pPacket != nullptr);
+
+    // Store data inside packet
+    pPacket->Write(pSrc, len);
+
+    // Asynchronous job
+    SendJob* pJob = new SendJob(pPacket, pCallback, pArg);
+    K_ASSERT(pJob != nullptr);
+    mSendJobs.PushBack(pJob);
+
+    // Send doesn't actually happen on this thread
+    rSend = 0;
+    return SO_EWOULDBLOCK;
 }
 
 } // namespace kiwi

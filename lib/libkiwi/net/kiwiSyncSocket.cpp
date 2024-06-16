@@ -1,97 +1,98 @@
-#include <climits>
 #include <libkiwi.h>
 
 namespace kiwi {
 
 /**
- * Connects to another socket
+ * @brief Connects to a peer
  *
- * @param addr Remote address
- * @param callback Connection callback
- * @param arg Callback user argument
+ * @param rAddr Remote address
+ * @param pCallback Connection callback
+ * @param pArg Callback user argument
  * @return Success
  */
-bool SyncSocket::Connect(const SockAddr& addr, Callback callback, void* arg) {
+bool SyncSocket::Connect(const SockAddrAny& rAddr, Callback pCallback,
+                         void* pArg) {
     K_ASSERT(IsOpen());
 
-    s32 result = LibSO::Connect(mHandle, addr);
+    s32 result = LibSO::Connect(mHandle, rAddr);
     bool success = result == SO_SUCCESS || result == SO_EISCONN;
 
-    if (callback != NULL) {
-        callback(LibSO::GetLastError(), arg);
+    if (pCallback != nullptr) {
+        pCallback(LibSO::GetLastError(), pArg);
     }
 
     return success;
 }
 
 /**
- * Accepts remote connection
+ * @brief Accepts a peer connection over a new socket
  *
- * @param callback Acceptance callback
- * @param arg Callback user argument
+ * @param pCallback Acceptance callback
+ * @param pArg Callback user argument
  * @return New socket
  */
-SyncSocket* SyncSocket::Accept(AcceptCallback callback, void* arg) {
+SyncSocket* SyncSocket::Accept(AcceptCallback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
 
-    SyncSocket* peer = NULL;
-    kiwi::SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
+    SyncSocket* pPeer = nullptr;
+    SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
 
     s32 fd = LibSO::Accept(mHandle, addr);
 
     // Result code is the peer descriptor
     if (fd > 0) {
-        peer = new SyncSocket(fd, mFamily, mType);
-        K_ASSERT(peer != NULL);
+        pPeer = new SyncSocket(fd, mFamily, mType);
+        K_ASSERT(pPeer != nullptr);
     }
 
-    if (callback != NULL) {
-        callback(LibSO::GetLastError(), peer, addr, arg);
+    if (pCallback != nullptr) {
+        pCallback(LibSO::GetLastError(), pPeer, addr, pArg);
     }
 
-    return peer;
+    return pPeer;
 }
 
 /**
- * Receives data and records sender address
+ * @brief Receives data and records sender address (internal implementation)
  *
- * @param dst Destination buffer
+ * @param pDst Destination buffer
  * @param len Buffer size
- * @param[out] nrecv Number of bytes received
- * @param[out] addr Sender address
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param[out] rRecv Number of bytes received
+ * @param[out] pAddr Sender address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Socket library result
  */
-SOResult SyncSocket::RecvImpl(void* dst, u32 len, u32& nrecv, SockAddr* addr,
-                              Callback callback, void* arg) {
+SOResult SyncSocket::RecvImpl(void* pDst, u32 len, u32& rRecv,
+                              SockAddrAny* pAddr, Callback pCallback,
+                              void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(dst != NULL);
-    K_ASSERT(len > 0 && len < ULONG_MAX);
+    K_ASSERT(pDst != nullptr);
+    K_ASSERT(len > 0);
 
     s32 result;
-    kiwi::SockAddr4 peer; // TODO: Will forcing ipv4 cause problems?
+    SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
 
-    nrecv = 0;
-    while (nrecv < len) {
-        result = LibSO::RecvFrom(mHandle, dst, len - nrecv, 0, peer);
+    rRecv = 0;
+    while (rRecv < len) {
+        result = LibSO::RecvFrom(mHandle, pDst, len - rRecv, 0, addr);
         if (result <= 0) {
             goto _exit;
         }
 
-        dst = AddToPtr(dst, result);
-        nrecv += result;
+        pDst = AddToPtr(pDst, result);
+        rRecv += result;
     }
 
-    K_ASSERT_EX(nrecv <= len, "Overflow???");
+    K_ASSERT_EX(rRecv <= len, "Overflow???");
 
 _exit:
-    if (addr != NULL) {
-        *addr = peer;
+    if (pAddr != nullptr) {
+        *pAddr = addr;
     }
 
-    if (callback != NULL) {
-        callback(LibSO::GetLastError(), arg);
+    if (pCallback != nullptr) {
+        pCallback(LibSO::GetLastError(), pArg);
     }
 
     // Successful if the last transaction resulted in some amount of bytes read
@@ -99,45 +100,45 @@ _exit:
 }
 
 /**
- * Sends data to specified connection
+ * @brief Sends data to specified connection (internal implementation)
  *
- * @param dst Destination buffer
+ * @param pSrc Source buffer
  * @param len Buffer size
- * @param[out] nsend Number of bytes sent
- * @param[out] addr Sender address
- * @param callback Completion callback
- * @param arg Callback user argument
+ * @param[out] rSend Number of bytes sent
+ * @param pAddr Sender address
+ * @param pCallback Completion callback
+ * @param pArg Callback user argument
  * @return Socket library result
  */
-SOResult SyncSocket::SendImpl(const void* src, u32 len, u32& nsend,
-                              const SockAddr* addr, Callback callback,
-                              void* arg) {
+SOResult SyncSocket::SendImpl(const void* pSrc, u32 len, u32& rSend,
+                              const SockAddrAny* pAddr, Callback pCallback,
+                              void* pArg) {
     K_ASSERT(IsOpen());
-    K_ASSERT(src != NULL);
-    K_ASSERT(len > 0 && len < ULONG_MAX);
+    K_ASSERT(pSrc != nullptr);
+    K_ASSERT(len > 0);
 
     s32 result;
 
-    nsend = 0;
-    while (nsend < len) {
-        if (addr != NULL) {
-            result = LibSO::SendTo(mHandle, src, len - nsend, 0, *addr);
+    rSend = 0;
+    while (rSend < len) {
+        if (pAddr != nullptr) {
+            result = LibSO::SendTo(mHandle, pSrc, len - rSend, 0, *pAddr);
         } else {
-            result = LibSO::Send(mHandle, src, len - nsend, 0);
+            result = LibSO::Send(mHandle, pSrc, len - rSend, 0);
         }
 
         if (result < 0) {
             goto _exit;
         }
 
-        nsend += result;
+        rSend += result;
     }
 
-    K_ASSERT_EX(nsend <= len, "Overflow???");
+    K_ASSERT_EX(rSend <= len, "Overflow???");
 
 _exit:
-    if (callback != NULL) {
-        callback(LibSO::GetLastError(), arg);
+    if (pCallback != nullptr) {
+        pCallback(LibSO::GetLastError(), pArg);
     }
 
     return result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);

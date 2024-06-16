@@ -4,14 +4,16 @@
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
- * @brief File access
+ * @brief File access type
  */
 enum EOpenMode { EOpenMode_Read, EOpenMode_Write, EOpenMode_RW };
 
 /**
- * @brief Stream to a physical file
+ * @brief Stream to a file
  */
 class FileStream : public IStream {
 public:
@@ -23,9 +25,9 @@ public:
     explicit FileStream(EOpenMode mode) : mOpenMode(mode) {}
 
     /**
-     * @brief Destructor
+     * @brief Gets the size of the currently open file
      */
-    virtual ~FileStream() {}
+    virtual u32 GetSize() const = 0;
 
     /**
      * @brief Tests whether the stream has hit the end-of-file
@@ -34,12 +36,11 @@ public:
         return mPosition >= GetSize();
     }
 
-    virtual u32 GetSize() const = 0;
-
 protected:
-    EOpenMode mOpenMode; // File access type
+    EOpenMode mOpenMode; //!< File access type
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

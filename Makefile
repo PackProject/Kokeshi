@@ -18,7 +18,7 @@
 #
 # To handle this in your code, expect preprocessor definitions of the format
 # PACK_{NAME}, (i.e. PACK_SPORTS, PACK_RESORT). 
-PACK ?= sports
+PACK ?= play
 
 # Pass NDEBUG=1 when running make to disable debug features.
 #
@@ -56,12 +56,12 @@ endif
 #==============================================================================#
 # Tools                                                                        #
 #==============================================================================#
-PYTHON := python
+PYTHON  := python
+DOXYGEN := doxygen
 
 ASSETSCRIPT := tools/asset.py
 BUILDSCRIPT := tools/compile.py
 CLEANSCRIPT := tools/clean.py
-
 
 #==============================================================================#
 # Default Targets                                                              #
@@ -85,7 +85,6 @@ build:
 	$(QUIET) $(foreach game, $(PACK), \
 		$(PYTHON) $(BUILDSCRIPT) --game=$(game) --target=$(TARGET) --cflags="$(CFLAGS)" --define=""; \
 	)
-
 
 #==============================================================================#
 # Clean                                                                        #

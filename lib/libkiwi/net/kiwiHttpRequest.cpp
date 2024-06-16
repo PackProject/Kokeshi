@@ -1,27 +1,33 @@
 #include <libkiwi.h>
 
 namespace kiwi {
-namespace {
 
-const String sMethodNames[HttpRequest::EMethod_Max] = {"GET", "POST"};
-const String sProtocolVer = "1.1";
+typedef TMap<String, String>::ConstIterator ParamIterator;
+typedef TMap<String, String>::ConstIterator HeaderIterator;
 
-} // namespace
+/**
+ * @brief HTTP request method names
+ */
+const char* HttpRequest::sMethodNames[EMethod_Max] = {"GET", "POST"};
+/**
+ * @brief HTTP protocol version
+ */
+const char* HttpRequest::sProtocolVer = "1.1";
 
 /**
  * @brief Constructor
  *
- * @param host Server hostname
+ * @param rHost Server hostname
  */
-HttpRequest::HttpRequest(const String& host)
-    : mHostName(host),
+HttpRequest::HttpRequest(const String& rHost)
+    : mHostName(rHost),
       mURI("/"),
-      mpSocket(NULL),
-      mTimeOut(OS_MSEC_TO_TICKS(DEFAULT_TIMEOUT_MS)),
-      mpResponseCallback(NULL),
-      mpResponseCallbackArg(NULL) {
+      mpSocket(nullptr),
+      mTimeOut(OS_MSEC_TO_TICKS(scDefaultTimeOut)),
+      mpResponseCallback(nullptr),
+      mpResponseCallbackArg(nullptr) {
     mpSocket = new SyncSocket(SO_PF_INET, SO_SOCK_STREAM);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     // Need non-blocking so timeout can be enforced
     bool success = mpSocket->SetBlocking(false);
@@ -32,24 +38,24 @@ HttpRequest::HttpRequest(const String& host)
     K_ASSERT(success);
 
     // Hostname required by HTTP 1.1
-    mHeader["Host"] = host;
+    mHeader["Host"] = rHost;
     // Identify libkiwi requests by user agent
     mHeader["User-Agent"] = "libkiwi";
 }
 
 /**
- * @brief Send request synchronously
+ * @brief Sends request synchronously
  *
  * @param method Request method
  * @return Server response
  */
 const HttpResponse& HttpRequest::Send(EMethod method) {
     K_ASSERT(method < EMethod_Max);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     mMethod = method;
-    mpResponseCallback = NULL;
-    mpResponseCallbackArg = NULL;
+    mpResponseCallback = nullptr;
+    mpResponseCallbackArg = nullptr;
 
     // Call on this thread
     SendImpl();
@@ -57,45 +63,43 @@ const HttpResponse& HttpRequest::Send(EMethod method) {
 }
 
 /**
- * @brief Send request asynchronously
+ * @brief Sends request asynchronously
  *
- * @param callback Response callback
- * @param arg Callback user argument
+ * @param pCallback Response callback
+ * @param pArg Callback user argument
  * @param method Request method
  */
-void HttpRequest::SendAsync(ResponseCallback callback, void* arg,
+void HttpRequest::SendAsync(ResponseCallback pCallback, void* pArg,
                             EMethod method) {
-    K_ASSERT(callback != NULL);
+    K_ASSERT_EX(pCallback != nullptr, "You will lose the reponse!");
     K_ASSERT(method < EMethod_Max);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     mMethod = method;
-    mpResponseCallback = callback;
-    mpResponseCallbackArg = arg;
+    mpResponseCallback = pCallback;
+    mpResponseCallbackArg = pArg;
 
     // Call on new thread
-    kiwi::Thread t(SendImpl, *this);
+    Thread t(SendImpl, *this);
 }
 
 /**
- * @brief Common send implementation
- *
- * @return Success
+ * @brief Sends request (internal implementation)
  */
 void HttpRequest::SendImpl() {
     K_ASSERT(mMethod < EMethod_Max);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     // HTTP connections use port 80
     SockAddr4 addr(mHostName, 80);
 
-    // Establish connection with server
     Watch w;
     w.Start();
+
+    // Establish connection with server
     while (true) {
         // Successful connection
         if (mpSocket->Connect(addr)) {
-            // Send request, receive server's response
             (void)Request();
             (void)Receive();
             break;
@@ -109,19 +113,24 @@ void HttpRequest::SendImpl() {
     }
 
     // User callback
-    if (mpResponseCallback != NULL) {
+    if (mpResponseCallback != nullptr) {
         mpResponseCallback(mResponse, mpResponseCallbackArg);
     }
+
+#ifndef NDEBUG
+    // Signal to destructor
+    mpResponseCallback = nullptr;
+#endif
 }
 
 /**
- * @brief Send request data
+ * @brief Sends request data
  *
  * @return Success
  */
 bool HttpRequest::Request() {
     K_ASSERT(mMethod < EMethod_Max);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     // Build URI & URL parameter string
     String request = mURI;
@@ -132,8 +141,8 @@ bool HttpRequest::Request() {
     }
 
     // Build request line
-    request = Format("%s %s HTTP/%s\n", sMethodNames[mMethod].CStr(),
-                     request.CStr(), sProtocolVer.CStr());
+    request = Format("%s %s HTTP/%s\n", sMethodNames[mMethod], request.CStr(),
+                     sProtocolVer);
 
     // Build header fields
     for (HeaderIterator it = mHeader.Begin(); it != mHeader.End(); ++it) {
@@ -149,20 +158,22 @@ bool HttpRequest::Request() {
 }
 
 /**
- * @brief Receive response data
+ * @brief Receives response data
  *
  * @return Successs
  */
 bool HttpRequest::Receive() {
     K_ASSERT(mMethod < EMethod_Max);
-    K_ASSERT(mpSocket != NULL);
+    K_ASSERT(mpSocket != nullptr);
 
     // Beginning timestamp
     Watch w;
     w.Start();
 
     /**
+     *
      * Receive response headers
+     *
      */
 
     // Need non-blocking because we greedily receive data
@@ -211,7 +222,9 @@ bool HttpRequest::Receive() {
     String headers = work.SubStr(0, end);
 
     /**
+     *
      * Build header dictionary
+     *
      */
 
     // Must at least have one line (status code)
@@ -253,7 +266,9 @@ bool HttpRequest::Receive() {
     }
 
     /**
+     *
      * Receive response body
+     *
      */
 
     // If we were given the length, we can be 100% sure

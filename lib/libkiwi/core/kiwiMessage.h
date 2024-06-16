@@ -1,12 +1,15 @@
-#ifndef KIWI_CORE_MESSAGE_H
-#define KIWI_CORE_MESSAGE_H
+#ifndef LIBKIWI_CORE_MESSAGE_H
+#define LIBKIWI_CORE_MESSAGE_H
 #include <libkiwi/core/kiwiIBinary.h>
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
- * @brief Binary message file, similar to BMG
+ * @brief Binary message file
+ * @note Does not own file memory
  */
 class Message : IBinary {
 private:
@@ -14,7 +17,7 @@ private:
     static const u32 scVersion = K_VERSION(1, 0);
 
     /**
-     * @brief Message descriptor
+     * @brief Message descriptor block
      */
     struct DESCBlock : Block {
         static const u32 scKind = 'DESC';
@@ -24,7 +27,7 @@ private:
     };
 
     /**
-     * @brief Message pool data
+     * @brief Message data block
      */
     struct DATABlock : Block {
         static const u32 scKind = 'DATA';
@@ -34,39 +37,59 @@ private:
     };
 
 public:
-    explicit Message(const void* bin);
-    virtual ~Message();
+    /**
+     * @brief Constructor
+     *
+     * @param pBin Binary file (KMSG)
+     */
+    explicit Message(const void* pBin);
 
     /**
-     * @brief Get the kind/magic of this object
+     * @brief Gets the kind/magic of this object
      */
     virtual u32 GetBinaryKind() const {
         return scKind;
     }
 
     /**
-     * @brief Get the serialized size of this object
+     * @brief Gets the serialized size of this object
      */
     virtual u32 GetBinarySize() const {
-        K_ASSERT(mpDescBlock != NULL);
-        K_ASSERT(mpDataBlock != NULL);
+        K_ASSERT(mpDescBlock != nullptr);
+        K_ASSERT(mpDataBlock != nullptr);
 
         return (sizeof(DESCBlock) + mpDescBlock->numMsg * sizeof(u32)) +
                (sizeof(DATABlock) + mpDataBlock->poolSize);
     }
 
     /**
-     * @brief Get the expected version of this object
+     * @brief Gets the expected version of this object
      */
     virtual u16 GetVersion() const {
         return scVersion;
     }
 
+    /**
+     * @brief Gets message text by ID
+     *
+     * @param id Message ID
+     * @return Message text
+     */
     const wchar_t* GetMessage(u32 id) const;
 
 private:
-    virtual void DeserializeImpl(const Header& header);
-    virtual void SerializeImpl(Header& header) const;
+    /**
+     * @brief Deserializes binary contents (internal implementation)
+     *
+     * @param rHeader Binary file header
+     */
+    virtual void DeserializeImpl(const Header& rHeader);
+    /**
+     * @brief Serializes binary contents (internal implementation)
+     *
+     * @param rHeader Binary file header
+     */
+    virtual void SerializeImpl(Header& rHeader) const;
 
 private:
     Header* mpHeader;             // Binary file header
@@ -74,6 +97,7 @@ private:
     const DATABlock* mpDataBlock; // Message data pool block
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

@@ -3,12 +3,12 @@
 namespace kiwi {
 
 /**
- * @brief Open stream to NAND file
+ * @brief Opens stream to NAND file
  *
- * @param path File path
+ * @param rPath File path
  * @return Success
  */
-bool NandStream::Open(const String& path) {
+bool NandStream::Open(const String& rPath) {
     NANDAccessType type;
     s32 result;
 
@@ -26,7 +26,7 @@ bool NandStream::Open(const String& path) {
     }
 
     // Attempt to open
-    result = NANDOpen(path, &mFileInfo, type);
+    result = NANDOpen(rPath, &mFileInfo, type);
 
     // Doesn't exist, but we should create it
     if (result == NAND_RESULT_NOEXISTS &&
@@ -35,13 +35,13 @@ bool NandStream::Open(const String& path) {
         Close();
 
         // Try to create file
-        if (NANDCreate(path, NAND_PERM_RWALL, 0) != NAND_RESULT_OK) {
+        if (NANDCreate(rPath, NAND_PERM_RWALL, 0) != NAND_RESULT_OK) {
             Close();
             return false;
         }
 
         // Need to open again
-        if (NANDOpen(path, &mFileInfo, type) != NAND_RESULT_OK) {
+        if (NANDOpen(rPath, &mFileInfo, type) != NAND_RESULT_OK) {
             Close();
             return false;
         }
@@ -61,28 +61,32 @@ bool NandStream::Open(const String& path) {
 }
 
 /**
- * @brief Close stream
+ * @brief Closes this stream
  */
 void NandStream::Close() {
+    if (!IsOpen()) {
+        return;
+    }
+
     NANDClose(&mFileInfo);
     mIsOpen = false;
 }
 
 /**
- * @brief Get file byte size
+ * @brief Gets the size of the currently open file
  */
 u32 NandStream::GetSize() const {
     // Parameter must be non-const according to decomp
-    NANDFileInfo* info = const_cast<NANDFileInfo*>(&mFileInfo);
+    NANDFileInfo* pInfo = const_cast<NANDFileInfo*>(&mFileInfo);
 
     u32 size = 0;
-    s32 result = NANDGetLength(info, &size);
+    s32 result = NANDGetLength(pInfo, &size);
 
     return result == NAND_RESULT_OK ? size : 0;
 }
 
 /**
- * @brief Seek stream
+ * @brief Advances this stream's position (internal implementation)
  *
  * @param dir Seek direction
  * @param offset Seek offset
@@ -104,40 +108,41 @@ void NandStream::SeekImpl(ESeekDir dir, s32 offset) {
 }
 
 /**
- * @brief Read data from the stream
+ * @brief Reads data from this stream (internal implementation)
  *
- * @param dst Destination buffer
+ * @param pDst Destination buffer
  * @param size Number of bytes to read
- * @return s32 Number of bytes read, or error code
+ * @return Number of bytes read, or NAND error code
  */
-s32 NandStream::ReadImpl(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
-    return NANDRead(&mFileInfo, dst, size);
+s32 NandStream::ReadImpl(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
+    return NANDRead(&mFileInfo, pDst, size);
 }
 
 /**
- * @brief Write data to the stream
+ * @brief Writes data to this stream (internal implementation)
  *
- * @param src Source buffer
+ * @param pSrc Source buffer
  * @param size Number of bytes to write
- * @return s32 Number of bytes written, or error code
+ * @return Number of bytes written, or NAND error code
  */
-s32 NandStream::WriteImpl(const void* src, u32 size) {
-    K_ASSERT(src != NULL);
-    return NANDWrite(&mFileInfo, src, size);
+s32 NandStream::WriteImpl(const void* pSrc, u32 size) {
+    K_ASSERT(pSrc != nullptr);
+    return NANDWrite(&mFileInfo, pSrc, size);
 }
 
 /**
- * @brief Peek data in the stream
+ * @brief Reads data from this stream without advancing the stream's
+ * position (internal implementation)
  *
- * @param dst Destination buffer
- * @param size Number of bytes to peek
- * @return s32 Number of bytes peeked, or error code
+ * @param pDst Destination buffer
+ * @param size Number of bytes to read
+ * @return Number of bytes read, or NAND error code
  */
-s32 NandStream::PeekImpl(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
+s32 NandStream::PeekImpl(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
 
-    s32 n = ReadImpl(dst, size);
+    s32 n = ReadImpl(pDst, size);
     if (n > 0) {
         s32 result = NANDSeek(&mFileInfo, -n, NAND_SEEK_CUR);
         K_WARN_EX(result < 0, "Seek back failed (%d)\n", result);

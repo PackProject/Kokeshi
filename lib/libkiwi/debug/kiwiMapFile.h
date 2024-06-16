@@ -5,16 +5,18 @@
 #include <libkiwi/util/kiwiDynamicSingleton.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_debug
+//! @{
 
 /**
- * Kamek symbol map utility
+ * @brief Kamek symbol map utility
  */
 class MapFile : public DynamicSingleton<MapFile> {
     friend class DynamicSingleton<MapFile>;
 
 public:
     /**
-     * Module link type
+     * @brief Module link type
      */
     enum ELinkType {
         ELinkType_None,       // Map file not loaded
@@ -23,35 +25,58 @@ public:
     };
 
     /**
-     * Map file symbol
+     * @brief Map file symbol
      */
     struct Symbol {
         ELinkType type; // Linkage
         union {
-            void* addr; // Address (unpacked)
-            u32 offset; // Offset (packed)
+            void* pAddr; // Address (unpacked)
+            u32 offset;  // Offset (packed)
         };
-        u32 size;   // Byte size
-        char* name; // Mangled name
+        u32 size;    // Byte size
+        char* pName; // Mangled name
     };
 
 public:
     /**
-     * Tests whether a map file has been loaded and unpacked
+     * @brief Tests whether a map file has been loaded and unpacked
      */
     bool IsAvailable() const {
-        return mpMapBuffer != NULL && mIsUnpacked;
+        return mpMapBuffer != nullptr && mIsUnpacked;
     }
 
-    void Open(const String& path, ELinkType type);
+    /**
+     * @brief Opens a map file from the DVD
+     *
+     * @param rPath Map file path
+     * @param type Module linkage type
+     */
+    void Open(const String& rPath, ELinkType type);
+    /**
+     * @brief Closes map file
+     */
     void Close();
 
-    const Symbol* QueryTextSymbol(const void* addr);
+    /**
+     * @brief Queries text section symbol
+     *
+     * @param pAddr Symbol address
+     */
+    const Symbol* QueryTextSymbol(const void* pAddr) const;
 
 private:
+    /**
+     * @brief Constructor
+     */
     MapFile();
-    ~MapFile();
+    /**
+     * @brief Destructor
+     */
+    virtual ~MapFile();
 
+    /**
+     * @brief Unpacks loaded map file
+     */
     void Unpack();
 
 private:
@@ -61,6 +86,7 @@ private:
     TList<Symbol> mSymbols; // Map symbols
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

@@ -4,11 +4,14 @@
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
-String GetBuildDate();
-String GetBuildPack();
-String GetBuildTarget();
+const char* GetBuildDate();
+const char* GetBuildPack();
+const char* GetBuildTarget();
 
+//! @}
 } // namespace kiwi
 
 #endif

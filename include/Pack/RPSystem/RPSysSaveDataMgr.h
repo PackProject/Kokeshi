@@ -78,7 +78,7 @@ public:
      * @brief Write banner file to NAND (temp/real)
      * @address 801886ac
      */
-    void saveBanner(EBannerType bannerType);
+    void saveBannerFile(EBannerType bannerType);
 
     /**
      * @brief Read NAND save data into raw save, then construct RP save file
@@ -111,7 +111,7 @@ public:
      * @details TPL exists on disc, text in BMG
      * @address 80188bd4
      */
-    void buildBannerBin();
+    void initBanner();
     /**
      * @brief Try to display "Unable to save" message
      * @details Calls continueNoSaveProc

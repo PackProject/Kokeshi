@@ -3,10 +3,10 @@
 namespace kiwi {
 
 /**
- * @brief Seek around through the stream
+ * @brief Advances this stream's position
  *
- * @param dir Seek origin
- * @param offset Seek amount
+ * @param dir Seek direction
+ * @param offset Seek offset
  */
 void IStream::Seek(ESeekDir dir, s32 offset) {
     K_ASSERT_EX(IsOpen(), "Stream is not available");
@@ -20,25 +20,25 @@ void IStream::Seek(ESeekDir dir, s32 offset) {
 }
 
 /**
- * @brief Read data from the stream
+ * @brief Reads data from this stream
  *
- * @param dst Destination buffer
+ * @param pDst Destination buffer
  * @param size Number of bytes to read
- * @return s32 Number of bytes read, or error code
+ * @return Number of bytes read, or DVD error code
  */
-s32 IStream::Read(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
+s32 IStream::Read(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
     K_ASSERT_EX(IsOpen(), "Stream is not available");
     K_ASSERT_EX(CanRead(), "Stream does not support reading");
 
-    K_ASSERT_EX(IsBufferAlign(dst), "Buffer must be aligned to %d bytes",
+    K_ASSERT_EX(IsBufferAlign(pDst), "Buffer must be aligned to %d bytes",
                 GetBufferAlign());
 
     K_ASSERT_EX(IsSizeAlign(size),
                 "This stream type requires sizes aligned to %d bytes",
                 GetSizeAlign());
 
-    s32 n = ReadImpl(dst, size);
+    s32 n = ReadImpl(pDst, size);
     if (n > 0) {
         mPosition += n;
     }
@@ -47,25 +47,25 @@ s32 IStream::Read(void* dst, u32 size) {
 }
 
 /**
- * @brief Write data to the stream
+ * @brief Writes data to this stream
  *
- * @param src Source buffer
+ * @param pSrc Source buffer
  * @param size Number of bytes to write
- * @return s32 Number of bytes written, or error code
+ * @return Number of bytes written, or DVD error code
  */
-s32 IStream::Write(const void* src, u32 size) {
-    K_ASSERT(src != NULL);
+s32 IStream::Write(const void* pSrc, u32 size) {
+    K_ASSERT(pSrc != nullptr);
     K_ASSERT_EX(IsOpen(), "Stream is not available");
     K_ASSERT_EX(CanWrite(), "Stream does not support writing");
 
-    K_ASSERT_EX(IsBufferAlign(src), "Buffer must be aligned to %d bytes",
+    K_ASSERT_EX(IsBufferAlign(pSrc), "Buffer must be aligned to %d bytes",
                 GetBufferAlign());
 
     K_ASSERT_EX(IsSizeAlign(size),
                 "This stream type requires sizes aligned to %d bytes",
                 GetSizeAlign());
 
-    s32 n = WriteImpl(src, size);
+    s32 n = WriteImpl(pSrc, size);
     if (n > 0) {
         mPosition += n;
     }
@@ -74,25 +74,26 @@ s32 IStream::Write(const void* src, u32 size) {
 }
 
 /**
- * @brief Peek data in the stream
+ * @brief Reads data from this stream without advancing the stream's
+ * position (internal implementation)
  *
- * @param dst Destination buffer
- * @param size Number of bytes to peek
- * @return s32 Number of bytes peeked, or error code
+ * @param pDst Destination buffer
+ * @param size Number of bytes to read
+ * @return Number of bytes read, or DVD error code
  */
-s32 IStream::Peek(void* dst, u32 size) {
-    K_ASSERT(dst != NULL);
+s32 IStream::Peek(void* pDst, u32 size) {
+    K_ASSERT(pDst != nullptr);
     K_ASSERT_EX(IsOpen(), "Stream is not available");
     K_ASSERT_EX(CanRead() && CanSeek(), "Stream does not support peeking");
 
-    K_ASSERT_EX(IsBufferAlign(dst), "Buffer must be aligned to %d bytes",
+    K_ASSERT_EX(IsBufferAlign(pDst), "Buffer must be aligned to %d bytes",
                 GetBufferAlign());
 
     K_ASSERT_EX(IsSizeAlign(size),
                 "This stream type requires sizes aligned to %d bytes",
                 GetSizeAlign());
 
-    return PeekImpl(dst, size);
+    return PeekImpl(pDst, size);
 }
 
 } // namespace kiwi

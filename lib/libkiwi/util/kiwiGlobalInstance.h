@@ -5,10 +5,12 @@
 #include <revolution/OS.h>
 
 #define K_GLOBAL_INSTANCE_IMPL(T)                                              \
-    T* kiwi::GlobalInstance<T>::sInstance = NULL;                              \
+    T* kiwi::GlobalInstance<T>::sInstance = nullptr;                           \
     OSMutex kiwi::GlobalInstance<T>::sMutex;
 
 namespace kiwi {
+//! @addtogroup libkiwi_util
+//! @{
 
 /**
  * @brief Global instance holder
@@ -24,7 +26,7 @@ public:
         AutoLock<OSMutex> lock(sMutex);
 
         // Without 'force' we cannot re-register
-        if (sInstance != NULL && !force) {
+        if (sInstance != nullptr && !force) {
             K_ASSERT_EX(false, "Created global instance twice");
             return;
         }
@@ -41,21 +43,21 @@ public:
 
         // Only unregister if this object is the global instance
         if (sInstance == (T*)this) {
-            sInstance = NULL;
+            sInstance = nullptr;
         }
     }
 
     /**
-     * Gets reference to global instance
+     * @brief Gets reference to global instance
      */
     static T& Get() {
         AutoLock<OSMutex> lock(sMutex);
-        K_ASSERT(sInstance != NULL);
+        K_ASSERT(sInstance != nullptr);
         return *sInstance;
     }
 
     /**
-     * Change to new global instance
+     * @brief Change to new global instance
      *
      * @param instance New instance
      */
@@ -65,11 +67,11 @@ public:
     }
 
     /**
-     * Tests whether a global instance is registered
+     * @brief Tests whether a global instance is registered
      */
     static bool Exists() {
         AutoLock<OSMutex> lock(sMutex);
-        return sInstance != NULL;
+        return sInstance != nullptr;
     }
 
 private:
@@ -77,6 +79,7 @@ private:
     static OSMutex sMutex; // Mutex lock for safe access
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

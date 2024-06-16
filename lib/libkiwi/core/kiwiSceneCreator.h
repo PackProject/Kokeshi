@@ -1,13 +1,15 @@
 #ifndef LIBKIWI_CORE_SCENE_CREATOR_H
 #define LIBKIWI_CORE_SCENE_CREATOR_H
 #include <RPSystem/RPSysSceneCreator.h>
-#include <libkiwi/k_config.h>
 #include <libkiwi/k_types.h>
+#include <libkiwi/util/kiwiExtView.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
- * @brief List of game scene IDs
+ * @brief Game scene ID
  */
 enum ESceneID {
 #ifndef PACK_RESORT
@@ -128,13 +130,13 @@ enum EExitType {
 /**
  * @brief Scene factory
  */
-class SceneCreator : private RPSysSceneCreator, private NonCopyable {
+class SceneCreator : private ExtView<RPSysSceneCreator> {
 public:
     /**
      * @brief Scene information
      */
     struct Info {
-        RPSysScene* (*ct)();      // Scene create function (for user scenes)
+        RPSysScene* (*pCt)();     // Scene create function (for user scenes)
         String name;              // Scene name
         String dir;               // Resource directory
         s32 id;                   // Scene ID (for RP scenes)
@@ -145,18 +147,17 @@ public:
     };
 
 public:
-    /**
-     * @brief Access singleton instance
-     */
-    static SceneCreator& GetInstance();
+    K_EXTVIEW_GET_INSTANCE(SceneCreator, RPSysSceneCreator::GetInstance);
 
     /**
-     * @brief Register user scene class
+     * @brief Registers user scene class
+     *
+     * @param rInfo Scene info
      */
-    static void RegistScene(const Info& info);
+    static void RegistScene(const Info& rInfo);
 
     /**
-     * @brief Fade out into a new scene
+     * @brief Fades out into a new scene
      *
      * @param id Scene ID
      * @param arg1 Unknown
@@ -164,51 +165,87 @@ public:
     bool ChangeSceneAfterFade(s32 id, bool arg1 = false);
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Gets the specified scene's name
      */
-    const char* GetSceneName(s32 id) const;
+    const char* GetSceneName(s32 id = -1) const;
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Gets the specified scene's resource directory name
      */
-    const char* GetSceneDirectory(s32 id) const;
+    const char* GetSceneDirectory(s32 id = -1) const;
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Gets the specified scene's target pack
      */
-    kiwi::EPackID GetScenePack(s32 id) const;
+    kiwi::EPackID GetScenePack(s32 id = -1) const;
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Gets the specified scene's create type
      */
-    kiwi::ECreateType GetSceneCreateType(s32 id) const;
+    kiwi::ECreateType GetSceneCreateType(s32 id = -1) const;
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Gets the specified scene's exit type
      */
-    kiwi::EExitType GetSceneExitType(s32 id) const;
+    kiwi::EExitType GetSceneExitType(s32 id = -1) const;
 
     /**
-     * @brief Get the specified scene's name
+     * @brief Tests whether the specified scene requires the RP common sound
+     * archive
      */
-    bool GetSceneCommonSound(s32 id) const;
+    bool GetSceneCommonSound(s32 id = -1) const;
 
 private:
     LIBKIWI_KAMEK_PUBLIC
 
+    /**
+     * @brief Creates a new scene by ID
+     *
+     * @param id Scene ID
+     */
     RPSysScene* Create(s32 id);
+
+    /**
+     * @brief Creates a new system scene by ID
+     *
+     * @param id Scene ID
+     */
     RPSysScene* CreateSystemScene(s32 id);
+
+    /**
+     * @brief Creates a new game scene by ID
+     *
+     * @param id Scene ID
+     */
     RPSysScene* CreatePackScene(s32 id);
+
+    /**
+     * @brief Creates a new user scene by ID
+     *
+     * @param id Scene ID
+     */
     RPSysScene* CreateUserScene(s32 id);
 
-private:
+    /**
+     * @brief Gets information on the specified scene
+     *
+     * @param id Scene ID
+     */
     static const Info* GetSceneInfo(s32 id);
 
 private:
+    /**
+     * @brief User-registered scenes
+     */
     static TMap<s32, Info> sUserScenes;
+
+    /**
+     * @brief Pack Project scenes
+     */
     static const Info scPackScenes[];
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

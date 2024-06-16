@@ -5,14 +5,20 @@
 #include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
 
+/**
+ * @brief Helper for declaring new scenes
+ */
+#define K_SCENE_DECL(T) static kiwi::SceneDecl<T> SceneDecl_##T;
+
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
  * @brief User scene interface
  */
 class IScene : public RPSysScene {
-    friend class SceneCreator;
-    template <typename> friend class SceneDecl;
+    template <typename> friend class SceneDecl; // Needs to see 'Create' method
 
 public:
     /**
@@ -26,180 +32,202 @@ public:
     virtual ~IScene() {}
 
     /**
-     * @brief Information for custom scenes
+     * @name Configuration
+     * @brief Scene settings
      */
-    /*@{*/
+    /**@{*/
     /**
-     * @brief Get the scene's name
+     * @brief Gets the scene's name
      */
     virtual String GetName() const {
         return "Dummy";
     }
 
     /**
-     * @brief Get the scene's resource directory name
+     * @brief Gets the scene's resource directory name
      */
     virtual String GetDirectory() const {
         return "RPCommon/";
     }
 
     /**
-     * @brief Get the scene's ID
+     * @brief Gets the scene's ID
      */
     virtual s32 GetID() const = 0;
 
     /**
-     * @brief Get the scene's supported Pack Project
+     * @brief Gets the scene's target pack
      */
     virtual EPackID GetPack() const {
         return EPackID_AllPack;
     }
 
     /**
-     * @brief Get the scene's create type
+     * @brief Gets the scene's create type
      */
     virtual ECreateType GetCreateType() const {
         return ECreateType_1;
     }
 
     /**
-     * @brief Get the scene's exit type
+     * @brief Gets the scene's exit type
      */
     virtual EExitType GetExitType() const {
         return EExitType_0;
     }
 
     /**
-     * @brief Whether the scene requires the RP common sound archive
+     * @brief Tests whether the scene requires the RP common sound archive
      */
     virtual bool GetCommonSound() const {
         return true;
     }
-    /*@}*/
 
 #ifdef PACK_RESORT
     /**
-     * @brief Get the type of this scene
+     * @brief Gets the scene's type
      */
     virtual RPSysScene::EKind getKind() {
         return RPSysScene::EKind_System;
     }
 
     /**
-     * @brief Get the island time of day
+     * @brief Gets the scene's target time of day for Wuhu Island
      */
     virtual RPSysScene::ETime getIslandTime() {
         return RPSysScene::ETime_Auto;
     }
 #endif
+    /**@}*/
 
     /**
-     * @brief Pause callback
+     * @name User state
+     */
+    /**@{*/
+    /**
+     * @brief Configure state user callback
+     * @details Ran once on initial scene setup
+     */
+    virtual void OnConfigure() {}
+    /**
+     * @brief LoadResource state user callback
+     * @details Ran once on asset loading
+     */
+    virtual void OnLoadResource() {}
+    /**
+     * @brief Reset state user callback
+     * @details Ran once on initial scene setup and on every restart
+     */
+    virtual void OnReset() {}
+    /**
+     * @brief Calculate state user callback
+     * @details Ran once per frame
+     */
+    virtual void OnCalculate() {}
+#ifdef PACK_RESORT
+    /**
+     * @brief CalculateMPlus state user callback
+     * @details Ran once per frame
+     */
+    virtual void OnCalculateMPlus() {}
+#endif
+    /**
+     * @brief Exit state user callback
+     * @details Ran once on scene exit (including restarts)
+     */
+    virtual void OnExit() {}
+
+    /**
+     * @brief Pause user callback
+     * @details Ran on pause menu open/close
      *
-     * @param enter Whether entering menu
+     * @param enter Whether the pause menu is opening
      */
     virtual void pauseCallBack(bool enter) {}
 
     /**
-     * @brief Base state functions
+     * @brief User-level draw
+     * @details Ran once per renderer draw pass, per frame
+     * @see EDrawPass
      */
-    /*@{*/
+    virtual void OnUserDraw() {}
     /**
-     * @brief Setup scene
+     * @brief Debug-level draw
+     * @details Ran once per renderer draw pass, per frame
+     * @see EDrawPass
+     */
+    virtual void OnDebugDraw() {}
+    /**@}*/
+
+    /**
+     * @brief Start task(s) on another thread
+     * @details Ran once before entering scene
+     */
+    virtual void taskAsync() {}
+
+private:
+    /**
+     * @name Internal state
+     */
+    /**@{*/
+    /**
+     * @brief Configure state
+     * @details Performs initial scene setup
      */
     virtual void Configure();
     /**
-     * @brief Load required assets
+     * @brief LoadResource state
+     * @details Loads scene assets from the DVD
      */
     virtual void LoadResource();
     /**
-     * @brief Reload scene
+     * @brief Reset state
+     * @details Resets scene state
      */
     virtual void Reset();
     /**
-     * @brief Scene logic
+     * @brief Calculate state
+     * @details Runs one step of scene logic
      */
     virtual void Calculate();
 #ifdef PACK_RESORT
     /**
-     * @brief Scene MotionPlus logic
+     * @brief CalculateMPlus state
+     * @details Runs one step of MotionPlus logic
      */
     virtual void CalculateMPlus();
 #endif
     /**
-     * @brief Exit scene
+     * @brief Exit state
+     * @details Finalizes scene before exiting
      */
     virtual void Exit();
 
     /**
      * @brief User-level draw
+     * @details Ran once per renderer draw pass, per frame
+     * @see EDrawPass
      */
     virtual void UserDraw();
     /**
      * @brief Debug-level draw
+     * @details Ran once per renderer draw pass, per frame
+     * @see EDrawPass
      */
     virtual void DebugDraw();
-    /*@}*/
+    /**@}*/
 
-    /**
-     * @brief User state functions
-     */
-    /*@{*/
-    /**
-     * @brief Setup scene
-     */
-    virtual void OnConfigure() {}
-    /**
-     * @brief Load required assets
-     */
-    virtual void OnLoadResource() {}
-    /**
-     * @brief Reload scene
-     */
-    virtual void OnReset() {}
-    /**
-     * @brief Scene logic
-     */
-    virtual void OnCalculate() {}
-#ifdef PACK_RESORT
-    /**
-     * @brief Scene MotionPlus logic
-     */
-    virtual void OnCalculateMPlus() {}
-#endif
-    /**
-     * @brief Exit scene
-     */
-    virtual void OnExit() {}
-
-    /**
-     * @brief User-level draw
-     */
-    virtual void OnUserDraw() {}
-    /**
-     * @brief Debug-level draw
-     */
-    virtual void OnDebugDraw() {}
-    /*@}*/
-
-    /**
-     * @brief Any async task(s) to start before entering this scene
-     */
-    virtual void taskAsync() {}
-
-private:
     /**
      * @brief Factory method (for scene creator)
      */
     template <typename TDerived> static RPSysScene* Create() {
         return new TDerived();
     }
-
 }; // namespace kiwi
 
 /**
- * @brief Declares scene to the creator
- * @note Construct one at the file scope
+ * @brief User scene declaration
+ * @details Makes user scene visible to the scene creator
  */
 template <typename T> class SceneDecl {
 public:
@@ -210,24 +238,20 @@ public:
         // Devirtualize calls
         const SceneCreator::Info info = {
             &IScene::Create<T>,
-            static_cast<T*>(NULL)->T::GetName(),
-            static_cast<T*>(NULL)->T::GetDirectory(),
-            static_cast<T*>(NULL)->T::GetID(),
-            static_cast<T*>(NULL)->T::GetPack(),
-            static_cast<T*>(NULL)->T::GetCreateType(),
-            static_cast<T*>(NULL)->T::GetExitType(),
-            static_cast<T*>(NULL)->T::GetCommonSound(),
+            static_cast<T*>(nullptr)->T::GetName(),
+            static_cast<T*>(nullptr)->T::GetDirectory(),
+            static_cast<T*>(nullptr)->T::GetID(),
+            static_cast<T*>(nullptr)->T::GetPack(),
+            static_cast<T*>(nullptr)->T::GetCreateType(),
+            static_cast<T*>(nullptr)->T::GetExitType(),
+            static_cast<T*>(nullptr)->T::GetCommonSound(),
         };
 
         SceneCreator::GetInstance().RegistScene(info);
     }
 };
 
-/**
- * @brief Helper macro for creating SceneDecl
- */
-#define K_SCENE_DECL(T) static kiwi::SceneDecl<T> SceneDecl_##T;
-
+//! @}
 } // namespace kiwi
 
 #endif

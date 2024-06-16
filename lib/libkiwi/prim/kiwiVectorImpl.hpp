@@ -12,10 +12,10 @@
 namespace kiwi {
 
 /**
- * @brief Clear vector contents
+ * @brief Clears vector contents
  */
 template <typename T> void TVector<T>::Clear() {
-    K_ASSERT(mSize == 0 || mpData != NULL);
+    K_ASSERT(mSize == 0 || mpData != nullptr);
 
     for (u32 i = 0; i < mSize; i++) {
         Buffer()[i].~T();
@@ -25,20 +25,18 @@ template <typename T> void TVector<T>::Clear() {
 }
 
 /**
- * @brief Insert a new element at the specified position
+ * @brief Inserts a new element at the specified position
  *
- * @param t New element
+ * @param rElem New element
  * @param pos Element position
  */
-template <typename T> void TVector<T>::Insert(const T& t, u32 pos) {
+template <typename T> void TVector<T>::Insert(const T& rElem, u32 pos) {
     K_ASSERT(pos <= mSize);
 
-    // Need to reallocate
-    if (mSize >= mCapacity) {
-        Reserve(mSize + 1);
-    }
+    // Make space for one extra element
+    Reserve(mSize + 1);
 
-    K_ASSERT(mpData != NULL);
+    K_ASSERT(mpData != nullptr);
 
     // Inserted in the middle, copy forward
     if (pos < mSize) {
@@ -47,22 +45,22 @@ template <typename T> void TVector<T>::Insert(const T& t, u32 pos) {
     }
 
     // Copy construct in-place
-    new (&Buffer()[pos]) T(t);
+    new (&Buffer()[pos]) T(rElem);
     mSize++;
 }
 
 /**
- * @brief Remove an element if it exists in the vector
+ * @brief Removes an element if it exists in the vector
  *
- * @param t Element to remove
- * @return Success
+ * @param rElem Element to remove
+ * @return Whether the element existed and was removed
  */
-template <typename T> bool TVector<T>::Remove(const T& t) {
-    K_ASSERT(mpData != NULL);
+template <typename T> bool TVector<T>::Remove(const T& rElem) {
+    K_ASSERT(mSize == 0 || mpData != nullptr);
 
     // Linear search for the target
     for (u32 i = 0; i < mSize; i++) {
-        if (Buffer()[i] == t) {
+        if (Buffer()[i] == rElem) {
             RemoveAt(i);
             return true;
         }
@@ -73,13 +71,13 @@ template <typename T> bool TVector<T>::Remove(const T& t) {
 }
 
 /**
- * @brief Remove an element at the specified position
+ * @brief Removes an element at the specified position
  *
  * @param pos Element position
  */
 template <typename T> void TVector<T>::RemoveAt(u32 pos) {
     K_ASSERT(pos < mSize);
-    K_ASSERT(mpData != NULL);
+    K_ASSERT(mpData != nullptr);
 
     // Destroy element
     Buffer()[pos].~T();
@@ -94,16 +92,16 @@ template <typename T> void TVector<T>::RemoveAt(u32 pos) {
 }
 
 /**
- * @brief Insert a new element at the back of the vector
+ * @brief Inserts a new element at the back of the vector
  *
- * @param t New element
+ * @param rElem New element
  */
-template <typename T> void TVector<T>::PushBack(const T& t) {
-    Insert(t, mSize);
+template <typename T> void TVector<T>::PushBack(const T& rElem) {
+    Insert(rElem, mSize);
 }
 
 /**
- * @brief Remove the last element from the vector
+ * @brief Removes the last element from the vector
  */
 template <typename T> void TVector<T>::PopBack() {
     K_ASSERT(mSize > 0);
@@ -111,7 +109,7 @@ template <typename T> void TVector<T>::PopBack() {
 }
 
 /**
- * @brief Reserve space for elements in the vector
+ * @brief Reserves space for elements in the vector
  *
  * @param capacity New capacity
  */
@@ -122,32 +120,51 @@ template <typename T> void TVector<T>::Reserve(u32 capacity) {
     }
 
     // Need to reallocate
-    u8* buffer = new u8[capacity * sizeof(T)];
-    K_ASSERT(buffer != NULL);
+    u8* pBuffer = new u8[capacity * sizeof(T)];
+    K_ASSERT(pBuffer != nullptr);
 
     // Copy in old data
-    if (mpData != NULL) {
-        std::memcpy(buffer, mpData, mSize * sizeof(T));
+    if (mpData != nullptr) {
+        std::memcpy(pBuffer, mpData, mSize * sizeof(T));
         delete mpData;
     }
 
     // Swap buffer
-    mpData = buffer;
+    mpData = pBuffer;
     mCapacity = capacity;
 }
 
 /**
- * @brief Copy vector contents
+ * @brief Copies vector contents
  *
- * @param other Vector to copy
+ * @param rOther Vector to copy from
  */
-template <typename T> void TVector<T>::CopyFrom(const TVector& other) {
+template <typename T> void TVector<T>::CopyFrom(const TVector& rOther) {
     // Destroy existing contents
     Clear();
 
     // Make sure we can fit the contents
-    Reserve(other.mSize);
-    std::memcpy(mpData, other.mpData, other.mSize * sizeof(T));
+    Reserve(rOther.mSize);
+    std::memcpy(mpData, rOther.mpData, rOther.mSize * sizeof(T));
+}
+
+/**
+ * @brief Moves vector contents
+ *
+ * @param rOther Vector to move
+ */
+template <typename T> void TVector<T>::MoveFrom(TVector&& rOther) {
+    // Destroy contents & free buffer
+    Clear();
+    delete mpData;
+
+    mpData = rOther.mpData;
+    mCapacity = rOther.mCapacity;
+    mSize = rOther.mSize;
+
+    rOther.mpData = nullptr;
+    rOther.mCapacity = 0;
+    rOther.mSize = 0;
 }
 
 } // namespace kiwi

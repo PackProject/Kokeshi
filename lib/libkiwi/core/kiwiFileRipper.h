@@ -2,9 +2,10 @@
 #define LIBKIWI_CORE_FILE_RIPPER_H
 #include <libkiwi/core/kiwiMemoryMgr.h>
 #include <libkiwi/k_types.h>
-#include <libkiwi/prim/kiwiSmartPtr.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 // Forward declarations
 class FileStream;
@@ -22,20 +23,20 @@ enum EStorage {
  * @brief File ripping parameters
  */
 struct FileRipperArg {
-    // Where the file contents are stored.
-    // Leave this as NULL to have the ripper allocate memory.
-    void* dst;
+    //! @brief Where the file contents are stored
+    //! @note Leave this as nullptr to have the ripper allocate memory
+    void* pDst;
 
-    // Where the file size is stored
-    u32* size;
+    //! Where the file size is stored
+    u32* pSize;
 
-    // Memory region to use for the destination buffer (when dst is NULL)
-    kiwi::EMemory region;
+    //! Memory region to use for ripper memory allocation
+    EMemory region;
 
     /**
      * @brief Constructor
      */
-    FileRipperArg() : dst(NULL), size(NULL), region(kiwi::EMemory_MEM2) {}
+    FileRipperArg() : pDst(nullptr), pSize(nullptr), region(EMemory_MEM2) {}
 };
 
 /**
@@ -44,36 +45,37 @@ struct FileRipperArg {
 class FileRipper {
 public:
     /**
-     * @brief Load a file
+     * @brief Rips a file's contents
      *
-     * @param path Path to the file
-     * @param where Storage on which the file is located
-     * @param arg Ripping parameters
-     * @return File data
+     * @param rPath Path to the file
+     * @param where Storage device on which the file is located
+     * @param rArg Ripping parameters
+     * @return File data (owned by you!)
      */
-    static void* Rip(const String& path, EStorage where,
-                     const FileRipperArg& arg = FileRipperArg());
+    static void* Rip(const String& rPath, EStorage where,
+                     const FileRipperArg& rArg = FileRipperArg());
 
     /**
-     * @brief Load a file
+     * @brief Rips a file's contents
      *
-     * @param strm Stream to file
-     * @param arg Ripping parameters
-     * @return File data
+     * @param rStrm Stream to the file
+     * @param rArg Ripping parameters
+     * @return File data (owned by you!)
      */
-    static void* Rip(FileStream& strm,
-                     const FileRipperArg& arg = FileRipperArg());
+    static void* Rip(FileStream& rStrm,
+                     const FileRipperArg& rArg = FileRipperArg());
 
     /**
-     * @brief Load a file and open a stream
+     * @brief Rips a file's contents and opens a stream to it
      *
-     * @param path Path to the file
-     * @param where Storage on which the file is located
+     * @param rPath Path to the file
+     * @param where Storage device on which the file is located
      * @return File stream
      */
-    static MemStream Open(const String& path, EStorage where);
+    static MemStream Open(const String& rPath, EStorage where);
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

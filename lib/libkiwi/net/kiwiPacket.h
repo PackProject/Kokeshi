@@ -8,141 +8,185 @@
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_net
+//! @{
 
 /**
- * Network packet wrapper
+ * @brief Network packet wrapper
  */
 class Packet {
 public:
     /**
-     * Constructor
+     * @brief Constructor
      *
      * @param size Packet buffer size
-     * @param dest Packet recipient
+     * @param pAddr Packet recipient
      */
-    Packet(u32 size, const SockAddr* dest = NULL)
-        : mpBuffer(NULL), mBufferSize(0), mReadOffset(0), mWriteOffset(0) {
+    Packet(u32 size, const SockAddrAny* pAddr = nullptr)
+        : mpBuffer(nullptr), mBufferSize(0), mReadOffset(0), mWriteOffset(0) {
         OSInitMutex(&mBufferMutex);
         Alloc(size);
 
-        if (dest != NULL) {
-            mAddress = *dest;
+        if (pAddr != nullptr) {
+            mAddress = *pAddr;
         } else {
             mAddress = SockAddr4();
         }
     }
 
     /**
-     * Destructor
+     * @brief Destructor
      */
     ~Packet() {
         Free();
     }
 
     /**
-     * Message buffer size
+     * @brief Gets the current size of the message buffer
      */
     virtual u32 GetBufferSize() const {
         return mBufferSize;
     }
     /**
-     * Largest allowable message buffer
+     * @brief Gets the maximum size of the message buffer
      */
     virtual u32 GetMaxBuffer() const {
         return ULONG_MAX;
     }
 
     /**
-     * Message content size
+     * @brief Gets the current size of the message payload
      */
     virtual u32 GetContentSize() const {
-        return mBufferSize;
+        return GetBufferSize() - GetOverhead();
     }
     /**
-     * Largest allowable message content
+     * @brief Gets the maximum size of the message payload
      */
     virtual u32 GetMaxContent() const {
-        return ULONG_MAX;
+        return GetMaxBuffer() - GetOverhead();
     }
     /**
-     * Access message content
+     * @brief Accesses the message payload
      */
     const void* GetContent() const {
         return mpBuffer + GetOverhead();
     }
 
     /**
-     * Message buffer overhead
+     * @brief Gets the size of the message buffer overhead
      */
     virtual u32 GetOverhead() const {
         return 0;
     }
 
     /**
-     * Whether the packet contains no data
+     * @brief Tests whether the packet contains no data
      */
     bool IsEmpty() const {
-        return mpBuffer == NULL || GetContentSize() == 0;
+        return mpBuffer == nullptr || GetContentSize() == 0;
     }
 
     /**
-     * The number of bytes that must be read to complete the packet
+     * @brief Gets the number of bytes that must be read to complete the packet
      */
     u32 ReadRemain() const {
-        return Max<s32>(GetContentSize() - mReadOffset, 0);
+        return Max<s64>(GetContentSize() - mReadOffset, 0);
     }
     /**
-     * The number of bytes that must be written to complete the packet
+     * @brief Gets the number of bytes that must be written to complete the
+     * packet
      */
     u32 WriteRemain() const {
-        return Max<s32>(GetContentSize() - mWriteOffset, 0);
+        return Max<s64>(GetContentSize() - mWriteOffset, 0);
     }
 
     /**
-     * Whether read operation has been completed
+     * @brief Tests whether read operation has been completed
      */
     bool IsReadComplete() const {
         return ReadRemain() == 0;
     }
     /**
-     * Whether write operation has been completed
+     * @brief Tests whether write operation has been completed
      */
     bool IsWriteComplete() const {
         return WriteRemain() == 0;
     }
 
     /**
-     * Get peer socket address
+     * @brief Accesses peer socket address (read-only)
      */
-    const SockAddr& GetPeer() const {
+    const SockAddrAny& GetPeer() const {
         return mAddress;
     }
 
+    /**
+     * @brief Allocates message buffer of the specified size
+     *
+     * @param size Packet size
+     */
     void Alloc(u32 size);
 
-    u32 Read(void* dst, u32 n);
-    u32 Write(const void* src, u32 n);
+    /**
+     * @brief Reads data from message buffer
+     *
+     * @param pDst Data destination
+     * @param n Data size
+     *
+     * @return Number of bytes read
+     */
+    u32 Read(void* pDst, u32 n);
+    /**
+     * @brief Writes data to message buffer
+     *
+     * @param pSrc Data source
+     * @param n Data size
+     *
+     * @return Number of bytes written
+     */
+    u32 Write(const void* pSrc, u32 n);
 
+    /**
+     * @brief Receives message data from socket
+     *
+     * @param socket Socket descriptor
+     *
+     * @return Number of bytes received
+     */
     Optional<u32> Send(SOSocket socket);
+    /**
+     * @brief Writes message data to socket
+     *
+     * @param socket Socket descriptor
+     *
+     * @return Number of bytes sent
+     */
     Optional<u32> Recv(SOSocket socket);
 
 protected:
+    /**
+     * @brief Releases message buffer
+     */
     void Free();
+
+    /**
+     * @brief Clears existing state
+     */
     void Clear();
 
 protected:
-    // Message buffer
-    u8* mpBuffer;
-    u32 mBufferSize;
-    OSMutex mBufferMutex;
+    u8* mpBuffer;         // Message buffer
+    u32 mBufferSize;      // Message buffer size
+    OSMutex mBufferMutex; // Buffer access mutex
 
-    // Read/write pointer
-    s32 mReadOffset;
-    s32 mWriteOffset;
+    s32 mReadOffset;  // Buffer read index
+    s32 mWriteOffset; // Buffer write index
 
-    SockAddr mAddress; // Sender (recv) or recipient (send)
+    SockAddrAny mAddress; // Sender (recv) or recipient (send)
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

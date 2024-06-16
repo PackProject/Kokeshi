@@ -5,29 +5,24 @@ namespace kiwi {
 /**
  * @brief Constructor
  *
- * @param bin Binary file (KMSG)
+ * @param pBin Binary file (KMSG)
  */
-Message::Message(const void* bin) {
-    K_ASSERT(bin != NULL);
-    Deserialize(bin);
+Message::Message(const void* pBin) {
+    K_ASSERT(pBin != nullptr);
+    Deserialize(pBin);
 }
 
 /**
- * @brief Destructor
- */
-Message::~Message() {}
-
-/**
- * @brief Deserialize binary message file
+ * @brief Deserializes binary contents (internal implementation)
  *
- * @param bin Binary message (KMSG)
+ * @param rHeader Binary file header
  */
-void Message::DeserializeImpl(const Header& bin) {
+void Message::DeserializeImpl(const Header& rHeader) {
     // Find first block
-    const Block* block = AddToPtr<const Block>(&bin, bin.block.size);
+    const Block* block = AddToPtr<const Block>(&rHeader, rHeader.block.size);
 
     // Parse blocks
-    for (int i = 0; i < bin.numBlocks; i++) {
+    for (int i = 0; i < rHeader.numBlocks; i++) {
         // Check block kind
         switch (block->kind) {
         case DESCBlock::scKind:
@@ -48,11 +43,11 @@ void Message::DeserializeImpl(const Header& bin) {
 }
 
 /**
- * @brief Serialize binary message file
+ * @brief Serializes binary contents (internal implementation)
  *
- * @param bin Binary message (KMSG)
+ * @param rHeader Binary file header
  */
-void Message::SerializeImpl(Header& bin) const {
+void Message::SerializeImpl(Header& rHeader) const {
     K_ASSERT_EX(false, "Not supported.");
 }
 

@@ -10,7 +10,7 @@ K_DYNAMIC_SINGLETON_IMPL(Nw4rDirectPrint);
 namespace {
 
 /**
- * Suspend execution until the next VI retrace
+ * @brief Suspends execution until the next VI retrace
  */
 void WaitVIRetrace() {
     AutoInterruptLock lock(true);
@@ -22,87 +22,89 @@ void WaitVIRetrace() {
 }
 
 /**
- * Create framebuffer
+ * @brief Creates framebuffer
  *
- * @param mode GX render configuration
+ * @param pRmo GX render configuration
  * @return Framebuffer
  */
-void* CreateFB(const GXRenderModeObj* mode) {
+void* CreateFB(const GXRenderModeObj* pRmo) {
     // Calculate framebuffer size in bytes
-    u32 size = ROUND_UP(mode->fbWidth, 16) * mode->xfbHeight * sizeof(u16);
+    u32 size = ROUND_UP(pRmo->fbWidth, 16) * pRmo->xfbHeight * sizeof(u16);
 
-    // Try using heap
-    void* fb = new (32) u8[size];
-
-    // Force allocation from OS arena
-    if (fb == NULL) {
-        K_LOG("Can't get framebuffer from heap\n");
-        fb = static_cast<u8*>(OSGetArenaHi()) - size;
-        OSSetArenaHi(fb);
+    // Try using heap, but be careful to not throw a nested exception
+    void* pXfb = nullptr;
+    if (MemoryMgr::GetInstance().GetFreeSize(EMemory_MEM1) != 0) {
+        pXfb = new (32) u8[size];
     }
 
-    VIConfigure(mode);
-    VISetNextFrameBuffer(fb);
-    return fb;
+    // Force allocation from OS arena
+    if (pXfb == nullptr) {
+        K_LOG("Can't get framebuffer from heap\n");
+        pXfb = static_cast<u8*>(OSGetArenaHi()) - size;
+        OSSetArenaHi(pXfb);
+    }
+
+    VIConfigure(pRmo);
+    VISetNextFrameBuffer(pXfb);
+    return pXfb;
 }
 
 } // namespace
 
 /**
- * Constructor
+ * @brief Constructor
  */
 Nw4rDirectPrint::Nw4rDirectPrint() {
     SetColor(Color::WHITE);
-    ChangeXfb(NULL, scBufferWidthDefault, scBufferHeightDefault);
+    ChangeXfb(nullptr, scBufferWidthDefault, scBufferHeightDefault);
 }
 
 /**
- * Destructor
+ * @brief Destructor
  */
 Nw4rDirectPrint::~Nw4rDirectPrint() {
     delete mpBuffer;
-    mpBuffer = NULL;
 }
 
 /**
- * Setup XFB for printing
+ * @brief Sets up XFB for printing
  */
 void Nw4rDirectPrint::SetupXfb() {
-    const GXRenderModeObj* mode = NULL;
+    const GXRenderModeObj* pRmo = nullptr;
 
     // Initialize direct print
     SetColor(Color::WHITE);
 
     // Try to repurpose current framebuffer
-    void* fb = VIGetCurrentFrameBuffer();
+    void* pXfb = VIGetCurrentFrameBuffer();
 
     // Create new framebuffer if one doesn't exist
-    if (fb == NULL) {
+    if (pXfb == nullptr) {
         // Auto-detect render mode
-        mode = LibGX::GetDefaultRenderMode();
-        fb = CreateFB(mode);
+        pRmo = LibGX::GetDefaultRenderMode();
+        pXfb = CreateFB(pRmo);
     }
 
     VISetBlack(FALSE);
     VIFlush();
     WaitVIRetrace();
 
-    if (mode != NULL) {
-        ChangeXfb(fb, mode->fbWidth, mode->xfbHeight);
+    if (pRmo != nullptr) {
+        ChangeXfb(pXfb, pRmo->fbWidth, pRmo->xfbHeight);
     } else {
-        ChangeXfb(fb, scBufferWidthDefault, scBufferHeightDefault);
+        ChangeXfb(pXfb, scBufferWidthDefault, scBufferHeightDefault);
     }
 }
 
 /**
- * Changes framebuffer information
+ * @brief Changes framebuffer information
  *
- * @param buffer Framebuffer in memory
+ * @param pXfb Framebuffer in memory
  * @param w Framebuffer width
  * @param h Framebuffer height
  */
-void Nw4rDirectPrint::ChangeXfb(void* buffer, u16 w, u16 h) {
-    mpBuffer = static_cast<u8*>(buffer);
+void Nw4rDirectPrint::ChangeXfb(void* pXfb, u16 w, u16 h) {
+    mpBuffer = static_cast<u8*>(pXfb);
     mBufferWidth = w;
     mBufferHeight = h;
 
@@ -111,7 +113,7 @@ void Nw4rDirectPrint::ChangeXfb(void* buffer, u16 w, u16 h) {
 }
 
 /**
- * Erases framebuffer contents
+ * @brief Erases framebuffer contents
  *
  * @param x X position
  * @param y Y position
@@ -119,7 +121,7 @@ void Nw4rDirectPrint::ChangeXfb(void* buffer, u16 w, u16 h) {
  * @param h Height
  */
 void Nw4rDirectPrint::EraseXfb(s32 x, s32 y, s32 w, s32 h) const {
-    if (mpBuffer == NULL) {
+    if (mpBuffer == nullptr) {
         return;
     }
 
@@ -142,44 +144,44 @@ void Nw4rDirectPrint::EraseXfb(s32 x, s32 y, s32 w, s32 h) const {
     h = y2 - y;
 
     // Character location in framebuffer
-    u16* pixel = reinterpret_cast<u16*>(mpBuffer);
-    pixel += x;
-    pixel += y * mBufferRows;
+    u16* pPixel = reinterpret_cast<u16*>(mpBuffer);
+    pPixel += x;
+    pPixel += y * mBufferRows;
 
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
-            *pixel++ = 0x1080;
+            *pPixel++ = 0x1080;
         }
 
-        pixel += mBufferRows - w;
+        pPixel += mBufferRows - w;
     }
 }
 
 /**
- * Keeps main framebuffer copy updated via cache blocks
+ * @brief Keeps main framebuffer copy updated via cache blocks
  */
 void Nw4rDirectPrint::StoreCache() const {
     DCStoreRange(mpBuffer, mBufferSize);
 }
 
 /**
- * Draws string to framebuffer (wrapper function)
+ * @brief Draws string to framebuffer
  *
  * @param x Text X position
  * @param y Text Y position
- * @param fmt Format string
+ * @param pMsg Format string
  * @param ... Format arguments
  */
-void Nw4rDirectPrint::DrawString(s32 x, s32 y, const char* fmt, ...) const {
-    if (mpBuffer == NULL) {
+void Nw4rDirectPrint::DrawString(s32 x, s32 y, const char* pMsg, ...) const {
+    if (mpBuffer == nullptr) {
         return;
     }
 
     char msgbuf[1024];
     std::va_list list;
 
-    va_start(list, fmt);
-    if (std::vsnprintf(msgbuf, sizeof(msgbuf), fmt, list) <= 0) {
+    va_start(list, pMsg);
+    if (std::vsnprintf(msgbuf, sizeof(msgbuf), pMsg, list) <= 0) {
         return;
     }
     va_end(list);
@@ -188,38 +190,38 @@ void Nw4rDirectPrint::DrawString(s32 x, s32 y, const char* fmt, ...) const {
 }
 
 /**
- * Sets framebuffer color
+ * @brief Sets framebuffer color
  *
  * @param rgb Color (RGB)
  */
-void Nw4rDirectPrint::SetColor(const Color rgb) {
+void Nw4rDirectPrint::SetColor(Color rgb) {
     // Framebuffer uses YUV format, so we convert the color
-    mBufferColor = rgb.yuv();
+    mBufferColor = rgb.Yuv();
 }
 
 /**
- * Gets framebuffer dot/unit width (in pixels)
+ * @brief Gets framebuffer dot/unit width (in pixels)
  */
 s32 Nw4rDirectPrint::GetDotWidth() const {
     return mBufferWidth < 400 ? 1 : 2;
 }
 
 /**
- * Gets framebuffer dot/unit height (in pixels)
+ * @brief Gets framebuffer dot/unit height (in pixels)
  */
 s32 Nw4rDirectPrint::GetDotHeight() const {
     return mBufferHeight < 300 ? 1 : 2;
 }
 
 /**
- * Draws string to framebuffer (implementation)
+ * @brief Draws string to framebuffer (internal implementation)
  *
  * @param x Text X position
  * @param y Text Y position
- * @param str Text string
+ * @param pMsg Text string
  */
-void Nw4rDirectPrint::DrawStringImpl(s32 x, s32 y, const char* str) const {
-    if (mpBuffer == NULL) {
+void Nw4rDirectPrint::DrawStringImpl(s32 x, s32 y, const char* pMsg) const {
+    if (mpBuffer == nullptr) {
         return;
     }
 
@@ -228,60 +230,59 @@ void Nw4rDirectPrint::DrawStringImpl(s32 x, s32 y, const char* str) const {
     // Framebuffer width in units
     s32 fbWidth = mBufferWidth / GetDotWidth();
 
-    while (*str != '\0') {
+    while (*pMsg != '\0') {
         // Attempt to draw line (whatever is allowed by framebuffer width)
         s32 width = (fbWidth - x) / scFontCharWidth;
-        str = DrawStringLine(x, y, str, width);
+        pMsg = DrawStringLine(x, y, pMsg, width);
         y += scFontLeading;
 
         // Entire line was drawn
-        if (*str == '\n') {
+        if (*pMsg == '\n') {
             // New line, reset X position
-            str++;
+            pMsg++;
             x = x1;
         }
         // Line was partially drawn (width overflow)
-        else if (*str != '\0') {
+        else if (*pMsg != '\0') {
             // Attempt to find next line
-            str++;
-            str = std::strchr(str, '\n');
+            pMsg++;
+            pMsg = std::strchr(pMsg, '\n');
 
             // No next line
-            if (str == NULL) {
+            if (pMsg == nullptr) {
                 return;
             }
 
             // New line, reset X position
-            str++;
+            pMsg++;
             x = x1;
         }
     }
 }
 
 /**
- * Draws line of string to framebuffer
+ * @brief Draws line of string to framebuffer
  *
  * @param x String X position
  * @param y String Y position
- * @param str String
+ * @param pMsg Text string
  * @param maxlen Max line width
  * @return char* String contents after what was drawn
  */
-
-const char* Nw4rDirectPrint::DrawStringLine(s32 x, s32 y, const char* str,
+const char* Nw4rDirectPrint::DrawStringLine(s32 x, s32 y, const char* pMsg,
                                             s32 maxlen) const {
-    if (mpBuffer == NULL || maxlen <= 0) {
-        return NULL;
+    if (mpBuffer == nullptr || maxlen <= 0) {
+        return nullptr;
     }
 
     s32 count = 0;
 
-    while (*str != '\0') {
-        char c = *str;
+    while (*pMsg != '\0') {
+        char c = *pMsg;
 
         // Line or string has ended, stop drawing
         if (c == '\n' || c == '\0') {
-            return str;
+            return pMsg;
         }
 
         // Convert to font code
@@ -308,28 +309,28 @@ const char* Nw4rDirectPrint::DrawStringLine(s32 x, s32 y, const char* str,
             // Skip over newline if it comes next.
             // It wouldn't take up view space anyways so it does not affect the
             // maxlen.
-            if (str[1] == '\n') {
-                str++;
+            if (pMsg[1] == '\n') {
+                pMsg++;
             }
 
-            return str;
+            return pMsg;
         }
 
-        str++;
+        pMsg++;
     }
 
-    return str;
+    return pMsg;
 }
 
 /**
- * Draws character to framebuffer
+ * @brief Draws character to framebuffer
  *
  * @param x Character X position
  * @param y Character Y position
  * @param code Character code
  */
 void Nw4rDirectPrint::DrawStringChar(s32 x, s32 y, s32 code) const {
-    if (mpBuffer == NULL) {
+    if (mpBuffer == nullptr) {
         return;
     }
 
@@ -340,15 +341,16 @@ void Nw4rDirectPrint::DrawStringChar(s32 x, s32 y, s32 code) const {
 
     s32 fontW = ncode % 5 * scFontCharWidth;
     s32 fontH = ncode / 5 * scFontCharHeight;
-    const u32* fontLine = code < 100 ? &scFontData[fontH] : &scFontData2[fontH];
+    const u32* pFontLine =
+        code < 100 ? &scFontData[fontH] : &scFontData2[fontH];
 
     s32 dotW = GetDotWidth();
     s32 dotH = GetDotHeight();
 
     // Character location in framebuffer
-    u16* pixel = reinterpret_cast<u16*>(mpBuffer);
-    pixel += x * dotW;
-    pixel += y * mBufferRows * dotH;
+    u16* pPixel = reinterpret_cast<u16*>(mpBuffer);
+    pPixel += x * dotW;
+    pPixel += y * mBufferRows * dotH;
 
     if (x < 0 || y < 0 || mBufferWidth <= dotW * (x + scFontCharWidth) ||
         mBufferHeight <= dotH * (y + scFontCharHeight)) {
@@ -356,7 +358,7 @@ void Nw4rDirectPrint::DrawStringChar(s32 x, s32 y, s32 code) const {
     }
 
     for (int countY = 0; countY < scFontCharHeight; countY++) {
-        u32 fontBits = *fontLine++ << fontW;
+        u32 fontBits = *pFontLine++ << fontW;
 
         // I couldn't tell you what this does...
         if (dotW == 1) {
@@ -376,29 +378,32 @@ void Nw4rDirectPrint::DrawStringChar(s32 x, s32 y, s32 code) const {
             color |= (((fontBits & 0x40000000) ? mBufferColor.g / 2 : 0x40) +
                       ((fontBits & 0x80000000) ? mBufferColor.g / 4 : 0x20) +
                       ((fontBits & 0x20000000) ? mBufferColor.g / 4 : 0x20));
-            *pixel = color;
+            *pPixel = color;
             if (dotH > 1) {
-                pixel[mBufferRows] = color;
+                pPixel[mBufferRows] = color;
             }
 
-            pixel++;
+            pPixel++;
 
             color = (fontBits & 0x20000000) ? (mBufferColor.r << 8) : 0x00;
             color |= (((fontBits & 0x20000000) ? mBufferColor.b / 2 : 0x40) +
                       ((fontBits & 0x10000000) ? mBufferColor.b / 4 : 0x20) +
                       ((fontBits & 0x40000000) ? mBufferColor.b / 4 : 0x20));
-            *pixel = color;
+            *pPixel = color;
             if (dotH > 1) {
-                pixel[mBufferRows] = color;
+                pPixel[mBufferRows] = color;
             }
 
-            pixel++;
+            pPixel++;
         }
 
-        pixel += (mBufferRows * dotH) - (dotW * scFontCharWidth);
+        pPixel += (mBufferRows * dotH) - (dotW * scFontCharWidth);
     }
 }
 
+/**
+ * @brief Font data pt. 1
+ */
 const u32 Nw4rDirectPrint::scFontData[] = {
     0x70871C30, 0x8988A250, 0x88808290, 0x88830C90, 0x888402F8, 0x88882210,
     0x71CF9C10, 0xF9CF9C70, 0x8208A288, 0xF200A288, 0x0BC11C78, 0x0A222208,
@@ -412,6 +417,9 @@ const u32 Nw4rDirectPrint::scFontData[] = {
     0x80020800, 0xF8011000, 0x70800000, 0x88822200, 0x08820400, 0x108F8800,
     0x20821000, 0x00022200, 0x20800020, 0x00000000};
 
+/**
+ * @brief Font data pt. 2
+ */
 const u32 Nw4rDirectPrint::scFontData2[] = {
     0x51421820, 0x53E7A420, 0x014A2C40, 0x01471000, 0x0142AA00, 0x03EAA400,
     0x01471A78, 0x00000000, 0x50008010, 0x20010820, 0xF8020040, 0x20420820,
@@ -427,6 +435,9 @@ const u32 Nw4rDirectPrint::scFontData2[] = {
     0x8A2A8888, 0x8A2A8878, 0x894A8808, 0x788536F0, 0x00000000, 0x00000000,
     0xF8000000, 0x10000000, 0x20000000, 0x40000000, 0xF8000000};
 
+/**
+ * @brief Converts from ASCII index to font data index
+ */
 const u8 Nw4rDirectPrint::scAscii2Font[128] = {
     0x7A, 0x7A, 0x7A, 0x7A, 0x7A, 0x7A, 0x7A, 0x7A, 0x7A, 0xFD, 0xFE, 0x7A,
     0x7A, 0x7A, 0x7A, 0x7A, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,

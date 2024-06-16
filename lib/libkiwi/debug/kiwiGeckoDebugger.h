@@ -8,6 +8,8 @@
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_debug
+//! @{
 
 /**
  * @brief USB Gecko debugger support
@@ -20,7 +22,7 @@ class GeckoDebugger : public IDebugger,
 
 public:
     /**
-     * @brief Attach the debugger (USB Gecko)
+     * @brief Attaches the debugger (USB Gecko)
      *
      * @return Success
      */
@@ -31,29 +33,30 @@ private:
      * @brief EXI input pending callback
      *
      * @param chan EXI channel
-     * @param ctx Interrupt context
+     * @param pCtx Interrupt context
      */
-    static void ExiCallback(EXIChannel chan, OSContext* ctx);
+    static void ExiCallback(EXIChannel chan, OSContext* pCtx);
 
     /**
-     * @brief Read data sent to the debugger
+     * @brief Reads data sent to the debugger
      *
-     * @param dst Destination buffer
+     * @param pDst Destination buffer
      * @param size Read length
      * @return Number of bytes read
      */
-    virtual Optional<u32> Read(void* dst, u32 size);
+    virtual Optional<u32> Read(void* pDst, u32 size);
 
     /**
-     * @brief Write data over the debugger
+     * @brief Writes data over the debugger
      *
-     * @param src Source buffer
+     * @param pSrc Source buffer
      * @param size Write length
      * @return Number of bytes read
      */
-    virtual Optional<u32> Write(const void* src, u32 size);
+    virtual Optional<u32> Write(const void* pSrc, u32 size);
 };
 
+//! @}
 } // namespace kiwi
 
 #endif

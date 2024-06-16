@@ -5,11 +5,17 @@
 #include <revolution/OS.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_core
+//! @{
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**
+ * @name Linker Generated Symbols (for your module)
+ */
+/**@{*/
 extern funcptr_t __ctor_loc;
 extern funcptr_t __ctor_end;
 
@@ -30,76 +36,304 @@ extern void* const _e_rodata;
 
 extern void* const _f_data;
 extern void* const _e_data;
+/**@}*/
+
+/**
+ * @name Linker Generated Symbols (for the base DOL)
+ */
+/**@{*/
+extern void* const _f_dol_init;
+extern void* const _e_dol_init;
+
+extern void* const _f_dol_text;
+extern void* const _e_dol_text;
+
+extern void* const _f_dol_ctors;
+extern void* const _e_dol_ctors;
+
+extern void* const _f_dol_dtors;
+extern void* const _e_dol_dtors;
+
+extern void* const _f_dol_rodata;
+extern void* const _e_dol_rodata;
+
+extern void* const _f_dol_data;
+extern void* const _e_dol_data;
+/**@}*/
 
 namespace {
 
 /**
- * ELF section functions
+ * @brief Gets the start address of the stack
+ * @note Stack grows upwards
  */
+const void* GetStackStart() {
+    return _stack_addr;
+}
+/**
+ * @brief Gets the end address of the stack
+ * @note Stack grows upwards
+ */
+const void* GetStackEnd() {
+    return _stack_end;
+}
 
-const void* GetInitStart() {
+/**
+ * @name Module section information
+ */
+/**@{*/
+/**
+ * @brief Gets the start address of the module ELF
+ */
+const void* GetModuleStart() {
+    return kokeshi::sModuleInfo.start;
+}
+/**
+ * @brief Gets the size of the module ELF
+ */
+u32 GetModuleSize() {
+    return kokeshi::sModuleInfo.size;
+}
+/**
+ * @brief Gets the end address of the module ELF
+ */
+const void* GetModuleEnd() {
+    return AddToPtr(GetModuleStart(), GetModuleSize());
+}
+
+/**
+ * @brief Gets the start address of the .init ELF section
+ */
+const void* GetModuleInitStart() {
     return &_f_init;
 }
-const void* GetInitEnd() {
+/**
+ * @brief Gets the end address of the .init ELF section
+ */
+const void* GetModuleInitEnd() {
     return &_e_init;
 }
-u32 GetInitSize() {
-    return PtrDistance(GetInitStart(), GetInitEnd());
+/**
+ * @brief Gets the size of the .init ELF section
+ */
+u32 GetModuleInitSize() {
+    return PtrDistance(GetModuleInitStart(), GetModuleInitEnd());
 }
 
-const void* GetTextStart() {
+/**
+ * @brief Gets the start address of the .text ELF section
+ */
+const void* GetModuleTextStart() {
     return &_f_text;
 }
-const void* GetTextEnd() {
+/**
+ * @brief Gets the end address of the .text ELF section
+ */
+const void* GetModuleTextEnd() {
     return &_e_text;
 }
-u32 GetTextSize() {
-    return PtrDistance(GetTextStart(), GetTextEnd());
+/**
+ * @brief Gets the size of the .text ELF section
+ */
+u32 GetModuleTextSize() {
+    return PtrDistance(GetModuleTextStart(), GetModuleTextEnd());
 }
 
-const void* GetCtorsStart() {
+/**
+ * @brief Gets the start address of the .ctors ELF section
+ */
+const void* GetModuleCtorsStart() {
     return &_f_ctors;
 }
-const void* GetCtorsEnd() {
+/**
+ * @brief Gets the end address of the .ctors ELF section
+ */
+const void* GetModuleCtorsEnd() {
     return &_e_ctors;
 }
-u32 GetCtorsSize() {
-    return PtrDistance(GetCtorsStart(), GetCtorsEnd());
+/**
+ * @brief Gets the size of the .ctors ELF section
+ */
+u32 GetModuleCtorsSize() {
+    return PtrDistance(GetModuleCtorsStart(), GetModuleCtorsEnd());
 }
 
-const void* GetDtorsStart() {
+/**
+ * @brief Gets the start address of the .dtors ELF section
+ */
+const void* GetModuleDtorsStart() {
     return &_f_dtors;
 }
-const void* GetDtorsEnd() {
+/**
+ * @brief Gets the end address of the .dtors ELF section
+ */
+const void* GetModuleDtorsEnd() {
     return &_e_dtors;
 }
-u32 GetDtorsSize() {
-    return PtrDistance(GetDtorsStart(), GetDtorsEnd());
+/**
+ * @brief Gets the size of the .dtors ELF section
+ */
+u32 GetModuleDtorsSize() {
+    return PtrDistance(GetModuleDtorsStart(), GetModuleDtorsEnd());
 }
 
-const void* GetRodataStart() {
+/**
+ * @brief Gets the start address of the .rodata ELF section
+ */
+const void* GetModuleRodataStart() {
     return &_f_rodata;
 }
-const void* GetRodataEnd() {
+/**
+ * @brief Gets the end address of the .rodata ELF section
+ */
+const void* GetModuleRodataEnd() {
     return &_e_rodata;
 }
-u32 GetRodataSize() {
-    return PtrDistance(GetRodataStart(), GetRodataEnd());
+/**
+ * @brief Gets the size of the .rodata ELF section
+ */
+u32 GetModuleRodataSize() {
+    return PtrDistance(GetModuleRodataStart(), GetModuleRodataEnd());
 }
 
-const void* GetDataStart() {
+/**
+ * @brief Gets the start address of the .data ELF section
+ */
+const void* GetModuleDataStart() {
     return &_f_data;
 }
-const void* GetDataEnd() {
+/**
+ * @brief Gets the end address of the .data ELF section
+ */
+const void* GetModuleDataEnd() {
     return &_e_data;
 }
-u32 GetDataSize() {
-    return PtrDistance(GetDataStart(), GetDataEnd());
+/**
+ * @brief Gets the size of the .data ELF section
+ */
+u32 GetModuleDataSize() {
+    return PtrDistance(GetModuleDataStart(), GetModuleDataEnd());
+}
+/**@}*/
+
+/**
+ * @name DOL section information
+ */
+/**@{*/
+/**
+ * @brief Gets the start address of the .init DOL section
+ */
+const void* GetDolInitStart() {
+    return &_f_dol_init;
+}
+/**
+ * @brief Gets the end address of the .init DOL section
+ */
+const void* GetDolInitEnd() {
+    return &_e_dol_init;
+}
+/**
+ * @brief Gets the size of the .init DOL section
+ */
+u32 GetDolInitSize() {
+    return PtrDistance(GetDolInitStart(), GetDolInitEnd());
 }
 
-bool IsStack(const void* addr) {
-    return addr >= _stack_end && addr < _stack_addr;
+/**
+ * @brief Gets the start address of the .text DOL section
+ */
+const void* GetDolTextStart() {
+    return &_f_dol_text;
 }
+/**
+ * @brief Gets the end address of the .text DOL section
+ */
+const void* GetDolTextEnd() {
+    return &_e_dol_text;
+}
+/**
+ * @brief Gets the size of the .text DOL section
+ */
+u32 GetDolTextSize() {
+    return PtrDistance(GetDolTextStart(), GetDolTextEnd());
+}
+
+/**
+ * @brief Gets the start address of the .ctors DOL section
+ */
+const void* GetDolCtorsStart() {
+    return &_f_dol_ctors;
+}
+/**
+ * @brief Gets the end address of the .ctors DOL section
+ */
+const void* GetDolCtorsEnd() {
+    return &_e_dol_ctors;
+}
+/**
+ * @brief Gets the size of the .ctors DOL section
+ */
+u32 GetDolCtorsSize() {
+    return PtrDistance(GetDolCtorsStart(), GetDolCtorsEnd());
+}
+
+/**
+ * @brief Gets the start address of the .dtors DOL section
+ */
+const void* GetDolDtorsStart() {
+    return &_f_dol_dtors;
+}
+/**
+ * @brief Gets the end address of the .dtors DOL section
+ */
+const void* GetDolDtorsEnd() {
+    return &_e_dol_dtors;
+}
+/**
+ * @brief Gets the size of the .dtors DOL section
+ */
+u32 GetDolDtorsSize() {
+    return PtrDistance(GetDolDtorsStart(), GetDolDtorsEnd());
+}
+
+/**
+ * @brief Gets the start address of the .rodata DOL section
+ */
+const void* GetDolRodataStart() {
+    return &_f_dol_rodata;
+}
+/**
+ * @brief Gets the end address of the .rodata DOL section
+ */
+const void* GetDolRodataEnd() {
+    return &_e_dol_rodata;
+}
+/**
+ * @brief Gets the size of the .rodata DOL section
+ */
+u32 GetDolRodataSize() {
+    return PtrDistance(GetDolRodataStart(), GetDolRodataEnd());
+}
+
+/**
+ * @brief Gets the start address of the .data DOL section
+ */
+const void* GetDolDataStart() {
+    return &_f_dol_data;
+}
+/**
+ * @brief Gets the end address of the .data DOL section
+ */
+const void* GetDolDataEnd() {
+    return &_e_dol_data;
+}
+/**
+ * @brief Gets the size of the .data DOL section
+ */
+u32 GetDolDataSize() {
+    return PtrDistance(GetDolDataStart(), GetDolDataEnd());
+}
+/**@}*/
 
 } // namespace
 
@@ -107,7 +341,9 @@ bool IsStack(const void* addr) {
 }
 #endif
 
-// Simulate a breakpoint for Dolphin debugging
+/**
+ * @brief Simulate a breakpoint for Dolphin debugging
+ */
 #define K_DEBUG_BREAK()                                                        \
     {                                                                          \
         BOOL __enabled__ = OSDisableInterrupts();                              \
@@ -120,40 +356,55 @@ bool IsStack(const void* addr) {
         OSRestoreInterrupts(__enabled__);                                      \
     }
 
-// Begin ASM block
-#define K_ASM_BEGIN asm volatile {
-// End ASM block
-#define K_ASM_END }
+/**
+ * @name Assembly utilities
+ */
+/**@{*/
+/**
+ * @brief Begin an inline assembly block
+ */
+#define K_ASM_BEGIN asm volatile
 
-// Copy GPR to variable
+/**
+ * @brief Copy the contents of a GPR to a variable
+ * @note Compiler optimizations usually alias the variable to the specified GPR
+ */
 #define K_GET_GPR(r, var)                                                      \
-    asm volatile {                                                             \
+    K_ASM_BEGIN {                                                              \
         mr var, r;                                                             \
     }
-// Copy variable to GPR
+/**
+ * @brief Copy the contents of a variable to a GPR
+ */
 #define K_SET_GPR(r, var)                                                      \
-    asm volatile {                                                             \
+    K_ASM_BEGIN {                                                              \
         mr r, var;                                                             \
     }
 
-// Backup GPRs to stack frame
+/**
+ * @brief Create a stack frame and save all GPRs
+ */
 #define K_SAVE_GPRS                                                            \
-    asm volatile {                                                             \
+    K_ASM_BEGIN {                                                              \
         stwu r1, -0x90(r1);                                                    \
         stmw r3, 0xC(r1);                                                      \
         mflr r12;                                                              \
         stw r12, 0x8(r1);                                                      \
     }
 
-// Restore GPRs from stack frame
+/**
+ * @brief Destroy the stack frame and restore all GPRs
+ */
 #define K_REST_GPRS                                                            \
-    asm volatile {                                                             \
+    K_ASM_BEGIN {                                                              \
         lwz r12, 0x8(r1);                                                      \
         mtlr r12;                                                              \
         lmw r3, 0xC(r1);                                                       \
         addi r1, r1, 0x90;                                                     \
     }
+/**@}*/
 
+//! @}
 } // namespace kiwi
 
 #endif

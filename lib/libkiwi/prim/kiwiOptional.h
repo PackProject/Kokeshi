@@ -1,8 +1,11 @@
 #ifndef LIBKIWI_PRIM_OPTIONAL_H
 #define LIBKIWI_PRIM_OPTIONAL_H
+#include <algorithm>
 #include <libkiwi/k_types.h>
 
 namespace kiwi {
+//! @addtogroup libkiwi_prim
+//! @{
 
 /**
  * @brief Helper for Optional with no value
@@ -17,35 +20,60 @@ template <typename T> class Optional {
 public:
     /**
      * @brief Constructor
-     *
-     * @param t Optional value
-     */
-    Optional(const T& t) : mHasValue(true) {
-        // Copy construct in-place
-        new (mBuffer) T(t);
-    }
-
-    /**
-     * @brief Constructor
      */
     Optional() : mHasValue(false) {}
 
     /**
      * @brief Constructor
+     * @details Null constructor
      */
     Optional(NullOpt) : mHasValue(false) {}
 
     /**
-     * @brief Copy constructor
+     * @brief Constructor
+     * @details Copy constructor
      *
-     * @param other Optional value
+     * @param rOther Optional value
      */
-    Optional(const Optional& other) : mHasValue(other.HasValue()) {
-        // Copy construct in-place
+    Optional(const Optional& rOther) : mHasValue(rOther.HasValue()) {
         if (mHasValue) {
-            new (mBuffer) T(*other);
+            new (mBuffer) T(*rOther);
         }
     }
+
+    /**
+     * @brief Constructor
+     * @details Copy constructor
+     *
+     * @param rValue Value
+     */
+    Optional(const T& rValue) : mHasValue(true) {
+        new (mBuffer) T(rValue);
+    }
+
+#ifdef LIBKIWI_CPP1X
+    /**
+     * @brief Constructor
+     * @details Move constructor
+     *
+     * @param rOther Optional value
+     */
+    Optional(const Optional&& rOther) : mHasValue(rOther.HasValue()) {
+        if (mHasValue) {
+            new (mBuffer) T(std::move(*rOther));
+        }
+    }
+
+    /**
+     * @brief Constructor
+     * @details Move constructor
+     *
+     * @param rValue Optional value
+     */
+    Optional(const T&& rValue) {
+        new (mBuffer) T(std::move(rValue));
+    }
+#endif
 
     /**
      * @brief Destructor
@@ -57,42 +85,60 @@ public:
     /**
      * @brief Value assignment
      *
-     * @param t New value
+     * @param rValue New value
      */
-    Optional& operator=(const T& t) {
-        new (mBuffer) T(t);
+    Optional& operator=(const T& rValue) {
+        new (mBuffer) T(rValue);
         mHasValue = true;
         return *this;
     }
 
-    // Check for optional value
+#ifdef LIBKIWI_CPP1X
+    /**
+     * @brief Value assignment
+     *
+     * @param rValue New value
+     */
+    Optional& operator=(const T&& rValue) {
+        new (mBuffer) T(std::move(rValue));
+        mHasValue = true;
+        return *this;
+    }
+#endif
+
+    /**
+     * @brief Tests whether a value is present
+     */
     bool HasValue() const {
         return mHasValue;
     }
-    operator bool() const {
-        return HasValue();
-    }
 
-    // Access optional value
+    /**
+     * @brief Accesses optional value
+     */
     T& Value() {
         K_ASSERT_EX(mHasValue, "Please check HasValue");
         return reinterpret_cast<T&>(mBuffer);
     }
+    /**
+     * @brief Accesses optional value (read-only)
+     */
     const T& Value() const {
         K_ASSERT_EX(mHasValue, "Please check HasValue");
         return reinterpret_cast<const T&>(mBuffer);
     }
 
-    // Access optional value (or 'val' if none)
-    const T& ValueOr(const T& val) {
-        return HasValue() ? Value() : val;
-    }
-    const T& ValueOr(const T& val) const {
-        return HasValue() ? Value() : val;
+    /**
+     * @brief Accesses optional value (or default value if not present)
+     *
+     * @param rValue Default value to use when this contains no value
+     */
+    const T& ValueOr(const T& rValue) const {
+        return mHasValue ? Value() : rValue;
     }
 
     /**
-     * @brief Construct value
+     * @brief Constructs value in-place
      */
     T& Emplace() {
         K_ASSERT(!mHasValue);
@@ -103,31 +149,25 @@ public:
     }
 
     /**
-     * @brief Destroy value
+     * @brief Destroys existing value
      */
     void Reset() {
-        if (HasValue()) {
+        if (mHasValue) {
             Value().~T();
         }
 
         mHasValue = false;
     }
 
-    // Dereference access
-    T& operator*() {
-        return Value();
-    }
-    const T& operator*() const {
-        return Value();
-    }
+    // clang-format off
+    operator bool() const { return HasValue(); }
+    
+    T&       operator*()       { return Value(); }
+    const T& operator*() const { return Value(); }
 
-    // Pointer access
-    T* operator->() {
-        return &Value();
-    }
-    const T* operator->() const {
-        return &Value();
-    }
+    T*       operator->()       { return &Value(); }
+    const T* operator->() const { return &Value(); }
+    // clang-format on
 
 private:
     u8 mBuffer[sizeof(T)]; // Don't automatically construct T
@@ -139,22 +179,23 @@ namespace {
 /**
  * @brief Optional construction helper
  *
- * @param t Value
+ * @param rValue Value
  */
-template <typename T> Optional<T> MakeOptional(const T& t) {
-    return Optional<T>(t);
+template <typename T> Optional<T> MakeOptional(const T& rValue) {
+    return Optional<T>(rValue);
 }
 
 /**
  * @brief Optional construction helper
  *
- * @param t Value (may be NULL)
+ * @param pValue Value (may be nullptr)
  */
-template <typename T> Optional<T> MakeOptional(const T* t) {
-    return t ? Optional<T>(*t) : kiwi::nullopt;
+template <typename T> Optional<T> MakeOptional(const T* pValue) {
+    return pValue ? Optional<T>(*pValue) : kiwi::nullopt;
 }
 
 } // namespace
+//! @}
 } // namespace kiwi
 
 #endif
