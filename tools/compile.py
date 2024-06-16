@@ -119,34 +119,43 @@ def main() -> None:
     parser.add_argument("--define", action='append',
                         required=False, help="Register a custom preprocessor definition of the form \"KEY,VALUE\"")
 
+    parser.add_argument("--ci", type=int, required=False, default=0,
+                        help="Use for GitHub CI to only compile code and avoid the ROM.")
+
     args = parser.parse_args()
-    build(args)
+    success = build(args)
+
+    if not success:
+        exit(1)
 
 
-def build(args) -> None:
+def build(args) -> bool:
     """Attempt to build the mod
 
     Args:
         args: Parsed command-line arguments
     """
 
-    print("[INFO] Checking baserom...")
-    if not baserom_ok(args):
-        return
+    if not args.ci:
+        print("[INFO] Checking baserom...")
+        if not baserom_ok(args):
+            return False
 
     print("[INFO] Building Kamek loader...")
     if not build_loader(args):
-        return
+        return False
 
     print(f"[INFO] Building module...")
     if not build_module(args):
-        return
+        return False
 
-    print(f"[INFO] Installing to romfs...")
-    if not install_romfs(args):
-        return
+    if not args.ci:
+        print(f"[INFO] Installing to romfs...")
+        if not install_romfs(args):
+            return False
 
     print(f"[INFO] Success!")
+    return True
 
 
 def search_files(root: str, extensions: list[str]) -> list[str]:

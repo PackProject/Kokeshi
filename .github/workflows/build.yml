@@ -21,4 +21,4 @@ jobs:
         mv tools/Wii/1.7 tools
 
     - name: Build the code
-      run: make
+      run: make CI=1
