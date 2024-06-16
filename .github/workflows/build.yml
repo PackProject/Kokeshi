@@ -19,7 +19,7 @@ jobs:
       run: curl -L '${{ secrets.COMPILERS }}' | tar -xvf- -C tools
 
     - name: Install CW for Wii 1.7
-      run: mv tools/Wii/1.7 tools
+      run: mv tools/Wii/1.7/* tools
 
     - name: Build the code
       run: make CI=1
