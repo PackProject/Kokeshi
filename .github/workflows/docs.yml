@@ -1,4 +1,4 @@
-name: Build docs
+name: Doxygen
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Kokeshi repository
