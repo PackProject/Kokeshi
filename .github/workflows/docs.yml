@@ -31,7 +31,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       uses: actions/upload-pages-artifact@v3.0.1
       with:
-        path: build/docs
+        path: build/docs/html
         
     - name: Deploy to GitHub Pages
       id: deployment
