@@ -12,12 +12,21 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - name: Checkout repository
+    - name: Checkout Kokeshi repository
       uses: actions/checkout@v3
-        
+      with:
+        submodules: 'true'
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build Kamek
+      run: msbuild /m /p:Configuration=Debug tools/Kamek/Kamek/Kamek.sln
+    - name: Install Kamek
+      run: mv tools/Kamek/Kamek/bin/Debug/net6.0/* tools
+
     - name: Download compilers
       run: curl -L '${{ secrets.COMPILERS }}' | tar -xvf- -C tools
-
     - name: Install CW for Wii 1.7
       run: mv tools/Wii/1.7/* tools
 

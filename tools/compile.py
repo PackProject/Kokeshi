@@ -379,19 +379,20 @@ def build_loader(args) -> bool:
     # Link step
     #
 
-    # Kamek loader flags
-    ldflags = " ".join([
-        f"-static={hex(LOADER_ADDR)}",
-        f"-input-dol={BASE_DIR}/baserom_{args.game}.dol",
-        f"-output-dol={BUILD_DIR}/main_{args.game}.dol",
-        f"-output-kamek={BUILD_DIR}/{LOADER_DIR}/Loader_{args.game}.bin",
-        f"-output-map={BUILD_DIR}/{LOADER_DIR}/Loader_{args.game}.map",
-        f"-externals={BASE_DIR}/symbols_{args.game}.txt"
-    ])
+    if not args.ci:
+        # Kamek loader flags
+        ldflags = " ".join([
+            f"-static={hex(LOADER_ADDR)}",
+            f"-input-dol={BASE_DIR}/baserom_{args.game}.dol",
+            f"-output-dol={BUILD_DIR}/main_{args.game}.dol",
+            f"-output-kamek={BUILD_DIR}/{LOADER_DIR}/Loader_{args.game}.bin",
+            f"-output-map={BUILD_DIR}/{LOADER_DIR}/Loader_{args.game}.map",
+            f"-externals={BASE_DIR}/symbols_{args.game}.txt"
+        ])
 
-    if not link(objs, ldflags):
-        print("[FATAL] Error while linking Kamek loader.")
-        return False
+        if not link(objs, ldflags):
+            print("[FATAL] Error while linking Kamek loader.")
+            return False
 
     return True
 
