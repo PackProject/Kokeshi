@@ -219,6 +219,9 @@ SHOW_USED_FILES        = NO
 # KOKESHI: Enabled for customization.
 LAYOUT_FILE            = docs/layout.xml
 
+# KOKESHI: Disabled for consistentency.
+CASE_SENSE_NAMES       = NO
+
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
