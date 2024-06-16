@@ -1,0 +1,33 @@
+name: Build docs
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Kokeshi repository
+      uses: actions/checkout@v3
+      
+    - name: Create Doxygen folder
+      run: mkdir -p build/docs
+
+    - name: Build Doxygen docs
+    - uses: mattnotmitt/doxygen-action@v1.9.8
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3.0.1
+      with:
+        path: build/docs
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4.0.5
