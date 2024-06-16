@@ -17,7 +17,7 @@ jobs:
         
     - name: Download compilers
       run: |
-        curl -L '${{ secrets.COMPILERS }}' | bsdtar -xvf- -C tools
+        curl -L '${{ secrets.COMPILERS }}' | tar -xvf- -C tools
         mv tools/Wii/1.7 tools
 
     - name: Build the code
