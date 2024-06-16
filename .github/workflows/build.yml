@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  SOLUTION_FILE_PATH: tools/Kamek/Kamek/Kamek.sln
+
 jobs:
   build:
     runs-on: windows-latest
@@ -25,7 +28,7 @@ jobs:
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build Kamek
-      run: msbuild /m /p:Configuration=Debug tools/Kamek/Kamek/Kamek.sln
+      run: msbuild /m /p:Configuration=Debug ${{env.SOLUTION_FILE_PATH}}
     - name: Install Kamek
       run: mv tools/Kamek/Kamek/bin/Debug/net6.0/* tools
 
