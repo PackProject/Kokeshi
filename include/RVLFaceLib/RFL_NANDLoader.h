@@ -6,8 +6,14 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 BOOL RFLFreeCachedResource(void);
 BOOL RFLIsResourceCached(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -6,19 +6,18 @@
 extern "C" {
 #endif
 
-/**
- * Common types used throughout many RFL files.
- *
- * To avoid circular depencies, common structures and all enums have been moved
- * here.
- *
- * Everything is organized in alphabetical order (when possible, otherwise
- * dependency order).
- */
+//
+// Common RFL elements have been moved here to avoid circular dependencies.
+// Everything is organized alphabetically where possible.
+//
 
-/**
- * Common enums
- */
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
+//
+// Common enums
+//
 
 typedef enum {
     RFLiArcID_Beard,
@@ -127,16 +126,17 @@ typedef enum {
     RFLiPartsTex_Max
 } RFLiPartsTex;
 
-/**
- * Common typedefs
- */
+//
+// Common typedefs
+//
 
 typedef void (*RFLiCallback)(void);
 typedef void (*RFLiExCallback)(u32 arg);
 
-/**
- * Common structs
- */
+//
+// Common structs
+//
+
 typedef struct RFLiCharInfo {
     union {
         struct {
@@ -430,6 +430,8 @@ typedef struct RFLiHiddenCharData {
 
     char padding9[10]; // at 0x36
 } RFLiHiddenCharData;
+
+//! @}
 
 #ifdef __cplusplus
 }

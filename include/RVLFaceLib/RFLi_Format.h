@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 typedef struct RFLiTableData {
     RFLCreateID createID; // at 0x0
 
@@ -21,6 +25,8 @@ typedef struct RFLiTableData {
 void RFLiClearTableData(RFLiTableData* data);
 void RFLiClearDBBuffer(void);
 RFLErrcode RFLiFormatAsync(RFLiCallback cb);
+
+//! @}
 
 #ifdef __cplusplus
 }

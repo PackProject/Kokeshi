@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 #define RFLi_CTRL_REPLACE_BUF_NUM 2
 
 typedef struct RFLiCtrlBuf {
@@ -55,6 +59,8 @@ BOOL RFLiCheckCtrlBufferCore(const RFLiCtrlBuf* buf, u8 index,
 RFLErrcode RFLiLoadControllerAsync(s32 chan, BOOL ch);
 BOOL RFLiGetControllerData(RFLiCharInfo* info, s32 chan, u16 index,
                            BOOL allowHidden);
+
+//! @}
 
 #ifdef __cplusplus
 }

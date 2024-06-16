@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 typedef struct RFLiTexture {
     u8 format;          // at 0x0
     u8 alpha;           // at 0x1
@@ -34,6 +38,8 @@ typedef struct RFLiTexture {
 inline void* RFLiGetTexImage(const RFLiTexture* tex) {
     return (u8*)tex + tex->imageOfs;
 }
+
+//! @}
 
 #ifdef __cplusplus
 }

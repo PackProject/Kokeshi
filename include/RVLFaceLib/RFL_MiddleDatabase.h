@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 typedef enum {
     RFLMiddleDBType_HiddenRandom,
     RFLMiddleDBType_HiddenNewer,
@@ -29,6 +33,8 @@ void RFLSetMiddleDBRandomMask(RFLMiddleDB* db, RFLSex sex, RFLAge age,
                               RFLRace race);
 void RFLSetMiddleDBHiddenMask(RFLMiddleDB* db, RFLSex sex);
 RFLErrcode RFLAddMiddleDBStoreData(RFLMiddleDB* db, const RFLStoreData* data);
+
+//! @}
 
 #ifdef __cplusplus
 }

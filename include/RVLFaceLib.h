@@ -4,6 +4,12 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+
+//! @file
+//! @brief Includes all header files of RFL
+
 #include <RVLFaceLib/RFL_Controller.h>
 #include <RVLFaceLib/RFL_DataUtility.h>
 #include <RVLFaceLib/RFL_Database.h>
@@ -14,6 +20,8 @@ extern "C" {
 #include <RVLFaceLib/RFL_NWC24.h>
 #include <RVLFaceLib/RFL_System.h>
 #include <RVLFaceLib/RFL_Types.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

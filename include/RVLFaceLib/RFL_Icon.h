@@ -6,7 +6,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 void RFLSetIconDrawDoneCallback(RFLCallback callback);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct RFLMiddleDB;
 
@@ -30,6 +34,8 @@ typedef struct RFLAdditionalInfo {
 
 RFLErrcode RFLGetAdditionalInfo(RFLAdditionalInfo* info, RFLDataSource source,
                                 struct RFLMiddleDB* db, u16 index);
+
+//! @}
 
 #ifdef __cplusplus
 }

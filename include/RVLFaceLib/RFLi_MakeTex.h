@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct RFLiTexture;
 
@@ -71,6 +75,8 @@ void RFLiDrawQuad(f32 x, f32 y, f32 width, f32 height, f32 rotZ,
 RFLi_MASKRSL RFLiGetMaxMaskRsl(RFLResolution resolution);
 u32 RFLiGetMaskSize(RFLi_MASKRSL resolution);
 u32 RFLiGetMaskBufSize(RFLResolution resolution);
+
+//! @}
 
 #ifdef __cplusplus
 }

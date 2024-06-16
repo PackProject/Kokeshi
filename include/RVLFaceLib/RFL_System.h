@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 u32 RFLGetWorkSize(BOOL deluxeTex);
 RFLErrcode RFLInitResAsync(void* workBuffer, void* resBuffer, u32 resSize,
                            BOOL deluxeTex);
@@ -16,6 +20,8 @@ BOOL RFLAvailable(void);
 RFLErrcode RFLGetAsyncStatus(void);
 s32 RFLGetLastReason(void);
 RFLErrcode RFLWaitAsync(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -9,6 +9,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 #define VTX_COORDS_IN_POS 3
 #define VTX_COORDS_IN_NRM 3
 #define VTX_COORDS_IN_TXC 2
@@ -148,6 +152,8 @@ void RFLiInitShapeRes(RFLiShapeRes* shape);
 void RFLiInitTexRes(GXTexObj* texObj, RFLiPartsShpTex part, u16 file,
                     void* buffer) DECOMP_DONT_INLINE;
 void RFLiTransformCoordinate(s16* to, const s16* from);
+
+//! @}
 
 #ifdef __cplusplus
 }

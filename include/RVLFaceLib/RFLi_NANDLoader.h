@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct RFLiTexture;
 
@@ -36,6 +40,8 @@ struct RFLiTexture* RFLiLoadShpTexture(RFLiPartsShpTex part, u16 file,
                                        void* dst);
 u32 RFLiGetShapeSize(RFLiPartsShp part, u16 file);
 void* RFLiLoadShape(RFLiPartsShp part, u16 file, void* dst);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+//! @file
+
 #define RFLi_HDB_DATA_MAX 10000
 
 // Forward declarations
@@ -58,6 +62,8 @@ s16 RFLiGetHiddenPrev(u16 index);
 BOOL RFLiIsValidHiddenData(u16 index, RFLSex sex) DECOMP_DONT_INLINE;
 void RFLiClearCacheHDB(RFLiHiddenCharData* hdb);
 BOOL RFLiIsCachedHDB(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

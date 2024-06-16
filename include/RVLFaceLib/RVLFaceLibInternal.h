@@ -4,6 +4,12 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl_impl
+//! @{
+
+//! @file
+//! @brief Includes all header files of RFL (internal implementation)
+
 #include <RVLFaceLib.h>
 #include <RVLFaceLib/RFLi_Config.h>
 #include <RVLFaceLib/RFLi_Controller.h>
@@ -21,6 +27,8 @@ extern "C" {
 #include <RVLFaceLib/RFLi_System.h>
 #include <RVLFaceLib/RFLi_Texture.h>
 #include <RVLFaceLib/RFLi_Types.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

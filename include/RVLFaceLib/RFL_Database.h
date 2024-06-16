@@ -6,8 +6,14 @@
 extern "C" {
 #endif
 
+//! @addtogroup rfl
+//! @{
+//! @file
+
 BOOL RFLIsAvailableOfficialData(u16 index);
 BOOL RFLSearchOfficialData(const RFLCreateID* id, u16* index);
+
+//! @}
 
 #ifdef __cplusplus
 }
