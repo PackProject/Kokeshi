@@ -11,7 +11,7 @@ extern "C" {
 volatile u32 SI_HW_REGS[] : 0xCD006400;
 
 /**
- * Hardware register indexes
+ * Hardware register indices
  */
 typedef enum {
     SI_SIC0OUTBUF, //!< 0xCD006400
@@ -33,7 +33,7 @@ typedef enum {
 
     // SI communication RAM
     SI_RAM_BASE = (0xCD006480 - 0xCD006400) / sizeof(u32) //!< 0xCD006480
-};
+} SIHwReg;
 
 // SIPOLL - SI Poll Register
 #define SI_SIPOLL_X (0b1111111111 << 16)

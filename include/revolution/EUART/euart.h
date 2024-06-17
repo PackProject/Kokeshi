@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_euart
+//! @{
+//! @file
+
 typedef enum {
     EUART_ERROR_OK,
     EUART_ERROR_FATAL,
@@ -17,6 +21,8 @@ typedef enum {
 BOOL EUARTInit(void);
 EUARTError InitializeUART(void);
 EUARTError WriteUARTN(const char* msg, u32 n);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -6,10 +6,16 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct NWC24MsgObj;
 
 NWC24Err NWC24CommitMsg(struct NWC24MsgObj*);
+
+//! @}
 
 #ifdef __cplusplus
 }

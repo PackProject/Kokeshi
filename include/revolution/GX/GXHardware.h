@@ -1,15 +1,18 @@
-/**
- * For more details, see:
- * https://www.gc-forever.com/yagcd/chap8.html#sec8
- * https://www.gc-forever.com/yagcd/chap5.html#sec5
- * https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/BPMemory.h
- * https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/XFMemory.h
- * https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/OpcodeDecoding.h
- * https://patents.google.com/patent/US6700586B1/en
- * https://patents.google.com/patent/US6639595B1/en
- * https://patents.google.com/patent/US7002591
- * https://patents.google.com/patent/US6697074
- */
+// clang-format off
+//
+// For more details, see:
+//
+// https://www.gc-forever.com/yagcd/chap8.html#sec8
+// https://www.gc-forever.com/yagcd/chap5.html#sec5
+// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/BPMemory.h
+// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/XFMemory.h
+// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/VideoCommon/OpcodeDecoding.h
+// https://patents.google.com/patent/US6700586B1/en
+// https://patents.google.com/patent/US6639595B1/en
+// https://patents.google.com/patent/US7002591
+// https://patents.google.com/patent/US6697074
+//
+// clang-format on
 
 #ifndef RVL_SDK_GX_HARDWARE_H
 #define RVL_SDK_GX_HARDWARE_H
@@ -18,6 +21,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//! @addtogroup rvl_gx
+//! @{
+//! @file
 
 /************************************************************
  *
@@ -28,7 +35,7 @@ extern "C" {
  ***********************************************************/
 
 /**
- * FIFO write/gather pipe
+ * @brief FIFO write/gather pipe
  */
 extern volatile union {
     // 1-byte
@@ -45,7 +52,7 @@ extern volatile union {
 } WGPIPE : 0xCC008000;
 
 /**
- * FIFO commands
+ * @brief FIFO commands
  */
 typedef enum {
     GX_FIFO_CMD_NOOP = 0x00,
@@ -98,14 +105,14 @@ typedef enum {
  ***********************************************************/
 
 /**
- * Load immediate value into BP register
+ * @brief Load immediate value into BP register
  */
 #define GX_BP_LOAD_REG(data)                                                   \
     WGPIPE.c = GX_FIFO_CMD_LOAD_BP_REG;                                        \
     WGPIPE.i = (data);
 
 /**
- * Set BP command opcode (first 8 bits)
+ * @brief Set BP command opcode (first 8 bits)
  */
 #define GX_BP_SET_OPCODE(cmd, opcode) (cmd) = GX_BITSET(cmd, 0, 8, (opcode))
 
@@ -118,7 +125,7 @@ typedef enum {
  ***********************************************************/
 
 /**
- * Load immediate value into CP register
+ * @brief Load immediate value into CP register
  */
 #define GX_CP_LOAD_REG(addr, data)                                             \
     WGPIPE.c = GX_FIFO_CMD_LOAD_CP_REG;                                        \
@@ -134,7 +141,7 @@ typedef enum {
  ***********************************************************/
 
 /**
- * XF memory
+ * @brief XF memory
  */
 typedef enum {
     GX_XF_MEM_POSMTX = 0x0000,
@@ -144,21 +151,21 @@ typedef enum {
 } GXXfMem;
 
 /**
- * Header for an XF register load
+ * @brief Header for an XF register load
  */
 #define GX_XF_LOAD_REG_HDR(addr)                                               \
     WGPIPE.c = GX_FIFO_CMD_LOAD_XF_REG;                                        \
     WGPIPE.i = (addr);
 
 /**
- * Load immediate value into XF register
+ * @brief Load immediate value into XF register
  */
 #define GX_XF_LOAD_REG(addr, data)                                             \
     GX_XF_LOAD_REG_HDR(addr);                                                  \
     WGPIPE.i = (data);
 
 /**
- * Load immediate values into multiple XF registers
+ * @brief Load immediate values into multiple XF registers
  */
 #define GX_XF_LOAD_REGS(size, addr)                                            \
     {                                                                          \
@@ -169,7 +176,7 @@ typedef enum {
     }
 
 /**
- * Enums for Tex0-Tex7 register fields
+ * @brief Enums for Tex0-Tex7 register fields
  */
 typedef enum {
     GX_XF_TEX_PROJ_ST, //! (s,t): texmul is 2x4
@@ -189,6 +196,8 @@ typedef enum {
     GX_XF_TG_CLR1  //! Color texgen: (s,t)=(r,g:b) (g and b are concatenated),
                    //! color 1
 } GXXfTexGen;
+
+//! @}
 
 #ifdef __cplusplus
 }

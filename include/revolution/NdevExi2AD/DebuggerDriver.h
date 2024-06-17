@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ndev
+//! @{
+//! @file
+
 void DBInitComm(u8** flagOut, OSInterruptHandler handler);
 void DBInitInterrupts(void);
 u32 DBQueryData(void);
@@ -31,6 +35,8 @@ static BOOL __DBWrite(u32 ofs, const void* src, u32 size) {
     return __DBEXIWriteRam(
         (((ofs + 0xD10000) * 0x40) & 0x3FFFFF00) | 0x80000000, src, size);
 }
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_axfx
+//! @{
+//! @file
+
 typedef void* (*AXFXAllocHook)(size_t size);
 typedef void (*AXFXFreeHook)(void* block);
 
@@ -13,6 +17,8 @@ extern AXFXFreeHook __AXFXFree;
 
 void AXFXSetHooks(AXFXAllocHook alloc, AXFXFreeHook free);
 void AXFXGetHooks(AXFXAllocHook* alloc, AXFXFreeHook* free);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dvd
+//! @{
+//! @file
+
 typedef void (*DVDErrorCallback)(s32 result, s32 arg1);
 
 #define DVD_ERROR_CMD_MAX 5
@@ -31,6 +35,8 @@ typedef struct DVDErrorInfo {
 extern DVDErrorInfo __ErrorInfo;
 
 void __DVDStoreErrorCode(u32 error, DVDErrorCallback callback);
+
+//! @}
 
 #ifdef __cplusplus
 }

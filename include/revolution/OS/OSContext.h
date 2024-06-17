@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_os
+//! @{
+//! @file
+
 typedef enum {
     OS_CONTEXT_STATE_FP_SAVED = (1 << 0),
 } OSContextState;
@@ -39,6 +43,8 @@ void OSClearContext(OSContext* ctx);
 void OSInitContext(OSContext* ctx, void* _srr0, void* stack);
 void OSDumpContext(const OSContext* ctx);
 void __OSContextInit(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

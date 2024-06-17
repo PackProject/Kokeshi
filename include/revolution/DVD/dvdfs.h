@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dvd
+//! @{
+//! @file
+
 extern OSThreadQueue __DVDThreadQueue;
 extern BOOL __DVDLongFileNameFlag;
 
@@ -19,6 +23,8 @@ BOOL DVDGetCurrentDir(char* buffer, u32 maxlen);
 BOOL DVDReadAsyncPrio(DVDFileInfo* info, void* dst, s32 size, s32 offset,
                       DVDAsyncCallback callback, s32 prio);
 s32 DVDReadPrio(DVDFileInfo* info, void* dst, s32 size, s32 offset, s32 prio);
+
+//! @}
 
 #ifdef __cplusplus
 }

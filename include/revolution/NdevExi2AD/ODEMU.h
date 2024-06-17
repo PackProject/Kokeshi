@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ndev
+//! @{
+//! @file
+
 static u32 ODEMUGenMailData(u32 ofs, u32 size) {
     return (ofs & 0xff) << 0x10 | 0x1f000000 | size & 0x1fff;
 }
@@ -28,6 +32,8 @@ static BOOL ODEMUIsValidMail(u32 mail) {
 static u32 ODEMUGetSize(u32 mail) {
     return mail & 0x1FFF;
 }
+
+//! @}
 
 #ifdef __cplusplus
 }

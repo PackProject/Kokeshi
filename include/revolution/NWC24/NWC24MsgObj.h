@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 #define NWC24_MSG_RECIPIENT_MAX 8
 #define NWC24_MSG_ATTACHMENT_MAX 2
 
@@ -52,7 +56,7 @@ typedef struct NWC24MsgObj {
     union {
         u64 toIds[NWC24_MSG_RECIPIENT_MAX];
         NWC24Data toAddrs[NWC24_MSG_RECIPIENT_MAX];
-    };              // at 0x88
+    }; // at 0x88
     u8 numTo;       // at 0xC8
     u8 numAttached; // at 0xC9
     u16 groupId;    // at 0xCA
@@ -80,6 +84,8 @@ NWC24Err NWC24SetMsgFaceData(NWC24MsgObj* msg, const struct RFLCharData* data);
 NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const wchar_t* name, u32 len);
 NWC24Err NWC24SetMsgMBNoReply(NWC24MsgObj* msg, BOOL enable);
 NWC24Err NWC24SetMsgMBRegDate(NWC24MsgObj* msg, u16 year, u8 month, u8 day);
+
+//! @}
 
 #ifdef __cplusplus
 }

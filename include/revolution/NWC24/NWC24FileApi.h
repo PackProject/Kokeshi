@@ -8,6 +8,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 typedef enum {
     // Access
     NWC24_OPEN_WRITE = (1 << 0),
@@ -69,6 +73,8 @@ NWC24Err NWC24FDeleteVF(const char* path);
 NWC24Err NWC24MountVF(const char* drive, const char* filename);
 NWC24Err NWC24UnmountVF(const char* drive);
 NWC24Err NWC24CheckSizeVF(const char* drive, u32* sizeOut);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -95,6 +95,10 @@
 //! @defgroup rvl_gx GX
 //! @brief Graphics FIFO
 
+//! @ingroup rvl_gx
+//! @defgroup rvl_gx_hw GX Hardware
+//! @brief Hardware registers
+
 //! @ingroup rvl
 //! @defgroup rvl_ipc IPC
 //! @brief Communication with IOS
@@ -126,6 +130,10 @@
 //! @ingroup rvl
 //! @defgroup rvl_os OS
 //! @brief Revolution OS
+
+//! @ingroup rvl_os
+//! @defgroup rvl_os_global OS Globals
+//! @brief Operating system globals
 
 //! @ingroup rvl
 //! @defgroup rvl_pad PAD

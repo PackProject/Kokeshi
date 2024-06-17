@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nand
+//! @{
+//! @file
+
 s32 NANDOpen(const char* path, NANDFileInfo* info, u8 mode);
 s32 NANDPrivateOpen(const char* path, NANDFileInfo* info, u8 mode);
 s32 NANDOpenAsync(const char* path, NANDFileInfo* info, u8 mode,
@@ -23,6 +27,8 @@ s32 NANDPrivateSafeOpenAsync(const char* path, NANDFileInfo* info, u8 access,
                              NANDCommandBlock* block);
 s32 NANDSafeCloseAsync(NANDFileInfo* info, NANDAsyncCallback callback,
                        NANDCommandBlock* block);
+
+//! @}
 
 #ifdef __cplusplus
 }

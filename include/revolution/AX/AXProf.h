@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ax
+//! @{
+//! @file
+
 typedef struct _AXPROFILE {
     s64 timeBegin;           // at 0x0
     s64 timeProcessAuxBegin; // at 0x8
@@ -17,6 +21,8 @@ typedef struct _AXPROFILE {
 } AXPROFILE;
 
 AXPROFILE* __AXGetCurrentProfile(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,13 +5,17 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dsp
+//! @{
+//! @file
+
 /**
- * DSP hardware registers
+ * @brief DSP hardware registers
  */
 volatile u16 DSP_HW_REGS[] : 0xCC005000;
 
 /**
- * Hardware register indexes
+ * @brief Hardware register indices
  */
 typedef enum {
     DSP_DSPMBOX_H,        //!< 0xCC005000
@@ -46,13 +50,18 @@ typedef enum {
     DSP_AI_DMA_BYTES_LEFT //!< 0xCC00503A
 } DSPHwReg;
 
-// DSPMBOX_H - DSP Mailbox High (to DSP)
+//! @name DSPMBOX_H - DSP Mailbox High (to DSP)
+/**@{*/
 #define DSP_DSPMBOX_H_STATUS (1 << 15)
+/**@}*/
 
-// CPUMBOX_H - CPU Mailbox High (from DSP)
+//! @name CPUMBOX_H - CPU Mailbox High (from DSP)
+/**@{*/
 #define DSP_CPUMBOX_H_STATUS (1 << 15)
+/**@}*/
 
-// CSR - Control Status Register
+//! @name CSR - Control Status Register
+/**@{*/
 #define DSP_CSR_RES (1 << 11)
 #define DSP_CSR_DMAINT (1 << 9)
 #define DSP_CSR_DSPINTMSK (1 << 8)
@@ -63,9 +72,14 @@ typedef enum {
 #define DSP_CSR_AIDINT (1 << 3)
 #define DSP_CSR_HALT (1 << 2)
 #define DSP_CSR_PIINT (1 << 1)
+/**@}*/
 
-// AI_DMA_CSR - AI DMA Control Status Register
+//! @name AI_DMA_CSR - AI DMA Control Status Register
+/**@{*/
 #define DSP_AI_DMA_CSR_PLAY (1 << 15)
+/**@}*/
+
+//! @}
 
 #ifdef __cplusplus
 }

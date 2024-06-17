@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ax
+//! @{
+//! @file
+
 #define AX_MAX_VOLUME 32768
 // Command list can hold up to 64 commands
 #define AX_CL_MAX_CMD 64
@@ -33,6 +37,8 @@ void AXSetMasterVolume(u16 volume);
 void AXSetAuxAReturnVolume(u16 volume);
 void AXSetAuxBReturnVolume(u16 volume);
 void AXSetAuxCReturnVolume(u16 volume);
+
+//! @}
 
 #ifdef __cplusplus
 }

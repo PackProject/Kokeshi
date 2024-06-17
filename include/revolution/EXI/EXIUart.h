@@ -6,7 +6,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_exi
+//! @{
+//! @file
+
 void __OSEnableBarnacle(EXIChannel chan, u32 dev);
+
+//! @}
 
 #ifdef __cplusplus
 }

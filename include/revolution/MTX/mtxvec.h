@@ -6,7 +6,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_mtx
+//! @{
+//! @file
+
 void PSMTXMultVec(const Mtx mtx, const Vec* vec, Vec* out);
+
+//! @}
 
 #ifdef __cplusplus
 }

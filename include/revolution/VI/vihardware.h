@@ -11,7 +11,7 @@ extern "C" {
 volatile u16 VI_HW_REGS[] : 0xCC002000;
 
 /**
- * Hardware register indexes
+ * Hardware register indices
  */
 typedef enum {
     VI_VTR,    //!< 0xCC002000

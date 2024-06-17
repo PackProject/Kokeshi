@@ -5,13 +5,18 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 /**
  * Pack value into bitfield.
  * Value is shifted to the specified bit position.
  * (Bit indices are LSB)
  */
 #define GX_BITSET(field, pos, size, value)                                     \
-    __rlwimi((field), (value), 31 - (pos) - (size) + 1, (pos), (pos) + (size)-1)
+    __rlwimi((field), (value), 31 - (pos) - (size) + 1, (pos),                 \
+             (pos) + (size) - 1)
 
 /**
  * Compose value from bitfield.
@@ -27,7 +32,7 @@ extern "C" {
  * (Bit indices are LSB)
  */
 #define GX_BITSET_TRUNC(field, pos, size, value)                               \
-    __rlwimi((field), (value), 0, (pos), (pos) + (size)-1)
+    __rlwimi((field), (value), 0, (pos), (pos) + (size) - 1)
 
 /**
  * Compose value from bitfield.
@@ -43,13 +48,12 @@ extern "C" {
  * here. Everything is organized in alphabetical order.
  */
 
-// Differentiate between 8-byte and boolean values
-// Real name! (from patent)
+//! Differentiate between 8-byte and boolean values. Real name! (from patent)
 typedef unsigned char GXBool;
 
-/**
- * Common structs
- */
+//
+// Common structs
+//
 
 typedef struct _GXColor {
     u8 r, g, b, a;
@@ -59,9 +63,9 @@ typedef struct _GXColorS10 {
     s16 r, g, b, a;
 } GXColorS10;
 
-/**
- * Common enums
- */
+//
+// Common enums
+//
 
 typedef enum _GXAlphaOp {
     GX_AOP_AND,
@@ -112,17 +116,17 @@ typedef enum _GXAttr {
     GX_NRM_MTX_ARRAY,
     GX_TEX_MTX_ARRAY,
     GX_LIGHT_ARRAY,
-    GX_VA_NBT, // All three normal elements (normal/binormal/tangent)
+    GX_VA_NBT, //!< All three normal elements (normal/binormal/tangent)
 
     GX_VA_MAX_ATTR,
     GX_VA_NULL = 255
 } GXAttr;
 
 typedef enum _GXAttrType {
-    GX_NONE,   //! No data sent
-    GX_DIRECT, //! Data sent directly to FIFO
-    GX_INDEX8, //! 8-bit index sent to FIFO
-    GX_INDEX16 //! 16-bit index sent to FIFO
+    GX_NONE,   //!< No data sent
+    GX_DIRECT, //!< Data sent directly to FIFO
+    GX_INDEX8, //!< 8-bit index sent to FIFO
+    GX_INDEX16 //!< 16-bit index sent to FIFO
 } GXAttrType;
 
 typedef enum _GXBlendFactor {
@@ -303,7 +307,7 @@ typedef enum _GXFogType {
 
 // Access components of the fog type
 #define GX_FOG_GET_PROJ(x) ((x) >> 3 & 1)
-#define GX_FOG_GET_FSEL(x) ((x)&7)
+#define GX_FOG_GET_FSEL(x) ((x) & 7)
 
 typedef enum _GXIndTexAlphaSel {
     GX_ITBA_OFF,
@@ -875,6 +879,8 @@ typedef enum _GXZTexOp {
 
     GX_MAX_ZTEXOP
 } GXZTexOp;
+
+//! @}
 
 #ifdef __cplusplus
 }

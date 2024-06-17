@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ai
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct OSContext;
 
@@ -23,6 +27,8 @@ void AISetDSPSampleRate(u32 rate);
 u32 AIGetDSPSampleRate(void);
 void AIInit(void* stack);
 void __AIDHandler(s16 intr, struct OSContext* ctx);
+
+//! @}
 
 #ifdef __cplusplus
 }

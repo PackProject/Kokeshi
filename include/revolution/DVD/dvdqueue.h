@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dvd
+//! @{
+//! @file
+
 typedef enum {
     DVD_PRIO_HIGHEST,
     DVD_PRIO_HIGH,
@@ -21,6 +25,8 @@ DVDCommandBlock* __DVDPopWaitingQueue(void);
 BOOL __DVDCheckWaitingQueue(void);
 DVDCommandBlock* __DVDGetNextWaitingQueue(void);
 BOOL __DVDDequeueWaitingQueue(const DVDCommandBlock* block);
+
+//! @}
 
 #ifdef __cplusplus
 }

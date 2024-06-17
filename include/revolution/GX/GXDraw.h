@@ -5,8 +5,14 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 void GXDrawCylinder(u8 sides);
 void GXDrawSphere(u32 stacks, u32 sectors);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nand
+//! @{
+//! @file
+
 #define NAND_BANNER_TITLE_MAX 32
 #define NAND_BANNER_ICON_MAX_FRAME 8
 
@@ -176,6 +180,8 @@ s32 NANDPrivateGetStatusAsync(const char* path, NANDStatus* status,
 
 void NANDSetUserData(NANDCommandBlock* block, void* data);
 void* NANDGetUserData(NANDCommandBlock* block);
+
+//! @}
 
 #ifdef __cplusplus
 }

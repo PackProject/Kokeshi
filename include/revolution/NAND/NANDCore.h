@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nand
+//! @{
+//! @file
+
 void nandRemoveTailToken(char* newp, const char* oldp);
 void nandGetHeadToken(char* head, char* rest, const char* path);
 void nandGetRelativeName(char* name, const char* path);
@@ -28,6 +32,8 @@ s32 NANDPrivateGetTypeAsync(const char* path, u8* type,
 const char* nandGetHomeDir(void);
 void NANDInitBanner(NANDBanner* banner, u32 flags, const wchar_t* title,
                     const wchar_t* subtitle);
+
+//! @}
 
 #ifdef __cplusplus
 }

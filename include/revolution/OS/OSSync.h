@@ -5,7 +5,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_os
+//! @{
+//! @file
+
 void __OSInitSystemCall(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

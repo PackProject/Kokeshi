@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_mtx
+//! @{
+//! @file
+
 typedef f32 Mtx[3][4];
 typedef f32 Mtx44[4][4];
 
@@ -36,6 +40,8 @@ void C_MTXLookAt(Mtx, const Vec*, const Vec*, const Vec*);
 void C_MTXLightFrustum(Mtx, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 void C_MTXLightPerspective(Mtx, f32, f32, f32, f32, f32, f32);
 void C_MTXLightOrtho(Mtx, f32, f32, f32, f32, f32, f32, f32, f32);
+
+//! @}
 
 #ifdef __cplusplus
 }

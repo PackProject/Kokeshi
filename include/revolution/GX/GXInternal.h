@@ -6,18 +6,18 @@
 extern "C" {
 #endif
 
-/**
- * GX internal structures.
- *
- * Wouldn't be necessary if the public ones didn't include padding; but they do,
- * so there has to be different structure definitions.
- *
- * These internal structures are implemented like the RFL ones since we don't
- * have DWARF info for most GX structures.
- */
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
+//
+// GX internal structures
+// Public structures include padding so they must be included in decomp.
+//
 
 /**
- * Declare a public structure from the corresponding internal structure.
+ * @brief Declares a dummy public structure from an internal structure.
+ *
  * (Implementation size is included to require that such a structure already
  * exists.)
  */
@@ -62,6 +62,8 @@ typedef struct _GXTexObjImpl {
 typedef struct _GXTlutObjImpl {
     u8 todo;
 } GXTlutObjImpl;
+
+//! @}
 
 #ifdef __cplusplus
 }

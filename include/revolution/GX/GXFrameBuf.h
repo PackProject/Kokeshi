@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 typedef struct _GXRenderModeObj {
     u32 tvInfo;               // at 0x0
     u16 fbWidth;              // at 0x4
@@ -36,6 +40,8 @@ void GXSetCopyFilter(GXBool, u8 sample_pattern[12][2], GXBool, u8 vfilter[7]);
 
 void GXCopyDisp(void*, GXBool);
 void GXCopyTex(void*, GXBool);
+
+//! @}
 
 #ifdef __cplusplus
 }

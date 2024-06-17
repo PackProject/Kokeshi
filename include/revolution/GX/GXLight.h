@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 GX_DECL_PUBLIC_STRUCT(GXLightObj, 64);
 
 void GXInitLightAttn(GXLightObj* light, f32 aa, f32 ab, f32 ac, f32 ka, f32 kb,
@@ -30,6 +34,8 @@ void GXSetNumChans(u8 num);
 void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc ambSrc,
                    GXColorSrc matSrc, GXLightID lightMask, GXDiffuseFn diffFn,
                    GXAttnFn attnFn);
+
+//! @}
 
 #ifdef __cplusplus
 }

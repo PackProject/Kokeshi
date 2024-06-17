@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_os
+//! @{
+//! @file
+
 typedef struct OSSram {
     u16 checksum;    // at 0x0
     u16 invchecksum; // at 0x2
@@ -36,6 +40,8 @@ u16 OSGetGbsMode(void);
 void OSSetGbsMode(u16 gbs);
 BOOL __OSGetRTCFlags(u32* out);
 BOOL __OSClearRTCFlags(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ipc
+//! @{
+//! @file
+
 u32 IPC_HW_REGS[] : 0xCD000000;
 
 inline u32 ACRReadReg(u32 reg) {
@@ -21,6 +25,8 @@ void IPCWriteReg(s32 index, u32 value);
 void* IPCGetBufferHi(void);
 void* IPCGetBufferLo(void);
 void IPCSetBufferLo(void* lo);
+
+//! @}
 
 #ifdef __cplusplus
 }

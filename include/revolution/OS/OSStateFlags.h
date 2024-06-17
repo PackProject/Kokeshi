@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_os
+//! @{
+//! @file
+
 typedef struct OSStateFlags {
     u32 checksum; // at 0x0
     u8 BYTE_0x4;
@@ -21,6 +25,8 @@ typedef struct OSStateFlags {
 
 BOOL __OSWriteStateFlags(const OSStateFlags* state);
 BOOL __OSReadStateFlags(OSStateFlags* state);
+
+//! @}
 
 #ifdef __cplusplus
 }

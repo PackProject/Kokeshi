@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 #define NWC24_FRIEND_LIST_CAPACITY 100
 
 typedef struct NWC24FLHeader {
@@ -18,6 +22,8 @@ typedef struct NWC24FLHeader {
 } NWC24FLHeader;
 
 NWC24Err NWC24iOpenFriendList(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

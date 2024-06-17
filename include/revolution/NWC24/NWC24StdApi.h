@@ -5,7 +5,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 void* Mail_memset(void* dst, int ch, size_t n);
+
+//! @}
 
 #ifdef __cplusplus
 }

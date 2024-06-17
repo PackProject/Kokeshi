@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_axfx
+//! @{
+//! @file
+
 typedef struct AXFX_REVERBHI_EXP_DPL2 {
     f32* earlyLine[4];  // at 0x0
     u32 earlyPos[3];    // at 0x10
@@ -59,6 +63,8 @@ void AXFXReverbHiExpShutdownDpl2(AXFX_REVERBHI_EXP_DPL2* fx);
 BOOL AXFXReverbHiExpSettingsDpl2(AXFX_REVERBHI_EXP_DPL2* fx);
 void AXFXReverbHiExpCallbackDpl2(struct AXFX_BUFFERUPDATE_DPL2* update,
                                  AXFX_REVERBHI_EXP_DPL2* fx);
+
+//! @}
 
 #ifdef __cplusplus
 }

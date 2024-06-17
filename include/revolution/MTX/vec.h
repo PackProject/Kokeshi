@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_mtx
+//! @{
+//! @file
+
 void PSVECAdd(const Vec* a, const Vec* b, Vec* sum);
 void PSVECScale(const Vec* in, Vec* out, f32 scale);
 void PSVECNormalize(const Vec* in, Vec* out);
@@ -14,6 +18,8 @@ f32 PSVECDotProduct(const Vec* a, const Vec* b);
 void PSVECCrossProduct(const Vec* a, const Vec* b, Vec* prod);
 f32 PSVECSquareDistance(const Vec* a, const Vec* b);
 void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dsp
+//! @{
+//! @file
+
 #define DSP_SEND_MAIL_SYNC(x)                                                  \
     do {                                                                       \
         DSPSendMailToDSP((DSPMail)(x));                                        \
@@ -64,6 +68,8 @@ void __DSP_exec_task(DSPTask* task1, DSPTask* task2);
 void __DSP_boot_task(DSPTask* task);
 void __DSP_insert_task(DSPTask* task);
 void __DSP_remove_task(DSPTask* task);
+
+//! @}
 
 #ifdef __cplusplus
 }

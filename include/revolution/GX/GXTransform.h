@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 void GXSetProjection(const Mtx44 proj, GXProjectionType type);
 void GXSetProjectionv(const f32 proj[7]);
 void GXGetProjectionv(f32 proj[7]);
@@ -33,6 +37,8 @@ void __GXSetMatrixIndex(GXAttr index);
 static void GXSetViewportv(const f32* vp) {
     GXSetViewport(vp[0], vp[1], vp[2], vp[3], vp[4], vp[5]);
 }
+
+//! @}
 
 #ifdef __cplusplus
 }

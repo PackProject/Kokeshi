@@ -5,10 +5,16 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_dvd
+//! @{
+//! @file
+
 void __DVDShowFatalMessage(void);
 BOOL DVDSetAutoFatalMessaging(BOOL enable);
 BOOL __DVDGetAutoFatalMessaging(void);
 void __DVDPrintFatalMessage(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

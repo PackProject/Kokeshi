@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 typedef struct NWC24SecretFLHeader {
     u32 magic;   // at 0x0
     u32 version; // at 0x4
@@ -13,6 +17,8 @@ typedef struct NWC24SecretFLHeader {
 } NWC24SecretFLHeader;
 
 NWC24Err NWC24iOpenSecretFriendList(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

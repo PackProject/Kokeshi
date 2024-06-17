@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_axfx
+//! @{
+//! @file
+
 typedef struct AXFX_CHORUS {
     AXFX_CHORUS_EXP exp; // at 0x0
     u32 baseDelay;       // at 0xA0
@@ -18,6 +22,8 @@ BOOL AXFXChorusInit(AXFX_CHORUS* fx);
 BOOL AXFXChorusShutdown(AXFX_CHORUS* fx);
 BOOL AXFXChorusSettings(AXFX_CHORUS* fx);
 void AXFXChorusCallback(void* chans, void* context);
+
+//! @}
 
 #ifdef __cplusplus
 }

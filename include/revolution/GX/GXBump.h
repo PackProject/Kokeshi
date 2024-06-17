@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_gx
+//! @{
+//! @file
+
 void GXSetTevIndirect(GXTevStageID tevStage, GXIndTexStageID texStage,
                       GXIndTexFormat texFmt, GXIndTexBiasSel biasSel,
                       GXIndTexMtxID mtxId, GXIndTexWrap wrapS,
@@ -22,6 +26,8 @@ void GXSetTevDirect(GXTevStageID stage);
 void __GXUpdateBPMask(void);
 void __GXSetIndirectMask(u32 mask);
 void __GXFlushTextureState(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

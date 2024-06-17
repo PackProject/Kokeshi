@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_mem
+//! @{
+//! @file
+
 // Forward declarations
 typedef struct MEMiHeapHead;
 
@@ -23,7 +27,7 @@ typedef struct MEMiExpHeapMBlock {
             u16 align : 7;
             u16 group : 8;
         };
-    };                              // at 0x2
+    }; // at 0x2
     u32 size;                       // at 0x4
     struct MEMiExpHeapMBlock* prev; // at 0x8
     struct MEMiExpHeapMBlock* next; // at 0xC
@@ -68,6 +72,8 @@ static void* MEMAllocFromExpHeap(struct MEMiHeapHead* heap, u32 size) {
 static u32 MEMGetAllocatableSizeForExpHeap(struct MEMiHeapHead* heap) {
     return MEMGetAllocatableSizeForExpHeapEx(heap, 4);
 }
+
+//! @}
 
 #ifdef __cplusplus
 }

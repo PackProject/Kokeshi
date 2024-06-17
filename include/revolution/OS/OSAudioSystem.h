@@ -5,8 +5,14 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_os
+//! @{
+//! @file
+
 void __OSInitAudioSystem(void);
 void __OSStopAudioSystem(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

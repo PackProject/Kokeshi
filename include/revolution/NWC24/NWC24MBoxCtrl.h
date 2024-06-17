@@ -6,7 +6,13 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 NWC24Err NWC24iOpenMBox(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

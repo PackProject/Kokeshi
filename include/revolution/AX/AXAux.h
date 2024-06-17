@@ -5,11 +5,13 @@
 extern "C" {
 #endif
 
-/**
- * Stereo: Left, Right, Surround
- * DPL2:   Left, Right, Left Surround, Right Surround
- */
+//! @addtogroup rvl_ax
+//! @{
+//! @file
+
+//! Left, Right, Surround
 #define AX_STEREO_CHAN_MAX 3
+//! Left, Right, Left Surround, Right Surround
 #define AX_DPL2_CHAN_MAX 4
 
 #define AX_SAMPLES_PER_FRAME 96
@@ -41,6 +43,8 @@ void AXRegisterAuxCCallback(AXAuxCallback callback, void* context);
 void AXGetAuxACallback(AXAuxCallback* callback, void** context);
 void AXGetAuxBCallback(AXAuxCallback* callback, void** context);
 void AXGetAuxCCallback(AXAuxCallback* callback, void** context);
+
+//! @}
 
 #ifdef __cplusplus
 }

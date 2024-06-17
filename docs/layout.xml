@@ -5,6 +5,7 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="user" url="@ref md_docs_2CONTRIBUTING" title="Contributing"/>
+    <tab type="todo" title="" intro=""/>
     <tab type="topics" visible="yes" title="Modules" intro="Here is a list of all documented modules with brief descriptions:"/>
     <tab type="namespacelist" visible="yes" title="Namespaces" intro=""/>
     <tab type="classlist" visible="yes" title=""/>

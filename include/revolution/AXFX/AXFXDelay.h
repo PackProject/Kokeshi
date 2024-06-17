@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_axfx
+//! @{
+//! @file
+
 typedef struct AXFX_DELAY {
     s32* line[3];        // at 0x0
     u32 curPos[3];       // at 0xC
@@ -22,6 +26,8 @@ BOOL AXFXDelayInit(AXFX_DELAY* fx);
 BOOL AXFXDelaySettings(AXFX_DELAY* fx);
 void AXFXDelayShutdown(AXFX_DELAY* fx);
 void AXFXDelayCallback(void* chans, void* context);
+
+//! @}
 
 #ifdef __cplusplus
 }

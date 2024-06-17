@@ -6,10 +6,16 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_nwc24
+//! @{
+//! @file
+
 NWC24Err NWC24EnableLedNotification(BOOL enable);
 NWC24Err NWC24iPrepareShutdown(void);
 NWC24Err NWC24iRequestShutdown(u32 event, NWC24Err* resultOut);
 BOOL NWC24Shutdown(BOOL final, u32 event);
+
+//! @}
 
 #ifdef __cplusplus
 }

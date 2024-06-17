@@ -1,6 +1,6 @@
-/**
- * Modified from decompilation by riidefi in WiiCore
- */
+//
+// Modified from decompilation by riidefi in WiiCore
+//
 
 #ifndef RVL_SDK_ARC_H
 #define RVL_SDK_ARC_H
@@ -8,6 +8,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//! @addtogroup rvl_arc
+//! @{
+//! @file
 
 typedef enum { ARC_ENTRY_FILE, ARC_ENTRY_FOLDER } ARCEntryType;
 
@@ -91,6 +95,8 @@ BOOL ARCChangeDir(ARCHandle* info, const char* path);
 BOOL ARCOpenDir(ARCHandle* info, const char* path, ARCDir* dir);
 BOOL ARCReadDir(ARCDir* dir, ARCEntry* entry);
 BOOL ARCCloseDir(ARCDir* dir);
+
+//! @}
 
 #ifdef __cplusplus
 }

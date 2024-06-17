@@ -5,9 +5,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ipc
+//! @{
+//! @file
+
 s32 iosCreateHeap(void* base, u32 size);
 void* iosAllocAligned(s32 handle, u32 size, u32 align);
 s32 iosFree(s32 handle, void* block);
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_ipc
+//! @{
+//! @file
+
 typedef enum {
     IPC_RESULT_FATAL_ERROR = -119,
     IPC_RESULT_BUSY,
@@ -141,6 +145,8 @@ s32 IOS_Ioctlv(s32 fd, s32 type, s32 inCount, s32 outCount,
                IPCIOVector* vectors);
 s32 IOS_IoctlvReboot(s32 fd, s32 type, s32 inCount, s32 outCount,
                      IPCIOVector* vectors);
+
+//! @}
 
 #ifdef __cplusplus
 }
