@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 typedef enum {
     RFLMiddleDBType_HiddenRandom,

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef enum {
     OS_CONTEXT_STATE_FP_SAVED = (1 << 0),

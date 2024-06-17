@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_vi
 //! @{
-//! @file
 
 /**
  * @brief VI hardware registers

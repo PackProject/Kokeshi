@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dsp
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct DSPTask;

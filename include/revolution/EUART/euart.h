@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_euart
 //! @{
-//! @file
 
 typedef enum {
     EUART_ERROR_OK,

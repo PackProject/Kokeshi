@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 #define OS_CACHE_BASE 0xE0000000
 

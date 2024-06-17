@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef enum {
     OS_FONT_ENCODE_ANSI,

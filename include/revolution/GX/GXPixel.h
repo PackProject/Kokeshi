@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 typedef struct _GXFogAdjTable {
     u16 r[10]; // at 0x0

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_usb
 //! @{
-//! @file
 
 typedef void (*USBCallback)(IPCResult result, void* arg);
 

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 typedef struct AXFX_REVERBHI_EXP_DPL2 {
     f32* earlyLine[4];  // at 0x0

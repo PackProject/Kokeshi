@@ -11,7 +11,6 @@ extern "C" {
 
 //! @addtogroup rvl_arc
 //! @{
-//! @file
 
 typedef enum { ARC_ENTRY_FILE, ARC_ENTRY_FOLDER } ARCEntryType;
 

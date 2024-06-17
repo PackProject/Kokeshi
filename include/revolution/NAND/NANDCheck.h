@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nand
 //! @{
-//! @file
 
 typedef enum {
     NAND_CHECK_TOO_MANY_APP_BLOCKS = (1 << 0),

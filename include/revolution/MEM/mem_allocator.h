@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_mem
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct MEMAllocator;

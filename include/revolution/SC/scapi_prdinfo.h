@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_sc
 //! @{
-//! @file
 
 #define SC_PRDINFO_SIZE 0x100
 

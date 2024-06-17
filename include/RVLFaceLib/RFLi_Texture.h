@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiTexture {
     u8 format;          // at 0x0

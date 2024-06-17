@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_sc
 //! @{
-//! @file
 
 typedef enum {
     SC_STATUS_READY,

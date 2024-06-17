@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_mtx
 //! @{
-//! @file
 
 void PSMTXMultVec(const Mtx mtx, const Vec* vec, Vec* out);
 

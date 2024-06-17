@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ai
 //! @{
-//! @file
 
 /**
  * @brief AI hardware registers

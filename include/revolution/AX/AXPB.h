@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 //! One frame contains eight bytes
 #define AX_ADPCM_FRAME_SIZE 8

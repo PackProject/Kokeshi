@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_wpad
 //! @{
-//! @file
 
 typedef void (*WPADCallback)(s32 chan, s32 result);
 

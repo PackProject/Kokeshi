@@ -11,7 +11,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiCallbackTag {
     RFLiAsyncTag tag;  // at 0x0

@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl
+//! @addtogroup rvl_arc
 //! @{
 
 //! @file

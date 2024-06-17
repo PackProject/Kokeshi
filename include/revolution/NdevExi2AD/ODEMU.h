@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ndev
 //! @{
-//! @file
 
 static u32 ODEMUGenMailData(u32 ofs, u32 size) {
     return (ofs & 0xff) << 0x10 | 0x1f000000 | size & 0x1fff;

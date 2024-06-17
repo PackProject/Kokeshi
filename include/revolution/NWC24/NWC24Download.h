@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 #define NWC24_DL_TASK_MAX 120
 #define NWC24_DL_SUBTASK_MAX 32

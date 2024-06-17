@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct NWC24MsgObj;

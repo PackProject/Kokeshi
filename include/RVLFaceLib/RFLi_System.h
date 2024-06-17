@@ -15,7 +15,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiManager {
     void* workBuffer;                      // at 0x0

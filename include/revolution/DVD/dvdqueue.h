@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 typedef enum {
     DVD_PRIO_HIGHEST,

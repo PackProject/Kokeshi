@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dsp
 //! @{
-//! @file
 
 void __DSP_debug_printf(const char* fmt, ...);
 

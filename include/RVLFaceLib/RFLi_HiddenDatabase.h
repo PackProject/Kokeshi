@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 #define RFLi_HDB_DATA_MAX 10000
 

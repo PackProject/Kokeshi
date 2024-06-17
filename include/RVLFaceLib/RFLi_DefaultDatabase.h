@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 void RFLiGetDefaultData(RFLiCharInfo* info, u16 index);
 

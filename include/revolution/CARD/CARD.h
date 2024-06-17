@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_card
 //! @{
-//! @file
 
 typedef struct CARDFileInfo {
     s32 chan;    // at 0x0

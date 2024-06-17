@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 RFLErrcode RFLLoadControllerAsync(s32 chan);
 BOOL RFLIsAvailableControllerData(s32 chan, u16 index);

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_cnt
 //! @{
-//! @file
 
 typedef struct CNTHandle {
     ARCHandle arcHandle; // at 0x0

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 f32* __AXFXGetSrcCoef(u32 i);
 

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_exi
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct OSContext;

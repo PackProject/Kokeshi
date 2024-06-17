@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 void GXSetTevOp(GXTevStageID, GXTevMode);
 void GXSetTevColorIn(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg,

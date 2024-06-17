@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 typedef enum {
     NWC24_ERR_OTHER_REGION = -52,

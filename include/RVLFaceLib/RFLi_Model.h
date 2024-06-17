@@ -11,7 +11,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 #define VTX_COORDS_IN_POS 3
 #define VTX_COORDS_IN_NRM 3

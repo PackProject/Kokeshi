@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 void* __OSGetIPCBufferHi(void);
 void* __OSGetIPCBufferLo(void);

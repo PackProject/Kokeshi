@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 const char* NWC24GetMIMETypeStr(NWC24MIMEType type);
 const char* NWC24iGetMIMETypeSuffix(NWC24MIMEType type);

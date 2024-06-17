@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 void RFLi_MakeRandomFace(RFLiCharInfo* info, RFLSex sex, RFLAge age,
                          RFLRace race);

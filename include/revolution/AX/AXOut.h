@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 #define AX_STREAM_SIZE_RMT 40
 #define AX_RMT_MAX 4

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 void OSFatal(GXColor textColor, GXColor bgColor, const char* msg);
 

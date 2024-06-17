@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 static inline void GXCmd1u8(u8 uc) {
     WGPIPE.c = uc;

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 void GXBegin(GXPrimitive prim, GXVtxFmt fmt, u16 verts);
 static void GXEnd(void) {}

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_wenc
 //! @{
-//! @file
 
 typedef enum {
     WENC_FLAG_USER_INFO = (1 << 0),

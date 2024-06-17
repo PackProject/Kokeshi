@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 void* OSGetMEM1ArenaHi(void);
 void* OSGetMEM2ArenaHi(void);

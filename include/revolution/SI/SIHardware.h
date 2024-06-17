@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_si
 //! @{
-//! @file
 
 /**
  * @brief SI hardware registers

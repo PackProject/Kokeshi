@@ -12,7 +12,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 #define RFLi_CTRL_REPLACE_BUF_NUM 2
 

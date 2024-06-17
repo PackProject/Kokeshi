@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 typedef struct NWC24Data {
     const void* ptr; // at 0x0

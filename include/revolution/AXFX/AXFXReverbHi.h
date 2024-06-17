@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 typedef struct AXFX_REVERBHI {
     AXFX_REVERBHI_EXP exp; // at 0x0

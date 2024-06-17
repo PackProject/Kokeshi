@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 typedef void (*GXDrawDoneCallback)(void);
 

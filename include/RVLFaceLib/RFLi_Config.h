@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 /**
  * Char data constraints

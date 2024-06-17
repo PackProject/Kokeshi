@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 //! OS sets MSB to signal that the device code was successfully read
 #define DVD_DEVICE_CODE_READ (1 << 15)

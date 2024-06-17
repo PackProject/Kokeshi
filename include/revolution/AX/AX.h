@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 void AXInit(void);
 void AXInitEx(u32 mode);

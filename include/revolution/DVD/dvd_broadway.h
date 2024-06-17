@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 #define DVD_LOW_OFFSET(x) ((x) >> 2)
 #define DVD_LOW_SPEED(x) (((x) & 3) << 16)

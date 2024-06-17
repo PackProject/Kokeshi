@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_fs
 //! @{
-//! @file
 
 #define FS_MAX_PATH 64
 

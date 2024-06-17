@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef struct OSStateFlags {
     u32 checksum; // at 0x0

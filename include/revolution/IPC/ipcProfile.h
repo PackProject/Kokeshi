@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_ipc
 //! @{
-//! @file
 
 void IPCiProfInit(void);
 void IPCiProfQueueReq(IPCRequestEx* req, s32 fd);

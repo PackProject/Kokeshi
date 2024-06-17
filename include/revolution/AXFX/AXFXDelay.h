@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 typedef struct AXFX_DELAY {
     s32* line[3];        // at 0x0

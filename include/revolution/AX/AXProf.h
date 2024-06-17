@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 typedef struct _AXPROFILE {
     s64 timeBegin;           // at 0x0

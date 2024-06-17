@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 #define AX_PRIORITY_FREE 0
 #define AX_PRIORITY_MIN 1

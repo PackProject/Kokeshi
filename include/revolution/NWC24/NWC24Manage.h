@@ -12,7 +12,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 #define NWC24_IO_BUFFER_SIZE 512
 

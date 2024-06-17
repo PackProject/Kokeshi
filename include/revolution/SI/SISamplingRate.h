@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_si
 //! @{
-//! @file
 
 #define SI_MAX_SAMPLE_RATE 11
 

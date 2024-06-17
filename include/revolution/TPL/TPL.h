@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_tpl
 //! @{
-//! @file
 
 typedef struct TPLHeader {
     u16 height;          // at 0x0

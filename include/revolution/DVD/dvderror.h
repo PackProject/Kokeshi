@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 typedef void (*DVDErrorCallback)(s32 result, s32 arg1);
 

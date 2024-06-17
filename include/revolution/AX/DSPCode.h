@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 extern u16 axDspInitVector;
 extern u16 axDspResumeVector;

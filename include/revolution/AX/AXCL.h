@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 #define AX_MAX_VOLUME 32768
 // Command list can hold up to 64 commands

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiTableData {
     RFLCreateID createID; // at 0x0

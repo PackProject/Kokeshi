@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 //
 // GX internal structures

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nand
 //! @{
-//! @file
 
 s32 NANDOpen(const char* path, NANDFileInfo* info, u8 mode);
 s32 NANDPrivateOpen(const char* path, NANDFileInfo* info, u8 mode);

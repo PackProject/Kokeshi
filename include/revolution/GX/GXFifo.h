@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 GX_DECL_PUBLIC_STRUCT(GXFifoObj, 128);
 

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 typedef struct _GXVtxDescList {
     GXAttr attr;     // at 0x0

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_exi
 //! @{
-//! @file
 
 typedef struct EXIItem {
     u32 dev;              // at 0x0

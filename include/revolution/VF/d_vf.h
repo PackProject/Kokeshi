@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_vf
 //! @{
-//! @file
 
 typedef void* VFFile;
 

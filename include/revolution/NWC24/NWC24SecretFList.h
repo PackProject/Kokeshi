@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 typedef struct NWC24SecretFLHeader {
     u32 magic;   // at 0x0

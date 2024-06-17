@@ -11,7 +11,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiDatabase {
     u32 identifier;                        // at 0x0

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_mem
 //! @{
-//! @file
 
 typedef struct MEMList {
     void* head; // at 0x0

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ipc
 //! @{
-//! @file
 
 u32 IPC_HW_REGS[] : 0xCD000000;
 

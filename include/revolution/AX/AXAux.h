@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 //! Left, Right, Surround
 #define AX_STEREO_CHAN_MAX 3

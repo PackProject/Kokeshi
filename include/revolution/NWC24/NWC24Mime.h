@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 void NWC24InitBase64Table(u8* table);
 

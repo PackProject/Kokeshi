@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 void __DVDShowFatalMessage(void);
 BOOL DVDSetAutoFatalMessaging(BOOL enable);

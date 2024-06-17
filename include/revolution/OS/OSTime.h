@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 // Time base frequency = 1/4 bus clock
 #define OS_TIME_SPEED (OS_BUS_CLOCK_SPEED / 4)

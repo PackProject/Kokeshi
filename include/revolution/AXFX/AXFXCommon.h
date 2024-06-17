@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 typedef struct AXFX_BUS {
     s32* left;     // at 0x0

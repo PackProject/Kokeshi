@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 #define NWC24_FRIEND_LIST_CAPACITY 100
 

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 NWC24Err NWC24iIsValidDate(u16 year, u8 month, u8 day);
 

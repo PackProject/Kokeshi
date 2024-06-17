@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_mtx
 //! @{
-//! @file
 
 typedef f32 Mtx[3][4];
 typedef f32 Mtx44[4][4];

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_mtx
 //! @{
-//! @file
 
 void PSQUATMultiply(const Quaternion* a, const Quaternion* b, Quaternion* prod);
 void PSQUATNormalize(const Quaternion* in, Quaternion* out);

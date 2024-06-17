@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 u32 RFLGetWorkSize(BOOL deluxeTex);
 RFLErrcode RFLInitResAsync(void* workBuffer, void* resBuffer, u32 resSize,

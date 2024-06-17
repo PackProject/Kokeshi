@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 static inline void* OSPhysicalToCached(u32 ofs) {
     return (void*)(ofs + 0x80000000);

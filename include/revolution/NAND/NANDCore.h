@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nand
 //! @{
-//! @file
 
 void nandRemoveTailToken(char* newp, const char* oldp);
 void nandGetHeadToken(char* head, char* rest, const char* path);

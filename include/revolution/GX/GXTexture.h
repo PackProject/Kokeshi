@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 GX_DECL_PUBLIC_STRUCT(GXTexObj, 32);
 GX_DECL_PUBLIC_STRUCT(GXTlutObj, 32);

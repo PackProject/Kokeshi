@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 typedef struct _GXRenderModeObj {
     u32 tvInfo;               // at 0x0

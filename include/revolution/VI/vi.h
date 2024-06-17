@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_vi
 //! @{
-//! @file
 
 //! Merge format/mode to one value for TV info @see GXRenderModeObj
 #define VI_TV_INFO(format, mode) (((format) << 2) + (mode))

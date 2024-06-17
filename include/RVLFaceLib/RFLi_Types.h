@@ -13,7 +13,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 //
 // Common enums

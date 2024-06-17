@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef struct OSMutex {
     OSThreadQueue queue;  // at 0x0

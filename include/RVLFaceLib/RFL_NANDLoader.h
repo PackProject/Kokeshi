@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 BOOL RFLFreeCachedResource(void);
 BOOL RFLIsResourceCached(void);

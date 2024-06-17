@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_axfx
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct AXFX_BUS;

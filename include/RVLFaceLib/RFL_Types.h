@@ -12,7 +12,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 //
 // Common defines

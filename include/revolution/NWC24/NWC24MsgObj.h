@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 #define NWC24_MSG_RECIPIENT_MAX 8
 #define NWC24_MSG_ATTACHMENT_MAX 2

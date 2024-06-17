@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_db
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct OSDebugInterface;

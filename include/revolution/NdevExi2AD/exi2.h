@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ndev
 //! @{
-//! @file
 
 BOOL __EXI2Imm(void* mem, s32 size, u32 type);
 void __DBEXIInit(void);

@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rfl
 //! @{
-//! @file
 
 void RFLSetIconDrawDoneCallback(RFLCallback callback);
 

@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 typedef struct RFLiMiddleDB {
     RFLMiddleDBType type;     // at 0x0

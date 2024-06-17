@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 void GXBeginDisplayList(void* list, u32 size);
 u32 GXEndDisplayList(void);

@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 #pragma pack(push, 1)
 typedef struct _AXSTUDIO {

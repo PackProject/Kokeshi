@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 NWC24Err NWC24iGetUniversalTime(s64* timeOut);
 NWC24Err NWC24iGetTimeDifference(s64* diffOut);

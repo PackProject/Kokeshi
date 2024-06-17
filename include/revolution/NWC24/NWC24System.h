@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 NWC24Err NWC24EnableLedNotification(BOOL enable);
 NWC24Err NWC24iPrepareShutdown(void);

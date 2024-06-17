@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_pad
 //! @{
-//! @file
 
 typedef struct PADStatus {
     u8 dummy;

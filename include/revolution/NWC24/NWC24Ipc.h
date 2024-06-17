@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 NWC24Err NWC24iOpenResourceManager(const char* user, const char* name,
                                    s32* fdOut, IPCOpenMode mode);

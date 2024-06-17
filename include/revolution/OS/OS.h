@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef enum {
     OS_CONSOLE_MASK = 0xF0000000,

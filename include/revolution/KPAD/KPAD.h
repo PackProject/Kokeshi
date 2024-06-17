@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_kpad
 //! @{
-//! @file
 
 typedef enum {
     KPAD_RESULT_OK = 0,

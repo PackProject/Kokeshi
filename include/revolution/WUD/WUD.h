@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_wud
 //! @{
-//! @file
 
 void* App_MEMalloc(u32 size);
 void App_MEMfree(void* block);

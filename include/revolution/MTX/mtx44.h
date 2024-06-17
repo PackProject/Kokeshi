@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_mtx
 //! @{
-//! @file
 
 void C_MTXFrustum(Mtx44 mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void C_MTXPerspective(Mtx44 mtx, f32 fovy, f32 aspect, f32 n, f32 f);

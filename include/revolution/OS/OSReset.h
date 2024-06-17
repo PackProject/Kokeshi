@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 typedef BOOL (*OSShutdownFunction)(BOOL final, u32 event);
 

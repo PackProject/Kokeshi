@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_ipc
 //! @{
-//! @file
 
 typedef enum {
     IPC_RESULT_FATAL_ERROR = -119,

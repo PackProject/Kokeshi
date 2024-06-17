@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_mtx
 //! @{
-//! @file
 
 void PSVECAdd(const Vec* a, const Vec* b, Vec* sum);
 void PSVECScale(const Vec* in, Vec* out, f32 scale);

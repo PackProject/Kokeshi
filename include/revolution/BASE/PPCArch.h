@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_base
 //! @{
-//! @file
 
 u32 PPCMfmsr(void);
 void PPCMtmsr(u32 val);
@@ -54,7 +53,6 @@ void PPCMthid4(u32 val);
 
 //! @addtogroup rvl_base
 //! @{
-//! @file
 
 /**
  * @name MSR

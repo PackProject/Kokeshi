@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rfl_impl
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct RFLiTexture;

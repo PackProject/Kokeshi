@@ -10,7 +10,6 @@ extern "C" {
 
 //! @addtogroup rvl_mem
 //! @{
-//! @file
 
 typedef enum {
     MEM_HEAP_OPT_CLEAR_ALLOC = (1 << 0),

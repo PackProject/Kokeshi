@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 // General-purpose typedef
 typedef void* OSMessage;

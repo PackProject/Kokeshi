@@ -20,7 +20,6 @@ extern "C" {
 
 //! @addtogroup rvl_os_global
 //! @{
-//! @file
 
 // Forward declarations
 typedef struct OSContext;

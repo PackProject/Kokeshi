@@ -10,7 +10,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 typedef enum {
     // Access

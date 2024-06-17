@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_so
 //! @{
-//! @file
 
 #define SO_O_NONBLOCK 0x4
 

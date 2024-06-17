@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 #pragma section ".init"
 DECL_SECTION(".init") void __init_hardware(void);

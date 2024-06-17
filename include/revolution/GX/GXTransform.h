@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_gx
 //! @{
-//! @file
 
 void GXSetProjection(const Mtx44 proj, GXProjectionType type);
 void GXSetProjectionv(const f32 proj[7]);

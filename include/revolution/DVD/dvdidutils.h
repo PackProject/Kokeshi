@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 BOOL DVDCompareDiskID(const DVDDiskID* id1, const DVDDiskID* id2);
 

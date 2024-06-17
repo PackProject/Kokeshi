@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_esp
 //! @{
-//! @file
 
 typedef enum {
     ES_IOCTLV_LAUNCH_TITLE = 8,

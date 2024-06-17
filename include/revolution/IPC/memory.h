@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_ipc
 //! @{
-//! @file
 
 s32 iosCreateHeap(void* base, u32 size);
 void* iosAllocAligned(s32 handle, u32 size, u32 align);

@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl
+//! @addtogroup rvl_dsp
 //! @{
 
 //! @file

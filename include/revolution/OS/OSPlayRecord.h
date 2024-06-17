@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 void __OSStartPlayRecord(void);
 void __OSStopPlayRecord(void);

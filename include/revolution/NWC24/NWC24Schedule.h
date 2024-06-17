@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_nwc24
 //! @{
-//! @file
 
 s32 NWC24SuspendScheduler(void);
 s32 NWC24ResumeScheduler(void);

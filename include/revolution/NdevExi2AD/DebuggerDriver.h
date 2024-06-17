@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_ndev
 //! @{
-//! @file
 
 void DBInitComm(u8** flagOut, OSInterruptHandler handler);
 void DBInitInterrupts(void);

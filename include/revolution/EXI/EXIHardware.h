@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_exi
 //! @{
-//! @file
 
 typedef struct EXIChannelParam {
     u32 cpr;    // at 0x0

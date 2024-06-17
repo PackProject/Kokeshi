@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 #define OS_PRIORITY_MIN 0
 #define OS_PRIORITY_MAX 31

@@ -9,7 +9,6 @@ extern "C" {
 
 //! @addtogroup rvl_dvd
 //! @{
-//! @file
 
 extern OSThreadQueue __DVDThreadQueue;
 extern BOOL __DVDLongFileNameFlag;

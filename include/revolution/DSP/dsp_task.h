@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_dsp
 //! @{
-//! @file
 
 #define DSP_SEND_MAIL_SYNC(x)                                                  \
     do {                                                                       \

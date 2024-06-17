@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_si
 //! @{
-//! @file
 
 typedef enum {
     SI_CHAN_0,

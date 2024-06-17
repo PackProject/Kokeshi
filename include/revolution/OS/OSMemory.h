@@ -7,7 +7,6 @@ extern "C" {
 
 //! @addtogroup rvl_os
 //! @{
-//! @file
 
 #define OS_MEM_B_TO_KB(mb) ((mb) / 1024)
 #define OS_MEM_B_TO_MB(mb) ((mb) / 1024 / 1024)

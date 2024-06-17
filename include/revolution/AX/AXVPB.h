@@ -8,7 +8,6 @@ extern "C" {
 
 //! @addtogroup rvl_ax
 //! @{
-//! @file
 
 #define AX_SAMPLE_RATE 32000
 #define AX_VOICE_MAX 96
