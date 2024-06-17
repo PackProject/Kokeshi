@@ -1,12 +1,18 @@
-/**
- * References: WiiBrew, Dolphin Emulator
- */
+//
+// References: WiiBrew, Dolphin Emulator
+//
 
 #ifndef RVL_SDK_PUBLIC_NWC24_H
 #define RVL_SDK_PUBLIC_NWC24_H
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the NWC24 library
 
 #include <revolution/NWC24/NWC24Config.h>
 #include <revolution/NWC24/NWC24DateParser.h>
@@ -26,6 +32,8 @@ extern "C" {
 #include <revolution/NWC24/NWC24Time.h>
 #include <revolution/NWC24/NWC24Types.h>
 #include <revolution/NWC24/NWC24Utils.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

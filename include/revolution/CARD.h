@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the CARD library
+
 #include <revolution/CARD/CARD.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -5,13 +5,17 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_vi
+//! @{
+//! @file
+
 /**
- * VI hardware registers
+ * @brief VI hardware registers
  */
 volatile u16 VI_HW_REGS[] : 0xCC002000;
 
 /**
- * Hardware register indices
+ * @brief Hardware register indices
  */
 typedef enum {
     VI_VTR,    //!< 0xCC002000
@@ -79,22 +83,32 @@ typedef enum {
     VI_0x7C,   //!< 0xCC00207C
 } VIHwReg;
 
-// DCR - Display Configuration Register
+//! @name DCR - Display Configuration Register
+/**@{*/
 #define VI_DCR_ENB (1 << 0)
 #define VI_DCR_RST (1 << 1)
 #define VI_DCR_NIN (1 << 2)
 #define VI_DCR_FMT (0b11 << 8)
+/**@}*/
 
-// DI{n} - Display Interrupt Register N
+//! @name DI{n} - Display Interrupt Register N
+/**@{*/
 #define VI_DI_INT (1 << 15)
 #define VI_DI_ENB (1 << 12)
+/**@}*/
 
-// VICLK - VI Clock Select Register
+//! @name VICLK - VI Clock Select Register
+/**@{*/
 #define VI_VICLK_SPEED (1 << 0)
 typedef enum { VI_VICLK_27MHZ, VI_VICLK_54MHZ } VIClkSpeed;
+/**@}*/
 
-// HBE - Border HBE
+//! @name HBE - Border HBE
+/**@{*/
 #define VI_HBE_BRDR_EN (1 << 15)
+/**@}*/
+
+//! @}
 
 #ifdef __cplusplus
 }

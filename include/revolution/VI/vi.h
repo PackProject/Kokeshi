@@ -6,12 +6,16 @@
 extern "C" {
 #endif
 
-// Merge format/mode to one value for TV info (see GXRenderModeObj)
+//! @addtogroup rvl_vi
+//! @{
+//! @file
+
+//! Merge format/mode to one value for TV info @see GXRenderModeObj
 #define VI_TV_INFO(format, mode) (((format) << 2) + (mode))
-// Get TV format from TV info
+//! Get TV format from TV info
 #define VI_TV_INFO_FMT(info) ((info) >> 2)
-// Get TV scan mode from TV info
-#define VI_TV_INFO_MODE(info) ((info)&0b00000011)
+//! Get TV scan mode from TV info
+#define VI_TV_INFO_MODE(info) ((info) & 0b00000011)
 
 typedef enum {
     VI_TV_FMT_NTSC,
@@ -57,6 +61,8 @@ s32 VIGetRetraceCount(void);
 
 VITvFormat VIGetTvFormat(void);
 VIScanMode VIGetScanMode(void);
+
+//! @}
 
 #ifdef __cplusplus
 }

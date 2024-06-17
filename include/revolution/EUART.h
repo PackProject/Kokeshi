@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the EUART library
+
 #include <revolution/EUART/euart.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the WENC library
+
 #include <revolution/WENC/wenc.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

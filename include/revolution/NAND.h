@@ -1,6 +1,6 @@
-/**
- * References: WiiBrew
- */
+//
+// References: WiiBrew
+//
 
 #ifndef RVL_SDK_PUBLIC_NAND_H
 #define RVL_SDK_PUBLIC_NAND_H
@@ -8,10 +8,18 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the NAND library
+
 #include <revolution/NAND/NANDCheck.h>
 #include <revolution/NAND/NANDCore.h>
 #include <revolution/NAND/NANDOpenClose.h>
 #include <revolution/NAND/nand.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

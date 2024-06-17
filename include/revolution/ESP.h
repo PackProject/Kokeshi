@@ -1,6 +1,6 @@
-/**
- * References: WiiBrew
- */
+//
+// References: WiiBrew
+//
 
 #ifndef RVL_SDK_PUBLIC_ESP_H
 #define RVL_SDK_PUBLIC_ESP_H
@@ -8,7 +8,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the ESP library
+
 #include <revolution/ESP/esp.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

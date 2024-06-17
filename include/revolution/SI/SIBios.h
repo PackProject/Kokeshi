@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_si
+//! @{
+//! @file
+
 typedef enum {
     SI_CHAN_0,
     SI_CHAN_1,
@@ -31,6 +35,8 @@ u32 SISetXY(u32 lines, u32 times);
 BOOL SITransfer(s32 chan, void* outAddr, u32 outSize, void* inAddr, u32 inSize,
                 SICallback callback, s64 wait);
 u32 SIGetType(s32 chan);
+
+//! @}
 
 #ifdef __cplusplus
 }

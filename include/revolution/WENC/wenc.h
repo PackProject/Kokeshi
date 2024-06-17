@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_wenc
+//! @{
+//! @file
+
 typedef enum {
     WENC_FLAG_USER_INFO = (1 << 0),
 } WENCFlag;
@@ -21,6 +25,8 @@ typedef struct WENCInfo {
 
 s32 WENCGetEncodeData(WENCInfo* info, u32 flag, const s16* pcmData, s32 samples,
                       u8* adpcmData);
+
+//! @}
 
 #ifdef __cplusplus
 }

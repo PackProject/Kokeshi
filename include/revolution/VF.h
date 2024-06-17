@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the VF library
+
 #include <revolution/VF/d_vf.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

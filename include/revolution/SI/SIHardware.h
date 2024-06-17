@@ -5,13 +5,17 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_si
+//! @{
+//! @file
+
 /**
- * SI hardware registers
+ * @brief SI hardware registers
  */
 volatile u32 SI_HW_REGS[] : 0xCD006400;
 
 /**
- * Hardware register indices
+ * @brief Hardware register indices
  */
 typedef enum {
     SI_SIC0OUTBUF, //!< 0xCD006400
@@ -35,11 +39,14 @@ typedef enum {
     SI_RAM_BASE = (0xCD006480 - 0xCD006400) / sizeof(u32) //!< 0xCD006480
 } SIHwReg;
 
-// SIPOLL - SI Poll Register
+//! @name SIPOLL - SI Poll Register
+/**@{*/
 #define SI_SIPOLL_X (0b1111111111 << 16)
 #define SI_SIPOLL_Y (0b11111111 << 8)
+/**@}*/
 
-// SICOMCSR - SI Communication Control Status Register
+//! @name SICOMCSR - SI Communication Control Status Register
+/**@{*/
 #define SI_SICOMCSR_TCINT (1 << 31)
 #define SI_SICOMCSR_TCINTMSK (1 << 30)
 #define SI_SICOMCSR_COMERR (1 << 29)
@@ -49,8 +56,10 @@ typedef enum {
 #define SI_SICOMCSR_INLNGTH (0b1111111 << 8)
 #define SI_SICOMCSR_CHANNEL (0b11 << 1)
 #define SI_SICOMCSR_TSTART (1 << 0)
+/**@}*/
 
-// SISR - SI Status Register
+//! @name SISR - SI Status Register
+/**@{*/
 #define SI_SISR_WR (1 << 31)
 #define SI_SISR_RDST0 (1 << 29)
 #define SI_SISR_WRST0 (1 << 28)
@@ -76,15 +85,20 @@ typedef enum {
 #define SI_SISR_COLL3 (1 << 2)
 #define SI_SISR_OVRUN3 (1 << 1)
 #define SI_SISR_UNRUN3 (1 << 0)
+/**@}*/
 
-// SISR flags by channel
-// Ex: (SISR >> ((SI_MAX_CHAN-1) - chan) * 8)
+//! @name SISR flags by channel
+//! Ex: <tt>(SISR >> ((SI_MAX_CHAN-1) - chan) * 8)</tt>
+/**@{*/
 #define SI_RDST SI_SISR_RDST3
 #define SI_WRST SI_SISR_WRST3
 #define SI_NOREP SI_SISR_NOREP3
 #define SI_COLL SI_SISR_COLL3
 #define SI_OVRUN SI_SISR_OVRUN3
 #define SI_UNRUN SI_SISR_UNRUN3
+/**@}*/
+
+//! @}
 
 #ifdef __cplusplus
 }

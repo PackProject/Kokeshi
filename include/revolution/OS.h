@@ -1,12 +1,18 @@
-/**
- * References: YAGCD, WiiBrew, Dolphin Emulator
- */
+//
+// References: YAGCD, WiiBrew, Dolphin Emulator
+//
 
 #ifndef RVL_SDK_PUBLIC_OS_H
 #define RVL_SDK_PUBLIC_OS_H
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the OS library
 
 #include <revolution/OS/OS.h>
 #include <revolution/OS/OSAddress.h>
@@ -39,6 +45,8 @@ extern "C" {
 #include <revolution/OS/OSTime.h>
 #include <revolution/OS/OSUtf.h>
 #include <revolution/OS/__ppc_eabi_init.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

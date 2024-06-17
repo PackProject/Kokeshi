@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_wpad
+//! @{
+//! @file
+
 typedef void (*WPADCallback)(s32 chan, s32 result);
 
 typedef enum {
@@ -29,6 +33,8 @@ UNKWORD WPADSendStreamData(s32, UNKTYPE*, UNKWORD);
 
 s32 WPADProbe(s32 chan, u32* type);
 s32 WPADReadFaceData(s32 chan, void* dst, u32 size, u32 src, WPADCallback cb);
+
+//! @}
 
 #ifdef __cplusplus
 }

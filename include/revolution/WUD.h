@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the WUD library
+
 #include <revolution/WUD/WUD.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

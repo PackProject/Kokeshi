@@ -6,6 +6,10 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl_tpl
+//! @{
+//! @file
+
 typedef struct TPLHeader {
     u16 height;          // at 0x0
     u16 width;           // at 0x2
@@ -43,6 +47,8 @@ typedef struct TPLPalette {
 
 void TPLBind(TPLPalette* pal);
 TPLDescriptor* TPLGet(TPLPalette* pal, u32 id);
+
+//! @}
 
 #ifdef __cplusplus
 }

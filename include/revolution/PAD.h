@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the PAD library
+
 #include <revolution/PAD/Pad.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

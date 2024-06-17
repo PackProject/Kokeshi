@@ -1,6 +1,6 @@
-/**
- * References: WiiBrew
- */
+//
+// References: WiiBrew
+//
 
 #ifndef RVL_SDK_PUBLIC_SC_H
 #define RVL_SDK_PUBLIC_SC_H
@@ -8,9 +8,17 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the SC library
+
 #include <revolution/SC/scapi.h>
 #include <revolution/SC/scapi_prdinfo.h>
 #include <revolution/SC/scsystem.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

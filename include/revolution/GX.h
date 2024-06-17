@@ -1,12 +1,18 @@
-/**
- * References: YAGCD, Dolphin Emulator, publicly available patents
- */
+//
+// References: YAGCD, Dolphin Emulator, publicly available patents
+//
 
 #ifndef RVL_SDK_PUBLIC_GX_H
 #define RVL_SDK_PUBLIC_GX_H
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the GX library
 
 #include <revolution/GX/GXAttr.h>
 #include <revolution/GX/GXBump.h>
@@ -29,6 +35,8 @@ extern "C" {
 #include <revolution/GX/GXTransform.h>
 #include <revolution/GX/GXTypes.h>
 #include <revolution/GX/GXVert.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

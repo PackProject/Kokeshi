@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the WPAD library
+
 #include <revolution/WPAD/WPAD.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

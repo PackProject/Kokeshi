@@ -4,7 +4,15 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the CNT library
+
 #include <revolution/CNT/cnt.h>
+
+//! @}
 
 #ifdef __cplusplus
 }

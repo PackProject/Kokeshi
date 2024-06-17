@@ -4,6 +4,12 @@
 extern "C" {
 #endif
 
+//! @addtogroup rvl
+//! @{
+
+//! @file
+//! @brief Includes all header files of the AXFX library
+
 #include <revolution/AXFX/AXFXChorus.h>
 #include <revolution/AXFX/AXFXChorusExp.h>
 #include <revolution/AXFX/AXFXCommon.h>
@@ -15,6 +21,8 @@ extern "C" {
 #include <revolution/AXFX/AXFXReverbHiExp.h>
 #include <revolution/AXFX/AXFXReverbHiExpDpl2.h>
 #include <revolution/AXFX/AXFXSrcCoef.h>
+
+//! @}
 
 #ifdef __cplusplus
 }
