@@ -12,7 +12,7 @@
 //! @addtogroup kokeshi
 //! @{
 
-#ifdef __DOXYGEN
+#ifdef KOKESHI_PARSED_BY_DOXYGEN
 /**
  * @brief Conditional compilation
  *
