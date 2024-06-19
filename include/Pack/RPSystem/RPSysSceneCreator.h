@@ -12,6 +12,8 @@
  * @wfuname
  */
 class RPSysSceneCreator : public EGG::SceneCreator {
+    RP_SINGLETON_DECL_EX(RPSysSceneCreator);
+
 public:
     // @brief RP Scene ID
     // @wfuname
@@ -144,12 +146,6 @@ public:
     };
 
 public:
-    // @address 80184e10
-    static RPSysSceneCreator* CreateInstance(EGG::Heap* heap);
-    static RPSysSceneCreator* GetInstance() {
-        return sInstance;
-    }
-
     s32 getLastSceneID() const {
         return mLastSceneID;
     }

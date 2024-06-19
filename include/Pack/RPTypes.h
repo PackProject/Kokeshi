@@ -13,23 +13,23 @@
 //! Declarations for a singleton which uses the current heap
 #define RP_SINGLETON_DECL(T)                                                   \
 public:                                                                        \
-    static void CreateInstance();                                              \
-    static void DestroyInstance();                                             \
-    static T* GetInstance() {                                                  \
-        return sInstance;                                                      \
+    static void createInstance();                                              \
+    static void destroyInstance();                                             \
+    static T* getInstance() {                                                  \
+        return spInstance;                                                     \
     }                                                                          \
                                                                                \
 private:                                                                       \
-    static T* sInstance;
+    static T* spInstance;
 
 //! Implementation for a singleton class which uses the current heap
 #define RP_SINGLETON_DEF(T)                                                    \
-    void T::CreateInstance() {                                                 \
-        sInstance = new T();                                                   \
+    void T::createInstance() {                                                 \
+        spInstance = new T();                                                  \
     }                                                                          \
-    void T::DestroyInstance() {                                                \
-        delete sInstance;                                                      \
-        sInstance = NULL;                                                      \
+    void T::destroyInstance() {                                                \
+        delete spInstance;                                                     \
+        spInstance = NULL;                                                     \
     }
 
 //! @}
@@ -40,39 +40,42 @@ private:                                                                       \
 //! Declarations for a singleton class which uses the specified heap
 #define RP_SINGLETON_DECL_EX(T)                                                \
 public:                                                                        \
-    static T* CreateInstance(EGG::Heap* pHeap);                                \
-    static void DestroyInstance();                                             \
-    static T* GetInstance() {                                                  \
-        return sInstance;                                                      \
+    static T* createInstance(EGG::Heap* pHeap);                                \
+    static void destroyInstance();                                             \
+    static T* getInstance() {                                                  \
+        return spInstance;                                                     \
     }                                                                          \
                                                                                \
 private:                                                                       \
-    static T* sInstance;
+    static T* spInstance;
 
 //! Implementation for a singleton class which uses the specified heap
 #define RP_SINGLETON_DEF_EX(T)                                                 \
-    void T::CreateInstance(EGG::Heap* pHeap) {                                 \
-        if (sInstance == NULL) {                                               \
-            sInstance = new (pHeap) T();                                       \
-            return sInstance;                                                  \
+    void T::createInstance(EGG::Heap* pHeap) {                                 \
+        if (spInstance == NULL) {                                              \
+            spInstance = new (pHeap) T();                                      \
+            return spInstance;                                                 \
         }                                                                      \
         return NULL;                                                           \
     }                                                                          \
-    void T::DestroyInstance() {                                                \
-        delete sInstance;                                                      \
-        sInstance = NULL;                                                      \
+    void T::destroyInstance() {                                                \
+        delete spInstance;                                                     \
+        spInstance = NULL;                                                     \
     }
 
 //! @}
 
 //! Accesses RP singleton instance by typename
 #ifndef RP_GET_INSTANCE
-#define RP_GET_INSTANCE(T) T::GetInstance()
+#define RP_GET_INSTANCE(T) T::getInstance()
 #endif
 
-//! Holds year, month, month day
+//! @brief Holds year, month, month day
+//! @note Only years after (and including) 2000 can be represented.
 typedef u16 RPTime16;
-//! Holds year, month, month day, week day, hour
+
+//! @brief Holds year, month, month day, week day, hour
+//! @note Only years after (and including) 2000 can be represented.
 typedef u32 RPTime32;
 
 //! @}

@@ -18,6 +18,8 @@
  * @wfuname
  */
 class RPSysSaveDataMgr : public IRPSysHostIOSocket {
+    RP_SINGLETON_DECL_EX(RPSysSaveDataMgr);
+
 public:
     // @brief Banner files
     enum EBannerType {
@@ -36,12 +38,6 @@ public:
     };
 
 public:
-    // @address 8018a8a4
-    static RPSysSaveDataMgr* CreateInstance(EGG::Heap* heap);
-    static RPSysSaveDataMgr* GetInstance() {
-        return sInstance;
-    }
-
     /**
      * @brief Write both save and banner files
      * @details Used asynchronously through task threads

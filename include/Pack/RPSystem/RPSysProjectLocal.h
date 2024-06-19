@@ -9,6 +9,8 @@
  * @wfuname
  */
 class RPSysProjectLocal {
+    RP_SINGLETON_DECL_EX(RPSysProjectLocal);
+
 public:
     // @brief Measurement system (mostly used for string formatting)
     enum EMeasureSystem {
@@ -46,12 +48,6 @@ public:
     };
 
 public:
-    // @address 801863a4
-    static RPSysProjectLocal* CreateInstance(EGG::Heap* heap);
-    static RPSysProjectLocal* GetInstance() {
-        return sInstance;
-    }
-
     s32 getPackID() const {
         return mPackID;
     }

@@ -248,8 +248,6 @@ Please write macros in uppercase SNAKE_CASE.
 
 The only exceptions to these rules are identifiers that must be named otherwise due to the decompilation, such as functions/data with known symbols, and the `OSIsMEM` family of macros.
 
-Also, the Pack Project library is very inconsistent and tends to use both camelCase and PascalCase. **When documenting RP please use PascalCase**.
-
 ### Declaration Order
 
 Please use the following order when writing C++ classes:

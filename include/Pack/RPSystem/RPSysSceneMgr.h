@@ -13,6 +13,8 @@
  * @wfuname
  */
 class RPSysSceneMgr : public EGG::SceneManager {
+    RP_SINGLETON_DECL(RPSysSceneMgr);
+
 public:
     // @brief Scene manager states
     enum EState {
@@ -24,10 +26,6 @@ public:
     };
 
 public:
-    static RPSysSceneMgr* GetInstance() {
-        return sInstance;
-    }
-
     /**
      * @brief Manager state logic
      * @address 801856d0

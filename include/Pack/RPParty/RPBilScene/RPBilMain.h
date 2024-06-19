@@ -5,13 +5,9 @@
 #include <RPUtility/RPUtlBaseFsm.h>
 
 class RPBilMain {
-public:
-    static void CreateInstance();
-    static void DestroyInstance();
-    static RPBilMain* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPBilMain);
 
+public:
     RP_UTL_FSM_STATE_DECL(AFTERSHOT);
     RP_UTL_FSM_STATE_DECL(FOUL);
 

@@ -6,11 +6,9 @@
 #include <RPUtility/RPUtlBaseFsm.h>
 
 class RPBilCueManager {
-public:
-    static RPBilCueManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPBilCueManager);
 
+public:
     RPBilCue* GetCue(int i) {
         return mCues[i];
     }

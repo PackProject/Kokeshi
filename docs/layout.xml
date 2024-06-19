@@ -26,16 +26,16 @@
       <interfaces title=""/>
       <publicslots title=""/>
       <signals title=""/>
-      <publicmethods title=""/>
       <publicstaticmethods title=""/>
-      <publicattributes title=""/>
+      <publicmethods title=""/>
       <publicstaticattributes title=""/>
+      <publicattributes title=""/>
       <protectedtypes title=""/>
       <protectedslots title=""/>
-      <protectedmethods title=""/>
       <protectedstaticmethods title=""/>
-      <protectedattributes title=""/>
+      <protectedmethods title=""/>
       <protectedstaticattributes title=""/>
+      <protectedattributes title=""/>
       <packagetypes title=""/>
       <packagemethods title=""/>
       <packagestaticmethods title=""/>
@@ -45,10 +45,10 @@
       <events title=""/>
       <privatetypes title=""/>
       <privateslots title=""/>
-      <privatemethods title=""/>
       <privatestaticmethods title=""/>
-      <privateattributes title=""/>
+      <privatemethods title=""/>
       <privatestaticattributes title=""/>
+      <privateattributes title=""/>
       <friends title=""/>
       <related title="" subtitle=""/>
       <membergroups visible="yes"/>

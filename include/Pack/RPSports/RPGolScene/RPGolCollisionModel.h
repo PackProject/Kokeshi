@@ -39,11 +39,9 @@ enum EGndAttr {
 };
 
 class RPGolCollisionModel : RPSysUnknownBase {
-public:
-    static RPGolCollisionModel* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPGolCollisionModel);
 
+public:
     static const char* GetCollisionDesc(EGndAttr col) {
         return sCollisionDesc[col];
     }

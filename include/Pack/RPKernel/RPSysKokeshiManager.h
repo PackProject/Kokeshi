@@ -3,16 +3,14 @@
 #include "RPTypes.h"
 
 class RPSysKokeshiManager {
+    RP_SINGLETON_DECL(RPSysKokeshiManager);
+
 public:
     enum GenType {
 
     };
 
 public:
-    static RPSysKokeshiManager* GetInstance() {
-        return sInstance;
-    }
-
     void LoadStaticResource();
 
 private:

@@ -7,6 +7,8 @@
  * @wfuname
  */
 class RPSportsSequenceMgr {
+    RP_SINGLETON_DECL(RPSportsSequenceMgr);
+
 public:
     /**
      * @brief Sport ID
@@ -27,12 +29,6 @@ public:
     enum EGolfMode { GOLF_NINEHOLE, GOLF_BEGINNER, GOLF_INTERMED, GOLF_EXPERT };
 
 public:
-    // @address 801e74b0
-    static void CreateInstance();
-    static RPSportsSequenceMgr* GetInstance() {
-        return sInstance;
-    }
-
     u32 GetSport() const {
         return (u32)mSport;
     }

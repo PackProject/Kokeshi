@@ -12,6 +12,8 @@
  * @todo Document all of the functions
  */
 class RPGolFieldManager : RPSysUnknownBase {
+    RP_SINGLETON_DECL(RPGolFieldManager);
+
 public:
     enum EMapObj {
         MAP_OBJ_PLAYER = 0x00010000, // Player start
@@ -38,15 +40,6 @@ public:
     };
 
 public:
-    // @address 80294008
-    static void CreateInstance();
-    // @address 80293fc4
-    static void DestroyInstance();
-
-    static RPGolFieldManager* GetInstance() {
-        return sInstance;
-    }
-
     RPGolMapObjBase* GetCourseObj() const {
         return mCourseObj;
     }

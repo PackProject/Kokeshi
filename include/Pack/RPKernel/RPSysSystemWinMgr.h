@@ -3,6 +3,8 @@
 #include "types.h"
 
 class RPSysSystemWinMgr {
+    RP_SINGLETON_DECL(RPSysSystemWinMgr);
+
 public:
     enum E_WINDOW_TYPE {
         WINDOW_TYPE_MSG,
@@ -12,10 +14,6 @@ public:
     enum E_RESULT { RESULT_NONE, RESULT_WAIT, RESULT_YES, RESULT_NO };
 
 public:
-    static RPSysSystemWinMgr* GetInstance() {
-        return sInstance;
-    }
-
     void createSystemWindow();
 
     void setSystemWindow(E_WINDOW_TYPE type, u32 group, RPSysMessage* msg,

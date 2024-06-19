@@ -8,15 +8,9 @@
  * @customname
  */
 class RPBowResourceManager : public IRPSysHostIOSocket {
-public:
-    // @address 80320ea4
-    static void CreateInstance();
-    // @address 80320e60
-    static void DestroyInstance();
-    static RPBowResourceManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPBowResourceManager);
 
+public:
     RPBowResourceManager() : mExcelGlobal(NULL) {}
 
     // @address 80320da8

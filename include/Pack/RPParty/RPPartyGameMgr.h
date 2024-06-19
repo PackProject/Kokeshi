@@ -1,16 +1,11 @@
 #ifndef RP_PARTY_GAME_MGR_H
 #define RP_PARTY_GAME_MGR_H
-#include "types.h"
+#include <Pack/RPTypes.h>
 
 class RPPartyGameMgr {
+    RP_SINGLETON_DECL(RPPartyGameMgr);
+
 public:
-    static RPPartyGameMgr* GetInstance() {
-        return sInstance;
-    }
-
-    static void CreateInstance();
-    static void DestroyInstance();
-
     void Reset();
 
 private:

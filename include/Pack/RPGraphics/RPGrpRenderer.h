@@ -6,6 +6,8 @@
 class RPGrpScreen;
 
 class RPGrpRenderer {
+    RP_SINGLETON_DECL(RPGrpRenderer);
+
 public:
     enum EDrawPass {
         EDrawPass_DrawBefore,
@@ -27,10 +29,6 @@ public:
 public:
     static void Begin();
     static void End();
-
-    static RPGrpRenderer* GetInstance() {
-        return sInstance;
-    }
 
     void AppendDrawObject(IRPGrpDrawObject*);
 

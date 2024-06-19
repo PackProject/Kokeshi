@@ -26,6 +26,9 @@ LOADER_ADDR = 0x80001900
 
 # Flags applied to all source files
 CFLAGS_COMMON = " ".join([
+    # For Kokeshi-specific code (separate from decomp)
+    "-D__KOKESHI__",
+
     "-proc gekko",                # Gekko processor
     "-i .",                       # Root include directory
     "-I-",

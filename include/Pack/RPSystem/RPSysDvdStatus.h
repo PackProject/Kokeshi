@@ -12,6 +12,8 @@
  * @wfuname
  */
 class RPSysDvdStatus {
+    RP_SINGLETON_DECL_EX(RPSysDvdStatus);
+
 public:
     // @brief Status of the last access to the DVD drive
     enum EDvdStatus {
@@ -23,12 +25,6 @@ public:
     };
 
 public:
-    // @address 80188280
-    static RPSysDvdStatus* CreateInstance(EGG::Heap* heap);
-    static RPSysDvdStatus* GetInstance() {
-        return sInstance;
-    }
-
     /**
      * @brief Draw status message (only if an error has occurred)
      * @address 80187fa4

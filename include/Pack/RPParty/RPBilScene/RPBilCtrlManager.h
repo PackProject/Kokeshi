@@ -15,11 +15,9 @@ struct RPBilCtrl {
 };
 
 class RPBilCtrlManager {
-public:
-    static RPBilCtrlManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPBilCtrlManager);
 
+public:
     RPBilCtrl* GetCtrl() const {
         return PTR_0x4;
     }

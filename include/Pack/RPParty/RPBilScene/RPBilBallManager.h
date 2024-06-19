@@ -5,11 +5,9 @@
 #include <RPBilScene/RPBilBall.h>
 
 class RPBilBallManager {
-public:
-    static RPBilBallManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPBilBallManager);
 
+public:
     RPBilBall* GetBall(int i) {
         return mBalls[i];
     }

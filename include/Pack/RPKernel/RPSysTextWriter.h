@@ -14,13 +14,9 @@
  * @wfuname
  */
 class RPSysTextWriter : public nw4r::ut::TextWriterBase<char> {
-public:
-    // @address 80190cc4
-    static RPSysTextWriter* CreateInstance();
-    static RPSysTextWriter* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPSysTextWriter);
 
+public:
     /**
      * @brief Reset all settings
      * @address 80190b9c

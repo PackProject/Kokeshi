@@ -7,11 +7,9 @@ class RPGrpLightManager;
 class RPGrpFogManager;
 
 class RPGrpModelManager {
-public:
-    static RPGrpModelManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPGrpModelManager);
 
+public:
     void CreateModelScene(u32, u8, u32, RPGrpLightManager*, RPGrpFogManager*);
 
 private:

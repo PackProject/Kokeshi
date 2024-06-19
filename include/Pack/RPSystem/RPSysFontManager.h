@@ -12,6 +12,8 @@
  * @wfuname
  */
 class RPSysFontManager {
+    RP_SINGLETON_DECL(RPSysFontManager);
+
 public:
     // @brief Pack Project res fonts
     enum EResFont {
@@ -27,12 +29,6 @@ public:
     };
 
 public:
-    // @address 8018bea4
-    static RPSysFontManager* CreateInstance();
-    static RPSysFontManager* GetInstance() {
-        return sInstance;
-    }
-
     /**
      * @brief Set up rom font
      * @address 8018be10

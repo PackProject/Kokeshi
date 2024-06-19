@@ -13,6 +13,8 @@ class RPSysEffect;
  * @brief Cursor manager and renderer
  */
 class RPSysCursorDrawMgr : public IRPSysHostIOSocket {
+    RP_SINGLETON_DECL_EX(RPSysCursorDrawMgr);
+
 public:
     /**
      * @brief Player ID
@@ -32,13 +34,6 @@ public:
     enum ECursorType { CURSOR_DISABLED, CURSOR_1, CURSOR_ACTIVE };
 
 public:
-    // @address 801a0230
-    static RPSysCursorDrawMgr* CreateInstance(EGG::Heap* heap);
-
-    static RPSysCursorDrawMgr* GetInstance() {
-        return sInstance;
-    }
-
     // @address 8019ede8
     RPSysCursorDrawMgr(EGG::Heap* heap);
     // @address 8019ed74

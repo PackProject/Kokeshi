@@ -3,11 +3,9 @@
 #include <RPTypes.h>
 
 class RPGrpModelResManager {
-public:
-    static RPGrpModelResManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPGrpModelResManager);
 
+public:
     void CreateResourceList(u16);
 
 private:

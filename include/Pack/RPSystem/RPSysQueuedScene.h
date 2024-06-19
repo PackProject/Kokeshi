@@ -11,13 +11,9 @@
  * @customname
  */
 class RPSysQueuedScene {
-public:
-    // @address 80187ba0
-    static RPSysQueuedScene* CreateInstance(EGG::Heap* heap);
-    static RPSysQueuedScene* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL_EX(RPSysQueuedScene);
 
+public:
     s32 GetSceneID() const {
         return mSceneID;
     }

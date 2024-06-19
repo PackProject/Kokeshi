@@ -13,12 +13,7 @@
  * @wfuname
  */
 class RPSysGameConfig : public RPSysTagParameters {
-public:
-    static RPSysGameConfig* GetInstance() {
-        return sInstance;
-    }
-    // @address 801866e0
-    static RPSysGameConfig* CreateInstance(EGG::Heap* heap);
+    RP_SINGLETON_DECL_EX(RPSysGameConfig);
 
 private:
     // @address 80186470

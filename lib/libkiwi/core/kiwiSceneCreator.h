@@ -148,7 +148,7 @@ public:
     };
 
 public:
-    K_EXTVIEW_GET_INSTANCE(SceneCreator, RPSysSceneCreator::GetInstance);
+    K_EXTVIEW_GET_INSTANCE(SceneCreator, RPSysSceneCreator::getInstance);
 
     /**
      * @brief Registers user scene class

@@ -3,11 +3,9 @@
 #include "types.h"
 
 class RPSysHomeMenuMgr {
-public:
-    static RPSysHomeMenuMgr* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPSysHomeMenuMgr);
 
+public:
     void LoadResource();
 
 private:

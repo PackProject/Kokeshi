@@ -14,13 +14,9 @@
  * @wfuname
  */
 class RPSysResourceManager {
-public:
-    // @address 80187ae8
-    static RPSysResourceManager* CreateInstance();
-    static RPSysResourceManager* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL(RPSysResourceManager);
 
+public:
     /**
      * @brief Open binary message (BMG) file
      * @address 8018783c
