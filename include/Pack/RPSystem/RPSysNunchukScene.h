@@ -2,7 +2,7 @@
 #define RP_SYSTEM_NUNCHUK_SCENE_H
 #include "IRPSysHostIOSocket.h"
 #include "RPSysScene.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Pack Project nunchuk scene

@@ -1,7 +1,7 @@
 #ifndef RP_SYSTEM_LYT_BACK_BUTTON_H
 #define RP_SYSTEM_LYT_BACK_BUTTON_H
+#include "RPTypes.h"
 #include "RPUtlLytBase.h"
-#include "types_RP.h"
 
 class RPSysLytBackButton : public RPUtlLytBase {
 public:

@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_BOX_SOUND_H
 #define RP_AUDIO_RP_BOX_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPBoxScene sound archive
+
+//! @}
+
 namespace rp_Box_sound {
 
 enum ESoundID {

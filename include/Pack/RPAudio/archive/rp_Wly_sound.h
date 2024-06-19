@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_WLY_SOUND_H
 #define RP_AUDIO_RP_WLY_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPWlyScene sound archive
+
+//! @}
+
 namespace rp_Wly_sound {
 
 enum ESoundID {

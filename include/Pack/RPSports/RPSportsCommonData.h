@@ -1,6 +1,6 @@
 #ifndef RP_SPORTS_COMMON_DATA_H
 #define RP_SPORTS_COMMON_DATA_H
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <types_egg.h>
 

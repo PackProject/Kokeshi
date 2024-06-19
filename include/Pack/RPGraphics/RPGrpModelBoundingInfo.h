@@ -1,6 +1,6 @@
 #ifndef RP_GRAPHICS_MODEL_BOUNDING_INFO_H
 #define RP_GRAPHICS_MODEL_BOUNDING_INFO_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/gfx/eggModelBoundingInfo.h>
 

@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_LYT_ALLOCATOR_H
 #define RP_KERNEL_LYT_ALLOCATOR_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggAllocator.h>
 

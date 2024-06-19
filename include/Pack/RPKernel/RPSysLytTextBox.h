@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_LYT_TEXT_BOX_H
 #define RP_KERNEL_LYT_TEXT_BOX_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <nw4r/lyt/lyt_textBox.h>
 

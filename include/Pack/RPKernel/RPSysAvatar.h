@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_AVATAR_H
 #define RP_KERNEL_AVATAR_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <RPKernel/RPSysKokeshiGenInfo.h>
 #include <RPKernel/RPSysKokeshiOverloadInfo.h>

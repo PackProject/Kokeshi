@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_GOL_CONFIG_H
 #define RP_SPORTS_GOL_CONFIG_H
 #include "RPSysUnknownBase.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Global settings used by the golf scene

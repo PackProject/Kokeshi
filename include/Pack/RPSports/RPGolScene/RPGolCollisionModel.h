@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_GOL_COLLISION_MODEL_H
 #define RP_SPORTS_GOL_COLLISION_MODEL_H
 #include "RPSysUnknownBase.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <nw4r/math.h>
 #include <nw4r/ut.h>

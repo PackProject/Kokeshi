@@ -1,6 +1,6 @@
 #ifndef RP_SPORTS_BOX_BOXER_COMBO_H
 #define RP_SPORTS_BOX_BOXER_COMBO_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Combo for boxer's punches

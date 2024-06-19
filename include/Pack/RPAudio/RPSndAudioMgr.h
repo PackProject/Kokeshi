@@ -1,21 +1,23 @@
-#ifndef RP_AUDIO_SND_AUDIO_MANAGER_H
-#define RP_AUDIO_SND_AUDIO_MANAGER_H
+#ifndef RP_AUDIO_SND_AUDIO_MGR_H
+#define RP_AUDIO_SND_AUDIO_MGR_H
+#include <RPTypes.h>
 #include <egg/audio.h>
 #include <egg/core.h>
 #include <nw4r/snd.h>
-#include <types_RP.h>
+
+//! @addtogroup rp_audio
+//! @{
 
 /**
  * @brief RP sound manager (BGM, SFX, etc.)
+ *
+ * @todo The %EGG inheritance is not quite correct. Virtual function calls do
+ * not work correctly.
  */
 class RPSndAudioMgr : public EGG::ExpAudioMgr {
-public:
-    // @address 801b82dc
-    static RPSndAudioMgr* CreateInstance(EGG::Heap* heap);
-    static RPSndAudioMgr* GetInstance() {
-        return sInstance;
-    }
+    RP_SINGLETON_DECL_EX(RPSndAudioMgr);
 
+public:
     /* virtual */ bool loadGroup(UNKWORD, nw4r::snd::SoundHeap*, UNKWORD);
 
     void setSystemSeFadeInFrame(s16 frame);
@@ -39,8 +41,8 @@ public:
 private:
     char UNK_0x0[0x928];
     nw4r::snd::SoundHandle mSndHandle; // at 0x928
-
-    static RPSndAudioMgr* sInstance;
 };
+
+//! @}
 
 #endif

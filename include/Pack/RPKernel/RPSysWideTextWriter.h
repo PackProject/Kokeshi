@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_WIDE_TEXT_WRITER_H
 #define RP_KERNEL_WIDE_TEXT_WRITER_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief RP engine screen wide text (wchar_t) writer

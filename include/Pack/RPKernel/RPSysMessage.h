@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_MESSAGE_H
 #define RP_KERNEL_MESSAGE_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/util/eggMsgRes.h>
 

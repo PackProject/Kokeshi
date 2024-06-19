@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_DVD_STATUS_H
 #define RP_SYSTEM_DVD_STATUS_H
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggColorFader.h>
 #include <egg/core/eggHeap.h>

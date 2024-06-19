@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_COMMON_SOUND_H
 #define RP_AUDIO_RP_COMMON_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPSportsCommon sound archive
+
+//! @}
+
 namespace rp_Common_Sports {
 
 enum ESoundID {

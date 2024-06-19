@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_BOM_SOUND_H
 #define RP_AUDIO_RP_BOM_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPBomScene sound archive
+
+//! @}
+
 namespace rp_Bom_sound {
 
 enum ESoundID {

@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_CONFIG_DATA_H
 #define RP_SYSTEM_CONFIG_DATA_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <RPAudio/RPSndAudioMgr.h>
 #include <RPSystem/RPSysSceneMgr.h>

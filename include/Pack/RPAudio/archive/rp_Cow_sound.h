@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_COW_SOUND_H
 #define RP_AUDIO_RP_COW_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPCowScene sound archive
+
+//! @}
+
 namespace rp_Cow_sound {
 
 enum ESoundID {

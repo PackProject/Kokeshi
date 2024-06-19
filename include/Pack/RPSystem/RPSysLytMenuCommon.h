@@ -1,7 +1,7 @@
 #ifndef RP_SYSTEM_LYT_MENU_COMMON_H
 #define RP_SYSTEM_LYT_MENU_COMMON_H
+#include "RPTypes.h"
 #include "RPUtlLytBase.h"
-#include "types_RP.h"
 
 class RPSysLytMenuCommon : public RPUtlLytBase {
 public:

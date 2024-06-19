@@ -1,6 +1,6 @@
 #ifndef RP_GRAPHICS_MODEL_RES_MANAGER_H
 #define RP_GRAPHICS_MODEL_RES_MANAGER_H
-#include <types_RP.h>
+#include <RPTypes.h>
 
 class RPGrpModelResManager {
 public:

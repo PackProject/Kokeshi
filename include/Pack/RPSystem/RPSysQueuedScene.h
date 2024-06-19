@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_QUEUED_SCENE_H
 #define RP_SYSTEM_QUEUED_SCENE_H
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <types_egg.h>
 

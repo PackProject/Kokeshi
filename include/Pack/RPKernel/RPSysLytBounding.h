@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_LYT_BOUNDING_H
 #define RP_KERNEL_LYT_BOUNDING_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <nw4r/lyt/lyt_bounding.h>
 

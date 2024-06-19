@@ -1,11 +1,20 @@
 #ifndef RP_KERNEL_LAYOUT_H
 #define RP_KERNEL_LAYOUT_H
 #include "RPSysLytDynamicAnm.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/math/eggVector.h>
 #include <nw4r/ut/ut_Color.h>
 #include <nw4r/ut/ut_list.h>
+
+// Forward declarations
+class RPSysLytBounding;
+class RPSysLytTextBox;
+class RPSysLytWindow;
+class RPSysLytPicture;
+class RPSysLytAnmObj;
+class RPSysLytResAccessor;
+class RPSysMessage;
 
 /**
  * @brief NW4R layout wrapper with added features, such as support for

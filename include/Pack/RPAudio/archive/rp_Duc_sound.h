@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_DUC_SOUND_H
 #define RP_AUDIO_RP_DUC_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPDucScene sound archive
+
+//! @}
+
 namespace rp_Duc_sound {
 
 enum ESoundID {

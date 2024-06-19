@@ -1,9 +1,17 @@
 #ifndef RP_AUDIO_RP_BIL_SOUND_H
 #define RP_AUDIO_RP_BIL_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPBilScene sound archive
+
+//! @}
+
 namespace rp_Bil_sound {
 
-enum ESoundID {
+enum {
     /* 0x00 */ RP_BIL_SE_KANSEI_END,
     /* 0x01 */ RP_BIL_SE_CUE_FIX,
     /* 0x02 */ RP_BIL_SE_CUE_CLEAR,

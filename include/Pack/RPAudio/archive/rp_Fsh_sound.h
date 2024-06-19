@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_FSH_SOUND_H
 #define RP_AUDIO_RP_FSH_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPFshSound sound archive
+
+//! @}
+
 namespace rp_Fsh_sound {
 
 enum ESoundID {

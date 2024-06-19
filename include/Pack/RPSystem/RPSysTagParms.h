@@ -1,8 +1,11 @@
 #ifndef RP_SYSTEM_TAG_PARMS_H
 #define RP_SYSTEM_TAG_PARMS_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggStream.h>
+
+// Forward declarations
+class RPSysTagParm;
 
 /**
  * @brief Container for tag parameters

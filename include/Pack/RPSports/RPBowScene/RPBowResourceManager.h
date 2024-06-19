@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_BOW_RESOURCE_MANAGER_H
 #define RP_SPORTS_BOW_RESOURCE_MANAGER_H
 #include "IRPSysHostIOSocket.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Bowling scene resource manager

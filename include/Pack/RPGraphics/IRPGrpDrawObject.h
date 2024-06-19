@@ -1,6 +1,6 @@
 #ifndef RP_GRAPHICS_I_DRAW_OBJECT_H
 #define RP_GRAPHICS_I_DRAW_OBJECT_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Linked-list interface for renderable objects.

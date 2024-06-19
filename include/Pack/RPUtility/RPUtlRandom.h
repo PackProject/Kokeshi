@@ -1,6 +1,6 @@
 #ifndef RP_UTILITY_RANDOM_H
 #define RP_UTILITY_RANDOM_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 class RPUtlRandom {
 public:

@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_I_HOSTIO_SOCKET_H
 #define RP_KERNEL_I_HOSTIO_SOCKET_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Host I/O for debugging

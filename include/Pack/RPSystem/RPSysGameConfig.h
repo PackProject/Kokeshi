@@ -1,7 +1,7 @@
 #ifndef RP_SYSTEM_GAME_CONFIG_H
 #define RP_SYSTEM_GAME_CONFIG_H
 #include "RPSysTagParms.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <types_egg.h>
 

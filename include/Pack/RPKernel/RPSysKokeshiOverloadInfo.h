@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_KOKESHI_OVERLOAD_INFO_H
 #define RP_KERNEL_KOKESHI_OVERLOAD_INFO_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 class RPSysKokeshiOverloadInfo {
 public:

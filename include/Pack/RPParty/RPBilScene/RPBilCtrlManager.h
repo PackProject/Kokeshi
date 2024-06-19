@@ -1,6 +1,6 @@
 #ifndef RP_PARTY_BIL_CTRL_MANAGER_H
 #define RP_PARTY_BIL_CTRL_MANAGER_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 struct RPBilCtrl {
     void TurnX(f32 amount);

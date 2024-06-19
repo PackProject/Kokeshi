@@ -1,7 +1,7 @@
 #ifndef RP_PARTY_TITLE_SCENE_H
 #define RP_PARTY_TITLE_SCENE_H
 #include "RPSysScene.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Party Pack title scene

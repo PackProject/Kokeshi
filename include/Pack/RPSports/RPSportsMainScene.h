@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_MAIN_SCENE_H
 #define RP_SPORTS_MAIN_SCENE_H
 #include "RPSysScene.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Sports Pack menu scene

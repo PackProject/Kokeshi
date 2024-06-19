@@ -1,11 +1,15 @@
 #ifndef RP_SYSTEM_SCENE_H
 #define RP_SYSTEM_SCENE_H
 #include "IRPGrpDrawObject.h"
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggScene.h>
 #include <egg/math/eggVector.h>
 #include <nw4r/ut/ut_Color.h>
+
+// Forward declarations
+class RPGrpRenderer;
+class RPSysCommonObject;
 
 /**
  * @brief Base class for all RP engine scenes

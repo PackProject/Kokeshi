@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_FONT_MANAGER_H
 #define RP_SYSTEM_FONT_MANAGER_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <nw4r/ut/ut_ResFont.h>
 #include <nw4r/ut/ut_RomFont.h>

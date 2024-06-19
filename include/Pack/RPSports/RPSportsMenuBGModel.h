@@ -1,6 +1,6 @@
 #ifndef RP_SPORTS_MENU_BG_MODEL_H
 #define RP_SPORTS_MENU_BG_MODEL_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/types_egg.h>
 

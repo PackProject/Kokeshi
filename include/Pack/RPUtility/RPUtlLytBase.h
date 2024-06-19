@@ -1,8 +1,11 @@
 #ifndef RP_UTILITY_LYT_BASE_H
 #define RP_UTILITY_LYT_BASE_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/core.h>
+
+// Forward declarations
+class RPSysLytResAccessor;
 
 class RPUtlLytBase {
 public:

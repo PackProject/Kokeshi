@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_COMMON_PARTY_H
 #define RP_AUDIO_RP_COMMON_PARTY_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPPartyCommon sound archive
+
+//! @}
+
 namespace rp_Common_Party {
 
 enum ESoundID {

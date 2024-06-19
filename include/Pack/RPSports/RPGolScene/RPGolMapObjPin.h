@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_GOL_MAP_OBJ_PIN_H
 #define RP_SPORTS_GOL_MAP_OBJ_PIN_H
 #include "RPGolMapObjBase.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 class RPGolMapObjPin : public RPGolMapObjBase {
 public:

@@ -1,6 +1,6 @@
 #ifndef RP_GRAPHICS_MODEL_H
 #define RP_GRAPHICS_MODEL_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/gfx/eggModelEx.h>
 

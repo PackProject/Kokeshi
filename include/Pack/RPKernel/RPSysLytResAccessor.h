@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_LYT_RES_ACCESSOR_H
 #define RP_KERNEL_LYT_RES_ACCESSOR_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/types_egg.h>
 #include <nw4r/lyt/lyt_arcResourceAccessor.h>

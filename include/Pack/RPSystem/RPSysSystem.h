@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_SYSTEM_H
 #define RP_KERNEL_SYSTEM_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <RPSystem/RPSysConfigData.h>
 #include <egg/core.h>

@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_PNP_SOUND_H
 #define RP_AUDIO_RP_PNP_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPPnpScene sound archive
+
+//! @}
+
 namespace rp_Pnp_sound {
 
 enum ESoundID {

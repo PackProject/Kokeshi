@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_SCENE_MGR_H
 #define RP_SYSTEM_SCENE_MGR_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggColorFader.h>
 #include <egg/core/eggSceneManager.h>

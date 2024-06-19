@@ -1,7 +1,7 @@
 #ifndef RP_SYSTEM_BOOT_SCENE_H
 #define RP_SYSTEM_BOOT_SCENE_H
 #include "RPSysScene.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Pack Project boot scene

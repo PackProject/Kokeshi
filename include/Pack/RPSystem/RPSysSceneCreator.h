@@ -1,6 +1,6 @@
 #ifndef RP_SYSTEM_SCENE_CREATOR_H
 #define RP_SYSTEM_SCENE_CREATOR_H
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggSceneCreator.h>
 

@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_TNS_SOUND_H
 #define RP_AUDIO_RP_TNS_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPTnsScene sound archive
+
+//! @}
+
 namespace rp_Tns_sound {
 
 enum ESoundID {

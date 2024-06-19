@@ -1,6 +1,6 @@
 #ifndef RP_PARTY_BIL_BALL_MANAGER_H
 #define RP_PARTY_BIL_BALL_MANAGER_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <RPBilScene/RPBilBall.h>
 

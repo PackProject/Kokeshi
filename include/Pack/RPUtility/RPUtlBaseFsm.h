@@ -1,6 +1,6 @@
 #ifndef RP_UTILITY_BASE_FSM_H
 #define RP_UTILITY_BASE_FSM_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <climits>
 

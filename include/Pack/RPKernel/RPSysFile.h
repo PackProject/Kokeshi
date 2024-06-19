@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_FILE_H
 #define RP_KERNEL_FILE_H
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggDisposer.h>
 #include <nw4r/ut/ut_list.h>

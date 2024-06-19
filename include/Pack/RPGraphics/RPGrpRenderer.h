@@ -1,8 +1,10 @@
 #ifndef RP_GRAPHICS_RENDERER_H
 #define RP_GRAPHICS_RENDERER_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
-// TODO
+// Forward declarations
+class RPGrpScreen;
+
 class RPGrpRenderer {
 public:
     enum EDrawPass {

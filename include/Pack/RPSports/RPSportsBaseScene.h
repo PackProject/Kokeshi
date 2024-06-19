@@ -2,7 +2,7 @@
 #define RP_SPORTS_BASE_SCENE_H
 #include "RPSysScene.h"
 #include "RPSysSceneCreator.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Base class for all Sports Pack scenes

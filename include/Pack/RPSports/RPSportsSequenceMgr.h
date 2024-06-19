@@ -1,6 +1,6 @@
 #ifndef RP_SPORTS_SEQUENCE_MGR_H
 #define RP_SPORTS_SEQUENCE_MGR_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Manages sequences, submodes of sports, and their interactions

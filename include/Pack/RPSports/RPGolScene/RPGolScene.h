@@ -1,7 +1,7 @@
 #ifndef RP_SPORTS_GOL_SCENE_H
 #define RP_SPORTS_GOL_SCENE_H
 #include "RPSportsBaseScene.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 /**
  * @brief Golf scene

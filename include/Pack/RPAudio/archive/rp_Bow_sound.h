@@ -1,6 +1,14 @@
 #ifndef RP_AUDIO_RP_BOW_SOUND_H
 #define RP_AUDIO_RP_BOW_SOUND_H
 
+//! @addtogroup rp_audio
+//! @{
+
+//! @file
+//! @brief Sound IDs for the RPBowScene sound archive
+
+//! @}
+
 namespace rp_Bow_sound {
 
 enum ESoundID {

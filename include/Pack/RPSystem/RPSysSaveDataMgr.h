@@ -5,7 +5,7 @@
 #include "RPPartyPlayerData.h"
 #include "RPSportsCommonData.h"
 #include "RPSportsPlayerData.h"
-#include "types_RP.h"
+#include "RPTypes.h"
 
 #include <types_egg.h>
 

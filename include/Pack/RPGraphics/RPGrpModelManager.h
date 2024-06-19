@@ -1,6 +1,10 @@
 #ifndef RP_GRAPHICS_MODEL_MANAGER_H
 #define RP_GRAPHICS_MODEL_MANAGER_H
-#include <types_RP.h>
+#include <RPTypes.h>
+
+// Forward declarations
+class RPGrpLightManager;
+class RPGrpFogManager;
 
 class RPGrpModelManager {
 public:

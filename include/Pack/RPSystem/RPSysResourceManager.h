@@ -2,7 +2,7 @@
 #define RP_SYSTEM_RESOURCE_MANAGER_H
 #include "RPSysFile.h"
 #include "RPSysSceneCreator.h"
-#include "types_rp.h"
+#include "RPTypes.h"
 
 #include <egg/core/eggHeap.h>
 #include <nw4r/ut/ut_list.h>

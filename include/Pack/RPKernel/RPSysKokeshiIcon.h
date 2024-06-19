@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_KOKESHI_ICON_H
 #define RP_KERNEL_KOKESHI_ICON_H
-#include "types_RP.h"
+#include "RPTypes.h"
 
 class RPSysKokeshiIcon {
 public:
