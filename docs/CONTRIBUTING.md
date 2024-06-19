@@ -264,14 +264,14 @@ In each section (public/protected/private), use the following order of declarati
 - Type aliases (`friend`, `typedef`, `using`)
 - Nested types
 - Static constants
+- ### **[Re-declare the access specifier here]**
 - Constructor(s) and assignment operator(s)
 - Destructor
 - Static functions
 - Non-static functions
+- ### **[Re-declare the access specifier here]**
 - Non-constant, static members
 - All other data members
-
-Re-declare the access specifier after the nested types section but before the constructor section to visually separate them:
 
 ```cpp
 class FruitBasket : public IBasket {
@@ -335,9 +335,11 @@ With older compilers it was common to implement function bodies in a header file
 
 However, Kokeshi code is compiled with size optimizations, not speed optimizations. As a result, the compiler will often not inline functions unless they are one or two instructions.
 
-So, please only implement functions in-header **if they are a single C/C++ statement** (not including ASSERT macros, as they are stripped from a release build).
+So, please only implement functions in-header **if they are a single C/C++ statement** (`return *this` in operators does not count). This does not include ASSERT macros, as they are stripped from release builds.
 
-**NOTE: This restriction does not apply to templated functions, although member functions should go in a .hpp file.**
+Don't bother implementing virtual function bodies in-header, as they will never be inlined unless the call is manually devirtualized.
+
+**NOTE: These restrictions does not apply to templated functions, although templated *member functions* should go in a .hpp file (see `libkiwi/prim/kiwiVectorImpl.hpp`).**
 
 ### Doxygen
 Kokeshi uses Doxygen to offer a website view of the codebase.

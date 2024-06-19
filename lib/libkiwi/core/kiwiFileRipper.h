@@ -15,8 +15,8 @@ class MemStream;
  * @brief File storage devices
  */
 enum EStorage {
-    EStorage_DVD,
-    EStorage_NAND,
+    EStorage_DVD,  //!< Game disc
+    EStorage_NAND, //!< System memory
 };
 
 /**
@@ -24,7 +24,7 @@ enum EStorage {
  */
 struct FileRipperArg {
     //! @brief Where the file contents are stored
-    //! @note Leave this as nullptr to have the ripper allocate memory
+    //! @details Leave this as nullptr to have the ripper allocate memory.
     void* pDst;
 
     //! Where the file size is stored

@@ -55,28 +55,19 @@ public:
      *
      * @param buttons Button mask
      */
-    bool IsHold(u32 buttons) const {
-        u32 mask = ConvertMask(buttons);
-        return (GetStatus().hold & mask) == mask;
-    }
+    bool IsHold(u32 buttons) const;
     /**
      * @brief Tests whether specific buttons were released last frame
      *
      * @param buttons Button mask
      */
-    bool IsRelease(u32 buttons) const {
-        u32 mask = ConvertMask(buttons);
-        return (GetStatus().release & mask) == mask;
-    }
+    bool IsRelease(u32 buttons) const;
     /**
      * @brief Tests whether specific buttons were triggered (pressed) last frame
      *
      * @param buttons Button mask
      */
-    bool IsTrig(u32 buttons) const {
-        u32 mask = ConvertMask(buttons);
-        return (GetStatus().trig & mask) == mask;
-    }
+    bool IsTrig(u32 buttons) const;
 
 private:
     /**

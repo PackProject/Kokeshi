@@ -12,30 +12,6 @@ namespace kiwi {
  * @note Does not own file memory
  */
 class Message : IBinary {
-private:
-    static const u32 scKind = 'KMSG';
-    static const u32 scVersion = K_VERSION(1, 0);
-
-    /**
-     * @brief Message descriptor block
-     */
-    struct DESCBlock : Block {
-        static const u32 scKind = 'DESC';
-
-        /* 0x08 */ u32 numMsg;
-        /* 0x0C */ u32 msgOffsets[];
-    };
-
-    /**
-     * @brief Message data block
-     */
-    struct DATABlock : Block {
-        static const u32 scKind = 'DATA';
-
-        /* 0x08 */ u32 poolSize;
-        /* 0x0C */ char poolData[];
-    };
-
 public:
     /**
      * @brief Constructor
@@ -48,25 +24,19 @@ public:
      * @brief Gets the kind/magic of this object
      */
     virtual u32 GetBinaryKind() const {
-        return scKind;
+        return 'KMSG';
     }
 
     /**
      * @brief Gets the serialized size of this object
      */
-    virtual u32 GetBinarySize() const {
-        K_ASSERT(mpDescBlock != nullptr);
-        K_ASSERT(mpDataBlock != nullptr);
-
-        return (sizeof(DESCBlock) + mpDescBlock->numMsg * sizeof(u32)) +
-               (sizeof(DATABlock) + mpDataBlock->poolSize);
-    }
+    virtual u32 GetBinarySize() const;
 
     /**
      * @brief Gets the expected version of this object
      */
     virtual u16 GetVersion() const {
-        return scVersion;
+        return K_VERSION(1, 0);
     }
 
     /**
@@ -76,6 +46,29 @@ public:
      * @return Message text
      */
     const wchar_t* GetMessage(u32 id) const;
+
+private:
+    /**
+     * @brief Message descriptor block
+     */
+    struct DESCBlock : Block {
+        //! Block signature
+        static const u32 KIND = 'DESC';
+
+        /* 0x08 */ u32 numMsg;       //!< Number of offsets
+        /* 0x0C */ u32 msgOffsets[]; //!< Message offsets
+    };
+
+    /**
+     * @brief Message data block
+     */
+    struct DATABlock : Block {
+        //! Block signature
+        static const u32 KIND = 'DATA';
+
+        /* 0x08 */ u32 poolSize;    //!< String pool data size
+        /* 0x0C */ char poolData[]; //!< String pool data
+    };
 
 private:
     /**
@@ -92,9 +85,9 @@ private:
     virtual void SerializeImpl(Header& rHeader) const;
 
 private:
-    Header* mpHeader;             // Binary file header
-    const DESCBlock* mpDescBlock; // Message descriptor block
-    const DATABlock* mpDataBlock; // Message data pool block
+    Header* mpHeader;             //!< Binary file header
+    const DESCBlock* mpDescBlock; //!< Message descriptor block
+    const DATABlock* mpDataBlock; //!< Message data pool block
 };
 
 //! @}

@@ -1,12 +1,8 @@
 #ifndef LIBKIWI_CORE_MEMORY_MGR_H
 #define LIBKIWI_CORE_MEMORY_MGR_H
+#include <egg/core.h>
 #include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiStaticSingleton.h>
-
-// Forward declarations
-namespace EGG {
-class Heap;
-}
 
 namespace kiwi {
 //! @addtogroup libkiwi_core
@@ -16,8 +12,8 @@ namespace kiwi {
  * @brief Memory region
  */
 enum EMemory {
-    EMemory_MEM1, // 24MB RAM brought over from NGC. [0x80000000 - 0x817FFFFF]
-    EMemory_MEM2, // 64MB RAM unique to RVL.         [0x90000000 - 0x93FFFFFF]
+    EMemory_MEM1, //!< 24MB RAM brought over from NGC. [0x80000000 - 0x817FFFFF]
+    EMemory_MEM2, //!< 64MB RAM unique to RVL.         [0x90000000 - 0x93FFFFFF]
 
     EMemory_Max
 };
@@ -78,15 +74,18 @@ private:
     EGG::Heap* GetHeap(EMemory memory) const;
 
 private:
-    EGG::Heap* mpHeapMEM1; // Heap in MEM1 region
-    EGG::Heap* mpHeapMEM2; // Heap in MEM2 region
-
-    // Initial size for both heaps
+    //! Initial size for each heap
     static const u32 scHeapSize = OS_MEM_KB_TO_B(1024);
+
+    EGG::Heap* mpHeapMEM1; //!< Heap in MEM1 region
+    EGG::Heap* mpHeapMEM2; //!< Heap in MEM2 region
 };
 
 //! @}
 } // namespace kiwi
+
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
  * @brief Allocates a block of memory
@@ -168,5 +167,7 @@ void operator delete(void* pBlock);
  * @param pBlock Block
  */
 void operator delete[](void* pBlock);
+
+//! @}
 
 #endif

@@ -4,9 +4,7 @@
 
 namespace kiwi {
 
-/**
- * @brief Text offset for shadow/outline
- */
+//! Text offset for shadow/outline
 const f32 DebugPrint::scEffectOffset = 0.0035f;
 
 /**

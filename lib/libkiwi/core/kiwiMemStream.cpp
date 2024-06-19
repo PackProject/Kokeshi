@@ -66,6 +66,15 @@ void MemStream::Open(void* pBuffer, u32 size, bool owns) {
 }
 
 /**
+ * @brief Closes this stream
+ */
+void MemStream::Close() {
+    if (IsOpen() && mOwnsBuffer) {
+        delete mpBuffer;
+    }
+}
+
+/**
  * @brief Advances this stream's position (internal implementation)
  *
  * @param dir Seek direction

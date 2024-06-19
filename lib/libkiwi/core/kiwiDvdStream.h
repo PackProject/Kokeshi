@@ -29,7 +29,7 @@ public:
 
     /**
      * @brief Destructor
-     * @note The stream is automatically closed.
+     * @details The stream is automatically closed.
      */
     virtual ~DvdStream() {
         Close();

@@ -75,8 +75,10 @@ private:
     TList<ISceneHook>& GetActiveHooks();
 
 private:
-    TArray<TList<ISceneHook>, ESceneID_Max> mHookLists; // Lists of scene hooks
-    TList<ISceneHook> mGlobalHooks; // Global hooks (always active)
+    //! Lists of scene hooks
+    TArray<TList<ISceneHook>, ESceneID_Max> mHookLists;
+    //! Global hooks (always active)
+    TList<ISceneHook> mGlobalHooks;
 };
 
 /**
@@ -167,7 +169,7 @@ public:
     virtual void Pause(RPSysScene* pScene, bool enter) {}
 
 private:
-    s32 mSceneID; // Scene to which this hook belongs
+    s32 mSceneID; //!< Scene to which this hook belongs
 };
 
 //! @}

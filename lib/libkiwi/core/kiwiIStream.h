@@ -11,7 +11,11 @@ namespace kiwi {
 /**
  * @brief Stream seek origin
  */
-enum ESeekDir { ESeekDir_Begin, ESeekDir_Current, ESeekDir_End };
+enum ESeekDir {
+    ESeekDir_Begin,   //!< Seek relative to the beginning of the stream
+    ESeekDir_Current, //!< Seek relative to the stream's current position
+    ESeekDir_End      //!< Seek relative to the end of the stream
+};
 
 /**
  * @brief Stream interface
@@ -184,8 +188,8 @@ protected:
     virtual s32 PeekImpl(void* pDst, u32 size) = 0;
 
 protected:
-    bool mIsOpen;  // Stream open flag
-    u32 mPosition; // Position in data
+    bool mIsOpen;  //!< Stream open flag
+    u32 mPosition; //!< Position in data
 };
 
 //! @}

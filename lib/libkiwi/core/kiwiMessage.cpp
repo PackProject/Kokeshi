@@ -13,6 +13,17 @@ Message::Message(const void* pBin) {
 }
 
 /**
+ * @brief Gets the serialized size of this object
+ */
+u32 Message::GetBinarySize() const {
+    K_ASSERT(mpDescBlock != nullptr);
+    K_ASSERT(mpDataBlock != nullptr);
+
+    return (sizeof(DESCBlock) + mpDescBlock->numMsg * sizeof(u32)) +
+           (sizeof(DATABlock) + mpDataBlock->poolSize);
+}
+
+/**
  * @brief Deserializes binary contents (internal implementation)
  *
  * @param rHeader Binary file header
@@ -25,10 +36,10 @@ void Message::DeserializeImpl(const Header& rHeader) {
     for (int i = 0; i < rHeader.numBlocks; i++) {
         // Check block kind
         switch (block->kind) {
-        case DESCBlock::scKind:
+        case DESCBlock::KIND:
             mpDescBlock = static_cast<const DESCBlock*>(block);
             break;
-        case DATABlock::scKind:
+        case DATABlock::KIND:
             mpDataBlock = static_cast<const DATABlock*>(block);
             break;
         default:

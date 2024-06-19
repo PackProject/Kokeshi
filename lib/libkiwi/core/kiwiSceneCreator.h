@@ -12,7 +12,7 @@ namespace kiwi {
  * @brief Game scene ID
  */
 enum ESceneID {
-#ifndef PACK_RESORT
+#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
     // RPSystem
     ESceneID_RPSysBootScene,
     ESceneID_RPSysPlayerSelectScene,
@@ -31,8 +31,9 @@ enum ESceneID {
     ESceneID_RPSportsPhysicalPreviewScene,
     ESceneID_RPSportsPhysicalResultScene,
     ESceneID_RPGolSelectScene,
+#endif
 
-#ifdef PACK_SPORTS
+#if defined(PACK_SPORTS)
     ESceneID_Max,
 #endif
 
@@ -51,11 +52,11 @@ enum ESceneID {
     ESceneID_RPPartyMiiLoadScene,
     ESceneID_RPPartyMenuScene,
 
-#ifdef PACK_PLAY
+#if defined(PACK_PLAY)
     ESceneID_Max,
 #endif
 
-#else
+#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
     // System
     ESceneID_Sp2StrapScene,
     ESceneID_Sp2SaveDataLoadScene,
@@ -98,10 +99,10 @@ enum ESceneID {
  * @brief Pack Project ID
  */
 enum EPackID {
-    EPackID_SportsPack,
-    EPackID_PartyPack,
-    EPackID_HealthPack,
-    EPackID_MusicPack,
+    EPackID_SportsPack, //!< Wii Sports
+    EPackID_PartyPack,  //!< Wii Play
+    EPackID_HealthPack, //!< Wii Fit
+    EPackID_MusicPack,  //!< Wii Music
     EPackID_AllPack,
 };
 
@@ -136,14 +137,14 @@ public:
      * @brief Scene information
      */
     struct Info {
-        RPSysScene* (*pCt)();     // Scene create function (for user scenes)
-        String name;              // Scene name
-        String dir;               // Resource directory
-        s32 id;                   // Scene ID (for RP scenes)
-        kiwi::EPackID pack;       // Pack ID
-        kiwi::ECreateType create; // How to create the scene
-        kiwi::EExitType exit;     // How to exit the scene
-        bool common;              // Use the RP common sound archive
+        RPSysScene* (*pCt)();     //!< Scene create function (for user scenes)
+        String name;              //!< Scene name
+        String dir;               //!< Resource directory
+        s32 id;                   //!< Scene ID (for RP scenes)
+        kiwi::EPackID pack;       //!< Pack ID
+        kiwi::ECreateType create; //!< How to create the scene
+        kiwi::EExitType exit;     //!< How to exit the scene
+        bool common;              //!< Use the RP common sound archive
     };
 
 public:
@@ -234,15 +235,10 @@ private:
     static const Info* GetSceneInfo(s32 id);
 
 private:
-    /**
-     * @brief User-registered scenes
-     */
-    static TMap<s32, Info> sUserScenes;
-
-    /**
-     * @brief Pack Project scenes
-     */
+    //! Pack Project scenes
     static const Info scPackScenes[];
+    //! User-registered scenes
+    static TMap<s32, Info> sUserScenes;
 };
 
 //! @}

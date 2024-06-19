@@ -74,11 +74,7 @@ public:
     /**
      * @brief Closes this stream
      */
-    virtual void Close() {
-        if (IsOpen() && mOwnsBuffer) {
-            delete mpBuffer;
-        }
-    }
+    virtual void Close();
 
     /**
      * @brief Gets the size of the currently open buffer
@@ -209,9 +205,9 @@ private:
     virtual s32 PeekImpl(void* pDst, u32 size);
 
 private:
-    u8* mpBuffer;     // Memory buffer
-    u32 mBufferSize;  // Buffer size
-    bool mOwnsBuffer; // Whether the stream owns the buffer
+    u8* mpBuffer;     //!< Memory buffer
+    u32 mBufferSize;  //!< Buffer size
+    bool mOwnsBuffer; //!< Whether the stream owns the buffer
 };
 
 //! @}

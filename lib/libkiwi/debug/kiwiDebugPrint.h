@@ -72,8 +72,7 @@ private:
                           const String& rMsg);
 
 private:
-    // Text offset for shadow/outline
-    static const f32 scEffectOffset;
+    static const f32 scEffectOffset; //!< Text offset for shadow/outline
 };
 
 //! @}

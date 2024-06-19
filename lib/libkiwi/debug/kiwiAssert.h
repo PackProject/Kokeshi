@@ -10,27 +10,27 @@
  * @brief Removes K_ prefix for user code
  */
 /**@{*/
-// Log a message to the console
+//! Log a message to the console
 #define LOG(msg) K_LOG(msg)
-// Log a message (format string) to the console
+//! Log a message (format string) to the console
 #define LOG_EX(msg, ...) K_LOG_EX(msg, __VA_ARGS__)
 
-// Log an error if the condition is TRUE
+//! Log an error if the condition is TRUE
 #define WARN(exp) K_WARN(exp)
-// Log an custom message if the condition is TRUE
+//! Log an custom message if the condition is TRUE
 #define WARN_EX(exp, ...) K_WARN_EX(exp, __VA_ARGS__)
 
-// Halt the program if the condition is FALSE
+//! Halt the program if the condition is FALSE
 #define ASSERT(exp) K_ASSERT(exp)
-// Halt the program and display a message if the condition is FALSE
+//! Halt the program and display a message if the condition is FALSE
 #define ASSERT_EX(exp, ...) K_ASSERT_EX(exp, __VA_ARGS__)
 
-// Compile-time assertion
+//! Compile-time assertion
 #define STATIC_ASSERT(exp) K_STATIC_ASSERT(exp)
-// Compile-time assertion with a custom message
+//! Compile-time assertion with a custom message
 #define STATIC_ASSERT_EX(exp, msg) K_STATIC_ASSERT_EX(exp, msg)
 
-// For compatability with modern libraries
+//! For compatability with modern libraries
 #define static_assert(exp, msg) K_STATIC_ASSERT_EX(exp, msg)
 /**@}*/
 
@@ -60,7 +60,7 @@
 #define K_ASSERT_EX(exp, ...) (void)0
 #endif
 
-// Compile-time assertion
+//! Compile-time assertion
 #define K_STATIC_ASSERT(exp) extern u8 __K_PREDICATE[(exp) ? 1 : -1]
 #define K_STATIC_ASSERT_EX(exp, msg) K_STATIC_ASSERT(exp)
 /**@}*/

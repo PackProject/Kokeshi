@@ -2,9 +2,7 @@
 
 namespace kiwi {
 
-/**
- * @brief Global console handle
- */
+//! Global console handle
 const detail::ConsoleOut cout;
 
 } // namespace kiwi

@@ -8,7 +8,10 @@
 namespace kiwi {
 //! @addtogroup libkiwi_core
 //! @{
+
 namespace detail {
+//! @addtogroup libkiwi_core
+//! @{
 
 /**
  * @brief Common thread implementation
@@ -60,19 +63,19 @@ protected:
     void SetMemberFunction(TFunc pFunc, const TClass& rObj);
 
 private:
-    OSThread* mpOSThread; // RVL thread
-    u8* mpThreadStack;    // RVL thread stack
+    OSThread* mpOSThread; //!< RVL thread
+    u8* mpThreadStack;    //!< RVL thread stack
 
-    // Thread stack size
-    static const u32 scStackSize = 0x4000;
-    // Thread priority
-    static const s32 scPriority = OS_PRIORITY_MAX / 2;
+    static const u32 scStackSize = 0x4000;             //!< Thread stack size
+    static const s32 scPriority = OS_PRIORITY_MAX / 2; //!< Thread priority
 };
 
+//! @}
 } // namespace detail
 
 /**
- * @brief Similar to std::thread
+ * @brief Run function on another thread
+ * @details Similar to std::thread.
  * @note Only allows GPR arguments
  */
 class Thread : public detail::ThreadImpl {
@@ -82,39 +85,28 @@ public:
 
 public:
     /**
-     * @brief Non-member function
+     * @name Non-member function
      */
-
+    /**@{*/
     /**
      * @brief Constructor
      *
      * @param pFunc Static, no-parameter function
      */
-    template <typename TRet> Thread(TRet (*pFunc)()) {
-        K_ASSERT(pFunc != nullptr);
-
-        SetFunction(pFunc);
-        Start();
-    }
-
+    template <typename TRet> Thread(TRet (*pFunc)());
     /**
      * @brief Constructor
      *
      * @param pFunc Static, single-parameter function
      * @param pArg Function argument
      */
-    template <typename TRet> Thread(TRet (*pFunc)(Param), Param pArg) {
-        K_ASSERT(pFunc != nullptr);
-
-        SetFunction(pFunc);
-        SetGPR(3, BitCast<u32>(pArg));
-        Start();
-    }
+    template <typename TRet> Thread(TRet (*pFunc)(Param), Param pArg);
+    /**@}*/
 
     /**
-     * @brief Member function (non-const)
+     * @name Member function (non-const)
      */
-
+    /**@{*/
     /**
      * @brief Constructor
      *
@@ -122,13 +114,7 @@ public:
      * @param rObj Class instance
      */
     template <typename TRet, typename TClass>
-    Thread(TRet (TClass::*pFunc)(), TClass& rObj) {
-        K_ASSERT(pFunc);
-
-        SetMemberFunction(pFunc, rObj);
-        Start();
-    }
-
+    Thread(TRet (TClass::*pFunc)(), TClass& rObj);
     /**
      * @brief Constructor
      *
@@ -137,18 +123,13 @@ public:
      * @param pArg Function argument
      */
     template <typename TRet, typename TClass>
-    Thread(TRet (TClass::*pFunc)(Param), TClass& rObj, Param pArg) {
-        K_ASSERT(pFunc);
-
-        SetMemberFunction(pFunc, rObj);
-        SetGPR(4, BitCast<u32>(pArg));
-        Start();
-    }
+    Thread(TRet (TClass::*pFunc)(Param), TClass& rObj, Param pArg);
+    /**@}*/
 
     /**
-     * @brief Member function (const)
+     * @name Member function (const)
      */
-
+    /**@{*/
     /**
      * @brief Constructor
      *
@@ -156,13 +137,7 @@ public:
      * @param rObj Class instance
      */
     template <typename TRet, typename TClass>
-    Thread(TRet (TClass::*pFunc)() const, const TClass& rObj) {
-        K_ASSERT(pFunc);
-
-        SetMemberFunction(pFunc, rObj);
-        Start();
-    }
-
+    Thread(TRet (TClass::*pFunc)() const, const TClass& rObj);
     /**
      * @brief Constructor
      *
@@ -171,76 +146,16 @@ public:
      * @param pArg Function argument
      */
     template <typename TRet, typename TClass>
-    Thread(TRet (TClass::*pFunc)(Param) const, const TClass& rObj, Param pArg) {
-        K_ASSERT(pFunc);
-
-        SetMemberFunction(pFunc, rObj);
-        SetGPR(4, BitCast<u32>(pArg));
-        Start();
-    }
+    Thread(TRet (TClass::*pFunc)(Param) const, const TClass& rObj, Param pArg);
+    /**@}*/
 };
 
-namespace detail {
-
-/**
- * @brief Pointer-to-member-function (PTMF)
- */
-struct MemberFunction {
-    s32 toff; // 'This' pointer offset for target object type
-    s32 voff; // Vtable offset into class
-    union {
-        s32 foff;    // Function offset into vtable
-        void* pAddr; // Raw function address (if voff is -1)
-    };
-};
-
-/**
- * @brief Sets a member function to run on this thread
- *
- * @param pFunc Function
- * @param rObj Class instance
- */
-template <typename TFunc, typename TClass>
-K_DONT_INLINE void ThreadImpl::SetMemberFunction(TFunc pFunc,
-                                                 const TClass& rObj) {
-    K_STATIC_ASSERT_EX(sizeof(TFunc) == sizeof(MemberFunction),
-                       "Not a member function");
-
-    register const MemberFunction* pPtmf;
-    register u32 self;
-
-    // clang-format off
-    asm volatile {
-        mr pPtmf, r4 // pFunc -> pPtmf
-        mr self, r5 // rObj   -> self
-    }
-    K_ASSERT(pPtmf != nullptr);
-    K_ASSERT(self != 0);
-    // clang-format on
-
-    K_ASSERT(mpOSThread != nullptr);
-    K_ASSERT(mpOSThread->state == OS_THREAD_STATE_READY);
-
-    // Adjust this pointer
-    self += pPtmf->toff;
-    SetGPR(3, self);
-
-    // Non-virtual function?
-    if (pPtmf->voff == -1) {
-        SetFunction(pPtmf->pAddr);
-        return;
-    }
-
-    // Find virtual function table
-    const void** pVtbl = BitCast<const void**>(self + pPtmf->voff);
-
-    // Find virtual function address
-    K_ASSERT(pPtmf->foff >= 0);
-    SetFunction(pVtbl[pPtmf->foff / sizeof(void*)]);
-}
-
-} // namespace detail
 //! @}
 } // namespace kiwi
+
+// Implementation header
+#ifndef LIBKIWI_CORE_THREAD_IMPL_HPP
+#include <libkiwi/core/kiwiThreadImpl.hpp>
+#endif
 
 #endif

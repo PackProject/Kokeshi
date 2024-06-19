@@ -10,7 +10,11 @@ namespace kiwi {
 /**
  * @brief File access type
  */
-enum EOpenMode { EOpenMode_Read, EOpenMode_Write, EOpenMode_RW };
+enum EOpenMode {
+    EOpenMode_Read,
+    EOpenMode_Write,
+    EOpenMode_RW //!< Read + write
+};
 
 /**
  * @brief Stream to a file

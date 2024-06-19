@@ -14,8 +14,7 @@ namespace detail {
 
 /**
  * @brief Console text output stream
- * @note This class cannot be instantiated. Please use the global kiwi::cout
- * instance.
+ * @see kiwi::cout
  */
 class ConsoleOut : private NonCopyable {
 public:

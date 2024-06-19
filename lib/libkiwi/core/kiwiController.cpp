@@ -37,6 +37,36 @@ u32 WiiCtrl::ConvertMask(u32 mask) {
 }
 
 /**
+ * @brief Tests whether specific buttons were held down last frame
+ *
+ * @param buttons Button mask
+ */
+bool WiiCtrl::IsHold(u32 buttons) const {
+    u32 mask = ConvertMask(buttons);
+    return (GetStatus().hold & mask) == mask;
+}
+
+/**
+ * @brief Tests whether specific buttons were released last frame
+ *
+ * @param buttons Button mask
+ */
+bool WiiCtrl::IsRelease(u32 buttons) const {
+    u32 mask = ConvertMask(buttons);
+    return (GetStatus().release & mask) == mask;
+}
+
+/**
+ * @brief Tests whether specific buttons were triggered (pressed) last frame
+ *
+ * @param buttons Button mask
+ */
+bool WiiCtrl::IsTrig(u32 buttons) const {
+    u32 mask = ConvertMask(buttons);
+    return (GetStatus().trig & mask) == mask;
+}
+
+/**
  * @brief Gets Wii Remote controller by player index
  *
  * @param i Player index

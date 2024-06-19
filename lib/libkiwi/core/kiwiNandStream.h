@@ -131,7 +131,7 @@ private:
     virtual s32 PeekImpl(void* pDst, u32 size);
 
 private:
-    NANDFileInfo mFileInfo; // NAND handle
+    NANDFileInfo mFileInfo; //!< NAND file handle
 };
 
 //! @}

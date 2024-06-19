@@ -6,7 +6,9 @@
 #include <libkiwi/prim/kiwiString.h>
 
 /**
- * @brief Helper for declaring new scenes
+ * @brief Declare new scene to the creator
+ *
+ * @param T Scene class type
  */
 #define K_SCENE_DECL(T) static kiwi::SceneDecl<T> SceneDecl_##T;
 
@@ -18,7 +20,8 @@ namespace kiwi {
  * @brief User scene interface
  */
 class IScene : public RPSysScene {
-    template <typename> friend class SceneDecl; // Needs to see 'Create' method
+    //! Needs to see 'Create' method
+    template <typename> friend class SceneDecl;
 
 public:
     /**

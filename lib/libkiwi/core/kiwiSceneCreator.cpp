@@ -4,14 +4,7 @@
 
 namespace kiwi {
 
-/**
- * @brief User-registered scenes
- */
-TMap<s32, SceneCreator::Info> SceneCreator::sUserScenes;
-
-/**
- * @brief Pack Project scenes
- */
+//! Pack Project scenes
 const SceneCreator::Info SceneCreator::scPackScenes[] = {
 // clang-format off
 #ifdef PACK_SPORTS
@@ -51,6 +44,9 @@ const SceneCreator::Info SceneCreator::scPackScenes[] = {
 #endif
     // clang-format on
 };
+
+//! User-registered scenes
+TMap<s32, SceneCreator::Info> SceneCreator::sUserScenes;
 
 /**
  * @brief Gets information on the specified scene
