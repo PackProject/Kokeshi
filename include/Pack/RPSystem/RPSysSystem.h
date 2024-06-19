@@ -1,8 +1,7 @@
-#ifndef RP_KERNEL_SYSTEM_H
-#define RP_KERNEL_SYSTEM_H
+#ifndef RP_SYSTEM_SYSTEM_H
+#define RP_SYSTEM_SYSTEM_H
+#include <Pack/RPSystem/RPSysConfigData.h>
 #include <Pack/RPTypes.h>
-#include <RPSystem/RPSysConfigData.h>
-#include <RPTypes.h>
 #include <egg/core.h>
 #include <nw4r/ut.h>
 #include <revolution/OS.h>
@@ -11,7 +10,7 @@
 //! @{
 
 /**
- * @brief Main RP engine class
+ * @brief Pack Project engine system
  * @wfuname
  *
  * The system class manages the low level components of the RP engine, such as
