@@ -1,229 +1,316 @@
 #ifndef RP_SYSTEM_SCENE_CREATOR_H
 #define RP_SYSTEM_SCENE_CREATOR_H
-#include "RPTypes.h"
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
 
-#include <egg/core/eggSceneCreator.h>
+//! @addtogroup rp_system
+//! @{
 
 /**
- * @brief Factory for all RP scenes
- * @details Not to be confused with the scene manager, the scene creator simply
- * creates/destroys scenes. The scene creator ensures that all scenes created
- * are intended for the current pack by referencing the scene attributes.
+ * @brief Pack Project scene factory
  * @wfuname
  */
 class RPSysSceneCreator : public EGG::SceneCreator {
     RP_SINGLETON_DECL_EX(RPSysSceneCreator);
 
 public:
-    // @brief RP Scene ID
-    // @wfuname
+    /**
+     * @brief Game scene ID
+     * @wfuname
+     */
     enum ESceneID {
-        // System scenes
-        ESceneID_RPSysBootScene,
-        ESceneID_RPSysPlayerSelectScene,
-        ESceneID_RPSysNunchukScene,
+#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+        // RPSystem
+        ESceneID_RPSysBootScene,         //!< Logo
+        ESceneID_RPSysPlayerSelectScene, //!< Player Select
+        ESceneID_RPSysNunchukScene,      //!< Nunchuk Check
 
-        // Sports Pack scenes
-        ESceneID_RPBsbScene,
-        ESceneID_RPBowScene,
-        ESceneID_RPGolScene,
-        ESceneID_RPTnsScene,
-        ESceneID_RPBoxScene,
-        ESceneID_RPSportsTitleScene,
-        ESceneID_RPSportsMenuScene,
-        ESceneID_RPSportsTrainingMenuScene,
-        ESceneID_RPSportsPhysicalMenuScene,
-        ESceneID_RPSportsPhysicalPreviewScene,
-        ESceneID_RPSportsPhysicalResultScene,
-        ESceneID_RPGolSelectScene,
-
-#ifdef PACK_SPORTS
-        RP_SCENE_MAX,
+        // RPSports
+        ESceneID_RPBsbScene,                   //!< Baseball
+        ESceneID_RPBowScene,                   //!< Bowling
+        ESceneID_RPGolScene,                   //!< Golf
+        ESceneID_RPTnsScene,                   //!< Tennis
+        ESceneID_RPBoxScene,                   //!< Boxing
+        ESceneID_RPSportsTitleScene,           //!< Sports Pack
+        ESceneID_RPSportsMenuScene,            //!< Main Menu
+        ESceneID_RPSportsTrainingMenuScene,    //!< Training Menu
+        ESceneID_RPSportsPhysicalMenuScene,    //!< Physical Test (Menu)
+        ESceneID_RPSportsPhysicalPreviewScene, //!< Physical Test (Description)
+        ESceneID_RPSportsPhysicalResultScene,  //!< Physical Test (Result)
+        ESceneID_RPGolSelectScene,             //!< Golf (Course Select)
 #endif
 
-        // Party Pack scenes
-        RP_SCENE_09h,
-        ESceneID_RPFshScene,
-        ESceneID_RPHkyScene,
-        ESceneID_RPDucScene,
-        ESceneID_RPPnpScene,
-        ESceneID_RPBilScene,
-        ESceneID_RPCowScene,
-        ESceneID_RPWlyScene,
-        ESceneID_RPTnkScene,
-        ESceneID_RPBomScene,
-        ESceneID_RPPartyTitleScene,
-        ESceneID_RPPartyMiiLoadScene,
-        ESceneID_RPPartyMenuScene,
-
-#ifdef PACK_PLAY
-        RP_SCENE_MAX,
+#if defined(PACK_SPORTS)
+        ESceneID_Max,
 #endif
 
-        // Health Pack scenes
-        RP_HEALTH_TITLE_SCENE,
-        RP_HEALTH_COUNSEL_SCENE,
-        RP_HEALTH_YOGA_SCENE,
-        RP_HEALTH_TRAINING_SCENE,
-        RP_HEALTH_RADIO_GYM_SCENE,
-        RP_HEALTH_GRAPH_SCENE,
-        RP_HEALTH_BALANCE_SCENE,
-        RP_HEALTH_SKI_SCENE,
-        RP_SCENE_23H,
-        RP_SCENE_24H,
+        // RPParty
+        ESceneID_Unknown09h,
+        ESceneID_RPFshScene,          //!< Fishing
+        ESceneID_RPHkyScene,          //!< Laser Hockey
+        ESceneID_RPDucScene,          //!< Shooting Range
+        ESceneID_RPPnpScene,          //!< Table Tennis
+        ESceneID_RPBilScene,          //!< Billiards
+        ESceneID_RPCowScene,          //!< Charge!
+        ESceneID_RPWlyScene,          //!< Find Mii
+        ESceneID_RPTnkScene,          //!< Tanks!
+        ESceneID_RPBomScene,          //!< Pose Mii
+        ESceneID_RPPartyTitleScene,   //!< Party Pack
+        ESceneID_RPPartyMiiLoadScene, //!< Mii/GameMgr Setup
+        ESceneID_RPPartyMenuScene,    //!< Main Menu
 
-        // Music Pack scenes
-        RP_DRM_SCENE,
-        RP_OCH_SCENE,
-        RP_MPE_1_SCENE,
-        RP_MPE_2_SCENE,
-        RP_MPE_3_SCENE,
-        RP_MPE_4_SCENE,
-        RP_MPE_5_SCENE,
-        RP_MUSIC_TITLE_SCENE,
+#if defined(PACK_PLAY)
+        ESceneID_Max,
+#endif
 
-        // All pack scenes
-        RP_ALL_PACK_SCENE,
-        RP_BASIC_DEBUG_SCENE,
-        RP_GRAPHICS_DEBUG_SCENE,
-        RP_SYSTEM_DEBUG_SCENE,
-        RP_LAYOUT_DEBUG_SCENE,
-        RP_CURSOR_DEBUG_SCENE,
-        RP_VIBRATION_DEBUG_SCENE,
-        RP_RESULT_DEBUG_SCENE,
-        RP_UI_DEBUG_SCENE,
-        RP_SMK_TRAINING_SCENE,
-        RP_MNT_TRAINING_SCENE,
-        RP_BSB_DEBUG_SCENE,
-        RP_DRM_DEBUG_SCENE,
-        RP_OCH_DEBUG_SCENE,
-        RP_OCH_MUSIC_SELECT_SCENE,
+        // RPHealth
+        ESceneID_RPHealthTitleScene,    //!< Health Pack
+        ESceneID_RPHealthCounselScene,  //!< Counseling
+        ESceneID_RPHealthYogaScene,     //!< Yoga
+        ESceneID_RPHealthTrainingScene, //!< Training (Menu)
+        ESceneID_RPHealthRadioGymScene, //!< Radio Calisthenics
+        ESceneID_RPHealthGraphScene,    //!< Health Graph
+        ESceneID_RPHealthBalanceScene,  //!< Balance Test
+        ESceneID_RPHealthSkiScene,      //!< Balance Ski
+        ESceneID_Unknown23h,
+        ESceneID_Unknown24h,
+
+        // RPMusic
+        ESceneID_RPDrmScene,        //!< Drum
+        ESceneID_RPOchScene,        //!< Orchestra
+        ESceneID_RPMpeScene1,       //!< Music Experiment 1
+        ESceneID_RPMpeScene2,       //!< Music Experiment 2
+        ESceneID_RPMpeScene3,       //!< Music Experiment 3
+        ESceneID_RPMpeScene4,       //!< Music Experiment 4
+        ESceneID_RPMpeScene5,       //!< Music Experiment 5
+        ESceneID_RPMusicTitleScene, //!< Music Pack
+
+        // Pack Project
+        ESceneID_RPAllPackScene,        //!< Pack Project
+        ESceneID_RPBasicDebugScene,     //!< Basic
+        ESceneID_RPGraphicsDebugScene,  //!< Graphics
+        ESceneID_RPSystemDebugScene,    //!< System
+        ESceneID_RPLayoutDebugScene,    //!< Layout
+        ESceneID_RPCursorDebugScene,    //!< Cursor
+        ESceneID_RPVibrationDebugScene, //!< Vibration
+        ESceneID_RPResultDebugScene,    //!< Result
+        ESceneID_RPUIDebugScene,        //!< UI Test
+        ESceneID_RPSmkTrainingScene,    //!< New Recruit Training (Smk)
+        ESceneID_RPMntTrainingScene,    //!< New Recruit Training (Mnt)
+        ESceneID_RPBsbDebugScene,       //!< Baseball Debug
+        ESceneID_RPDrmDebugScene,       //!< Drum Debug
+        ESceneID_RPOchDebugScene,       //!< Orchestra Debug
+        ESceneID_RPOchSelectScene,      //!< Orchestra Music Select
     };
 
     /**
      * @brief Sport ID
+     * @customname
      */
     enum ESportID {
-        SPORT_BASEBALL,
-        SPORT_TENNIS,
-        SPORT_GOLF,
-        SPORT_BOXING,
-        SPORT_BOWLING,
+        ESportID_Bsb, //!< Baseball
+        ESportID_Tns, //!< Tennis
+        ESportID_Gol, //!< Golf
+        ESportID_Box, //!< Boxing
+        ESportID_Bow, //!< Bowling
 
-        SPORT_MAX
-    };
-
-    // @brief Pack Project game ID
-    enum EPackID {
-        RP_SPORTS_PACK,
-        RP_PARTY_PACK,
-        RP_HEALTH_PACK,
-        RP_MUSIC_PACK,
-        RP_ALLPACK
+        ESportID_Max
     };
 
     /**
-     * @brief Attributes to show the creator how to handle a given scene
+     * @brief Pack Project game ID
      * @customname
      */
-    struct SceneAttr {
-        // @brief Scene ID
-        s32 scene; // at 0x0
-        // @brief Pack ID
-        s32 pack; // at 0x4
-        // @brief How to create the scene
-        s32 createType; // at 0x8
-        // @brief Toggle "Now Loading" text (unused)
-        s32 showLoadingText; // at 0xC
-        // @brief How to exit the scene
-        s32 exitType; // at 0x10
-        // @brief Whether to use the RP common sound archive
-        s32 useCommonSound; // at 0x14
-        // @brief Scene file directory
-        const char* resDirName; // at 0x18
-        // @brief Proper name (unused lookup feature?)
-        const char* sceneName; // at 0x1C
+    enum EPackID {
+        EPackID_SportsPack, //!< Wii Sports
+        EPackID_PartyPack,  //!< Wii Play
+        EPackID_HealthPack, //!< Wii Fit
+        EPackID_MusicPack,  //!< Wii Music
+        EPackID_AllPack,    //!< Pack Project
+
+        EPackID_Max
+    };
+
+    /**
+     * @brief Scene create type
+     * @customname
+     */
+    enum ECreateType {
+        ECreateType_Standard, //!< Overwrite outgoing scene
+        ECreateType_Sibling,  //!< Become sibling of outgoing scene
+        ECreateType_Child,    //!< Become child of outgoing scene
+    };
+
+    /**
+     * @brief Scene exit type
+     * @customname
+     */
+    enum EExitType {
+        EExitType_Standard, //!< Incoming scene overwrites this scene
+        EExitType_Sibling,  //!< Incoming scene becomes a sibling of this scene
+        EExitType_2,
+        EExitType_3,
+        EExitType_Child, //!< Incoming scene becomes a child of this scene
+    };
+
+    /**
+     * @brief Scene information
+     * @customname
+     */
+    struct SceneEntry {
+        //! @brief Scene ID
+        ESceneID scene; // at 0x0
+        //! @brief Pack ID
+        EPackID pack; // at 0x4
+        //! @brief How to create the scene
+        ECreateType createType; // at 0x8
+        //! @brief Toggle "Now Loading" text (unused)
+        BOOL loadingText; // at 0xC
+        //! @brief How to exit the scene
+        EExitType exitType; // at 0x10
+        //! @brief Whether to use the RP common sound archive
+        BOOL commonSound; // at 0x14
+        //! @brief Scene resource directory
+        const char* pResDirName; // at 0x18
+        //! @brief Proper name
+        const char* pSceneName; // at 0x1C
     };
 
 public:
-    s32 getLastSceneID() const {
-        return mLastSceneID;
-    }
-    void setLastSceneID(s32 scene) {
-        mLastSceneID = scene;
-    }
+#ifdef PACK_SPORTS
+    /**
+     * @brief Creates a Sports Pack scene by ID
+     *
+     * @param id Scene ID
+     */
+    EGG::Scene* createSportsScene(s32 id);
+#elif PACK_PLAY
+    /**
+     * @brief Creates a Party Pack scene by ID
+     *
+     * @param id Scene ID
+     */
+    EGG::Scene* createPartyScene(s32 id);
+#elif PACK_RESORT
+    /**
+     * @brief Creates a Wii Sports 2 scene by ID
+     *
+     * @param id Scene ID
+     */
+    EGG::Scene* createSp2Scene(s32 id);
+#endif
 
     /**
-     * @brief Fade out into a new scene, optionally reloading the current scene
-     * @address 80184ba4
+     * @brief Fades out the current scene and changes to a new scene
+     * @details Supply an ID of -1 to use the ID of the current scene
+     *
+     * @param id New scene ID (-1 for current scene)
+     * @param reload Whether to reload the current scene
      * @return Success
      */
-    bool changeSceneAfterFade(s32 sceneID, bool reenterCurrent = false);
+    bool changeSceneAfterFade(s32 id, bool reload = false);
     /**
-     * @brief Change to the boot scene (performing a soft reset)
-     * @address 80184b98
+     * @brief Changes the scene to the boot scene (performs a soft reset)
      */
     void changeSoftReset();
 
     /**
-     * @brief Create a Sports Pack scene
-     * @address 80184000
+     * @brief Creates a scene by ID
+     *
+     * @param id Scene ID
      */
+    virtual EGG::Scene* create(s32 id);
+    /**
+     * @brief Destroys a scene
+     * @details If the scene manager has requested a shutdown, this function
+     * will tell the system to shutdown.
+     *
+     * @param id ID of the scene being destroyed
+     */
+    virtual void destroy(s32 id);
+
+    /**
+     * @brief Gets the scene's resource directory
+     * @bug If the specified scene has no entry, this function's result is
+     * undefined behavior. It reads from memory before the array of entries.
+     *
+     * @param id Scene ID (-1 to use the current scene)
+     */
+    const char* getResDirName(s32 id = -1);
+
 #ifdef PACK_SPORTS
-    EGG::Scene* createSportsScene(s32 sceneID);
-#elif PACK_PLAY
-    EGG::Scene* createPartyScene(s32 sceneID);
-#elif PACK_RESORT
-    EGG::Scene* createWS2Scene(s32 sceneID);
+    /**
+     * @brief Gets the sport corresponding to the scene ID
+     * @details If the specified scene has no entry, this function returns -1.
+     *
+     * @param id Scene ID (-1 to use the current scene)
+     */
+    s32 getSportID(s32 id = -1);
 #endif
 
-    // @address 801845f4
-    s32 getCreateType(s32 sceneID);
-    // @address 80184558
-    s32 getExitType(s32 sceneID);
-    // @address 801844bc
-    s32 getUseCommonSound(s32 sceneID);
-    // @address 80184758
-    s32 getResDirName(s32 sceneID);
-    // @address 80184690
-    s32 getSceneID(s32 sportID);
-    // @address 801846ec
-    s32 getSportID(s32 sceneID);
+    /**
+     * @brief Gets the scene ID corresponding to the sport
+     * @details If the specified sport has no entry, this function returns -1.
+     *
+     * @param sport Sport ID
+     */
+    s32 getSceneID(ESportID sport);
 
     /**
-     * @brief Create any Pack Project scene
-     * @address 80184838
+     * @brief Gets the scene's create logic type
+     * @bug If the specified scene has no entry, this function's result is
+     * undefined behavior. It reads from memory before the array of entries.
+     *
+     * @param id Scene ID (-1 to use the current scene)
      */
-    virtual EGG::Scene* create(s32 sceneID);
+    s32 getCreateType(s32 id = -1);
 
     /**
-     * @brief Request engine shutdown
-     * @address 80184804
+     * @brief Gets the scene's exit logic type
+     * @bug If the specified scene has no entry, this function's result is
+     * undefined behavior. It reads from memory before the array of entries.
+     *
+     * @param id Scene ID (-1 to use the current scene)
      */
-    virtual void destroy(s32);
+    s32 getExitType(s32 id = -1);
+
+    /**
+     * @brief Tests whether the scene should use the pack's common sound
+     * archive.
+     * @bug If the specified scene has no entry, this function's result is
+     * undefined behavior. It reads from memory before the array of entries.
+     *
+     * @param id Scene ID (-1 to use the current scene)
+     */
+    bool isCommonSound(s32 id = -1);
 
 private:
-    RPSysSceneCreator(EGG::Heap* heap) : mParentHeap(heap), mLastSceneID(-1) {}
-    // @address 80183f68
-    virtual ~RPSysSceneCreator() {}
+    /**
+     * @brief Constructor
+     *
+     * @param pHeap Parent heap
+     */
+    RPSysSceneCreator(EGG::Heap* pHeap);
+    /**
+     * @brief Destructor
+     */
+    virtual ~RPSysSceneCreator();
 
+// KOKESHI: We need to access private members in SceneCreator
+#ifdef __KOKESHI__
+public:
+#else
 private:
-    // @brief Heap in which this object was allocated
-    EGG::Heap* mParentHeap; // at 0x4
-    // @brief Last created scene's ID
+#endif
+    //! Heap in which this object was allocated
+    EGG::Heap* mpParentHeap; // at 0x4
+    //! ID of the previous scene
     s32 mLastSceneID; // at 0x8
 
-    /**
-     * @brief Configuration for all supported Pack Project scenes
-     * @address 803820f8
-     */
-    static SceneAttr sSceneAttributeTable[];
-
-    /**
-     * @brief Static instance
-     * @address 804bf4f8
-     */
-    static RPSysSceneCreator* sInstance;
+    //! Entries for all Pack Project scenes
+    static SceneEntry sSceneEntryTable[];
 };
+
+//! @}
 
 #endif

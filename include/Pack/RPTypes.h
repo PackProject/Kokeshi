@@ -53,7 +53,7 @@ private:                                                                       \
 #define RP_SINGLETON_DEF_EX(T)                                                 \
     void T::createInstance(EGG::Heap* pHeap) {                                 \
         if (spInstance == NULL) {                                              \
-            spInstance = new (pHeap) T();                                      \
+            spInstance = new (pHeap) T(pHeap);                                 \
             return spInstance;                                                 \
         }                                                                      \
         return NULL;                                                           \

@@ -10,6 +10,7 @@
 
 /**
  * @brief Pack Project engine configuration
+ * @wfuname
  */
 class RPSysConfigData : public EGG::ConfigurationData {
 public:

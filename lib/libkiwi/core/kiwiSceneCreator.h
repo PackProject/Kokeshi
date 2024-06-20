@@ -1,5 +1,6 @@
 #ifndef LIBKIWI_CORE_SCENE_CREATOR_H
 #define LIBKIWI_CORE_SCENE_CREATOR_H
+
 #include <RPSystem/RPSysSceneCreator.h>
 #include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiExtView.h>
@@ -103,29 +104,29 @@ enum EPackID {
     EPackID_PartyPack,  //!< Wii Play
     EPackID_HealthPack, //!< Wii Fit
     EPackID_MusicPack,  //!< Wii Music
-    EPackID_AllPack,
+    EPackID_AllPack,    //!< Pack Project
+
+    EPackID_Max
 };
 
 /**
  * @brief Scene create type
  */
 enum ECreateType {
-    ECreateType_0,
-    ECreateType_1,
-    ECreateType_2,
+    ECreateType_Standard, //!< Overwrite outgoing scene
+    ECreateType_Sibling,  //!< Become sibling of outgoing scene
+    ECreateType_Child,    //!< Become child of outgoing scene
 };
 
 /**
  * @brief Scene exit type
  */
 enum EExitType {
-    EExitType_0,
-    EExitType_1,
+    EExitType_Standard, //!< Incoming scene overwrites this scene
+    EExitType_Sibling,  //!< Incoming scene becomes a sibling of this scene
     EExitType_2,
     EExitType_3,
-    EExitType_4,
-    EExitType_5,
-    EExitType_6,
+    EExitType_Child, //!< Incoming scene becomes a child of this scene
 };
 
 /**
@@ -161,9 +162,9 @@ public:
      * @brief Fades out into a new scene
      *
      * @param id Scene ID
-     * @param arg1 Unknown
+     * @param reload Reload the current scene
      */
-    bool ChangeSceneAfterFade(s32 id, bool arg1 = false);
+    bool ChangeSceneAfterFade(s32 id, bool reload = false);
 
     /**
      * @brief Gets the specified scene's name

@@ -69,14 +69,14 @@ public:
      * @brief Gets the scene's create type
      */
     virtual ECreateType GetCreateType() const {
-        return ECreateType_1;
+        return ECreateType_Sibling;
     }
 
     /**
      * @brief Gets the scene's exit type
      */
     virtual EExitType GetExitType() const {
-        return EExitType_0;
+        return EExitType_Standard;
     }
 
     /**

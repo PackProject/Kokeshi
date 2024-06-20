@@ -1,5 +1,6 @@
 #define LIBKIWI_INTERNAL
 
+#include <Pack/RPSystem.h>
 #include <libkiwi.h>
 
 namespace kiwi {
@@ -8,39 +9,39 @@ namespace kiwi {
 const SceneCreator::Info SceneCreator::scPackScenes[] = {
 // clang-format off
 #ifdef PACK_SPORTS
-    {nullptr, "Logo",                         "RPCommon/",             ESceneID_RPSysBootScene,               EPackID_AllPack,    ECreateType_0, EExitType_1,  true},
-    {nullptr, "Player Select",                "RPCommon/",             ESceneID_RPSysPlayerSelectScene,       EPackID_AllPack,    ECreateType_0, EExitType_2,  true},
-    {nullptr, "Nunchuk Check",                "RPCommon/",             ESceneID_RPSysNunchukScene,            EPackID_AllPack,    ECreateType_1, EExitType_3, false},
-    {nullptr, "Baseball",                     "RPBsbScene/",           ESceneID_RPBsbScene,                   EPackID_SportsPack, ECreateType_1, EExitType_0, false},
-    {nullptr, "Bowling",                      "RPBowScene/",           ESceneID_RPBowScene,                   EPackID_SportsPack, ECreateType_1, EExitType_0, false},
-    {nullptr, "Golf",                         "RPGolScene/",           ESceneID_RPGolScene,                   EPackID_SportsPack, ECreateType_1, EExitType_0, false},
-    {nullptr, "Tennis",                       "RPTnsScene/",           ESceneID_RPTnsScene,                   EPackID_SportsPack, ECreateType_1, EExitType_0, false},
-    {nullptr, "Boxing",                       "RPBoxScene/",           ESceneID_RPBoxScene,                   EPackID_SportsPack, ECreateType_1, EExitType_0, false},
-    {nullptr, "Sports Pack",                  "RPSportsTitle/",        ESceneID_RPSportsTitleScene,           EPackID_SportsPack, ECreateType_0, EExitType_1,  true},
-    {nullptr, "Sports Menu Select",           "RPSportsCommon/",       ESceneID_RPSportsMenuScene,            EPackID_SportsPack, ECreateType_0, EExitType_2,  true},
-    {nullptr, "Training Menu",                "RPSportsTrainingMenu/", ESceneID_RPSportsTrainingMenuScene,    EPackID_SportsPack, ECreateType_1, EExitType_3,  true},
-    {nullptr, "Physical Measure Menu",        "RPSportsPhysical/",     ESceneID_RPSportsPhysicalMenuScene,    EPackID_SportsPack, ECreateType_1, EExitType_3,  true},
-    {nullptr, "Physical Measure Explanation", "RPSportsPhysical/",     ESceneID_RPSportsPhysicalPreviewScene, EPackID_SportsPack, ECreateType_1, EExitType_3,  true},
-    {nullptr, "Physical Measure Results",     "RPSportsPhysical/",     ESceneID_RPSportsPhysicalResultScene,  EPackID_SportsPack, ECreateType_1, EExitType_3,  true},
-    {nullptr, "Golf Course Select",           "RPGolScene/",           ESceneID_RPGolSelectScene,             EPackID_SportsPack, ECreateType_1, EExitType_0, false},
+    {nullptr, "Logo",                         "RPCommon/",             kiwi::ESceneID_RPSysBootScene,               kiwi::EPackID_AllPack,    kiwi::ECreateType_Standard, kiwi::EExitType_Sibling,  true},
+    {nullptr, "Player Select",                "RPCommon/",             kiwi::ESceneID_RPSysPlayerSelectScene,       kiwi::EPackID_AllPack,    kiwi::ECreateType_Standard, kiwi::EExitType_2,        true},
+    {nullptr, "Nunchuk Check",                "RPCommon/",             kiwi::ESceneID_RPSysNunchukScene,            kiwi::EPackID_AllPack,    kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        false},
+    {nullptr, "Baseball",                     "RPBsbScene/",           kiwi::ESceneID_RPBsbScene,                   kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Bowling",                      "RPBowScene/",           kiwi::ESceneID_RPBowScene,                   kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Golf",                         "RPGolScene/",           kiwi::ESceneID_RPGolScene,                   kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Tennis",                       "RPTnsScene/",           kiwi::ESceneID_RPTnsScene,                   kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Boxing",                       "RPBoxScene/",           kiwi::ESceneID_RPBoxScene,                   kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Sports Pack",                  "RPSportsTitle/",        kiwi::ESceneID_RPSportsTitleScene,           kiwi::EPackID_SportsPack, kiwi::ECreateType_Standard, kiwi::EExitType_Sibling,  true},
+    {nullptr, "Sports Menu Select",           "RPSportsCommon/",       kiwi::ESceneID_RPSportsMenuScene,            kiwi::EPackID_SportsPack, kiwi::ECreateType_Standard, kiwi::EExitType_2,        true},
+    {nullptr, "Training Menu",                "RPSportsTrainingMenu/", kiwi::ESceneID_RPSportsTrainingMenuScene,    kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        true},
+    {nullptr, "Physical Measure Menu",        "RPSportsPhysical/",     kiwi::ESceneID_RPSportsPhysicalMenuScene,    kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        true},
+    {nullptr, "Physical Measure Explanation", "RPSportsPhysical/",     kiwi::ESceneID_RPSportsPhysicalPreviewScene, kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        true},
+    {nullptr, "Physical Measure Results",     "RPSportsPhysical/",     kiwi::ESceneID_RPSportsPhysicalResultScene,  kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        true},
+    {nullptr, "Golf Course Select",           "RPGolScene/",           kiwi::ESceneID_RPGolSelectScene,             kiwi::EPackID_SportsPack, kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
 #elif PACK_PLAY
-    {nullptr, "Logo",                         "RPCommonParty/",        ESceneID_RPSysBootScene,               EPackID_AllPack,    ECreateType_0, EExitType_1,  true},
-    {nullptr, "Player Select",                "RPCommonParty/",        ESceneID_RPSysPlayerSelectScene,       EPackID_AllPack,    ECreateType_0, EExitType_2,  true},
-    {nullptr, "Nunchuk Check",                "RPCommonParty/",        ESceneID_RPSysNunchukScene,            EPackID_AllPack,    ECreateType_1, EExitType_3, false},
-    {nullptr, "Fishing",                      "RPFshScene/",           ESceneID_RPFshScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Hockey",                       "RPHkyScene/",           ESceneID_RPHkyScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Shooting",                     "RPDucScene/",           ESceneID_RPDucScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Table Tennis",                 "RPPnpScene/",           ESceneID_RPPnpScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Billiards",                    "RPBilScene/",           ESceneID_RPBilScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Cow Race",                     "RPCowScene/",           ESceneID_RPCowScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Wally",                        "RPWlyScene/",           ESceneID_RPWlyScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Tank",                         "RPTnkScene/",           ESceneID_RPTnkScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Bomb",                         "RPBomScene/",           ESceneID_RPBomScene,                   EPackID_PartyPack,  ECreateType_1, EExitType_0, false},
-    {nullptr, "Party Pack",                   "RPPartyTitle/",         ESceneID_RPPartyTitleScene,            EPackID_PartyPack,  ECreateType_0, EExitType_1,  true},
-    {nullptr, "Tour Menu",                    "RPPartyCommon/",        ESceneID_RPPartyMiiLoadScene,          EPackID_PartyPack,  ECreateType_0, EExitType_4,  true},
-    {nullptr, "Tour Menu",                    "RPPartyCommon/",        ESceneID_RPPartyMenuScene,             EPackID_PartyPack,  ECreateType_1, EExitType_3,  true},
+    {nullptr, "Logo",                         "RPCommonParty/",        kiwi::ESceneID_RPSysBootScene,               kiwi::EPackID_AllPack,    kiwi::ECreateType_Standard, kiwi::EExitType_Sibling,  true},
+    {nullptr, "Player Select",                "RPCommonParty/",        kiwi::ESceneID_RPSysPlayerSelectScene,       kiwi::EPackID_AllPack,    kiwi::ECreateType_Standard, kiwi::EExitType_2,        true},
+    {nullptr, "Nunchuk Check",                "RPCommonParty/",        kiwi::ESceneID_RPSysNunchukScene,            kiwi::EPackID_AllPack,    kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        false},
+    {nullptr, "Fishing",                      "RPFshScene/",           kiwi::ESceneID_RPFshScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Hockey",                       "RPHkyScene/",           kiwi::ESceneID_RPHkyScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Shooting",                     "RPDucScene/",           kiwi::ESceneID_RPDucScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Table Tennis",                 "RPPnpScene/",           kiwi::ESceneID_RPPnpScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Billiards",                    "RPBilScene/",           kiwi::ESceneID_RPBilScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Cow Race",                     "RPCowScene/",           kiwi::ESceneID_RPCowScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Wally",                        "RPWlyScene/",           kiwi::ESceneID_RPWlyScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Tank",                         "RPTnkScene/",           kiwi::ESceneID_RPTnkScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Bomb",                         "RPBomScene/",           kiwi::ESceneID_RPBomScene,                   kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_Standard, false},
+    {nullptr, "Party Pack",                   "RPPartyTitle/",         kiwi::ESceneID_RPPartyTitleScene,            kiwi::EPackID_PartyPack,  kiwi::ECreateType_Standard, kiwi::EExitType_Sibling,  true},
+    {nullptr, "Tour Menu",                    "RPPartyCommon/",        kiwi::ESceneID_RPPartyMiiLoadScene,          kiwi::EPackID_PartyPack,  kiwi::ECreateType_Standard, kiwi::EExitType_Child,    true},
+    {nullptr, "Tour Menu",                    "RPPartyCommon/",        kiwi::ESceneID_RPPartyMenuScene,             kiwi::EPackID_PartyPack,  kiwi::ECreateType_Sibling,  kiwi::EExitType_3,        true},
 #elif PACK_RESORT
-    {nullptr, "Logo",                         "RPCommon/",             ESceneID_RPSysBootScene,               EPackID_AllPack,    ECreateType_0, EExitType_1,  true},
+    {nullptr, "Logo",                         "RPCommon/",             kiwi::ESceneID_RPSysBootScene,               kiwi::EPackID_AllPack,    kiwi::ECreateType_Standard, kiwi::EExitType_Sibling,  true},
 #endif
     // clang-format on
 };
@@ -99,9 +100,9 @@ void SceneCreator::RegistScene(const Info& rInfo) {
  * @brief Fades out into a new scene
  *
  * @param id Scene ID
- * @param arg1 Unknown
+ * @param reload Reload the current scene
  */
-bool SceneCreator::ChangeSceneAfterFade(s32 id, bool arg1) {
+bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
     // Ensure all threads are idle
     if (!RP_GET_INSTANCE(RPSysSceneMgr)->isTaskFinished()) {
         return false;
@@ -109,13 +110,13 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool arg1) {
 
     // Optionally reload current scene
     s32 current = RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID();
-    if (arg1) {
+    if (reload) {
         id = current;
     }
 
     // Send request to scene manager
     bool success =
-        RP_GET_INSTANCE(RPSysSceneMgr)->changeNextSceneAfterFade(id, arg1);
+        RP_GET_INSTANCE(RPSysSceneMgr)->changeNextSceneAfterFade(id, reload);
 
     // Fade out common sounds if we are switching sound archives
     if (GetSceneCommonSound(id) != GetSceneCommonSound(current)) {
@@ -124,8 +125,8 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool arg1) {
     }
 
     // Update last scene for exiting
-    if (GetSceneExitType(id) != EExitType_4) {
-        setLastSceneID(current);
+    if (GetSceneExitType(id) != EExitType_Child) {
+        mLastSceneID = current;
     }
 
     return success;
@@ -230,11 +231,11 @@ RPSysScene* SceneCreator::Create(s32 id) {
 
     K_ASSERT_EX(scene != nullptr, "Failed to create scene (id %d)", id);
 
-    if (GetSceneExitType(id) == EExitType_4) {
+    if (GetSceneExitType(id) == EExitType_Child) {
         scene->disableFadeIn();
     }
 
-    scene->setCreatorSceneID(getLastSceneID());
+    scene->setCreatorSceneID(mLastSceneID);
     return scene;
 }
 // clang-format off

@@ -13,8 +13,8 @@
  * @brief Pack Project engine system
  * @wfuname
  *
- * The system class manages the low level components of the RP engine, such as
- * its many heaps, console power/reset callbacks, and TV/render modes.
+ * @details The system class manages the low level components of the RP engine,
+ * such as its many heaps, console power/reset callbacks, and TV/render modes.
  */
 class RPSysSystem {
 public:
