@@ -1,169 +1,214 @@
 #ifndef RP_SYSTEM_RESOURCE_MANAGER_H
 #define RP_SYSTEM_RESOURCE_MANAGER_H
-#include "RPSysFile.h"
-#include "RPSysSceneCreator.h"
-#include "RPTypes.h"
-
+#include <Pack/RPTypes.h>
 #include <egg/core/eggHeap.h>
 #include <nw4r/ut/ut_list.h>
 
+// Forward declarations
+class RPSysFile;
+class RPSportsAppMiiManager;
+class RPPartyAppMiiManager;
+
+//! @addtogroup rp_system
+//! @{
+
 /**
- * @brief Engine resource manager
- * @details Responsible for pretty much all file loads from the disc,
- * and also serves as a utility for building scene/pack relative paths to files.
+ * @brief Resource manager
  * @wfuname
+ *
+ * @details Loads resources from the DVD and caches them for future access.
  */
 class RPSysResourceManager {
     RP_SINGLETON_DECL(RPSysResourceManager);
 
 public:
     /**
-     * @brief Open binary message (BMG) file
-     * @address 8018783c
+     * @brief Loads a file from the DVD
+     * @remark If no heap is specified, the current heap is used instead.
+     * @see EGG::DvdRipper::EAllocDirection
+     *
+     * @param pPath Path to the file
+     * @param pHeap Heap from which to allocate the buffer
+     * @param allocDir Direction of heap allocation
+     * @param[out] pSize Where the file's size will be written
      */
-    static void* GetMessageResource(const char* path);
-    /**
-     * @brief Get file from EGG archive
-     * @address 80187878
-     * @param sizeOut Optional output pointer for file size
-     */
-    static void* GetFileFromArchive(EGG::Archive* arc, const char* path,
-                                    u32* sizeOut);
+    void* LoadFromDVD(const char* pPath, EGG::Heap* pHeap, s32 allocDir,
+                      s32* pSize);
 
     /**
-     * @brief Load archive from current scene's Stage directory
-     * @address 801878c4
+     * @brief Loads and decompresses a file from the DVD
+     * @remark If the file already exists in the cache, this function returns
+     * the cached instance.
+     * @remark If no heap is specified, the current heap is used instead.
+     *
+     * @param pPath Path to the file
+     * @param pHeap Heap from which to allocate the buffer
      */
-    static EGG::Archive* LoadGameStageArchive(const char* path);
-    /**
-     * @brief Load local archive (`local.carc`) for the specified scene
-     * @address 80187964
-     */
-    static EGG::Archive* LoadGameLocalArchive(int sceneID, EGG::Heap* heap);
-    /**
-     * @brief Load common archive (`common.carc`) for the specified scene
-     * @address 80187a0c
-     */
-    static EGG::Archive* LoadGameCommonArchive(int sceneID, EGG::Heap* heap);
+    void* LoadCompressed(const char* pPath, EGG::Heap* pHeap);
 
     /**
-     * @brief Load file from DVD
-     * @address 80186eb4
-     * @param sizeOut Optional output pointer for file size
+     * @brief Loads the local archive in the specified directory
+     * @note The "local" archive is always named `local.carc`.
+     *
+     * @param pPath Path to the directory
      */
-    void* LoadFromDVD(const char* path, EGG::Heap* heap, int allocDir,
-                      int* sizeOut);
-    /**
-     * @brief Load and decompress file
-     * @address 80186fa0
-     */
-    void* LoadCompressed(const char* path, EGG::Heap* heap);
-    /**
-     * @brief Load local archive in specified directory
-     * @address 801871f4
-     */
-    EGG::Archive* LoadLocalArchive(const char* dir);
+    EGG::Archive* LoadLocalArchive(const char* pPath);
 
     /**
-     * @brief Get local sound path of specified scene
-     * @address 80187290
-     * @param bufOut Output buffer for path
-     * @param bufSize Size of output buffer (unused)
+     * @brief Loads the common archive for the specified scene
+     * @note The "common" archive is always named `common.carc`.
+     *
+     * @param id Scene ID
+     * @param pHeap Heap from which to allocate the buffer
      */
-    void GetGameSoundLocalPath(char* bufOut, u32 bufSize, int sceneID);
+    static EGG::Archive* LoadGameCommonArchive(s32 id, EGG::Heap* pHeap);
     /**
-     * @brief Get common sound path of specified scene
-     * @address 80187300
-     * @param bufOut Output buffer for path
-     * @param bufSize Size of output buffer (unused)
+     * @brief Loads the local archive for the specified scene
+     * @note The "local" archive is always named `local.carc`.
+     *
+     * @param id Scene ID
+     * @param pHeap Heap from which to allocate the buffer
      */
-    void GetGameSoundCommonPath(char* bufOut, u32 bufSize, int sceneID);
+    static EGG::Archive* LoadGameLocalArchive(s32 id, EGG::Heap* pHeap);
     /**
-     * @brief Get local sound path of current pack's static directory
-     * @address 8018736c
-     * @param bufOut Output buffer for path
-     * @param bufSize Size of output buffer (unused)
+     * @brief Loads the specified stage archive from the current scene's assets
+     *
+     * @param pName Name of the file in the scene's "Stage" directory
      */
-    void GetStaticSoundLocalPath(char* bufOut, u32 bufSize);
-    /**
-     * @brief Get common sound path of current pack's static directory
-     * @address 801873e8
-     * @param bufOut Output buffer for path
-     * @param bufSize Size of output buffer (unused)
-     */
-    void GetStaticSoundCommonPath(char* bufOut, u32 bufSize);
+    static EGG::Archive* LoadGameStageArchive(const char* pName);
 
     /**
-     * @brief Load Mii resources (`kokeshi.carc`)
-     * @address 8018744c
+     * @brief Gets the specified file from the specified archive
+     *
+     * @param pArc Archive which contains the file
+     * @param pName Name of the file
+     * @param[out] pSize Where the file's size will be written
+     */
+    static void* GetFileFromArchive(EGG::Archive* pArc, const char* pName,
+                                    u32* pSize);
+
+    /**
+     * @brief Gets a message file by name from the message archive
+     *
+     * @param pName Name of the message file
+     */
+    static void* GetMessageResource(const char* pName);
+
+    /**
+     * @brief Tests whether the specified file exists in the game filesystem
+     *
+     * @param pPath Path to the file
+     */
+    bool IsExist(const char* pPath);
+
+    /**
+     * @brief Removes a file from the user cache
+     * @note This is automatically called through the RPSysFile destructor.
+     *
+     * @param pFile File to remove
+     */
+    void RemoveFromFileList(RPSysFile* pFile);
+
+    /**
+     * @brief Loads the Kokeshi asset archive
      */
     void LoadKokeshiArchive();
     /**
-     * @brief Load static common archive
-     * @address 801874b4
+     * @brief Loads the archives from the current pack's static directory
+     * @remarks This also includes the message and font archives.
      */
-    void LoadSharedCommonArchive();
+    void LoadStaticArchives();
     /**
-     * @brief Load cached archives (font, BMG, static common)
-     * @address 80187604
+     * @brief Loads and caches the common archive of every scene
      */
     void LoadCacheArchives();
-    /**
-     * @brief Load sound archive
-     * @address 801877dc
-     */
-    bool LoadSoundArchive(const char* path);
 
     /**
-     * @brief Remove file from file list
-     * @address 801877d4
+     * @brief Gets the common sound path of the current pack
+     * @bug This function ignores the @p bufSize parameter and instead uses
+     * unsafe versions of string functions.
+     *
+     * @param[out] pBuffer Buffer containing resulting path
+     * @param bufSize Size of the buffer pointed to by @p pBuffer
      */
-    void RemoveFromFileList(RPSysFile* file);
+    void GetStaticSoundCommonPath(char* pBuffer, u32 bufSize);
+    /**
+     * @brief Gets the local sound path of the current pack
+     * @bug This function ignores the @p bufSize parameter and instead uses
+     * unsafe versions of string functions.
+     *
+     * @param[out] pBuffer Buffer containing resulting path
+     * @param bufSize Size of the buffer pointed to by @p pBuffer
+     */
+    void GetStaticSoundLocalPath(char* pBuffer, u32 bufSize);
 
-    EGG::Archive* GetStaticLocalArchive() const {
-        return mStaticLocalArc;
-    }
+    /**
+     * @brief Gets the common sound path of the specified scene
+     * @bug This function ignores the @p bufSize parameter and instead uses
+     * unsafe versions of string functions.
+     *
+     * @param[out] pBuffer Buffer containing resulting path
+     * @param bufSize Size of the buffer pointed to by @p pBuffer
+     * @param id Scene ID
+     */
+    void GetGameSoundCommonPath(char* pBuffer, u32 bufSize, s32 id);
+    /**
+     * @brief Gets the local sound path of the specified scene
+     * @bug This function ignores the @p bufSize parameter and instead uses
+     * unsafe versions of string functions.
+     *
+     * @param[out] pBuffer Buffer containing resulting path
+     * @param bufSize Size of the buffer pointed to by @p pBuffer
+     * @param id Scene ID
+     */
+    void GetGameSoundLocalPath(char* pBuffer, u32 bufSize, s32 id);
 
 private:
-    RPSysResourceManager() {
-        nw4r::ut::List_Init(&LIST_0x4, offsetof(RPSysFile, mNode));
-        nw4r::ut::List_Init(&mFileList, offsetof(RPSysFile, mNode));
-        mPath = new char[128];
-    }
-
-    // @address 80187aa8
+    /**
+     * @brief Constructor
+     */
+    RPSysResourceManager();
+    /**
+     * @brief Destructor
+     */
     virtual ~RPSysResourceManager();
 
 private:
-    nw4r::ut::List LIST_0x4;
-    nw4r::ut::List mFileList; // at 0x10
-    // @brief Buffer for constucting path
-    char* mPath; // at 0x1C
-    // @brief Kokeshi (Mii) archive
-    EGG::Archive* mKokeshiArc; // at 0x20
-    // @brief Message (BMG) archive
-    EGG::Archive* mMessageArc; // at 0x24
-    // @brief Font archive
-    EGG::Archive* mFontArc; // at 0x28
-    // @brief Pack static common archive
-    EGG::Archive* mStaticCmnArc; // at 0x2C
-    // @brief Pack static local archive
-    EGG::Archive* mStaticLocalArc; // at 0x30
-    UNKWORD WORD_0x34;
-    UNKTYPE* PTR_0x38;
-    UNKWORD WORD_0x3C;
+    //! Resource cache for common archives
+    nw4r::ut::List mCommonCache; // at 0x4
+    //! Resource cache for other files loaded from the DVD
+    nw4r::ut::List mUserCache; // at 0x10
 
-    /**
-     * @brief Pack Project static paths
-     * @address 803b9850
-     */
-    static const char* sPackStaticPaths[4];
+    //! Work buffer for building filepaths
+    char* mpPathWork; // at 0x1C
 
-    /**
-     * @brief Static instance
-     * @address 804bf4f0
-     */
-    static RPSysResourceManager* sInstance;
+    //! Archive containing Kokeshi assets
+    EGG::Archive* mpKokeshiArchive; // at 0x20
+    //! Archive containing all message files
+    EGG::Archive* mpMessageArchive; // at 0x24
+    //! Archive containing all fonts
+    EGG::Archive* mpFontArchive; // at 0x28
+
+    //! Static common assets for this pack
+    EGG::Archive* mpStaticCommonArchive; // at 0x2C
+    //! Static locale assets for this pack
+    EGG::Archive* mpStaticLocalArchive; // at 0x30
+    //! Static layout assets for this pack
+    EGG::Archive* mpStaticLayoutArchive; // at 0x34
+
+#ifdef PACK_SPORTS
+    //! Sports Pack Mii manager
+    RPSportsAppMiiManager* mpAppMiiManager; // at 0x38
+#elif PACK_PLAY
+    //! Party Pack Mii manager
+    RPPartyAppMiiManager* mpAppMiiManager; // at 0x38
+#endif
+
+    //! @brief Handle for opening NAND sound archives
+    //! @remark This seems to be for NAND titles using the Pack Project engine.
+    void* mpMultiHandle; // at 0x3C
 };
+
+//! @}
 
 #endif

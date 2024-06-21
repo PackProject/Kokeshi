@@ -105,7 +105,7 @@ public:
 
     /**
      * @brief Splits 32-bit calendar time into parts
-     * @details If no input time is specified, this function operates on the
+     * @note If no input time is specified, this function operates on the
      * current clock time.
      *
      * @param pTime32 Input time
@@ -120,7 +120,7 @@ public:
 
     /**
      * @brief Splits 16-bit calendar time into parts
-     * @details If no input time is specified, this function operates on the
+     * @note If no input time is specified, this function operates on the
      * current clock time.
      *
      * @param pTime16 Input time
@@ -201,7 +201,7 @@ public:
 
     /**
      * @brief Turns on/off screen dimming
-     * @details If "Screen Saver Mode" is disabled, dimming is always OFF.
+     * @note If "Screen Saver Mode" is disabled, dimming is always OFF.
      *
      * @param dim Whether to dim the screen
      */

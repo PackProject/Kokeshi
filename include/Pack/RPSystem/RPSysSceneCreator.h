@@ -7,7 +7,7 @@
 //! @{
 
 /**
- * @brief Pack Project scene factory
+ * @brief Scene factory
  * @wfuname
  */
 class RPSysSceneCreator : public EGG::SceneCreator {
@@ -19,7 +19,7 @@ public:
      * @wfuname
      */
     enum ESceneID {
-#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifndef PACK_RESORT
         // RPSystem
         ESceneID_RPSysBootScene,         //!< Logo
         ESceneID_RPSysPlayerSelectScene, //!< Player Select
@@ -105,7 +105,6 @@ public:
 
     /**
      * @brief Sport ID
-     * @customname
      */
     enum ESportID {
         ESportID_Bsb, //!< Baseball
@@ -119,7 +118,6 @@ public:
 
     /**
      * @brief Pack Project game ID
-     * @customname
      */
     enum EPackID {
         EPackID_SportsPack, //!< Wii Sports
@@ -133,7 +131,6 @@ public:
 
     /**
      * @brief Scene create type
-     * @customname
      */
     enum ECreateType {
         ECreateType_Standard, //!< Overwrite outgoing scene
@@ -143,7 +140,6 @@ public:
 
     /**
      * @brief Scene exit type
-     * @customname
      */
     enum EExitType {
         EExitType_Standard, //!< Incoming scene overwrites this scene
@@ -155,7 +151,6 @@ public:
 
     /**
      * @brief Scene information
-     * @customname
      */
     struct SceneEntry {
         //! @brief Scene ID
@@ -202,7 +197,7 @@ public:
 
     /**
      * @brief Fades out the current scene and changes to a new scene
-     * @details Supply an ID of -1 to use the ID of the current scene
+     * @note Supply an ID of -1 to use the ID of the current scene
      *
      * @param id New scene ID (-1 for current scene)
      * @param reload Whether to reload the current scene
@@ -222,8 +217,8 @@ public:
     virtual EGG::Scene* create(s32 id);
     /**
      * @brief Destroys a scene
-     * @details If the scene manager has requested a shutdown, this function
-     * will tell the system to shutdown.
+     * @remark If the scene manager has requested a shutdown, this function will
+     * tell the system to shutdown.
      *
      * @param id ID of the scene being destroyed
      */
@@ -241,7 +236,7 @@ public:
 #ifdef PACK_SPORTS
     /**
      * @brief Gets the sport corresponding to the scene ID
-     * @details If the specified scene has no entry, this function returns -1.
+     * @note If the specified scene has no entry, this function returns -1.
      *
      * @param id Scene ID (-1 to use the current scene)
      */
@@ -250,7 +245,7 @@ public:
 
     /**
      * @brief Gets the scene ID corresponding to the sport
-     * @details If the specified sport has no entry, this function returns -1.
+     * @note If the specified sport has no entry, this function returns -1.
      *
      * @param sport Sport ID
      */

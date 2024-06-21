@@ -265,8 +265,7 @@ In each section (public/protected/private), use the following order of declarati
 - ### **[Re-declare the access specifier here]**
 - Constructor(s) and assignment operator(s)
 - Destructor
-- Static functions
-- Non-static functions
+- All other functions
 - ### **[Re-declare the access specifier here]**
 - Non-constant, static members
 - All other data members

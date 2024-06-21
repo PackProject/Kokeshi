@@ -1,51 +1,40 @@
 #ifndef RP_KERNEL_FILE_H
 #define RP_KERNEL_FILE_H
-#include "RPTypes.h"
-
-#include <egg/core/eggDisposer.h>
-#include <nw4r/ut/ut_list.h>
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
+#include <nw4r/ut.h>
 
 /**
- * @brief Disc file loaded into RAM
- * @details Similar to EGG's DvdFile structure,
- * except this class expects the file's data to already have been loaded into
- * RAM.
- *
- * Paths are relative to the project root (i.e. `"Common/Kokeshi/common.carc"`)
- *
- * In theory this class could be used for all open files, but the resource
- * manager seems to only use it for archives post-decompression. Perhaps it
- * "simulates" the existence of data only in memory as a file?
- *
- * This class has an additional ut::Node so that the resource manager can keep
- * track of all open files. It removes itself from the resource manager's file
- * list (at 0x10) on destruction.
- *
+ * @brief Cached resource file
  * @wfuname
  */
 class RPSysFile : public EGG::Disposer {
 public:
     /**
-     * @address 80199678
-     * @param path File path (relative to project root)
-     * @param size File size
-     * @param data Pointer to file data
+     * @brief Constructor
+     *
+     * @param pPath File path (absolute)
+     * @param size File data size
+     * @param pData File data pointer
      */
-    RPSysFile(const char* path, int size, const void* data);
-
-    // @address 80199604
+    RPSysFile(const char* pPath, s32 size, const void* pData);
+    /**
+     * @brief Destructor
+     * @details The file is automatically removed from the resource cache.
+     */
     virtual ~RPSysFile();
 
 public:
-    // @brief Link node for resource manager
-    nw4r::ut::Node mNode; // at 0x10
+    //! Link node used for cache lists
+    nw4r::ut::Node node; // at 0x10
+
 private:
-    // @brief File path
+    //! File path
     char mPath[128]; // at 0x18
-    // @brief File size
-    int mSize; // at 0x98
-    // @brief File data
-    void* mData; // at 0x9C
+    //! File data size
+    s32 mSize; // at 0x98
+    //! File data contents
+    const u8* mpData; // at 0x9C
 };
 
 #endif

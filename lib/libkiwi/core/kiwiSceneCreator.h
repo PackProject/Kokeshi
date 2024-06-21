@@ -13,7 +13,7 @@ namespace kiwi {
  * @brief Game scene ID
  */
 enum ESceneID {
-#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifndef PACK_RESORT
     // RPSystem
     ESceneID_RPSysBootScene,
     ESceneID_RPSysPlayerSelectScene,
@@ -57,7 +57,7 @@ enum ESceneID {
     ESceneID_Max,
 #endif
 
-#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifdef PACK_RESORT
     // System
     ESceneID_Sp2StrapScene,
     ESceneID_Sp2SaveDataLoadScene,

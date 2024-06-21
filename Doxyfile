@@ -78,11 +78,11 @@ STRIP_FROM_INC_PATH    = include/MSL/ loader/ include/ lib/
 
 ALIASES                += wfuname="\note Type name from Wii Fit U."
 ALIASES                += wscname="\note Type name from Wii Sports Club."
-ALIASES                += customname="\note Unofficial type name."
 ALIASES 			   += typo="\xrefitem typo \"\" \"Known Typo Errors\" "
 ALIASES                += extview{1}="\note This class cannot be instantiated. It is an extension of \1."
 ALIASES                += unused="\note This functionality is unused."
 ALIASES                += stubbed="\note This functionality is stubbed out in retail builds."
+ALIASES                += ws2="\note This functionality was added to the engine for Wii Sports Resort."
 
 # The NUM_PROC_THREADS specifies the number threads doxygen is allowed to use
 # during processing. When set to 0 doxygen will based this on the number of

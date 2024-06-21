@@ -24,7 +24,7 @@ public:
 #ifdef PACK_RESORT
     /**
      * @brief Scene type
-     * @customname
+     * @ws2
      */
     enum EKind {
         EKind_System = 'SYS_',   //!< RPSysScene
@@ -35,7 +35,7 @@ public:
 
     /**
      * @brief Island time
-     * @customname
+     * @ws2
      */
     enum ETime {
         ETime_Day,     //!< Force daytime
@@ -47,10 +47,9 @@ public:
 
     /**
      * @brief Unknown static scene structure
-     * @customname
      */
     struct UnkStruct {
-        u32 _00; // at 0x0
+        u32 _00;
 
         /**
          * @brief Constructor
@@ -120,9 +119,10 @@ public:
         return sUnkStruct;
     } // at 0x3C
 
-#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifdef PACK_RESORT
     /**
      * @brief Gets the scene's class type
+     * @ws2
      */
     virtual EKind getKind() {
         return ETime_Auto;
@@ -136,9 +136,10 @@ public:
      */
     virtual void pauseCallBack(bool enter); // at 0x40
 
-#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifdef PACK_RESORT
     /**
      * @brief Gets the scene's island time of day
+     * @ws2
      */
     virtual ETime getIslandTime();
 #endif
@@ -164,9 +165,10 @@ public:
      */
     virtual void Exit() {} // at 0x54
 
-#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifdef PACK_RESORT
     /**
      * @brief Updates the scene's MotionPlus state
+     * @ws2
      */
     virtual void CalculateMotionPlus() {}
 #endif
@@ -234,7 +236,7 @@ public:
 
     /**
      * @brief Turns on/off screen dimming
-     * @details If "Screen Saver Mode" is disabled, dimming is always OFF.
+     * @note If "Screen Saver Mode" is disabled, dimming is always OFF.
      *
      * @param dim Whether to dim the screen
      */
@@ -253,7 +255,7 @@ public:
 
     /**
      * @brief Sets the fast entry scene flag
-     * @details Doing this skips loading assets, running asynchronous tasks, and
+     * @remark Doing this skips loading assets, running asynchronous tasks, and
      * fading in.
      */
     void setEnterFast();
@@ -276,14 +278,14 @@ public:
     void enableLoadMessage();
     /**
      * @brief Loads the scene's assets without displaying any visual indicators
-     * @details If the flag for the message is enabled, this function will do
+     * @note If the flag for the message is enabled, this function will do
      * nothing.
      */
     void load();
     /**
      * @brief Loads the scene's assets and attempts to display "Now Loading"
      * message
-     * @details If the flag for the message is disabled, this function will do
+     * @note If the flag for the message is disabled, this function will do
      * nothing.
      */
     void loadDebug();
@@ -310,7 +312,7 @@ public:
     static void taskAsyncFunc(void* pArg);
     /**
      * @brief Thread function used to call @ref LoadResource on the DVD thread
-     * @details This function also opens the common sound archive if the scene
+     * @remark This function also opens the common sound archive if the scene
      * requires it.
      * @param pArg Thread function argument (the scene)
      */
@@ -318,8 +320,8 @@ public:
 
     /**
      * @brief Attempts to run asynchronous tasks on the DVD thread
-     * @details If the DVD thread is busy, or setTaskAsync was never called,
-     * this function will do nothing.
+     * @note If the DVD thread is busy, or setTaskAsync was never called, this
+     * function will do nothing.
      */
     void initTaskAsync();
 
@@ -336,21 +338,20 @@ public:
 private:
     /**
      * @brief Bitflag indices
-     * @customname
      */
     enum EFlag {
         EFlag_LoadMessage,   //!< Show "Now Loading" text
+        EFlag_TaskAsyncSet,  //!< Asynchronous task has been started
         EFlag_WaitTaskAsync, //!< Waiting on asynchronous task
-        EFlag_WaitDvdThread, //!< Waiting on DVD task thread
         EFlag_EnterFast,     //!< Skip loading resources, fading in, etc.
     };
 
 private:
-#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifndef PACK_RESORT
     //! @name Wii Sports / Wii Play
     /**@{*/
     //! @brief Scene renderer
-    //! @details Upon entering the scene, this becomes the global renderer.
+    //! @remark Upon entering the scene, this becomes the global renderer.
     RPGrpRenderer* mpRenderer; // at 0x2C
     //! Common draw functionality
     RPSysCommonObject* mpCommonObject; // at 0x30
@@ -366,7 +367,7 @@ private:
     /**@}*/
 #endif
 
-#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+#ifdef PACK_RESORT
     //! @name Wii Sports Resort
     /**@{*/
     //! @todo Document these fields
