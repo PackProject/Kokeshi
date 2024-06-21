@@ -210,7 +210,7 @@ public:
     /**
      * @brief Gets the heap for the resource manager
      */
-    EGG::Heap* getResourceHeap() {
+    EGG::Heap* getResourceHeap() const {
         return mpResourceHeap;
     }
 
