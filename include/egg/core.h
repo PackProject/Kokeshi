@@ -1,5 +1,5 @@
-#ifndef EGG_CORE_H
-#define EGG_CORE_H
+#ifndef EGG_PUBLIC_CORE_H
+#define EGG_PUBLIC_CORE_H
 
 #include <egg/core/eggAllocator.h>
 #include <egg/core/eggArchive.h>

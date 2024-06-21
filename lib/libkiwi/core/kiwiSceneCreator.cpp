@@ -232,7 +232,7 @@ RPSysScene* SceneCreator::Create(s32 id) {
     K_ASSERT_EX(scene != nullptr, "Failed to create scene (id %d)", id);
 
     if (GetSceneExitType(id) == EExitType_Child) {
-        scene->disableFadeIn();
+        scene->setEnterFast();
     }
 
     scene->setCreatorSceneID(mLastSceneID);

@@ -1,5 +1,5 @@
-#ifndef EGG_AUDIO_H
-#define EGG_AUDIO_H
+#ifndef EGG_PUBLIC_AUDIO_H
+#define EGG_PUBLIC_AUDIO_H
 
 #include <egg/audio/eggAudioArcPlayerMgr.h>
 #include <egg/audio/eggAudioExpMgr.h>

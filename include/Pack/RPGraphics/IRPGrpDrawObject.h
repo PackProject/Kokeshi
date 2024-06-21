@@ -1,26 +1,42 @@
 #ifndef RP_GRAPHICS_I_DRAW_OBJECT_H
 #define RP_GRAPHICS_I_DRAW_OBJECT_H
-#include "RPTypes.h"
+#include <Pack/RPTypes.h>
+
+//! @addtogroup rp_graphics
+//! @{
 
 /**
- * @brief Linked-list interface for renderable objects.
- * @details The engine's renderer has a linked list of draw objects that it
- * iterates through when rendering.
+ * @brief Interface for renderable objects
  * @wfuname
+ *
+ * @details The active renderer (RPGrpRenderer) manages a list of these draw
+ * objects.
  */
 class IRPGrpDrawObject {
 private:
-    // @brief Next draw object
-    IRPGrpDrawObject* mNext; // at 0x0
+    //! Next renderable in the linked list
+    IRPGrpDrawObject* mpNext; // at 0x0
 
 public:
-    IRPGrpDrawObject() : mNext(NULL) {}
+    /**
+     * @brief Constructor
+     */
+    IRPGrpDrawObject() : mpNext(NULL) {}
+    /**
+     * @brief Destructor
+     */
     virtual ~IRPGrpDrawObject() {} // at 0x4
 
-    // @brief Any drawing the object needs to do
+    /**
+     * @brief Standard draw pass
+     */
     virtual void UserDraw() {} // at 0x8
-    // @brief Debug draw pass, nearly all objects stub this out
+    /**
+     * @brief Additional draw pass for debug builds
+     */
     virtual void DebugDraw() {} // at 0xC
 };
+
+//! @}
 
 #endif

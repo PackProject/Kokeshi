@@ -147,10 +147,10 @@ public:
      */
     enum EExitType {
         EExitType_Standard, //!< Incoming scene overwrites this scene
-        EExitType_Sibling,  //!< Incoming scene becomes a sibling of this scene
+        EExitType_Sibling,  //!< Incoming scene is a sibling of this scene
         EExitType_2,
         EExitType_3,
-        EExitType_Child, //!< Incoming scene becomes a child of this scene
+        EExitType_Child, //!< Incoming scene is a child of this scene
     };
 
     /**

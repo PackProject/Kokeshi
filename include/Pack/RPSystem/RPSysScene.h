@@ -1,257 +1,384 @@
 #ifndef RP_SYSTEM_SCENE_H
 #define RP_SYSTEM_SCENE_H
-#include "IRPGrpDrawObject.h"
-#include "RPTypes.h"
-
-#include <egg/core/eggScene.h>
-#include <egg/math/eggVector.h>
-#include <nw4r/ut/ut_Color.h>
+#include <Pack/RPGraphics.h>
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
+#include <egg/math.h>
+#include <nw4r/ut.h>
 
 // Forward declarations
-class RPGrpRenderer;
 class RPSysCommonObject;
+class RPSysEffectCreator;
+
+//! @addtogroup rp_system
+//! @{
 
 /**
- * @brief Base class for all RP engine scenes
- * @details Inherits from EGG::Scene for compatability,
- * and inherits from a renderable interface to simplify the renderer's job.
+ * @brief Pack Project base scene
  * @wfuname
+ *
+ * @details Common between all Pack Project games.
  */
 class RPSysScene : public EGG::Scene, public IRPGrpDrawObject {
 public:
 #ifdef PACK_RESORT
     /**
      * @brief Scene type
+     * @customname
      */
-    enum EKind{
-        EKind_System = 'SYS_',
-        EKind_Base = 'BASE',
-        EKind_Game = 'GAME',
-        EKind_Sequence = 'SEQ_',
+    enum EKind {
+        EKind_System = 'SYS_',   //!< RPSysScene
+        EKind_Base = 'BASE',     //!< RPSportsBaseScene
+        EKind_Game = 'GAME',     //!< RPSportsGameScene
+        EKind_Sequence = 'SEQ_', //!< RPSportsSeqScene
     };
 
     /**
      * @brief Island time
+     * @customname
      */
-    enum ETime{
-        ETime_Day,
-        ETime_Evening,
-        ETime_Night,
-        ETime_Auto,
+    enum ETime {
+        ETime_Day,     //!< Force daytime
+        ETime_Evening, //!< Force evening
+        ETime_Night,   //!< Force night
+        ETime_Auto,    //!< Auto-detect from the current sequence
     };
 #endif
 
-    RPSysScene();
-    virtual ~RPSysScene() {}
+    /**
+     * @brief Unknown static scene structure
+     * @customname
+     */
+    struct UnkStruct {
+        u32 _00; // at 0x0
 
-    virtual void calc();
-    virtual void draw();
-    virtual void enter();
-    virtual void exit();
-    virtual void reinit();
-    virtual void incoming_childDestroy();
-    virtual void outgoing_childCreate();
+        /**
+         * @brief Constructor
+         */
+        UnkStruct() : _00(0) {}
+    };
+
+public:
+    /**
+     * @brief Constructor
+     */
+    RPSysScene();
+    /**
+     * @brief Destructor
+     */
+    virtual ~RPSysScene() {} // at 0x8
 
     /**
-     * @brief Access debug heap
+     * @name EGG scene states
+     * @brief These state functions are internal and should not be overriden.
      */
-    virtual EGG::Heap* getDebugHeap();
+    /**@{*/
+    /**
+     * @brief Updates the scene state
+     */
+    virtual void calc(); // at 0xC
+    /**
+     * @brief Renders the scene state
+     */
+    virtual void draw(); // at 0x10
 
-#ifdef PACK_RESORT
-    virtual EKind getKind();
+    /**
+     * @brief Enters the scene
+     */
+    virtual void enter(); // at 0x14
+    /**
+     * @brief Exits the scene
+     */
+    virtual void exit(); // at 0x18
+
+    /**
+     * @brief Re-initializes the scene
+     */
+    virtual void reinit(); // at 0x1C
+
+    /**
+     * @brief Prepares for destruction of (and transition from) a child scene
+     */
+    virtual void incoming_childDestroy(); // at 0x20
+    /**
+     * @brief Prepares for creation of (and transition to) a child scene
+     */
+    virtual void outgoing_childCreate(); // at 0x24
+    /**@}*/
+
+    /**
+     * @name RP scene states
+     * @brief These state functions are mostly empty stubs and should be
+     * overriden to provide scene functionality.
+     */
+    /**@{*/
+    /**
+     * @brief Accesses an unknown, unused structure
+     * @unused
+     */
+    virtual UnkStruct& VF_0x3C() {
+        return sUnkStruct;
+    } // at 0x3C
+
+#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+    /**
+     * @brief Gets the scene's class type
+     */
+    virtual EKind getKind() {
+        return ETime_Auto;
+    }
 #endif
 
     /**
-     * @brief Callback for pause/unpause
-     * @param pauseOn True = enter, false = exit
+     * @brief Pause callback
+     *
+     * @param enter Whether the pause menu is being entered
      */
-    virtual void pauseCallBack(bool pauseOn);
+    virtual void pauseCallBack(bool enter); // at 0x40
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+    /**
+     * @brief Gets the scene's island time of day
+     */
     virtual ETime getIslandTime();
 #endif
 
     /**
-     * @brief Setup scene members
+     * @brief Initializes the scene's state for the first time
      */
-    virtual void Configure();
-
+    virtual void Configure() {} // at 0x44
     /**
-     * @brief Load required scene resources
+     * @brief Loads the scene's required assets
      */
-    virtual void LoadResource();
-    virtual void Reset();
-    virtual void Calculate();
-    virtual void Exit();
+    virtual void LoadResource() {} // at 0x48
+    /**
+     * @brief Re-initializes the scene's state
+     */
+    virtual void Reset() {} // at 0x4C
+    /**
+     * @brief Updates the scene's state
+     */
+    virtual void Calculate() {} // at 0x50
+    /**
+     * @brief Exits the scene
+     */
+    virtual void Exit() {} // at 0x54
 
-#ifdef PACK_RESORT
-    virtual void CalculateMPlus();
+#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+    /**
+     * @brief Updates the scene's MotionPlus state
+     */
+    virtual void CalculateMotionPlus() {}
 #endif
 
     /**
-     * @brief Async task
-     * @details Called by taskAsyncFunc
+     * @brief Runs an asynchronous task on the DVD thread
      */
-    virtual void taskAsync();
+    virtual void taskAsync() {} // at 0x58
+    /**@}*/
 
     /**
-     * @brief Disable scene fade-in on enter/reset
-     * @address 80184e80
-     */
-    void disableFadeIn();
-
-    // @address 80184e90
-    int getCreatorSceneID() const;
-    // @address 80184e98
-    void setCreatorSceneID(int scene);
-
-    /**
-     * @brief Initialize base RP scene members
-     * @address 80184ea0
+     * @brief Initializes the scene's members
      */
     void init();
 
     /**
-     * @brief Toggle VI dimming
-     * @address 8018546c
+     * @brief Tests whether the scene is currently fully visible
      */
-    void setDimming(bool dim);
-
-    // @address 80185474
-    void startFadeOut();
-    // @address 8018547c
-    void startFadeIn();
-
+    bool isSceneDisplay() const;
     /**
-     * @brief Set manager's scene fade color
-     * @address 80185484
+     * @brief Tests whether the scene is currently not visible
      */
-    void setSceneFadeColor(nw4r::ut::Color color);
+    bool isSceneBlank() const;
     /**
-     * @brief Fade color of both of manager's faders
-     * @details Manager has a scene fader and a manager fader
+     * @brief Tests whether the scene is allowed to change
      */
-    /**@{*/
-    // @address 801854cc
-    void setFadeColor(nw4r::ut::Color color);
-    // @address 80185514
-    nw4r::ut::Color getFadeColor() const;
-    /**@}*/
+    bool isSceneChangeEnable() const;
+    /**
+     * @brief Tests whether the scene is allowing NAND access
+     */
+    bool isNandAccessEnable() const;
 
     /**
-     * @brief Set fade frame of both of manager's faders
-     * @address 8018551c
+     * @brief Sets the current frame of all faders
+     *
+     * @param frame Frame count
      */
     void setFadeFrame(u16 frame);
 
     /**
-     * @brief Check if the scene manager is allowing NAND access
-     * @details The scene manager must not be fading in or be busy
-     * @address 80185524
+     * @brief Gets the fader color for scene changes
      */
-    bool isNandAccessEnable() const;
+    nw4r::ut::Color getFadeColor() const;
     /**
-     * @brief Check if the scene manager is allowing the scene to change
-     * @details The scene manager must be ready to fade out and not be busy
-     * @address 80185574
+     * @brief Sets the fader color for scene changes
+     *
+     * @param color Fade color
      */
-    bool isSceneChangeEnable() const;
+    void setFadeColor(nw4r::ut::Color color);
+    /**
+     * @brief Set the scene's fader color
+     *
+     * @param color Fade color
+     */
+    void setSceneFadeColor(nw4r::ut::Color color);
 
     /**
-     * @brief Check if the scene is currently blank (not visible)
-     * @details This happens when both faders are preparing to fade in
-     * @address 8018557c
+     * @brief Begins fading in the scene's fader
      */
-    bool isSceneBlank() const;
+    void startFadeIn();
     /**
-     * @brief Check if the scene is currently fully visible
-     * @details This happens when both faders are done and ready to fade back
-     * out
-     * @address 80185584
+     * @brief Begins fading out the scene's fader
      */
-    bool isSceneDisplay() const;
+    void startFadeOut();
 
     /**
-     * @name Defined in RPSysLoadScene.cpp
+     * @brief Turns on/off screen dimming
+     * @details If "Screen Saver Mode" is disabled, dimming is always OFF.
+     *
+     * @param dim Whether to dim the screen
+     */
+    void setDimming(BOOL dim);
+
+    /**
+     * @brief Sets the ID of the previously created scene
+     *
+     * @param id Previous scene ID
+     */
+    void setCreatorSceneID(s32 id);
+    /**
+     * @brief Gets the ID of the previously created scene
+     */
+    s32 getCreatorSceneID() const;
+
+    /**
+     * @brief Sets the fast entry scene flag
+     * @details Doing this skips loading assets, running asynchronous tasks, and
+     * fading in.
+     */
+    void setEnterFast();
+
+    /**
+     * @name RPSysLoadScene
+     * @brief These functions are defined in `RPSysLoadScene.cpp`.
      */
     /**@{*/
     /**
-     * @brief Calls virtual task function asynchronously
-     * @details Set up on thread by initTaskAsync
-     * @address 80186878
-     * @param scene Scene required to call taskAsync
+     * @brief Prints the Pack Project build information in the specified color
+     *
+     * @param color Text color
      */
-    static void taskAsyncFunc(void* scene);
-    /**
-     * @brief Loads scene resources asynchronously
-     * @details calls LoadResource when done
-     * @address 80186888
-     * @param scene Scene required to call taskAsync
-     */
-    static void loadResourceFunc(void* scene);
-
-    UNKTYPE FUN_80186960(UNKTYPE);
-    UNKTYPE FUN_80186a1c(UNKTYPE);
+    void printTimeStamp(nw4r::ut::Color color) const;
 
     /**
-     * @brief Request DVD thread to run taskAsyncFunc
-     * @address 80186aa8
+     * @brief Enables the "Now Loading" text when loading the scene's assets
+     */
+    void enableLoadMessage();
+    /**
+     * @brief Loads the scene's assets without displaying any visual indicators
+     * @details If the flag for the message is enabled, this function will do
+     * nothing.
+     */
+    void load();
+    /**
+     * @brief Loads the scene's assets and attempts to display "Now Loading"
+     * message
+     * @details If the flag for the message is disabled, this function will do
+     * nothing.
+     */
+    void loadDebug();
+    /**
+     * @brief Somehow involved in updating state during asset loading
+     * @stubbed
+     */
+    void loadUpdate();
+
+    /**
+     * @brief Allows asynchronous tasks to run upon entering the scene
+     */
+    void setTaskAsync();
+    /**
+     * @brief Tests whether the scene's asynchronous tasks have finished running
+     */
+    bool isTaskAsyncFinish() const;
+
+    /**
+     * @brief Thread function used to call @ref taskAsync on the DVD thread
+     *
+     * @param pArg Thread function argument (the scene)
+     */
+    static void taskAsyncFunc(void* pArg);
+    /**
+     * @brief Thread function used to call @ref LoadResource on the DVD thread
+     * @details This function also opens the common sound archive if the scene
+     * requires it.
+     * @param pArg Thread function argument (the scene)
+     */
+    static void loadResourceFunc(void* pArg);
+
+    /**
+     * @brief Attempts to run asynchronous tasks on the DVD thread
+     * @details If the DVD thread is busy, or setTaskAsync was never called,
+     * this function will do nothing.
      */
     void initTaskAsync();
 
-    UNKTYPE FUN_80186b20(UNKTYPE);
-    UNKTYPE FUN_80186c34(UNKTYPE);
-
     /**
-     * @brief Enable the "Now Loading" scene text
-     * @details Set automatically if the scene attributes allow it
-     * @address 80186cec
+     * @brief Updates the status of the DVD thread
      */
-    void setShowLoadingText();
+    void updateDvdEndMessage();
     /**
-     * @brief Check if the scene is waiting on an async task
-     * @address 80186cfc
+     * @brief Updates the status of the NAND thread
      */
-    bool isTaskAsyncFinish() const;
-    /**
-     * @brief Set waiting on async flag
-     * @address 80186d1c
-     */
-    void setTaskAsync();
-
-    UNKTYPE FUN_80186d2c(UNKTYPE);
-
-    /**
-     * @brief Print time stamp string in specified color
-     * @address 80186d30
-     */
-    void printTimeStamp(nw4r::ut::Color color) const;
+    void updateNandEndMessage();
     /**@}*/
 
 private:
-#ifdef PACK_RESORT
-    char dummy[0x80 - 0x38]; // 0x38
-#else
-    // @brief Scene renderer (becomes global on scene enter)
-    RPGrpRenderer* mRenderer; // at 0x2C
-    // @brief Common draw functionality
-    RPSysCommonObject* mCmnObject; // at 0x30
-    // @brief TODO, constructor at 801988d8
-    // @details Some particle related structure
-    UNKTYPE* PTR_0x34;
-    // @brief Scene heap (unused)
-    EGG::Heap* mHeap; // at 0x38
-    // @brief Scene flags
-    u32 mFlags; // at 0x3C
-    // @brief Scene ID set by scene creator
-    int mCreatorSceneId; // at 0x40
+    /**
+     * @brief Bitflag indices
+     * @customname
+     */
+    enum EFlag {
+        EFlag_LoadMessage,   //!< Show "Now Loading" text
+        EFlag_WaitTaskAsync, //!< Waiting on asynchronous task
+        EFlag_WaitDvdThread, //!< Waiting on DVD task thread
+        EFlag_EnterFast,     //!< Skip loading resources, fading in, etc.
+    };
+
+private:
+#if !defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+    //! @name Wii Sports / Wii Play
+    /**@{*/
+    //! @brief Scene renderer
+    //! @details Upon entering the scene, this becomes the global renderer.
+    RPGrpRenderer* mpRenderer; // at 0x2C
+    //! Common draw functionality
+    RPSysCommonObject* mpCommonObject; // at 0x30
+    //! Scene effect creator
+    RPSysEffectCreator* mpEffectCreator; // at 0x34
+    //! @brief Scene heap
+    //! @unused
+    EGG::Heap* mpSceneHeap; // at 0x38
+    //! Scene flags
+    EGG::TBitFlag<u32> mFlags; // at 0x3C
+    //! ID of the previously created scene
+    s32 mCreatorSceneID; // at 0x40
+    /**@}*/
 #endif
 
-    // @brief Debug heap (unused)
-    static EGG::Heap* sDebugHeap; // 804bf4d0
+#if defined(PACK_RESORT) || defined(KOKESHI_PARSED_BY_DOXYGEN)
+    //! @name Wii Sports Resort
+    /**@{*/
+    //! @todo Document these fields
+    char dummy[0x80 - 0x38]; // 0x38
+    /**@}*/
+#endif
 
-    // @brief Defined in RPSysLoadScene.cpp
-    static EGG::Vector3f DAT_804a3db0[3]; // 804a3db0
+    //! @brief Unknown structure
+    //! @unused
+    static UnkStruct sUnkStruct;
 };
+
+//! @}
 
 #endif

@@ -327,6 +327,11 @@ private:
     TList<Fruit> mFruits;
 };
 ```
+
+#### Exceptions
+
+The only exceptions to these rules are classes where certain members must be declared higher up because of the placement of the class's virtual table. This is only important for ensuring interoperability with classes in the DOL.
+
 ### Header Implementation
 
 With older compilers it was common to implement function bodies in a header file so that they can be inlined across translation units. Because Kokeshi relies on the CodeWarrior compiler, this is still is a potential optimization.

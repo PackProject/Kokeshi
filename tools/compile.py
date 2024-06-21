@@ -30,7 +30,6 @@ CFLAGS_COMMON = " ".join([
     "-D__KOKESHI__",
 
     "-proc gekko",                # Gekko processor
-    "-i .",                       # Root include directory
     "-I-",
     "-Cpp_exceptions off",        # Disable C++ exceptions
     "-enum int",                  # Force 4-byte enumerations
@@ -342,10 +341,11 @@ def build_loader(args) -> bool:
     srcs = search_files(LOADER_DIR, SRC_EXTENSIONS)
     objs = [src_to_obj(f) for f in srcs]
 
-    inc_dirs = search_dirs(SRC_DIR, recursive=False) + \
+    inc_dirs = ["include/MSL"] + \
+        search_dirs(SRC_DIR, recursive=False) + \
         search_dirs(INCLUDE_DIR, recursive=False) + \
-        search_dirs(LIBRARY_DIR, recursive=False)
-    inc_dirs.append(LOADER_DIR)
+        search_dirs(LIBRARY_DIR, recursive=False) + \
+        [LOADER_DIR]
 
     # Loader compiler flags
     cflags = ' '.join([
@@ -420,9 +420,11 @@ def build_module(args) -> bool:
         search_files(SRC_DIR, SRC_EXTENSIONS)
     objs = [src_to_obj(f) for f in srcs]
 
-    inc_dirs = search_dirs(SRC_DIR, recursive=False) + search_dirs(
-        INCLUDE_DIR, recursive=False) + search_dirs(LIBRARY_DIR, recursive=False)
-    inc_dirs.append(LOADER_DIR)
+    inc_dirs = ["include/MSL"] + \
+        search_dirs(SRC_DIR, recursive=False) + \
+        search_dirs(INCLUDE_DIR, recursive=False) + \
+        search_dirs(LIBRARY_DIR, recursive=False) + \
+        [LOADER_DIR]
 
     # Module compiler flags
     cflags = ' '.join([

@@ -76,12 +76,13 @@ STRIP_FROM_INC_PATH    = include/MSL/ loader/ include/ lib/
 # with the commands \{ and \} for these it is advised to use the version @{ and
 # @} or use a double escape (\\{ and \\})
 
-ALIASES                += wfuname="\note Type name from Wii Fit U"
-ALIASES                += wscname="\note Type name from Wii Sports Club"
-ALIASES                += customname="\note Unofficial type name"
+ALIASES                += wfuname="\note Type name from Wii Fit U."
+ALIASES                += wscname="\note Type name from Wii Sports Club."
+ALIASES                += customname="\note Unofficial type name."
 ALIASES 			   += typo="\xrefitem typo \"\" \"Known Typo Errors\" "
 ALIASES                += extview{1}="\note This class cannot be instantiated. It is an extension of \1."
-ALIASES                += unused="\note This functionality is unused"
+ALIASES                += unused="\note This functionality is unused."
+ALIASES                += stubbed="\note This functionality is stubbed out in retail builds."
 
 # The NUM_PROC_THREADS specifies the number threads doxygen is allowed to use
 # during processing. When set to 0 doxygen will based this on the number of
