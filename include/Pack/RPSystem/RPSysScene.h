@@ -26,7 +26,7 @@ public:
      * @brief Scene type
      * @ws2
      */
-    enum EKind {
+    enum EKind{
         EKind_System = 'SYS_',   //!< RPSysScene
         EKind_Base = 'BASE',     //!< RPSportsBaseScene
         EKind_Game = 'GAME',     //!< RPSportsGameScene
@@ -37,7 +37,7 @@ public:
      * @brief Island time
      * @ws2
      */
-    enum ETime {
+    enum ETime{
         ETime_Day,     //!< Force daytime
         ETime_Evening, //!< Force evening
         ETime_Night,   //!< Force night
@@ -348,8 +348,6 @@ private:
 
 private:
 #ifndef PACK_RESORT
-    //! @name Wii Sports / Wii Play
-    /**@{*/
     //! @brief Scene renderer
     //! @remark Upon entering the scene, this becomes the global renderer.
     RPGrpRenderer* mpRenderer; // at 0x2C
@@ -364,15 +362,9 @@ private:
     EGG::TBitFlag<u32> mFlags; // at 0x3C
     //! ID of the previously created scene
     s32 mCreatorSceneID; // at 0x40
-    /**@}*/
-#endif
-
-#ifdef PACK_RESORT
-    //! @name Wii Sports Resort
-    /**@{*/
+#else
     //! @todo Document these fields
     char dummy[0x80 - 0x38]; // 0x38
-    /**@}*/
 #endif
 
     //! @brief Unknown structure

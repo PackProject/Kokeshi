@@ -80,6 +80,7 @@ ALIASES                += wfuname="\note Type name from Wii Fit U."
 ALIASES                += wscname="\note Type name from Wii Sports Club."
 ALIASES 			   += typo="\xrefitem typo \"\" \"Known Typo Errors\" "
 ALIASES                += extview{1}="\note This class cannot be instantiated. It is an extension of \1."
+ALIASES                += history="\attention"
 ALIASES                += unused="\note This functionality is unused."
 ALIASES                += stubbed="\note This functionality is stubbed out in retail builds."
 ALIASES                += ws2="\note This functionality was added to the engine for Wii Sports Resort."
@@ -499,7 +500,7 @@ GENERATE_LATEX         = NO
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 # KOKESHI: Add CodeWarrior macros, C++11
-PREDEFINED             = __MWCC__ __MWERKS__ LIBKIWI_CPP1X KOKESHI_PARSED_BY_DOXYGEN PACK_SPORTS PACK_PLAY PACK_RESORT
+PREDEFINED             = __MWCC__ __MWERKS__ LIBKIWI_CPP1X KOKESHI_PARSED_BY_DOXYGEN PACK_SPORTS
 
 # KOKESHI: Expand some codegen macros for documentation purposes.
 MACRO_EXPANSION        = YES

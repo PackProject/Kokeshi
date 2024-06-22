@@ -1,9 +1,11 @@
 #ifndef RP_SYSTEM_SYSTEM_H
 #define RP_SYSTEM_SYSTEM_H
 #include <Pack/RPSystem/RPSysConfigData.h>
+#include <Pack/RPSystem/RPSysRenderMode.h>
 #include <Pack/RPTypes.h>
 #include <egg/core.h>
 #include <nw4r/ut.h>
+#include <revolution/GX.h>
 #include <revolution/OS.h>
 
 //! @addtogroup rp_system
@@ -247,8 +249,13 @@ public:
     void setupLocalSettings();
 
     /**
-     * @brief Blocks the main thread to safely change video/render mode
-     * configuration
+     * @brief Blocks the main thread until it is safe to change the render mode
+     * @details Waits for either 100 frames or 1.6 seconds to pass.
+     *
+     * @history This arbitrary 1.6 second delay is likely from performance
+     * metrics taken during development. This code exists in other EAD games
+     * (notably Big Brain Academy and Mario Kart Wii), where the delay is
+     * slightly changed.
      */
     void waitRenderModeChange();
 
@@ -277,10 +284,20 @@ private:
     static void shutdownSystemCallBack();
 
 private:
-    //! Class singleton instance
-    static RPSysSystem* spInstance;
     //! Engine configuration
     static RPSysConfigData sConfigData;
+
+    //! Active render mode
+    static GXRenderModeObj* spRenderModeObj;
+    //! Render mode format @see RPSysRenderMode::EFormat
+    static u32 sRenderModeFormat;
+    //! @brief Time (in milliseconds) when the render mode was setup
+    //! @remark This value is only non-zero when scan mode/TV format is changed
+    //! and the system must wait.
+    static u32 sRenderModeWaitStart;
+
+    //! Class singleton instance
+    static RPSysSystem* spInstance;
 
     //! Effect manager work memory size
     u32 mEffectWorkSize; // at 0x4
