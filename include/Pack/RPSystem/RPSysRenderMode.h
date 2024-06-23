@@ -15,12 +15,12 @@ public:
      * @brief Render mode formats
      */
     enum EFormat {
-        EFormat_NTSC,      //! NTSC
-        EFormat_NTSC_Prog, //! NTSC, Progressive Mode
+        EFormat_NTSC,      //!< NTSC
+        EFormat_NTSC_Prog, //!< NTSC, Progressive Mode
 
-        EFormat_PAL50,    //! PAL, 50Hz ("EuRgb50")
-        EFormat_PAL60,    //! PAL, 60Hz ("EuRgb60")
-        EFormat_PAL_Prog, //! PAL, Progressive Mode
+        EFormat_PAL50,    //!< PAL, 50Hz ("EuRgb50")
+        EFormat_PAL60,    //!< PAL, 60Hz ("EuRgb60")
+        EFormat_PAL_Prog, //!< PAL, Progressive Mode
 
         EFormat_Max
     };
