@@ -63,6 +63,8 @@ To build your mod, simply run `make` from the project root directory. A `make cl
 
 The default build target is the debug configuration. To disable debug features such as logging/assertions, run `make` with `NDEBUG=1`.
 
+The patched DOL and your code modules are output in the `build/` directory, and are also automatically installed into the `romfs` folder(s) for ease of testing.
+
 ## Troubleshooting
 
 ### "Baserom is missing or could not be opened"
