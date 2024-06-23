@@ -15,7 +15,8 @@ baserom*.dol
 #=========================================================#
 # Tools
 #=========================================================#
-# Kamek binaries
+# Kamek
+tools/Kamek/*
 tools/Kamek*.*
 # CodeWarrior
 tools/mwasmeppc.exe
