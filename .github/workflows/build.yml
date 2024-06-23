@@ -8,7 +8,8 @@ permissions:
   contents: read
 
 env:
-  SOLUTION_FILE_PATH: tools/Kamek/Kamek/Kamek.sln
+  KAMEK_RELEASE: https://github.com/PackProject/Kamek/releases/download/v1.0.0/KamekRelease_net6.0.zip
+  KAMEK_SOLUTION: tools/Kamek/Kamek/Kamek.sln
 
 jobs:
   build:
@@ -18,23 +19,10 @@ jobs:
     - name: Checkout Kokeshi repository
       uses: actions/checkout@v3
 
-    - name: Checkout Kamek repository
-      uses: actions/checkout@v3
-      with:
-        repository: 'PackProject/Kamek'
-        path: 'tools/Kamek'
-
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-
-    - name: Build Kamek
-      run: msbuild /m /p:Configuration=Debug ${{env.SOLUTION_FILE_PATH}}
     - name: Install Kamek
-      run: mv tools/Kamek/Kamek/bin/Debug/net6.0/* tools
+      run: |
+        curl -L ${{env.KAMEK_RELEASE}} -o kamek.zip
+        unzip kamek.zip -d tools
 
     - name: Download compilers
       run: curl -L '${{ secrets.COMPILERS }}' | tar -xvf- -C tools
