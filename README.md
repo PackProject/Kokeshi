@@ -3,15 +3,17 @@ Kokeshi is a framework for injecting custom code into Pack Project titles. It is
 
 ## Repository Map
 ```
-├── 🎨 assets: Graphics, audio, and other data
-├── 📜 base: Base game DOLs and symbol maps
-├── 🚧 build: Build process output
-├── 📜 include: Header files for interfacing with the game(s)
-├── 📚 lib: External library code
-│      └── 🥝 libkiwi: Utility library for working with Pack Project games
-├── 🔄 loader: Statically-linked code (Kamek loader)
-├── 💿 src: Dynamically-linked code (Kamek module)
-└── 🔨 tools: Build tools (Kamek linker, CodeWarrior compiler, etc.)
+├── assets: Graphics, audio, and other data
+├── base: Base game DOLs and symbol maps
+├── build: Build process output
+├── docs: Doxygen assets
+├── examples: Doxygen code examples
+├── include: Header files for interfacing with the game(s)
+├── lib: External library code
+│      └── libkiwi: Utility library for working with Pack Project games
+├── loader: Statically-linked code (Kamek loader)
+├── src: Dynamically-linked code (Kamek module)
+└── tools: Build tools (Kamek linker, CodeWarrior compiler, etc.)
 ```
 
 ## Supported Games
