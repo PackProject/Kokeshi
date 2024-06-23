@@ -59,7 +59,6 @@ endif
 # Tools                                                                        #
 #==============================================================================#
 PYTHON  := python
-DOXYGEN := doxygen
 
 ASSETSCRIPT := tools/asset.py
 BUILDSCRIPT := tools/compile.py
