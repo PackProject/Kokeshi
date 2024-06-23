@@ -18,7 +18,11 @@ jobs:
     - name: Checkout Kokeshi repository
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        repository: 'PackProject/Kamek'
+        path: 'tools/'
+
+    - name: Checkout Kamek repository
+      uses: actions/checkout@v3
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
