@@ -3,21 +3,6 @@
 Thank you for your interest in the Kokeshi project! We ask that you please follow these contribution guidelines to ensure consistency across the codebase and its documentation.
 
 ## Project Structure
-
-The Kokeshi repository follows this structure:
-
-```
-├── 🎨 assets: Graphics, audio, and other data
-├── 📜 base: Base game DOLs and symbol maps
-├── 🚧 build: Build process output
-├── 📜 include: Header files for interfacing with the games
-├── 📚 lib: External library code
-│      └── 🥝 libkiwi: Utility library for working with Pack Project games
-├── 🔄 loader: Statically-linked code (Kamek loader)
-├── 💿 src: Dynamically-linked code (Kamek module)
-└── 🔨 tools: Build tools (Kamek linker, CodeWarrior compiler, etc.)
-```
-
 Header files that detail game concepts should be placed in the `include` directory. Depending on the module in which the code lies, you should choose the appropriate sub-directory to hold the header files:
 
 ```
@@ -33,7 +18,6 @@ Header files that detail game concepts should be placed in the `include` directo
 ```
 
 ## File Formats
-
 Please use the following file extensions for Kokeshi code:
 
 | File Extension | Usage                                                |
@@ -44,11 +28,9 @@ Please use the following file extensions for Kokeshi code:
 | `*.hpp`        | Large C++ template definitions that must be included |
 
 ## Style Guide
-
 Kokeshi contains a `.clang-format` configuration file which handles most of the code formatting. Still, there are some important style elements to conform to:
 
 ### Header Guards
-
 Although this project will likely always use the CodeWarrior compiler, which supports the `#pragma once` directive, please use standard include guards instead.
 
 This is done both for readability purposes and to provide context about the file inside the guard:
@@ -57,7 +39,6 @@ This is done both for readability purposes and to provide context about the file
 - `#ifndef NW4R_UT_LIST_H` -> `include/nw4r/ut/ut_list.h`
 
 #### Syntax
-
 Please use the following format:
 ```
 #ifndef {library}_{module}_{filename}_H
@@ -76,7 +57,6 @@ Terms separated by case/underscores should both be converted to underscores in t
 - `MYClass` -> `MY_CLASS`
 
 #### Special cases
-
 The only exception is for Pack Project (RP) files. The classes exist in the global namespace and often include the module name in both the directory and filename:
 
 - `include/Pack/RPAudio/RPSndAudioMgr.h` -> `#ifndef RP_AUDIO_SND_AUDIO_MGR_H`
@@ -84,11 +64,9 @@ The only exception is for Pack Project (RP) files. The classes exist in the glob
 - `include/Pack/RPUtility/RPUtlBaseFsm.h` -> `#ifndef RP_UTILITY_BASE_FSM_H`
 
 ### Include Directives
-
 *Include-what-you-use.* Unnecessary `#include` directives only increase the duration of compilation. 
 
 #### Syntax
-
 Please use the `<>` characters over `""` when writing include paths, and use filepaths relative to `include/` or `lib/`:
 
 ```cpp
@@ -99,7 +77,6 @@ Please use the `<>` characters over `""` when writing include paths, and use fil
 ```
 
 #### Vs. forward declarations
-
 If a forward declaration can resolve the dependency, favor that over `#include`'ing the corresponding file:
 
 
@@ -135,7 +112,6 @@ public:
 ```
 
 #### Public header files
-
 Many libraries/modules have a "public" or "external" header file that will in-turn `#include` all of its respective files.
 
 For example, `include/revolution/NAND.h` is the public header file for the NAND library:
@@ -179,7 +155,6 @@ Here's an example!
 ```
 
 #### libkiwi
-
 All libkiwi header files must at least include the types header file:
 ```c
 #include <libkiwi/k_types.h>
@@ -188,7 +163,6 @@ All libkiwi header files must at least include the types header file:
 ### Naming Scheme
 
 #### Functions
-
 Please write function names in PascalCase:
 ```cpp
 void myFunction();  // ❌ Don't do this!!!
@@ -197,7 +171,6 @@ void MyFunction();  // ✅ Do this!!!
 ```
 
 #### Data
-
 Please use the following prefixes for data members/function parameters:
 
 | Prefix | Meaning                      |
@@ -241,15 +214,12 @@ bool GetHandle(int& rHandle); // ✅ Do this!!!
 ```
 
 #### Macros
-
 Please write macros in uppercase SNAKE_CASE.
 
 #### Exceptions
-
 The only exceptions to these rules are identifiers that must be named otherwise due to the decompilation, such as functions/data with known symbols, and the `OSIsMEM` family of macros.
 
 ### Declaration Order
-
 Please use the following order when writing C++ classes:
 
 1. Public members
@@ -328,11 +298,9 @@ private:
 ```
 
 #### Exceptions
-
 The only exceptions to these rules are classes where certain members must be declared higher up because of the placement of the class's virtual table. This is only important for ensuring interoperability with classes in the DOL.
 
 ### Header Implementation
-
 With older compilers it was common to implement function bodies in a header file so that they can be inlined across translation units. Because Kokeshi relies on the CodeWarrior compiler, this is still is a potential optimization.
 
 However, Kokeshi code is compiled with size optimizations, not speed optimizations. As a result, the compiler will often not inline functions unless they are one or two instructions.
@@ -349,12 +317,10 @@ Kokeshi uses Doxygen to offer a website view of the codebase.
 At the time of writing, this documentation lives at [packproject.dev/Kokeshi](https://packproject.dev/Kokeshi) and is updated as the main branch changes.
 
 #### Syntax
-
 - Use the `@` prefix to issue Doxygen commands, rather than `\`.
 - Use `//!` for single-line Doxygen comments, rather than  `///`.
 
 #### Groups
-
 The only required Doxygen grouping is for modules that are not distinguished by namespaces. This is especially true for C code where there is no such construct as a "namespace".
 
 For example, the Doxygen group hierarchy `NW4R` -> `ut` is represented by the contents of the namespace `nw4r::ut`.
@@ -384,11 +350,9 @@ namespace kiwi {
 **To see a list of all Doxygen groups, please see `include/__doxygen.hpp`.**
 
 #### Comments
-
 Comments do not have heavy restrictions but should follow a consistent format to generate readable Doxygen pages:
 
 ##### Syntax
-
 For functions, write the brief description such that it could be prefixed with "This function" and still make sense:
 
 ```
@@ -415,7 +379,6 @@ bool Empty() const;
 ```
 
 ##### Structures
-
 Structures (`struct`/`class`) should at least provide a brief description:
 ```
 /**
@@ -426,7 +389,6 @@ public:
 ```
 
 ##### Enumerations
-
 Enumerations should at least provide a brief description:
 ```
 /**
@@ -436,7 +398,6 @@ enum ESeekDir { ESeekDir_Begin, ESeekDir_Current, ESeekDir_End };
 ```
 
 ##### Functions
-
 Functions should at least provide a brief description, documenting all parameters:
 
 ```
@@ -474,7 +435,6 @@ void GetHostAddr(SockAddr4& rAddr)
 ```
 
 ##### Macros
-
 Macros can be documented like functions, but also a single-line comment will suffice when there are no parameters, or their purpose is obvious:
 
 ```
@@ -491,7 +451,6 @@ Macros can be documented like functions, but also a single-line comment will suf
 ```
 
 ##### Data
-
 Data members should provide a single-line brief description. It does not matter whether this is a comment above or after the declaration:
 
 ```
@@ -505,7 +464,6 @@ u32 mPosition; //!< Position in data
 ```
 
 ##### Constructors/Destructors
-
 The brief description for constructors should be "Constructor", and the brief description for destructors should be "Destructor":
 
 ```
