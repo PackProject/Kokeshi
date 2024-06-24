@@ -1,26 +1,50 @@
 #ifndef RP_SYSTEM_COMMON_OBJECT_H
 #define RP_SYSTEM_COMMON_OBJECT_H
-#include "IRPGrpDrawObject.h"
-#include "RPTypes.h"
+#include <Pack/RPGraphics/IRPGrpDrawObject.h>
+#include <Pack/RPTypes.h>
+
+//! @addtogroup rp_system
+//! @{
 
 /**
- * @brief Provides common draw functionality to derived objects,
- * and automatically adds them to the renderer's queue.
+ * @brief Encapsulates common object behavior/rendering
  * @wfuname
+ *
+ * @details Encapsulates scene fader/effects, pause manager, system/tutorial
+ * windows, etc.
+ * @note Appends itself to the renderer list for automatic rendering.
  */
 class RPSysCommonObject : public IRPGrpDrawObject {
 public:
-    // @address 80187dbc
+    /**
+     * @brief Constructor
+     */
     RPSysCommonObject();
-
-    // @address 80187f24
-    virtual ~RPSysCommonObject();
+    /**
+     * @brief Destructor
+     */
+    virtual ~RPSysCommonObject() {}
 
     /**
-     * @brief Draws scene fader, pause mgr, etc.
-     * @address 80187c10
+     * @brief Initializes common objects' state
+     */
+    void init();
+
+    /**
+     * @brief Updates common objects' state before the scene gets to update
+     */
+    void preUpdate();
+    /**
+     * @brief Updates common objects' state after the scene gets to update
+     */
+    void postUpdate();
+
+    /**
+     * @brief Renders common objects' state
      */
     virtual void UserDraw();
 };
+
+//! @}
 
 #endif
