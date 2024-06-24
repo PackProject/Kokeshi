@@ -12,16 +12,7 @@
 //! @addtogroup kokeshi
 //! @{
 
-#ifdef KOKESHI_PARSED_BY_DOXYGEN
-/**
- * @brief Conditional compilation
- *
- * @param sports Code to compile under PACK_SPORTS
- * @param play Code to compile under PACK_PLAY
- * @param resort Code to compile under PACK_RESORT
- */
-#define KOKESHI_BY_PACK(sports, play, resort)
-#elif PACK_SPORTS
+#ifdef PACK_SPORTS
 #define KOKESHI_BY_PACK(sports, play, resort) sports
 #elif PACK_PLAY
 #define KOKESHI_BY_PACK(sports, play, resort) play

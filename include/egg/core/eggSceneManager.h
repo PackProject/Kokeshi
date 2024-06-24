@@ -59,6 +59,9 @@ public:
 
     Scene* findParentScene(s32);
 
+    inline Scene* getCurrentScene() const {
+        return mCurrentScene;
+    }
     inline s32 getCurrentSceneID() const {
         return mCurrentSceneID;
     }

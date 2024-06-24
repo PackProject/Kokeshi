@@ -120,7 +120,7 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
 
     // Fade out common sounds if we are switching sound archives
     if (GetSceneCommonSound(id) != GetSceneCommonSound(current)) {
-        s16 frame = RP_GET_INSTANCE(RPSysSceneMgr)->getFadeFrame();
+        s16 frame = RP_GET_INSTANCE(RPSysSceneMgr)->getSceneFadeFrame();
         RP_GET_INSTANCE(RPSndAudioMgr)->setSystemSeFadeInFrame(frame);
     }
 
