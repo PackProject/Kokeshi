@@ -500,10 +500,13 @@ GENERATE_LATEX         = NO
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 # KOKESHI: Add CodeWarrior macros, C++11
-PREDEFINED             = __MWCC__ __MWERKS__ LIBKIWI_CPP1X KOKESHI_PARSED_BY_DOXYGEN PACK_SPORTS
+PREDEFINED             = __MWCC__ __MWERKS__ LIBKIWI_CPP1X KOKESHI_PARSED_BY_DOXYGEN PACK_SPORTS LIBKIWI_KAMEK_PUBLIC
 
 # KOKESHI: Expand some codegen macros for documentation purposes.
 MACRO_EXPANSION        = YES
 
 # KOKESHI: Clean up underscore prefixed structures in RVL SDK.
 TYPEDEF_HIDES_STRUCT = YES
+
+# KOKESHI: Hide Kamek macros
+EXCLUDE_SYMBOLS = "KOKESHI_BY_PACK*" "KM_*"

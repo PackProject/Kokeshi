@@ -153,21 +153,21 @@ public:
      * @brief Scene information
      */
     struct SceneEntry {
-        //! @brief Scene ID
+        //! Scene ID
         ESceneID scene; // at 0x0
-        //! @brief Pack ID
+        //! Pack ID
         EPackID pack; // at 0x4
-        //! @brief How to create the scene
+        //! How to create the scene
         ECreateType createType; // at 0x8
-        //! @brief Toggle "Now Loading" text (unused)
+        //! Toggle "Now Loading" text (unused)
         BOOL loadingText; // at 0xC
-        //! @brief How to exit the scene
+        //! How to exit the scene
         EExitType exitType; // at 0x10
-        //! @brief Whether to use the RP common sound archive
+        //! Whether to use the RP common sound archive
         BOOL commonSound; // at 0x14
-        //! @brief Scene resource directory
+        //! Scene resource directory
         const char* pResDirName; // at 0x18
-        //! @brief Proper name
+        //! Proper name
         const char* pSceneName; // at 0x1C
     };
 
