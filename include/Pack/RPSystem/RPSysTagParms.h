@@ -1,136 +1,172 @@
 #ifndef RP_SYSTEM_TAG_PARMS_H
 #define RP_SYSTEM_TAG_PARMS_H
-#include "RPTypes.h"
-
-#include <egg/core/eggStream.h>
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
 
 // Forward declarations
 class RPSysTagParm;
 
+//! @addtogroup rp_system
+//! @{
+
 /**
- * @brief Container for tag parameters
- * @details Base used for RP engine's GameConfig
+ * @brief Group of tag parameters
  * @wfuname
  */
 class RPSysTagParameters {
 public:
     /**
-     * @address 8018674c
-     * @param name Container name
+     * @brief Constructor
+     *
+     * @param pName Parameter group name
      */
-    RPSysTagParameters(char* name);
+    RPSysTagParameters(char* pName);
 
 private:
-    // @brief Name of parameter group
-    const char* mName; // at 0x0
-    // @brief Children parameters
-    RPSysTagParm* mChildren; // at 0x4
+    //! Name of parameter group
+    const char* mpName; // at 0x0
+    //! Child parameters
+    RPSysTagParm* mpParameters; // at 0x4
 };
 
 /**
- * @brief Base class for a tag parameter
+ * @brief Base class for tag parameters
  * @wfuname
  */
 class RPSysTagParm {
 public:
     /**
-     * @address 80186840
-     * @param parent Parent container
-     * @param tag Parameter name
+     * @brief Constructor
+     *
+     * @param pParent Parent container
+     * @param pTag Parameter tag
      */
-    RPSysTagParm(RPSysTagParameters* parent, char* tag);
+    RPSysTagParm(RPSysTagParameters* pParent, char* pTag);
 
     /**
-     * @brief Read parameter value
-     * @address 80186748
+     * @brief Reads parameter value
+     *
+     * @param rStream Input stream
      */
-    virtual void read(EGG::Stream& stream);
+    virtual void read(EGG::Stream& rStream);
     /**
-     * @brief Write parameter value
-     * @address 80186744
+     * @brief Writes parameter value
+     *
+     * @param rStream Output stream
      */
-    virtual void write(EGG::Stream& stream);
+    virtual void write(EGG::Stream& rStream);
     /**
-     * @brief Print parameter information? (stubbed)
-     * @address 80186740
+     * @brief Prints parameter value
+     * @stubbed
      */
     virtual void dump();
 
 private:
-    // @brief Parameter tag
-    char* mTag; // at 0x0
-    // @brief Next parameter in linked list
-    RPSysTagParm* mNext; // at 0x4
+    //! Parameter tag
+    char* mpTag; // at 0x0
+    //! Next parameter in group
+    RPSysTagParm* mpNext; // at 0x4
 };
 
 /**
- * @brief Template for primitive typed tag parameters
- * @details Only the `int` template is used in OGWS
- * @tparam Parameter primitive type
+ * @brief Primitive-typed tag parameter
  * @wfuname
+ *
+ * @tparam Parameter primitive type
  */
 template <typename T> class RPSysPrimTagParm : public RPSysTagParm {
 public:
     /**
-     * @param parent Parent container
-     * @param tag Parameter name
+     * @brief Constructor
+     *
+     * @param pParent Parent container
+     * @param pTag Parameter tag
      */
-    RPSysPrimTagParm(RPSysTagParameters* parent, char* tag)
-        : RPSysTagParm(parent, tag) {}
+    RPSysPrimTagParm(RPSysTagParameters* pParent, char* pTag)
+        : RPSysTagParm(pParent, pTag) {}
 
     /**
-     * @brief Read parameter value
-     * @address 8018680c (\<int\> template)
+     * @brief Reads parameter value
+     *
+     * @param rStream Input stream
      */
-    virtual void read(EGG::Stream& stream);
+    virtual void read(EGG::Stream& rStream);
     /**
-     * @brief Read parameter value
-     * @address 801867fc (\<int\> template)
+     * @brief Writes parameter value
+     *
+     * @param rStream Output stream
      */
-    virtual void write(EGG::Stream& stream);
+    virtual void write(EGG::Stream& rStream);
     /**
-     * @brief Print parameter information? (stubbed)
-     * @address 801867f8 (\<int\> template)
+     * @brief Prints parameter value
+     * @stubbed
      */
     virtual void dump();
 
 private:
-    // @brief Parameter value
+    //! Parameter value
     T mValue; // at 0xC
 };
 
 /**
- * @brief Tag parameter class for string values
+ * @brief String-typed tag parameter
  * @wfuname
  */
 class RPSysStringTagParm : public RPSysTagParm {
 public:
     /**
-     * @address 801867ac
-     * @param parent Parent container
-     * @param tag Parameter name
+     * @brief Constructor
+     *
+     * @param pParent Parent container
+     * @param pTag Parameter tag
      */
-    RPSysStringTagParm(RPSysTagParameters* parent, char* tag);
+    RPSysStringTagParm(RPSysTagParameters* pParent, char* pTag);
 
     /**
-     * @brief Read parameter value
-     * @address 80186770
+     * @brief Reads parameter value
+     *
+     * @param rStream Input stream
      */
-    virtual void read(EGG::Stream& stream);
+    virtual void read(EGG::Stream& rStream);
     /**
-     * @brief Write parameter value
-     * @address 80186760
+     * @brief Writes parameter value
+     *
+     * @param rStream Output stream
      */
-    virtual void write(EGG::Stream& stream);
+    virtual void write(EGG::Stream& rStream);
     /**
-     * @brief Print parameter information? (stubbed)
-     * @address 8018675c
+     * @brief Prints parameter value
+     * @stubbed
      */
     virtual void dump();
 
 private:
-    // @brief Parameter value
-    const char* mValue; // at 0xC
+    //! Parameter value
+    const char* mpValue; // at 0xC
 };
+
+/**
+ * @brief Reads parameter value
+ *
+ * @param rStream Input stream
+ */
+template <> inline void RPSysPrimTagParm<s32>::read(EGG::Stream& rStream) {
+    mValue = rStream.read_s32();
+}
+/**
+ * @brief Writes parameter value
+ *
+ * @param rStream Output stream
+ */
+template <> inline void RPSysPrimTagParm<s32>::write(EGG::Stream& rStream) {
+    rStream.write_s32(mValue);
+}
+/**
+ * @brief Prints parameter value
+ * @stubbed
+ */
+template <> inline void RPSysPrimTagParm<s32>::dump() {}
+
+//! @}
 
 #endif
