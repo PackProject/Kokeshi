@@ -45,24 +45,6 @@ public:
     bool isErrorOccured();
 
 private:
-    RPSysDvdStatus(EGG::Heap* heap)
-        : mParentHeap(heap), mErrorStatus(DVD_IDLE) {
-        mErrorMessage = new char[256];
-
-        mErrorFader =
-            new EGG::ColorFader(0.0f, 0.0f, 640.0f, 456.0f, nw4r::ut::Color(0),
-                                EGG::ColorFader::STATUS_PREPARE_IN);
-
-        // Maybe the status in the constructor is a defualt argument?
-        mErrorFader->setStatus(EGG::ColorFader::STATUS_PREPARE_IN);
-    }
-
-    // @address 80187f64
-    virtual ~RPSysDvdStatus();
-
-private:
-    // @brief Heap in which this object was allocated
-    EGG::Heap* mParentHeap; // at 0x4
     // @brief DVD status
     s32 mErrorStatus; // at 0x8
     // @brief Error message to draw (constructed when needed)

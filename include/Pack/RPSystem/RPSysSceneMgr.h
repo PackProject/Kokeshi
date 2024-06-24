@@ -210,20 +210,6 @@ private:
     };
 
 private:
-    /**
-     * @brief Constructor
-     *
-     * @param pHeap Parent heap
-     */
-    RPSysSceneMgr(EGG::Heap* pHeap);
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPSysSceneMgr();
-
-private:
-    //! Heap in which this object was allocated
-    EGG::Heap* mpParentHeap; // at 0x2C
     //! Manager state
     EState mState; // at 0x30
     //! @brief Fader controllable by the current scene

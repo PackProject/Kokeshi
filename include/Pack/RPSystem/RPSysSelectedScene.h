@@ -36,20 +36,6 @@ public:
     }
 
 private:
-    /**
-     * @brief Constructor
-     *
-     * @param pHeap Parent heap
-     */
-    RPSysSelectedScene(EGG::Heap* pHeap);
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPSysSelectedScene();
-
-private:
-    //! Heap in which this object was allocated
-    EGG::Heap* mParentHeap; // at 0x4
     //! ID of the scene that was selected from the main menu
     s32 mSceneID; // at 0x8
 };

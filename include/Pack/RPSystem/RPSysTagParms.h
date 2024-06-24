@@ -150,7 +150,7 @@ private:
  *
  * @param rStream Input stream
  */
-template <> inline void RPSysPrimTagParm<s32>::read(EGG::Stream& rStream) {
+template <> inline void RPSysPrimTagParm<int>::read(EGG::Stream& rStream) {
     mValue = rStream.read_s32();
 }
 /**
@@ -158,14 +158,14 @@ template <> inline void RPSysPrimTagParm<s32>::read(EGG::Stream& rStream) {
  *
  * @param rStream Output stream
  */
-template <> inline void RPSysPrimTagParm<s32>::write(EGG::Stream& rStream) {
+template <> inline void RPSysPrimTagParm<int>::write(EGG::Stream& rStream) {
     rStream.write_s32(mValue);
 }
 /**
  * @brief Prints parameter value
  * @stubbed
  */
-template <> inline void RPSysPrimTagParm<s32>::dump() {}
+template <> inline void RPSysPrimTagParm<int>::dump() {}
 
 //! @}
 

@@ -34,11 +34,6 @@ public:
     enum ECursorType { CURSOR_DISABLED, CURSOR_1, CURSOR_ACTIVE };
 
 public:
-    // @address 8019ede8
-    RPSysCursorDrawMgr(EGG::Heap* heap);
-    // @address 8019ed74
-    virtual ~RPSysCursorDrawMgr(); // at 0x8
-
     void startDpdCheck();
     void createActiveCursor();
 
@@ -46,9 +41,7 @@ public:
     s32 getActivePlayer();
 
 private:
-    // @brief Parent heap
-    EGG::Heap* mHeap; // at 0x4
-    u32 mFlags;       // at 0x8
+    u32 mFlags; // at 0x8
 
     u32 WORD_0xC;
     u32 WORDS_0x10[PLAYER_MAX];

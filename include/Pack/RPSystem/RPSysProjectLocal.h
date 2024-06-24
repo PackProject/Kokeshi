@@ -67,20 +67,6 @@ public:
     void setLanguage(EArea lang);
 
 private:
-    /**
-     * @brief Constructor
-     *
-     * @param pHeap Parent heap
-     */
-    RPSysProjectLocal(EGG::Heap* pHeap);
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPSysProjectLocal();
-
-    //! Heap in which this object was allocated
-    EGG::Heap* mpParentHeap; // at 0x4
-
     //! Game region
     ERegion mRegion; // at 0x8
     //! Game pack
@@ -89,7 +75,6 @@ private:
     EArea mDialect; // at 0x10
     //! Game language
     EArea mLanguage; // at 0x14
-
     //! Whether the display is 50Hz
     BOOL mIsPal50; // at 0x18
     //! Sound archive storage device

@@ -216,14 +216,6 @@ public:
     RPSportsPlayerData getSportsPlayerData(u32 id) const;
 
 private:
-    // @address 801883c0
-    RPSysSaveDataMgr(EGG::Heap* heap);
-    // @address 80188368
-    virtual ~RPSysSaveDataMgr();
-
-private:
-    // @brief Heap in which this object was allocated
-    EGG::Heap* mParentHeap; // at 0x4
     // @brief Flags regarding the manager's status
     u32 mStatus; // at 0x8
     // @brief NAND error code

@@ -95,8 +95,8 @@ public:
         ESceneID_RPVibrationDebugScene, //!< Vibration
         ESceneID_RPResultDebugScene,    //!< Result
         ESceneID_RPUIDebugScene,        //!< UI Test
-        ESceneID_RPSmkTrainingScene,    //!< New Recruit Training (Smk)
-        ESceneID_RPMntTrainingScene,    //!< New Recruit Training (Mnt)
+        ESceneID_RPSmkTrainingScene,    //!< New Recruit Training (Mr. Sumaki)
+        ESceneID_RPMntTrainingScene,    //!< New Recruit Training (Mr. Minato)
         ESceneID_RPBsbDebugScene,       //!< Baseball Debug
         ESceneID_RPDrmDebugScene,       //!< Drum Debug
         ESceneID_RPOchDebugScene,       //!< Orchestra Debug
@@ -279,26 +279,12 @@ public:
      */
     bool isCommonSound(s32 id = -1);
 
-private:
-    /**
-     * @brief Constructor
-     *
-     * @param pHeap Parent heap
-     */
-    RPSysSceneCreator(EGG::Heap* pHeap);
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPSysSceneCreator();
-
 // KOKESHI: We need to access private members in SceneCreator
 #ifdef __KOKESHI__
 public:
 #else
 private:
 #endif
-    //! Heap in which this object was allocated
-    EGG::Heap* mpParentHeap; // at 0x4
     //! ID of the previous scene
     s32 mLastSceneID; // at 0x8
 

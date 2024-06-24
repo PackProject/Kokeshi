@@ -47,10 +47,19 @@ public:                                                                        \
     }                                                                          \
                                                                                \
 private:                                                                       \
+    T(EGG::Heap* pHeap);                                                       \
+    virtual ~T();                                                              \
+                                                                               \
+private:                                                                       \
+    EGG::Heap* mpParentHeap;                                                   \
+                                                                               \
+private:                                                                       \
     static T* spInstance;
 
 //! Implementation for a singleton class which uses the specified heap
 #define RP_SINGLETON_DEF_EX(T)                                                 \
+    T* T::spInstance = NULL;                                                   \
+                                                                               \
     void T::createInstance(EGG::Heap* pHeap) {                                 \
         if (spInstance == NULL) {                                              \
             spInstance = new (pHeap) T(pHeap);                                 \
@@ -58,6 +67,7 @@ private:                                                                       \
         }                                                                      \
         return NULL;                                                           \
     }                                                                          \
+                                                                               \
     void T::destroyInstance() {                                                \
         delete spInstance;                                                     \
         spInstance = NULL;                                                     \
