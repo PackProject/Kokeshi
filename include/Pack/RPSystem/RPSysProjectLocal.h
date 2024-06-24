@@ -1,101 +1,101 @@
 #ifndef RP_SYSTEM_PROJECT_LOCAL_H
 #define RP_SYSTEM_PROJECT_LOCAL_H
-#include "RPTypes.h"
+#include <Pack/RPSystem/RPSysSceneCreator.h>
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
 
-#include <types_egg.h>
+//! @addtogroup rp_system
+//! @{
 
 /**
- * @brief Runtime-access regional localization using compile-time settings.
+ * @brief Runtime project localization
  * @wfuname
  */
 class RPSysProjectLocal {
     RP_SINGLETON_DECL_EX(RPSysProjectLocal);
 
 public:
-    // @brief Measurement system (mostly used for string formatting)
-    enum EMeasureSystem {
-        RP_SYS_0,
-        RP_SYS_IMPERIAL,
-        RP_SYS_2,
-    };
-
-    // @brief Pack Project game ID
-    enum EPackID {
-        RP_SPORTS_PACK,
-        RP_PARTY_PACK,
-        RP_HEALTH_PACK,
-        RP_MUSIC_PACK,
-        RP_ALLPACK
-    };
-
-    // @brief Region, used for both locale and language
+    /**
+     * @brief Game region
+     */
     enum ERegion {
-        RP_ENGLISH_GB,
-        RP_FRENCH,
-        RP_GERMAN,
-        RP_ITALIAN,
-        RP_SPANISH,
-        RP_ENGLISH_NL,
-        RP_JAPANESE,
-        RP_ENGLISH_US
+        ERegion_NTSC_J, //!< Japan
+        ERegion_NTSC_U, //!< Americas/Asia
+        ERegion_PAL,    //!< Europe/Oceania
+        ERegion_KOR     //!< Korea
     };
 
-    // @brief Storage of sound archives (NAND suggests RP supports WiiWare?)
-    enum EStorage {
-        RP_STORAGE_MEM,
-        RP_STORAGE_NAND,
-        RP_STORAGE_DVD,
+    /**
+     * @brief World area
+     */
+    enum EArea {
+        EArea_England,
+        EArea_France,
+        EArea_Germany,
+        EArea_Italy,
+        EArea_Spain,
+        EArea_Netherlands,
+        EArea_Japan,
+        EArea_USA
     };
+
+    /**
+     * @brief Storage device
+     */
+    enum EStorage { EStorage_Memory, EStorage_NAND, EStorage_DVD };
 
 public:
-    s32 getPackID() const {
-        return mPackID;
-    }
-
-    // @address 80186234
-    void setLanguage(ERegion lang);
-    // @address 8018623c
-    void setLocale(ERegion locale);
+    /**
+     * @brief Appends locale directory to the given path
+     *
+     * @param pPath Path to append to
+     * @param pSuffix Optional suffix to append after the locale
+     */
+    void appendLocalDirectory(char* pPath, const char* pSuffix = "");
 
     /**
-     * @brief Concatenate locale directory to input path
-     * @address 80186244
+     * @brief Sets the current dialect
+     *
+     * @param dialect Dialect area
      */
-    void appendLocalDirectory(char* path, const char* prefix);
+    void setDialect(EArea dialect);
+    /**
+     * @brief Sets the current language
+     *
+     * @param lang Language area
+     */
+    void setLanguage(EArea lang);
 
 private:
-    RPSysProjectLocal(EGG::Heap* heap)
-        : mParentHeap(heap),
-          mMeasureSystem(RP_SYS_IMPERIAL),
-          mPackID(RP_SPORTS_PACK),
-          mLocale(RP_ENGLISH_US),
-          mLanguage(RP_ENGLISH_US),
-          mSndPal50Fix(FALSE),
-          mSndStorage(RP_STORAGE_MEM) {}
-
-    // @address 80186364
+    /**
+     * @brief Constructor
+     *
+     * @param pHeap Parent heap
+     */
+    RPSysProjectLocal(EGG::Heap* pHeap);
+    /**
+     * @brief Destructor
+     */
     virtual ~RPSysProjectLocal();
 
-    // @brief Heap in which this object was allocated
-    EGG::Heap* mParentHeap; // at 0x4
-    // @brief For formatting decimal numbers, using feet vs meters, etc.
-    u32 mMeasureSystem; // at 0x8
-    // @brief Pack Project game ID
-    u32 mPackID; // at 0xC
-    // @brief Controls what directory is used for regional files, etc.
-    u32 mLocale; // at 0x10
-    // @brief Seems to be unused, set alongside locale
-    u32 mLanguage; // at 0x14
-    // @brief Play sequenced audio at 5/6 speed
-    BOOL mSndPal50Fix; // at 0x18
-    // @brief Where audio archives are stored (DVD, NAND, memory)
-    u32 mSndStorage; // at 0x1C
+    //! Heap in which this object was allocated
+    EGG::Heap* mpParentHeap; // at 0x4
 
-    /**
-     * Static instance
-     * @address 804bf4e0
-     */
-    static RPSysProjectLocal* sInstance;
+    //! Game region
+    ERegion mRegion; // at 0x8
+    //! Game pack
+    RPSysSceneCreator::EPackID mPack; // at 0xC
+    //! Game dialect
+    EArea mDialect; // at 0x10
+    //! Game language
+    EArea mLanguage; // at 0x14
+
+    //! Whether the display is 50Hz
+    BOOL mIsPal50; // at 0x18
+    //! Sound archive storage device
+    EStorage mSoundStorage; // at 0x1C
 };
+
+//! @}
 
 #endif
