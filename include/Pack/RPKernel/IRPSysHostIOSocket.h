@@ -1,28 +1,46 @@
 #ifndef RP_KERNEL_I_HOSTIO_SOCKET_H
 #define RP_KERNEL_I_HOSTIO_SOCKET_H
-#include "RPTypes.h"
+#include <Pack/RPTypes.h>
+
+//! @addtogroup rp_kernel
+//! @{
 
 /**
  * @brief Host I/O for debugging
- * @details All functions have been stubbed out
  */
 class IRPSysHostIOSocket {
 public:
     /**
-     * @brief Construct socket with formattable name
-     * @address 801907e4
+     * @brief Constructor
+     * @stubbed
+     *
+     * @param pName Socket name
+     * @param ... Format string arguments
      */
-    IRPSysHostIOSocket(const char* name, ...);
-    // @address 801907d4
+    IRPSysHostIOSocket(const char* pName, ...);
+    /**
+     * @brief Constructor
+     * @stubbed
+     */
     IRPSysHostIOSocket();
+    /**
+     * @brief Destructor
+     * @stubbed
+     */
+    virtual ~IRPSysHostIOSocket(); // at 0x8
 
-    // @address 80190794
-    virtual ~IRPSysHostIOSocket();
-
-    // @address 8018a904
-    virtual UNKTYPE FUN_8018a904(UNKTYPE) {}
-    // @address 8018a908
-    virtual UNKTYPE FUN_8018a908(UNKTYPE) {}
+    /**
+     * @brief Receives property event from the host
+     * @stubbed
+     */
+    virtual void ListenPropertyEvent() {} // at 0xC
+    /**
+     * @brief Sends message to the host
+     * @stubbed
+     */
+    virtual void GenMessage() {} // at 0x10
 };
+
+//! @}
 
 #endif

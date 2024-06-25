@@ -82,7 +82,7 @@ ALIASES 			   += typo="\attention This identifier contains a known typo that is 
 ALIASES                += extview{1}="\note This class cannot be instantiated. It is an extension of \1."
 ALIASES                += history="\attention"
 ALIASES                += unused="\note This functionality is unused."
-ALIASES                += stubbed="\note This functionality is stubbed out in retail builds."
+ALIASES                += stubbed="\note This functionality is removed from retail builds."
 ALIASES                += ws2="\note This functionality was added to the engine for Wii Sports Resort."
 
 # The NUM_PROC_THREADS specifies the number threads doxygen is allowed to use
