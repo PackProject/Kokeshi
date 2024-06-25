@@ -164,16 +164,6 @@ public:
     void GetGameSoundLocalPath(char* pBuffer, u32 bufSize, s32 id);
 
 private:
-    /**
-     * @brief Constructor
-     */
-    RPSysResourceManager();
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPSysResourceManager();
-
-private:
     //! Resource cache for common archives
     nw4r::ut::List mCommonCache; // at 0x4
     //! Resource cache for other files loaded from the DVD

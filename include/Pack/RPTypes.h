@@ -17,9 +17,14 @@ public:                                                                        \
     static void destroyInstance();                                             \
     static T* getInstance() {                                                  \
         return spInstance;                                                     \
-    }                                                                          \
+    };                                                                         \
                                                                                \
 private:                                                                       \
+    T();                                                                       \
+    virtual ~T();                                                              \
+                                                                               \
+private:                                                                       \
+    /** Class singleton instance */                                            \
     static T* spInstance;
 
 //! Implementation for a singleton class which uses the current heap
@@ -51,9 +56,11 @@ private:                                                                       \
     virtual ~T();                                                              \
                                                                                \
 private:                                                                       \
+    /** Heap in which this object was allocated */                             \
     EGG::Heap* mpParentHeap;                                                   \
                                                                                \
 private:                                                                       \
+    /** Class singleton instance */                                            \
     static T* spInstance;
 
 //! Implementation for a singleton class which uses the specified heap

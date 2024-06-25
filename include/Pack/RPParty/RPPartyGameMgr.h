@@ -7,9 +7,6 @@ class RPPartyGameMgr {
 
 public:
     void Reset();
-
-private:
-    static RPPartyGameMgr* sInstance;
 };
 
 #endif

@@ -7,9 +7,6 @@ class RPSysHomeMenuMgr {
 
 public:
     void LoadResource();
-
-private:
-    static RPSysHomeMenuMgr* sInstance;
 };
 
 #endif

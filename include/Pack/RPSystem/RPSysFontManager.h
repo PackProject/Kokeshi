@@ -53,20 +53,6 @@ public:
     }
 
 private:
-    RPSysFontManager() {
-        // Initialize rom font
-        mRomFont = new nw4r::ut::RomFont();
-        // Initialize res fonts
-        for (int i = 0; i < FONT_MAX; i++) {
-            mResFonts[i] = new nw4r::ut::ResFont();
-            mResFontData[i] = NULL;
-        }
-    }
-
-    // @address 8018be64
-    virtual ~RPSysFontManager();
-
-private:
     // @brief Deserialized rom font
     nw4r::ut::RomFont* mRomFont; // at 0x4
     // @brief Deserialized res fonts
@@ -84,12 +70,6 @@ private:
      * @address 803b9950
      */
     static const char* sPackResFonts[FONT_MAX];
-
-    /**
-     * @brief Static instance
-     * @address 804bf510
-     */
-    static RPSysFontManager* sInstance;
 };
 
 #endif

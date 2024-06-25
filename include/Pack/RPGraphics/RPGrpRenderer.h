@@ -58,7 +58,6 @@ private:
 
     static EDrawPass sDrawPass;
     static u8 sCurrentViewID;
-    static RPGrpRenderer* sInstance;
     static RPGrpScreen* sActiveScreen;
 };
 

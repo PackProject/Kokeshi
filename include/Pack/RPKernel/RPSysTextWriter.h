@@ -48,23 +48,8 @@ public:
     void End();
 
 private:
-    RPSysTextWriter() {
-        // SetFont(RPSysFontManager::GetInstance()->GetRomFont());
-        // mIsRendering = FALSE;
-    }
-
-    // @address 80190c6c
-    virtual ~RPSysTextWriter();
-
-private:
     // @brief Render status (Begin/End)
     BOOL mIsRendering; // at 0x68
-
-    /**
-     * @brief Static instance
-     * @address 804bf538
-     */
-    static RPSysTextWriter* sInstance;
 };
 
 #endif

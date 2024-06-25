@@ -9,9 +9,6 @@ public:
     void resetData();
     void setPlayerNum(int num);
     void setControllerNum(int num);
-
-private:
-    static RPSysPlayerMgr* sInstance;
 };
 
 #endif

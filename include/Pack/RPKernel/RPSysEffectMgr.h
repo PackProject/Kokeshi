@@ -7,9 +7,6 @@ class RPSysEffectMgr {
 
 public:
     void LoadResource();
-
-private:
-    static RPSysEffectMgr* sInstance;
 };
 
 #endif

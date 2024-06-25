@@ -18,8 +18,6 @@ public:
 private:
     char _00[0x7C];
     RPBilBall* mBalls[BALL_MAX]; // at 0x7C
-
-    static RPBilBallManager* sInstance;
 };
 
 #endif

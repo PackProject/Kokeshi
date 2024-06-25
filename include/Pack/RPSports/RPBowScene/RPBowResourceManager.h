@@ -11,11 +11,6 @@ class RPBowResourceManager : public IRPSysHostIOSocket {
     RP_SINGLETON_DECL(RPBowResourceManager);
 
 public:
-    RPBowResourceManager() : mExcelGlobal(NULL) {}
-
-    // @address 80320da8
-    virtual ~RPBowResourceManager();
-
     /**
      * @brief Sets up all bowling resources
      * @address 80320e00
@@ -34,12 +29,6 @@ private:
     void* mCmnArchive; // at 0x4
     // @brief Scene local archive
     void* mLocalArchive; // at 0x8
-
-    /**
-     * @brief Static instance
-     * @address 804bf9a8
-     */
-    static RPBowResourceManager* sInstance;
 };
 
 #endif

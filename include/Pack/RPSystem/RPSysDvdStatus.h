@@ -1,62 +1,61 @@
 #ifndef RP_SYSTEM_DVD_STATUS_H
 #define RP_SYSTEM_DVD_STATUS_H
-#include "RPTypes.h"
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
 
-#include <egg/core/eggColorFader.h>
-#include <egg/core/eggHeap.h>
+//! @addtogroup rp_system
+//! @{
 
 /**
- * @brief Current status/error of the DVD.
- * @details Similar to EGG's DvdStatus, but seems to be a re-implementation
- * (missing Disposer inheritance)
+ * @brief Disc status
  * @wfuname
+ *
+ * @history Likely predates EGG::DvdStatus.
  */
 class RPSysDvdStatus {
     RP_SINGLETON_DECL_EX(RPSysDvdStatus);
 
 public:
-    // @brief Status of the last access to the DVD drive
-    enum EDvdStatus {
-        DVD_IDLE = -2,
-        DVD_READING,
-        DVD_DISC_REMOVED,
-        DVD_CANNOT_READ,
-        DVD_FATAL_ERROR
+    /**
+     * @brief Result of the last access to the DVD drive
+     */
+    enum EErrorStatus {
+        EErrorStatus_Success = -2,
+        EErrorStatus_Busy,      //!< Drive is busy
+        EErrorStatus_NoDisk,    //!< Disk is ejected or is wrong game
+        EErrorStatus_DiskError, //!< Cannot read from the disk
+        EErrorStatus_Fatal      //!< Fatal error
     };
 
 public:
     /**
-     * @brief Draw status message (only if an error has occurred)
-     * @address 80187fa4
+     * @brief Draws an error message if an error has occurred
      */
     void draw();
 
     /**
-     * @brief Update status using DVD library
-     * @address 8018818c
+     * @brief Updates state using the DVD library
+     * @return Whether the DVD status is OK
      */
-    void update();
+    bool update();
 
     /**
-     * @brief Check if the DVD cannot be accessed
-     * @address 80188260
+     * @brief Tests whether the status is in an error state
+     * @details @ref EErrorStatus_Success and @ref EErrorStatus_Busy are *not*
+     * considered error states.
      * @typo
      */
     bool isErrorOccured();
 
 private:
-    // @brief DVD status
-    s32 mErrorStatus; // at 0x8
-    // @brief Error message to draw (constructed when needed)
-    const char* mErrorMessage; // at 0xC
-    // @brief Fader to black out the screen when displaying an error message
-    EGG::ColorFader* mErrorFader; // at 0x10
-
-    /**
-     * @brief Static instance
-     * @address 804bf500
-     */
-    static RPSysDvdStatus* sInstance;
+    //! DVD error status
+    EErrorStatus mStatus; // at 0x8
+    //! Error message text
+    const char* mpMessageWork; // at 0xC
+    //! Fader for the black error background
+    EGG::ColorFader* mpFader; // at 0x10
 };
+
+//! @}
 
 #endif

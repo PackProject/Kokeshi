@@ -24,14 +24,9 @@ public:
     }
 
 private:
-    virtual ~RPSysSystemWinMgr();
-
-private:
     char UNK_0x4[0x90 - 0x4];
     s32 mResult;
     char UNK_0x94[0xE0 - 0x94];
-
-    static RPSysSystemWinMgr* sInstance;
 };
 
 #endif

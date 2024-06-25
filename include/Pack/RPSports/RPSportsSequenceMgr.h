@@ -113,13 +113,6 @@ public:
     void SetGolfScore(u32 stroke, u32 hole, u32 player);
 
 private:
-    RPSportsSequenceMgr() {
-        Reset();
-    }
-    // @address 801e7290
-    virtual ~RPSportsSequenceMgr(); // at 0x8
-
-private:
     // @brief Max player count
     static const u32 PLAYER_MAX = 4;
     // @brief Golf course length
@@ -157,12 +150,6 @@ private:
     // @brief Player has finished a training game
     // @note Seems to be unused
     bool mHasFinishedTraining; // at 0xCC
-
-    /**
-     * @brief Static instance
-     * @address 804bf708
-     */
-    static RPSportsSequenceMgr* sInstance;
 };
 
 #endif

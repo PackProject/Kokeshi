@@ -15,13 +15,7 @@ public:
     void Reset();
 
 private:
-    RPBilMain();
-    virtual ~RPBilMain();
-
-private:
     RPUtlBaseFsm<RPBilMain>* mpStateMachine; // at 0x4
-
-    static RPBilMain* sInstance;
 };
 
 #endif

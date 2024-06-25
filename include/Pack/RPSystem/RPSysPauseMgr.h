@@ -7,9 +7,6 @@ class RPSysPauseMgr {
 
 public:
     void LoadResource();
-
-private:
-    static RPSysPauseMgr* sInstance;
 };
 
 #endif

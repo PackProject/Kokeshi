@@ -7,9 +7,6 @@ class RPGrpModelResManager {
 
 public:
     void CreateResourceList(u16);
-
-private:
-    static RPGrpModelResManager* sInstance;
 };
 
 #endif

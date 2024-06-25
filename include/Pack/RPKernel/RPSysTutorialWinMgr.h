@@ -7,9 +7,6 @@ class RPSysTutorialWinMgr {
 
 public:
     void LoadResource();
-
-private:
-    static RPSysTutorialWinMgr* sInstance;
 };
 
 #endif

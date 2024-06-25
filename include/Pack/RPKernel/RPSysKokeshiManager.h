@@ -12,9 +12,6 @@ public:
 
 public:
     void LoadStaticResource();
-
-private:
-    static RPSysKokeshiManager* sInstance;
 };
 
 #endif

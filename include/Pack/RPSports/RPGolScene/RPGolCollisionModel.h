@@ -57,10 +57,6 @@ public:
     }
 
 private:
-    RPGolCollisionModel();
-    virtual ~RPGolCollisionModel();
-
-private:
     nw4r::math::VEC3* mVertices;        // at 0x4
     nw4r::math::VEC3* mNormals;         // at 0x8
     RPGolCollisionTriangle* mTriangles; // at 0xC
@@ -78,7 +74,6 @@ private:
     u32 mNumRPTris;    // at 0x5C
     UNKTYPE* PTR_0x60; // at 0x60
 
-    static RPGolCollisionModel* sInstance;
     static const char* sCollisionDesc[EGndAttr_Max];
     static nw4r::ut::Color sCollisionColors[EGndAttr_Max];
 };

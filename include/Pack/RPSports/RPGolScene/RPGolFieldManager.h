@@ -55,12 +55,6 @@ public:
     }
 
 private:
-    // @address 80293d74
-    RPGolFieldManager();
-    // @address 80293d18
-    virtual ~RPGolFieldManager();
-
-private:
     // @brief Player Mii shadow
     RPGrpShadowTexture* mPlayerShadowTexture; // at 0x4
     // @brief Tree shadow (all objects)
@@ -156,12 +150,6 @@ private:
     // @brief Set to kill the target effect emitters
     // @note Used to achieve the blinking effect
     bool mKillTargetEffEmitter; // at 0xA4
-
-    /**
-     * @brief Static instance
-     * @address 804bf868
-     */
-    static RPGolFieldManager* sInstance;
 };
 
 #endif

@@ -11,9 +11,6 @@ class RPGrpModelManager {
 
 public:
     void CreateModelScene(u32, u8, u32, RPGrpLightManager*, RPGrpFogManager*);
-
-private:
-    static RPGrpModelManager* sInstance;
 };
 
 #endif
