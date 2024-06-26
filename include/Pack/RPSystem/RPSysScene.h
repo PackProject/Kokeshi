@@ -68,8 +68,8 @@ public:
     virtual ~RPSysScene() {} // at 0x8
 
     /**
-     * @name EGG scene states
-     * @brief These state functions are internal and should not be overriden.
+     * @name Internal events
+     * @brief These event functions are internal and should not be overriden.
      */
     /**@{*/
     /**
@@ -106,8 +106,8 @@ public:
     /**@}*/
 
     /**
-     * @name RP scene states
-     * @brief These state functions are mostly empty stubs and should be
+     * @name User events
+     * @brief These event functions are mostly empty stubs and should be
      * overriden to provide scene functionality.
      */
     /**@{*/

@@ -1,5 +1,5 @@
-#ifndef RP_PARTY_COMMON_DATA_H
-#define RP_PARTY_COMMON_DATA_H
+#ifndef RP_PARTY_SYSTEM_DATA_H
+#define RP_PARTY_SYSTEM_DATA_H
 #include "RPTypes.h"
 
 #include <types_egg.h>
@@ -10,7 +10,7 @@
  * @note Not a packed structure, this is an abstraction of the binary format
  * @customname
  */
-class RPPartyCommonData {
+class RPPartySystemData {
 public:
     /**
      * @brief Structure used to allow players' Miis to be automatically

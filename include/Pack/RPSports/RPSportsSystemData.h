@@ -1,5 +1,5 @@
-#ifndef RP_SPORTS_COMMON_DATA_H
-#define RP_SPORTS_COMMON_DATA_H
+#ifndef RP_SPORTS_SYSTEM_DATA_H
+#define RP_SPORTS_SYSTEM_DATA_H
 #include "RPTypes.h"
 
 #include <types_egg.h>
@@ -10,7 +10,7 @@
  * @note Not a packed structure, this is an abstraction of the binary format
  * @customname
  */
-class RPSportsCommonData {
+class RPSportsSystemData {
 public:
     /**
      * @brief Structure used to allow players' Miis to be automatically
@@ -56,7 +56,7 @@ public:
     };
 
 public:
-    RPSportsCommonData(); // 8018ad34
+    RPSportsSystemData(); // 8018ad34
 
     /**
      * @brief Write data

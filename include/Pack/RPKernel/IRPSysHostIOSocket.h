@@ -1,5 +1,5 @@
-#ifndef RP_KERNEL_I_HOSTIO_SOCKET_H
-#define RP_KERNEL_I_HOSTIO_SOCKET_H
+#ifndef RP_KERNEL_I_HOST_IO_SOCKET_H
+#define RP_KERNEL_I_HOST_IO_SOCKET_H
 #include <Pack/RPTypes.h>
 
 //! @addtogroup rp_kernel
@@ -30,12 +30,12 @@ public:
     virtual ~IRPSysHostIOSocket(); // at 0x8
 
     /**
-     * @brief Receives property event from the host
+     * @brief Receives UI control values from the host
      * @stubbed
      */
     virtual void ListenPropertyEvent() {} // at 0xC
     /**
-     * @brief Sends message to the host
+     * @brief Sends UI control layout to the host
      * @stubbed
      */
     virtual void GenMessage() {} // at 0x10
