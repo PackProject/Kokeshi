@@ -8,33 +8,33 @@
 //! @{
 
 /**
- * @brief Wii Sports save file common data
+ * @brief Wii Sports save file system data
  */
 class RPSportsSystemData {
 public:
     /**
      * @brief Training game ID
      */
-    enum EGameTr {
-        EGameTr_Box_Mituchi,  //!< Throwing Punches
-        EGameTr_Box_Tamayoke, //!< Dodging
-        EGameTr_Box_Sandbag,  //!< Working the Bag
+    enum EGameID {
+        EGameID_Box_Mituchi,  //!< Throwing Punches
+        EGameID_Box_Tamayoke, //!< Dodging
+        EGameID_Box_Sandbag,  //!< Working the Bag
 
-        EGameTr_Gol_Target,  //!< Target Practice
-        EGameTr_Gol_Nearpin, //!< Hitting the Green
-        EGameTr_Gol_Onepat,  //!< Putting
+        EGameID_Gol_Target,  //!< Target Practice
+        EGameID_Gol_Nearpin, //!< Hitting the Green
+        EGameID_Gol_Onepat,  //!< Putting
 
-        EGameTr_Bow_Gatetoshi,  //!< Spin Control
-        EGameTr_Bow_Nagitaoshi, //!< Power Throws
-        EGameTr_Bow_Spareget,   //!< Picking Up Spares
+        EGameID_Bow_Gatetoshi,  //!< Spin Control
+        EGameID_Bow_Nagitaoshi, //!< Power Throws
+        EGameID_Bow_Spareget,   //!< Picking Up Spares
 
-        EGameTr_Bsb_Renzoku,  //!< Batting Practice
-        EGameTr_Bsb_Uchiwake, //!< Swing Control
-        EGameTr_Bsb_Homerun,  //!< Hitting Home Runs
+        EGameID_Bsb_Renzoku,  //!< Batting Practice
+        EGameID_Bsb_Uchiwake, //!< Swing Control
+        EGameID_Bsb_Homerun,  //!< Hitting Home Runs
 
-        EGameTr_Tns_Kabeuchi,  //!< Target Practice
-        EGameTr_Tns_Nerauchii, //!< Timing Your Swing
-        EGameTr_Tns_Renzoku,   //!< Returning Balls
+        EGameID_Tns_Kabeuchi,  //!< Target Practice
+        EGameID_Tns_Nerauchii, //!< Timing Your Swing
+        EGameID_Tns_Renzoku,   //!< Returning Balls
     };
 
 public:
@@ -68,32 +68,32 @@ public:
     void setOldData(s8 index, const u8* pAddr, s32 numPlayers, s32 player);
 
     /**
-     * @brief Sets the total number of fitness tests taken
+     * @brief Sets the total number of fitness tests completed
      *
-     * @param count Number of fitness tests taken
+     * @param count Number of fitness tests completed
      */
-    void setPhysicalCount(u8 count);
+    void setPhysicalEndCount(u8 count);
     /**
-     * @brief Gets the total number of fitness tests taken
+     * @brief Gets the total number of fitness tests completed
      */
-    u8 getPhysicalCount() const;
+    u8 getPhysicalEndCount() const;
 
     /**
-     * @brief Sets the last date on which a fitness test was taken
+     * @brief Sets the last date on which a fitness test was completed
      *
      * @param date Date of last fitness test
      */
-    void setPhysicalLastDate(RPTime16 date);
+    void setPhysicalEndLastDate(RPTime16 date);
     /**
-     * @brief Gets the last date on which a fitness test was taken
+     * @brief Gets the last date on which a fitness test was completed
      */
-    RPTime16 getPhysicalLastDate() const;
+    RPTime16 getPhysicalEndLastDate() const;
 
     /**
      * @brief Sets whether the specified training game's opening cutscene has
      * played
      *
-     * @param game Training game (@ref EGameTr)
+     * @param game Training game (@ref EGameID)
      * @param demo Whether the cutscene has played
      */
     void setGameOpenDemo(u8 game, bool demo);
@@ -101,21 +101,21 @@ public:
      * @brief Tests whether the specified training game's opening cutscene has
      * played
      *
-     * @param game Training game (@ref EGameTr)
+     * @param game Training game (@ref EGameID)
      */
     void isGameOpenDemo(u8 game) const;
 
     /**
      * @brief Sets whether the specified training game is available
      *
-     * @param game Training game (@ref EGameTr)
+     * @param game Training game (@ref EGameID)
      * @param open Whether the game is available
      */
     void setGameOpen(u8 game, bool open);
     /**
      * @brief Tests whether the specified training game is available
      *
-     * @param game Training game (@ref EGameTr)
+     * @param game Training game (@ref EGameID)
      */
     void isGameOpen(u8 game) const;
 
@@ -145,10 +145,10 @@ private:
     u8 mOldRemoteAddr[1 + 2 + 3 + 4][WPAD_ADDR_LEN]; // at 0xA
     /**@}*/
 
-    //! Total number of fitness tests taken
-    u8 mPhysicalCount; // at 0x46
-    //! Last fitness test taken by any Mii
-    RPTime16 mPhysicalLastDate; // at 0x48
+    //! Total number of fitness tests completed
+    u8 mPhysicalEndCount; // at 0x46
+    //! Last fitness test completed
+    RPTime16 mPhysicalEndLastDate; // at 0x48
 
     //! @unused
     u16 SHORT_0x4A;
