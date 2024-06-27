@@ -1,152 +1,169 @@
 #ifndef RP_SPORTS_SYSTEM_DATA_H
 #define RP_SPORTS_SYSTEM_DATA_H
-#include "RPTypes.h"
+#include <Pack/RPTypes.h>
+#include <egg/core.h>
+#include <revolution/WPAD.h>
 
-#include <types_egg.h>
+//! @addtogroup rp_sports
+//! @{
 
 /**
  * @brief Wii Sports save file common data
- * @details Includes everything that isn't tied to a specific player
- * @note Not a packed structure, this is an abstraction of the binary format
- * @customname
  */
 class RPSportsSystemData {
 public:
     /**
-     * @brief Structure used to allow players' Miis to be automatically
-     * selected.
-     * @details The Mii's player list index is kept alongside information
-     * identifying the remote used, so that Mii can be chosen automatically when
-     * applicable.
+     * @brief Training game ID
      */
-    struct MiiHistory {
-        // @brief Previously selected Mii (Index into player list)
-        // @note -1 if unused
-        s8 mPrevMiiIdx; // at 0x0
+    enum EGameTr {
+        EGameTr_Box_Mituchi,  //!< Throwing Punches
+        EGameTr_Box_Tamayoke, //!< Dodging
+        EGameTr_Box_Sandbag,  //!< Working the Bag
 
-        // @brief Set by WPADGetRadioSensitivity
-        // @details Used to identify the remote previously used
-        u8 mRadioSensitivity[6]; // at 0x1
-    };
+        EGameTr_Gol_Target,  //!< Target Practice
+        EGameTr_Gol_Nearpin, //!< Hitting the Green
+        EGameTr_Gol_Onepat,  //!< Putting
 
-    /**
-     * @brief Indices for the common save data bitfield
-     * @note Must be used with getTrainingUnlock, or getBitFlag(15 + bit)
-     */
-    enum ETrainingGames {
-        BIT_BOX_MITUCHI,  // Throwing Punches
-        BIT_BOX_TAMAYOKE, // Dodging
-        BIT_BOX_SANDBAG,  // Working the Bag
+        EGameTr_Bow_Gatetoshi,  //!< Spin Control
+        EGameTr_Bow_Nagitaoshi, //!< Power Throws
+        EGameTr_Bow_Spareget,   //!< Picking Up Spares
 
-        BIT_GOL_TARGET,  // Target Practice
-        BIT_GOL_NEARPIN, // Hitting the Green
-        BIT_GOL_ONEPAT,  // Putting
+        EGameTr_Bsb_Renzoku,  //!< Batting Practice
+        EGameTr_Bsb_Uchiwake, //!< Swing Control
+        EGameTr_Bsb_Homerun,  //!< Hitting Home Runs
 
-        BIT_BOW_GATETOSHI,  // Spin Control
-        BIT_BOW_NAGITAOSHI, // Power Throws
-        BIT_BOW_SPAREGET,   // Picking Up Spares
-
-        BIT_BSB_RENZOKU,  // Batting Practice
-        BIT_BSB_UCHIWAKE, // Swing Control
-        BIT_BSB_HOMERUN,  // Hitting Home Runs
-
-        BIT_TNS_KABEUCHI,  // Target Practice
-        BIT_TNS_NERAUCHII, // Timing Your Swing
-        BIT_TNS_RENZOKU,   // Returning Balls
+        EGameTr_Tns_Kabeuchi,  //!< Target Practice
+        EGameTr_Tns_Nerauchii, //!< Timing Your Swing
+        EGameTr_Tns_Renzoku,   //!< Returning Balls
     };
 
 public:
-    RPSportsSystemData(); // 8018ad34
-
     /**
-     * @brief Write data
-     * @address 8018a90c
+     * @brief Constructor
      */
-    void write(EGG::RamStream* stream) const;
-    /**
-     * @brief Read data
-     * @address 8018a9d0
-     */
-    void read(EGG::RamStream* stream);
+    RPSportsSystemData();
 
     /**
-     * @brief Get Mii history fields
-     * @address 8018abe0
-     * @param[out] miiIdxOut For storing mii index
-     * @param[out] radioSensOut For storing radio sensitivity
-     * @param[in] numPlayers Player count
-     * @param[in] playerIdx Index into history
-     */
-    void getMiiHistory(s8* miiIdxOut, u8* radioSensOut, u32 numPlayers,
-                       u32 playerIdx) const;
-    /**
-     * @brief Set Mii history fields
-     * @address 8018ab60
-     * @param[in] miiIdx Mii index
-     * @param[in] radioSens Radio sensitivity
-     * @param[in] numPlayers Player count
-     * @param[in] playerIdx Index into history
-     */
-    void setMiiHistory(const s8* miiIdx, const u8* radioSens, u32 numPlayers,
-                       u32 playerIdx);
-
-    /**
-     * @brief Check training unlock
-     * @note Training game bits start at 15, so this is equivalent to
-     * getBitFlag(15 + i)
-     * @see ETrainingGame
-     * @address 8018aa90
-     * @param i Training game
-     */
-    bool getTrainingUnlock(u8 i) const;
-    /**
-     * @brief Check training unlock
-     * @note Training game bits start at 15, so this is equivalent to
-     * setBitFlag(15 + i, val)
-     * @see ETrainingGame
-     * @address 8018aab8
-     * @param i Training game
-     * @param val New value
-     */
-    bool setTrainingUnlock(u8 i, bool val);
-
-    // @address 8018aaf0
-    bool getBitFlag(u8 i) const;
-    // @address 8018ab10
-    bool setBitFlag(u8 i, bool val);
-
-    // @address 8018ab40
-    u16 getLastFitnessTestTime() const;
-    // @address 8018ab40
-    void setLastFitnessTestTime(u16 time);
-
-    // @address 8018ab50
-    u8 getTotalFitnessTests() const;
-    // @address 8018ab58c
-    void setTotalFitnessTests(u8 num);
-
-    /**
-     * @brief Reset all data
-     * @address 8018ac64
+     * @brief Clears all data
      */
     void reset();
 
+    /**
+     * @brief Gets the old data for the specified player count and ID
+     *
+     * @param[out] pIndex Where the Mii index will be stored
+     * @param[out] pAddr Where the remote address will be stored
+     * @param numPlayers Player count (zero-indexed)
+     * @param player Player index
+     */
+    void getOldData(s8* pIndex, u8* pAddr, s32 numPlayers, s32 player) const;
+    /**
+     * @brief Sets the old data for the specified player count and ID
+     *
+     * @param index Mii index (official database)
+     * @param pAddr Remote address
+     * @param numPlayers Player count (zero-indexed)
+     * @param player Player index
+     */
+    void setOldData(s8 index, const u8* pAddr, s32 numPlayers, s32 player);
+
+    /**
+     * @brief Sets the total number of fitness tests taken
+     *
+     * @param count Number of fitness tests taken
+     */
+    void setPhysicalCount(u8 count);
+    /**
+     * @brief Gets the total number of fitness tests taken
+     */
+    u8 getPhysicalCount() const;
+
+    /**
+     * @brief Sets the last date on which a fitness test was taken
+     *
+     * @param date Date of last fitness test
+     */
+    void setPhysicalLastDate(RPTime16 date);
+    /**
+     * @brief Gets the last date on which a fitness test was taken
+     */
+    RPTime16 getPhysicalLastDate() const;
+
+    /**
+     * @brief Sets whether the specified training game's opening cutscene has
+     * played
+     *
+     * @param game Training game (@ref EGameTr)
+     * @param demo Whether the cutscene has played
+     */
+    void setGameOpenDemo(u8 game, bool demo);
+    /**
+     * @brief Tests whether the specified training game's opening cutscene has
+     * played
+     *
+     * @param game Training game (@ref EGameTr)
+     */
+    void isGameOpenDemo(u8 game) const;
+
+    /**
+     * @brief Sets whether the specified training game is available
+     *
+     * @param game Training game (@ref EGameTr)
+     * @param open Whether the game is available
+     */
+    void setGameOpen(u8 game, bool open);
+    /**
+     * @brief Tests whether the specified training game is available
+     *
+     * @param game Training game (@ref EGameTr)
+     */
+    void isGameOpen(u8 game) const;
+
+    /**
+     * @brief Deserializes data from a memory buffer
+     *
+     * @param rStrm Memory stream
+     */
+    void read(EGG::RamStream& rStrm);
+    /**
+     * @brief Serializes data to memory buffer
+     *
+     * @param rStrm Memory stream
+     */
+    void write(EGG::RamStream& rStrm) const;
+
 private:
-    // @brief Mii History for every possible amount of players
-    MiiHistory mHistory[1 + 2 + 3 + 4]; // at 0x0
+    /**
+     * @name Old data
+     * @brief Data from previous play session
+     * @note Contains data for each possible amount of players.
+     */
+    /**@{*/
+    //! Official database index
+    s8 mOldMiiIndex[1 + 2 + 3 + 4]; // at 0x0
+    //! Remote address
+    u8 mOldRemoteAddr[1 + 2 + 3 + 4][WPAD_ADDR_LEN]; // at 0xA
+    /**@}*/
 
-    // @brief Total fitness tests across all Miis
-    u8 mTotalFitnessTests; // at 0x46
-    // @brief Last fitness test by any Mii
-    u16 mLastFitnessTestTime; // at 0x48
+    //! Total number of fitness tests taken
+    u8 mPhysicalCount; // at 0x46
+    //! Last fitness test taken by any Mii
+    RPTime16 mPhysicalLastDate; // at 0x48
 
+    //! @unused
     u16 SHORT_0x4A;
+    //! @unused
     u8 BYTE_0x4C;
 
-    // @brief Common save data bitfield, used primarily for training games
-    u32 mBitfield;
+    //! @brief Training game bitflags
+    //! @details The upper half holds the open demo flags, while the lower half
+    //! holds the open flags.
+    u32 mTrainingFlags; // at 0x50
 
+    //! @unused
     u32 WORD_0x54;
 };
+
+//! @}
 
 #endif

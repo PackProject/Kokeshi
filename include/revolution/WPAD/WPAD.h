@@ -8,6 +8,8 @@ extern "C" {
 //! @addtogroup rvl_wpad
 //! @{
 
+#define WPAD_ADDR_LEN 6
+
 typedef void (*WPADCallback)(s32 chan, s32 result);
 
 typedef enum {

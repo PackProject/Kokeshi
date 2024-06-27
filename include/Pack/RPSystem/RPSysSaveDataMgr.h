@@ -327,7 +327,7 @@ private:
     //! Last NAND operation result
     s32 mNandErrorCode; // at 0xC
     //! @unused
-    UNKWORD WORD_0x10;
+    u32 WORD_0x10;
     //! NANDCheck result
     u32 mNandCheckAnswer; // at 0x14
 
