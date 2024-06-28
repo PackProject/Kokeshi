@@ -109,6 +109,8 @@ private:
 
     //! Fitness tests include three games
     static const u32 scPhysicalNumEvent = 3;
+    //! Fitness test history includes the most recent test and the previous 90
+    static const u32 scPhysicalHistoryLength = 90 + 1;
 
     /**
      * @name Common
@@ -235,14 +237,14 @@ private:
     u8 mPhysicalLastEvents[scPhysicalNumEvent]; // at 0x2AC
 
     //! Best fitness stat sum in all training games
-    u16 mPhysicalBestStatSums[ESportID_Max][EGameID_Max]; // at 0x2B0
+    u16 mPhysicalStatSumBests[ESportID_Max][EGameID_Max]; // at 0x2B0
 
     //! Date of the last completed fitness test
     RPTime16 mPhysicalEndLastDate; // at 0x2CE
     //! Fitness stat sums of the most recent fitness test, and the previous 90
-    u16 mPhysicalHistoryStatSums[90 + 1];
+    u16 mPhysicalStatSumHistory[scPhysicalHistoryLength];
     //! Dates of the most recent fitness test, and the previous 90
-    RPTime16 mPhysicalHistoryDates[90 + 1];
+    RPTime16 mPhysicalDateHistory[scPhysicalHistoryLength];
 
     //! Date of the last started fitness test
     RPTime16 mPhysicalBeginLastDate; // at 0x43C
