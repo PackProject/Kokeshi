@@ -158,7 +158,7 @@ private:
     //! @brief Training game bitflags
     //! @details The upper half holds the open demo flags, while the lower half
     //! holds the open flags.
-    u32 mTrainingFlags; // at 0x50
+    EGG::TBitFlag<u32> mTrainingFlags; // at 0x50
 
     //! @unused
     u32 WORD_0x54;

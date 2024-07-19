@@ -17,8 +17,9 @@ void IScene::Configure() {
     RPGrpScreen* pScreen = new RPGrpScreen();
     K_ASSERT(pScreen != nullptr);
     pScreen->SetCanvasMode(RPGrpScreen::CANVASMODE_0);
-    RP_GET_INSTANCE(RPGrpRenderer)->CreateView2D(1, pScreen);
-    RP_GET_INSTANCE(RPGrpRenderer)->CorrectView();
+
+    RPGrpRenderer::GetCurrent()->CreateView2D(1, pScreen);
+    RPGrpRenderer::GetCurrent()->CorrectView();
 
     // User state function
     OnConfigure();

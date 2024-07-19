@@ -6,8 +6,6 @@
 class RPGrpScreen;
 
 class RPGrpRenderer {
-    RP_SINGLETON_DECL(RPGrpRenderer);
-
 public:
     enum EDrawPass {
         EDrawPass_DrawBefore,
@@ -44,6 +42,9 @@ public:
         sDrawPass = pass;
     }
 
+    static RPGrpRenderer* GetCurrent() {
+        return spCurrent;
+    }
     static RPGrpScreen* GetActiveScreen() {
         return sActiveScreen;
     }
@@ -58,6 +59,7 @@ private:
 
     static EDrawPass sDrawPass;
     static u8 sCurrentViewID;
+    static RPGrpRenderer* spCurrent;
     static RPGrpScreen* sActiveScreen;
 };
 

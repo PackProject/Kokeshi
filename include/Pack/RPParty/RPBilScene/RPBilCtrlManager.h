@@ -23,7 +23,6 @@ public:
     }
 
 private:
-    char _00[0x4];
     RPBilCtrl* PTR_0x4;
 };
 

@@ -16,7 +16,7 @@ public:
     static const int BALL_MAX = 10;
 
 private:
-    char _00[0x7C];
+    char _04[0x7C - 0x4];
     RPBilBall* mBalls[BALL_MAX]; // at 0x7C
 };
 
