@@ -50,12 +50,12 @@ struct ModuleInfo {
 };
 
 //! Information about the currently loaded Kamek module
-ModuleInfo sModuleInfo : 0x80003200;
+ModuleInfo CURRENT_MODULE : 0x80003200;
 
 //! Path to the module's code binary
-static const char* scModulePath = KOKESHI_MODULE_PATH ".bin";
+static const char* BINARY_PATH = KOKESHI_MODULE_PATH ".bin";
 //! Path to the module's mapfile
-static const char* scMapfilePath = KOKESHI_MODULE_PATH ".map";
+static const char* MAPFILE_PATH = KOKESHI_MODULE_PATH ".map";
 
 /**
  * @brief Allocates memory

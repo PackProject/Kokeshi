@@ -37,7 +37,7 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
  * @brief Loads Kamek module and applies patches
  */
 void Load() {
-    kamek::loadKamekBinaryFromDisc(&cLoaderFunctions, scModulePath);
+    kamek::loadKamekBinaryFromDisc(&cLoaderFunctions, BINARY_PATH);
 }
 KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load), // Wii Sports
                 KM_BRANCH(0x80182d6c, Load), // Wii Play

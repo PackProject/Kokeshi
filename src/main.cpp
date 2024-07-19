@@ -10,7 +10,7 @@ void KokeshiMain() {
     // Setup libkiwi debugging utilities
     kiwi::Nw4rException::CreateInstance();
     kiwi::MapFile::CreateInstance();
-    kiwi::MapFile::GetInstance().Open(kokeshi::scMapfilePath,
+    kiwi::MapFile::GetInstance().Open(kokeshi::MAPFILE_PATH,
                                       kiwi::MapFile::ELinkType_Relocatable);
 
     kiwi::GeckoDebugger::CreateInstance();

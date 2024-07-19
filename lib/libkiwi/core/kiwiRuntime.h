@@ -86,13 +86,13 @@ const void* GetStackEnd() {
  * @brief Gets the start address of the module ELF
  */
 const void* GetModuleStart() {
-    return kokeshi::sModuleInfo.start;
+    return kokeshi::CURRENT_MODULE.start;
 }
 /**
  * @brief Gets the size of the module ELF
  */
 u32 GetModuleSize() {
-    return kokeshi::sModuleInfo.size;
+    return kokeshi::CURRENT_MODULE.size;
 }
 /**
  * @brief Gets the end address of the module ELF
