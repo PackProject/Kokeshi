@@ -132,7 +132,7 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
     return success;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                                       // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x80184ba4, SceneCreator, ChangeSceneAfterFade), // Wii Sports
                 KM_BRANCH_MF(0x8018459c, SceneCreator, ChangeSceneAfterFade), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                                      // Wii Sports Resort
 // clang-format on
@@ -153,7 +153,7 @@ const char* SceneCreator::GetSceneDirectory(s32 id) const {
     return pInfo->dir;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                                    // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x80184758, SceneCreator, GetSceneDirectory), // Wii Sports
                 KM_BRANCH_MF(0x80184124, SceneCreator, GetSceneDirectory), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                                   // Wii Sports Resort
 // clang-format on
@@ -174,7 +174,7 @@ ECreateType SceneCreator::GetSceneCreateType(s32 id) const {
     return pInfo->create;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                                     // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x801845f4, SceneCreator, GetSceneCreateType), // Wii Sports
                 KM_BRANCH_MF(0x8018402c, SceneCreator, GetSceneCreateType), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                                    // Wii Sports Resort
 // clang-format on
@@ -187,7 +187,7 @@ EExitType SceneCreator::GetSceneExitType(s32 id) const {
     return pInfo->exit;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                                   // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x80184558, SceneCreator, GetSceneExitType), // Wii Sports
                 KM_BRANCH_MF(0x80183f90, SceneCreator, GetSceneExitType), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                                  // Wii Sports Resort
 // clang-format on
@@ -201,7 +201,7 @@ bool SceneCreator::GetSceneCommonSound(s32 id) const {
     return pInfo->common;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                                      // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x801844bc, SceneCreator, GetSceneCommonSound), // Wii Sports
                 KM_BRANCH_MF(0x80183ef4, SceneCreator, GetSceneCommonSound), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                                     // Wii Sports Resort
 // clang-format on
@@ -239,7 +239,7 @@ RPSysScene* SceneCreator::Create(s32 id) {
     return scene;
 }
 // clang-format off
-KOKESHI_BY_PACK(KOKESHI_NOTIMPLEMENTED,                         // Wii Sports
+KOKESHI_BY_PACK(KM_BRANCH_MF(0x80184838, SceneCreator, Create), // Wii Sports
                 KM_BRANCH_MF(0x80184230, SceneCreator, Create), // Wii Play
                 KOKESHI_NOTIMPLEMENTED);                        // Wii Sports Resort
 // clang-format on

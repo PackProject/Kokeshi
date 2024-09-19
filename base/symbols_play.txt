@@ -2916,3 +2916,7 @@ _e_dol_data=0x8035f91f
 sCurrentHeap__Q23EGG4Heap=0x8043bc30
 mConfigData__Q23EGG10BaseSystem=0x8043bc40
 sUnkStruct__10RPSysScene=0x8043c460
+__ct__Q34nw4r2ut17TextWriterBase<c>Fv=0x8000c76c
+Print__Q34nw4r2ut17TextWriterBase<c>FPCci=0x8000cb04
+__dt__Q34nw4r2ut10CharWriterFv=0x8000b1ac
+Printf__15RPSysTextWriterFffPCce=0x8018f0b4
