@@ -175,6 +175,8 @@ private:
 };
 
 namespace {
+//! @addtogroup libkiwi_prim
+//! @{
 
 /**
  * @brief Optional construction helper
@@ -194,6 +196,7 @@ template <typename T> Optional<T> MakeOptional(const T* pValue) {
     return pValue ? Optional<T>(*pValue) : kiwi::nullopt;
 }
 
+//! @}
 } // namespace
 //! @}
 } // namespace kiwi

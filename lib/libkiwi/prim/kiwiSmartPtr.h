@@ -183,7 +183,7 @@ namespace {
 /**
  * @brief Smart pointer construction helper
  */
-template <typename T> SmartPtr<T> MakeSmartPtr() {
+template <typename T> inline SmartPtr<T> MakeSmartPtr() {
     return SmartPtr<T>(new T());
 }
 

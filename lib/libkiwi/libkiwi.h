@@ -9,6 +9,7 @@
 #include <libkiwi/core/kiwiIBinary.h>
 #include <libkiwi/core/kiwiIScene.h>
 #include <libkiwi/core/kiwiIStream.h>
+#include <libkiwi/core/kiwiJSON.h>
 #include <libkiwi/core/kiwiMemStream.h>
 #include <libkiwi/core/kiwiMemoryMgr.h>
 #include <libkiwi/core/kiwiMessage.h>
@@ -45,6 +46,7 @@
 #include <libkiwi/prim/kiwiHashMap.h>
 #include <libkiwi/prim/kiwiLinkList.h>
 #include <libkiwi/prim/kiwiOptional.h>
+#include <libkiwi/prim/kiwiPair.h>
 #include <libkiwi/prim/kiwiSTL.h>
 #include <libkiwi/prim/kiwiSmartPtr.h>
 #include <libkiwi/prim/kiwiString.h>

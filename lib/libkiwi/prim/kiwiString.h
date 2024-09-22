@@ -73,7 +73,7 @@ public:
      *
      * @param c Character
      */
-    StringImpl(char c) : mpBuffer(nullptr), mCapacity(0), mLength(0) {
+    explicit StringImpl(char c) : mpBuffer(nullptr), mCapacity(0), mLength(0) {
         Assign(c);
     }
 
@@ -108,7 +108,8 @@ public:
     }
 
     /**
-     * @brief Gets the length of the underlying string (not including term)
+     * @brief Gets the length of the underlying string
+     * @note Null terminator is not included in the length
      */
     u32 Length() const {
         return mLength;
@@ -151,9 +152,22 @@ public:
     }
 
     /**
-     * @brief Clears string buffer (yields empty string)
+     * @brief Clears string data, but does not change the buffer size
      */
-    void Clear();
+    void Clear() {
+        mLength = 0;
+    }
+
+    /**
+     * @brief Reserves string buffer of specified size
+     *
+     * @param n Number of characters to reserve (ignoring null terminator)
+     */
+    void Reserve(u32 n);
+    /**
+     * @brief Shrinks buffer to fit string contents
+     */
+    void Shrink();
 
     /**
      * @brief Generates substring of this string
@@ -258,17 +272,6 @@ public:
     }
 
 private:
-    /**
-     * @brief Reserves string buffer of specified size
-     *
-     * @param n Number of characters to reserve (ignoring null terminator)
-     */
-    void Reserve(u32 n);
-    /**
-     * @brief Shrinks buffer to fit string contents
-     */
-    void Shrink();
-
     /**
      * @brief Assigns data to string
      *

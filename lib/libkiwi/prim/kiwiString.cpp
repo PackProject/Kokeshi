@@ -25,24 +25,41 @@ template <typename T> const T* StrStr(const T* pStr1, const T* pStr2);
 } // namespace
 
 /**
- * @brief Clears string buffer (yields empty string)
+ * @brief Reserves string buffer of specified size
+ *
+ * @param n Number of characters to reserve (ignoring null terminator)
  */
-template <typename T> void StringImpl<T>::Clear() {
-    // Don't delete static memory
-    if (mpBuffer == scEmptyCStr) {
+template <typename T> void StringImpl<T>::Reserve(u32 n) {
+    // Already have enough space
+    if (mCapacity >= n + 1) {
         return;
     }
 
-    // Delete string buffer
-    delete[] mpBuffer;
-    mpBuffer = nullptr;
+    // Reallocate buffer
+    T* pBuffer = new T[n + 1];
 
-    // Update size/length
+    // Copy existing data
+    StrNCpy(pBuffer, mpBuffer, mLength);
+    pBuffer[mLength] = '\0';
+
+    // Delete old data
+    if (mpBuffer != scEmptyCStr) {
+        delete[] mpBuffer;
+    }
+
+    // Set new configuration
+    mpBuffer = pBuffer;
+    mCapacity = n + 1;
+}
+
+/**
+ * @brief Shrinks buffer to fit string contents
+ */
+template <typename T> void StringImpl<T>::Shrink() {
+    K_ASSERT(mCapacity > Length());
+
     mCapacity = 0;
-    mLength = 0;
-
-    // Set empty string
-    mpBuffer = const_cast<T*>(scEmptyCStr);
+    Reserve(Length());
 }
 
 /**
@@ -253,44 +270,6 @@ template <typename T> bool StringImpl<T>::operator==(const T* pStr) const {
 
     // Compare string data
     return StrNCmp(mpBuffer, pStr, mLength) == 0;
-}
-
-/**
- * @brief Reserves string buffer of specified size
- *
- * @param n Number of characters to reserve (ignoring null terminator)
- */
-template <typename T> void StringImpl<T>::Reserve(u32 n) {
-    // Already have enough space
-    if (mCapacity >= n + 1) {
-        return;
-    }
-
-    // Reallocate buffer
-    T* pBuffer = new T[n + 1];
-
-    // Copy existing data
-    StrNCpy(pBuffer, mpBuffer, mLength);
-    pBuffer[mLength] = '\0';
-
-    // Delete old data
-    if (mpBuffer != scEmptyCStr) {
-        delete[] mpBuffer;
-    }
-
-    // Set new configuration
-    mpBuffer = pBuffer;
-    mCapacity = n + 1;
-}
-
-/**
- * @brief Shrinks buffer to fit string contents
- */
-template <typename T> void StringImpl<T>::Shrink() {
-    K_ASSERT(mCapacity > Length());
-
-    mCapacity = 0;
-    Reserve(Length());
 }
 
 /**
