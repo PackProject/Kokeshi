@@ -503,6 +503,14 @@ namespace detail {}
 
 //! @}
 
+//! @addtogroup libkiwi
+//! @{
+
+//! @brief libkiwi JSON functionality
+namespace json {}
+
+//! @}
+
 } // namespace kiwi
 
 //! @}
