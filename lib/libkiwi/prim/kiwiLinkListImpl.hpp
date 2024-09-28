@@ -17,7 +17,8 @@ namespace kiwi {
  * @return Iterator to new node
  */
 template <typename T>
-TList<T>::Iterator TList<T>::Insert(Iterator iter, TListNode<T>* pNode) {
+K_INLINE typename TList<T>::Iterator TList<T>::Insert(Iterator iter,
+                                                      TListNode<T>* pNode) {
     K_ASSERT(pNode != nullptr);
 
     TListNode<T>* pNext = iter.mpNode;
@@ -41,7 +42,8 @@ TList<T>::Iterator TList<T>::Insert(Iterator iter, TListNode<T>* pNode) {
  * @param pNode Node to erase
  * @return Iterator to next node
  */
-template <typename T> TList<T>::Iterator TList<T>::Erase(TListNode<T>* pNode) {
+template <typename T>
+K_INLINE typename TList<T>::Iterator TList<T>::Erase(TListNode<T>* pNode) {
     K_ASSERT(pNode != nullptr);
 
     TListNode<T>* pNext = pNode->mpNext;
@@ -69,7 +71,8 @@ template <typename T> TList<T>::Iterator TList<T>::Erase(TListNode<T>* pNode) {
  * @return Iterator to end of range
  */
 template <typename T>
-TList<T>::Iterator TList<T>::Erase(Iterator begin, Iterator end) {
+K_INLINE typename TList<T>::Iterator TList<T>::Erase(Iterator begin,
+                                                     Iterator end) {
     TListNode<T>* pCurr = begin.mpNode;
     TListNode<T>* pEnd = end.mpNode;
 

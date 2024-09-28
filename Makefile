@@ -18,7 +18,7 @@
 #
 # To handle this in your code, expect preprocessor definitions of the format
 # PACK_{NAME}, (i.e. PACK_SPORTS, PACK_RESORT). 
-PACK ?= play
+PACK ?= resort
 
 # Pass NDEBUG=1 when running make to disable debug features.
 #

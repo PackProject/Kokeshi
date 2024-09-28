@@ -2,6 +2,8 @@
 #include <Pack/RPKernel.h>
 #include <libkiwi.h>
 
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
+
 namespace kiwi {
 
 //! Text offset for shadow/outline
@@ -127,3 +129,5 @@ void DebugPrint::PrintImpl(f32 x, f32 y, f32 scale, bool center, Color color,
 }
 
 } // namespace kiwi
+
+#endif

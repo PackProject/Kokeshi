@@ -4,6 +4,9 @@
 #include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
 
+// TODO: PrintfZeroCenter needs impl. for WS2
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
+
 namespace kiwi {
 //! @addtogroup libkiwi_debug
 //! @{
@@ -77,5 +80,7 @@ private:
 
 //! @}
 } // namespace kiwi
+
+#endif
 
 #endif

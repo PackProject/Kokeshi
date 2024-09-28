@@ -95,7 +95,7 @@ GOOD_HASHES = {
     "play": [
         "0da5e7e51135219f580ad011d1b635bc83569bb9"  # Wii Play (US, Rev 1)
     ],
-    "sports2": [
+    "resort": [
         "e3e22a9de62f6e11ded52e9a7e6933892963b219"  # Wii Sports Resort (US)
     ]
 }

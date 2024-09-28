@@ -29,7 +29,8 @@ RPSysScene* GetCurrentScene() {
  */
 TList<ISceneHook>& SceneHookMgr::GetActiveHooks() {
     K_ASSERT_EX(IsPackScene(), "Only game scenes have hooks");
-    return mHookLists[RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID()];
+    s32 id = RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID();
+    return mHookLists[id];
 }
 
 /**
@@ -79,9 +80,9 @@ void SceneHookMgr::DoEnter() {
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_CALL(0x8018532c, SceneHookMgr::DoEnter), // Wii Sports
-                KM_CALL(0x80184d24, SceneHookMgr::DoEnter), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                    // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x8018532c, SceneHookMgr::DoEnter),  // Wii Sports
+                KM_CALL(0x80184d24, SceneHookMgr::DoEnter),  // Wii Play
+                KM_CALL(0x8022fae4, SceneHookMgr::DoEnter)); // Wii Sports Resort
 // clang-format on
 
 /**
@@ -109,12 +110,12 @@ void SceneHookMgr::DoReset() {
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_CALL(0x801852d8, SceneHookMgr::DoReset), // Wii Sports
-                KM_CALL(0x80184cd0, SceneHookMgr::DoReset), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                    // Wii Sports Resort
-KOKESHI_BY_PACK(KM_CALL(0x801853d4, SceneHookMgr::DoReset), // Wii Sports
-                KM_CALL(0x80184dcc, SceneHookMgr::DoReset), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                    // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x801852d8, SceneHookMgr::DoReset),  // Wii Sports
+                KM_CALL(0x80184cd0, SceneHookMgr::DoReset),  // Wii Play
+                KM_CALL(0x8022f9ac, SceneHookMgr::DoReset)); // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x801853d4, SceneHookMgr::DoReset),  // Wii Sports
+                KM_CALL(0x80184dcc, SceneHookMgr::DoReset),  // Wii Play
+                KM_CALL(0x8022fb54, SceneHookMgr::DoReset)); // Wii Sports Resort
 // clang-format on
 
 /**
@@ -132,9 +133,9 @@ void SceneHookMgr::DoLoadResource() {
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_BRANCH(0x8018695c, SceneHookMgr::DoLoadResource), // Wii Sports
-                KM_BRANCH(0x801861fc, SceneHookMgr::DoLoadResource), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                             // Wii Sports Resort
+KOKESHI_BY_PACK(KM_BRANCH(0x8018695c, SceneHookMgr::DoLoadResource),  // Wii Sports
+                KM_BRANCH(0x801861fc, SceneHookMgr::DoLoadResource),  // Wii Play
+                KM_BRANCH(0x802311ac, SceneHookMgr::DoLoadResource)); // Wii Sports Resort
 // clang-format on
 
 /**
@@ -164,9 +165,9 @@ void SceneHookMgr::DoCalculate() {
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_BRANCH(0x80185868, SceneHookMgr::DoCalculate), // Wii Sports
-                KM_BRANCH(0x801851f0, SceneHookMgr::DoCalculate), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                          // Wii Sports Resort
+KOKESHI_BY_PACK(KM_BRANCH(0x80185868, SceneHookMgr::DoCalculate),  // Wii Sports
+                KM_BRANCH(0x801851f0, SceneHookMgr::DoCalculate),  // Wii Play
+                KM_BRANCH(0x8023016c, SceneHookMgr::DoCalculate)); // Wii Sports Resort
 // clang-format on
 
 /**
@@ -184,9 +185,9 @@ void SceneHookMgr::DoExit() {
     }
 }
 // clang-format off
-KOKESHI_BY_PACK(KM_BRANCH(0x80185000, SceneHookMgr::DoExit), // Wii Sports
-                KM_BRANCH(0x801849f8, SceneHookMgr::DoExit), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                     // Wii Sports Resort
+KOKESHI_BY_PACK(KM_BRANCH(0x80185000, SceneHookMgr::DoExit),  // Wii Sports
+                KM_BRANCH(0x801849f8, SceneHookMgr::DoExit),  // Wii Play
+                KM_BRANCH(0x8022f6f4, SceneHookMgr::DoExit)); // Wii Sports Resort
 // clang-format on
 
 /**
@@ -206,7 +207,7 @@ void SceneHookMgr::DoPause() {
 // clang-format off
 KOKESHI_BY_PACK(KM_BRANCH(0x801b68ec, SceneHookMgr::DoPause), // Wii Sports
                 KM_BRANCH(0x801b3174, SceneHookMgr::DoPause), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                      // Wii Sports Resort
+                );                                            // Wii Sports Resort
 // clang-format on
 
 /**
@@ -226,7 +227,7 @@ void SceneHookMgr::DoUnPause() {
 // clang-format off
 KOKESHI_BY_PACK(KM_BRANCH(0x801b6840, SceneHookMgr::DoUnPause), // Wii Sports
                 KM_BRANCH(0x801b30c8, SceneHookMgr::DoUnPause), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);                        // Wii Sports Resort
+                );                                              // Wii Sports Resort
 // clang-format on
 
 } // namespace kiwi

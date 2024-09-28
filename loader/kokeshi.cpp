@@ -29,9 +29,11 @@ void Report(const char* pMsg, ...) {
     std::vprintf(pMsg, list);
     va_end(list);
 }
-KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
-                KM_BRANCH(0x80183b50, Report), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);       // Wii Sports Resort
+// clang-format off
+KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report),  // Wii Sports
+                KM_BRANCH(0x80183b50, Report),  // Wii Play
+                KM_BRANCH(0x80235cc8, Report)); // Wii Sports Resort
+// clang-format on
 
 /**
  * @brief Loads Kamek module and applies patches
@@ -39,9 +41,11 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80183f18, Report), // Wii Sports
 void Load() {
     kamek::loadKamekBinaryFromDisc(&cLoaderFunctions, BINARY_PATH);
 }
-KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load), // Wii Sports
-                KM_BRANCH(0x80182d6c, Load), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);     // Wii Sports Resort
+// clang-format off
+KOKESHI_BY_PACK(KM_BRANCH(0x80183098, Load),  // Wii Sports
+                KM_BRANCH(0x80182d6c, Load),  // Wii Play
+                KM_BRANCH(0x8022d980, Load)); // Wii Sports Resort
+// clang-format on
 
 } // namespace
 

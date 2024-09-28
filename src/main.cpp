@@ -25,12 +25,17 @@ void KokeshiMain() {
     // ====================================================
 
     // Enter first scene
+#ifndef PACK_RESORT
     kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
         kiwi::ESceneID_RPSysBootScene);
+#else
+    kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
+        kiwi::ESceneID_Sp2StrapScene);
+#endif
 
     RP_GET_INSTANCE(RPSysSystem)->mainLoop(); // Enter game loop
     ASSERT(false); // Main function should never return
 }
-KOKESHI_BY_PACK(KM_CALL(0x80183b6c, KokeshiMain), // Wii Sports
-                KM_CALL(0x80183784, KokeshiMain), // Wii Play
-                KOKESHI_NOTIMPLEMENTED);          // Wii Sports Resort
+KOKESHI_BY_PACK(KM_CALL(0x80183b6c, KokeshiMain),  // Wii Sports
+                KM_CALL(0x80183784, KokeshiMain),  // Wii Play
+                KM_CALL(0x8022df10, KokeshiMain)); // Wii Sports Resort

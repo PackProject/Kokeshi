@@ -13,7 +13,7 @@ namespace kiwi {
  * @brief Pre-increment operator
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::ConstIterator&
+K_INLINE typename TMap<TKey, TValue>::ConstIterator&
 TMap<TKey, TValue>::ConstIterator::operator++() {
     // Can't iterate
     if (mpIter == nullptr) {
@@ -54,7 +54,8 @@ TMap<TKey, TValue>::ConstIterator::operator++() {
  * @param rOther Map to copy
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::TMap(const TMap& rOther) : mCapacity(rOther.mCapacity) {
+K_INLINE TMap<TKey, TValue>::TMap(const TMap& rOther)
+    : mCapacity(rOther.mCapacity) {
     K_ASSERT(mCapacity > 0);
     K_ASSERT(mCapacity < HASH_MAX);
 
@@ -76,7 +77,7 @@ TMap<TKey, TValue>::TMap(const TMap& rOther) : mCapacity(rOther.mCapacity) {
  * @return Success
  */
 template <typename TKey, typename TValue>
-bool TMap<TKey, TValue>::Remove(const TKey& rKey, TValue* pRemoved) {
+K_INLINE bool TMap<TKey, TValue>::Remove(const TKey& rKey, TValue* pRemoved) {
     Bucket* pBucket = Search(rKey);
 
     // Can't remove, doesn't exist
@@ -101,7 +102,8 @@ bool TMap<TKey, TValue>::Remove(const TKey& rKey, TValue* pRemoved) {
  * @param rKey Key
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::Bucket* TMap<TKey, TValue>::Search(const TKey& rKey) const {
+K_INLINE typename TMap<TKey, TValue>::Bucket*
+TMap<TKey, TValue>::Search(const TKey& rKey) const {
     // Calculate bucket index
     u32 i = Hash(rKey) % mCapacity;
 
@@ -127,7 +129,8 @@ TMap<TKey, TValue>::Bucket* TMap<TKey, TValue>::Search(const TKey& rKey) const {
  * @param rKey Key
  */
 template <typename TKey, typename TValue>
-TMap<TKey, TValue>::Bucket& TMap<TKey, TValue>::Create(const TKey& rKey) {
+K_INLINE typename TMap<TKey, TValue>::Bucket&
+TMap<TKey, TValue>::Create(const TKey& rKey) {
     // Calculate bucket index
     u32 i = Hash(rKey) % mCapacity;
 

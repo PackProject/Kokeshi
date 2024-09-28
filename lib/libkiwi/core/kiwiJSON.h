@@ -372,7 +372,7 @@ private:
  *
  * @param rStr JSON string
  */
-inline Element loads(const String& rStr) {
+K_INLINE Element loads(const String& rStr) {
     Reader reader;
     reader.Decode(rStr);
     return reader.Get();
@@ -385,7 +385,7 @@ inline Element loads(const String& rStr) {
  * @tparam T Object type
  * @param rStr JSON string
  */
-template <typename T> inline Optional<T> loads(const String& rStr) {
+template <typename T> K_INLINE Optional<T> loads(const String& rStr) {
     Reader reader;
     reader.Decode(rStr);
 
@@ -412,7 +412,7 @@ template <typename T> inline Optional<T> loads(const String& rStr) {
  * @param rElem JSON element
  * @param pretty Whether to pretty-print
  */
-inline String dumps(const Element& rElem, bool pretty = false) {
+K_INLINE String dumps(const Element& rElem, bool pretty = false) {
     Writer writer;
     writer.Encode(rElem);
     return writer.Get();
@@ -425,7 +425,7 @@ inline String dumps(const Element& rElem, bool pretty = false) {
  * @param rObj Object
  * @param pretty Whether to pretty-print
  */
-inline String dumps(const ISerializable& rObj, bool pretty = false) {
+K_INLINE String dumps(const ISerializable& rObj, bool pretty = false) {
     Element elem;
     rObj.Serialize(elem);
 

@@ -43,19 +43,19 @@ Support for Wii Music and Wii Fit, as well as other revisions of supported games
 1. For each game that you want to build for, extract its filesystem using Dolphin Emulator.
    1. This can be done by right-clicking the game and selecting `Properties > Filesystem > Disc > Extract Entire Disc...`
    2. When prompted by Dolphin, select the directory corresponding to the game:
-        | Name              | Path            |
-        | ----------------- | --------------- |
-        | Wii Sports        | `romfs/sports`  |
-        | Wii Play          | `romfs/play`    |
-        | Wii Sports Resort | `romfs/sports2` |
+        | Name              | Path           |
+        | ----------------- | -------------- |
+        | Wii Sports        | `romfs/sports` |
+        | Wii Play          | `romfs/play`   |
+        | Wii Sports Resort | `romfs/resort` |
     3. If done correctly, this will create a `DATA` folder in the corresponding `romfs` game folder. 
 
 2. For each game that you want to build for, copy `DATA/sys/main.dol` from its `romfs` folder to the `base/` directory:
-    | Name              | Path                       |
-    | ----------------- | -------------------------- |
-    | Wii Sports        | `base/baserom_sports.dol`  |
-    | Wii Play          | `base/baserom_play.dol`    |
-    | Wii Sports Resort | `base/baserom_sports2.dol` |
+    | Name              | Path                      |
+    | ----------------- | ------------------------- |
+    | Wii Sports        | `base/baserom_sports.dol` |
+    | Wii Play          | `base/baserom_play.dol`   |
+    | Wii Sports Resort | `base/baserom_resort.dol` |
 
 #### Makefile
 The `Makefile` provides various options for your project. You can choose which games to build your mod for by modifying the `PACK` variable. You can even write multiple names to build for multiple games!

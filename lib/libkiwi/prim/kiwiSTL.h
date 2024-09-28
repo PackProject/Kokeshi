@@ -38,6 +38,14 @@ bool islower(char c);
 char* strchr(const char* pStr, char c);
 
 /**
+ * @brief Finds the first occurrence of a sequence in a string
+ *
+ * @param pStr String to search
+ * @param pSeq Sequence to search for
+ */
+const char* strstr(const char* pStr, const char* pSeq);
+
+/**
  * @brief Determines string length (up to the specified limit)
  * @note Null terminator not included
  *

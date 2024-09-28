@@ -14,7 +14,7 @@ namespace kiwi {
 /**
  * @brief Clears vector contents
  */
-template <typename T> void TVector<T>::Clear() {
+template <typename T> K_INLINE void TVector<T>::Clear() {
     K_ASSERT(mSize == 0 || mpData != nullptr);
 
     for (u32 i = 0; i < mSize; i++) {
@@ -30,7 +30,8 @@ template <typename T> void TVector<T>::Clear() {
  * @param rElem New element
  * @param pos Element position
  */
-template <typename T> void TVector<T>::Insert(const T& rElem, u32 pos) {
+template <typename T>
+K_INLINE void TVector<T>::Insert(const T& rElem, u32 pos) {
     K_ASSERT(pos <= mSize);
 
     // Make space for one extra element
@@ -55,7 +56,7 @@ template <typename T> void TVector<T>::Insert(const T& rElem, u32 pos) {
  * @param rElem Element to remove
  * @return Whether the element existed and was removed
  */
-template <typename T> bool TVector<T>::Remove(const T& rElem) {
+template <typename T> K_INLINE bool TVector<T>::Remove(const T& rElem) {
     K_ASSERT(mSize == 0 || mpData != nullptr);
 
     // Linear search for the target
@@ -75,7 +76,7 @@ template <typename T> bool TVector<T>::Remove(const T& rElem) {
  *
  * @param pos Element position
  */
-template <typename T> void TVector<T>::RemoveAt(u32 pos) {
+template <typename T> K_INLINE void TVector<T>::RemoveAt(u32 pos) {
     K_ASSERT(pos < mSize);
     K_ASSERT(mpData != nullptr);
 
@@ -96,14 +97,14 @@ template <typename T> void TVector<T>::RemoveAt(u32 pos) {
  *
  * @param rElem New element
  */
-template <typename T> void TVector<T>::PushBack(const T& rElem) {
+template <typename T> K_INLINE void TVector<T>::PushBack(const T& rElem) {
     Insert(rElem, mSize);
 }
 
 /**
  * @brief Removes the last element from the vector
  */
-template <typename T> void TVector<T>::PopBack() {
+template <typename T> K_INLINE void TVector<T>::PopBack() {
     K_ASSERT(mSize > 0);
     Remove(mSize - 1);
 }
@@ -113,7 +114,7 @@ template <typename T> void TVector<T>::PopBack() {
  *
  * @param capacity New capacity
  */
-template <typename T> void TVector<T>::Reserve(u32 capacity) {
+template <typename T> K_INLINE void TVector<T>::Reserve(u32 capacity) {
     // All good!
     if (mCapacity >= capacity) {
         return;
@@ -139,7 +140,8 @@ template <typename T> void TVector<T>::Reserve(u32 capacity) {
  *
  * @param rOther Vector to copy from
  */
-template <typename T> void TVector<T>::CopyFrom(const TVector& rOther) {
+template <typename T>
+K_INLINE void TVector<T>::CopyFrom(const TVector& rOther) {
     // Destroy existing contents
     Clear();
 
@@ -153,7 +155,7 @@ template <typename T> void TVector<T>::CopyFrom(const TVector& rOther) {
  *
  * @param rOther Vector to move
  */
-template <typename T> void TVector<T>::MoveFrom(TVector&& rOther) {
+template <typename T> K_INLINE void TVector<T>::MoveFrom(TVector&& rOther) {
     // Destroy contents & free buffer
     Clear();
     delete mpData;

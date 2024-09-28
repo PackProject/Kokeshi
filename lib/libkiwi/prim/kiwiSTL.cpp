@@ -61,6 +61,49 @@ char* strchr(const char* pStr, char c) {
 }
 
 /**
+ * @brief Finds the first occurrence of a sequence in a string
+ *
+ * @param pStr String to search
+ * @param pSeq Sequence to search for
+ */
+const char* strstr(const char* pStr, const char* pSeq) {
+    K_ASSERT(pStr != nullptr);
+
+    // No sequence/empty sequence
+    if (pSeq == nullptr || *pSeq == L'\0') {
+        return pStr;
+    }
+
+    // First character in sequence
+    char begin = *pSeq;
+
+    // Check for sequence
+    while (*pStr != L'\0') {
+        // Matches beginning of sequence
+        if (*pStr == begin) {
+            // Backup original pointers
+            const char* pCheck = pStr;
+            const char* pExpect = pSeq;
+
+            // Look for rest of sequence
+            while (*++pCheck == *++pExpect) {
+                ;
+            }
+
+            // Did we hit the end?
+            if (*pExpect == '\0') {
+                return pStr;
+            }
+        }
+
+        // Next character
+        pStr++;
+    }
+
+    return nullptr;
+}
+
+/**
  * @brief Determines string length (up to the specified limit)
  * @note Null terminator not included
  *
@@ -295,16 +338,16 @@ const wchar_t* wcsstr(const wchar_t* pwStr, const wchar_t* pwSeq) {
         // Matches beginning of sequence
         if (*pwStr == begin) {
             // Backup original pointers
-            const wchar_t* check = pwStr;
-            const wchar_t* expect = pwSeq;
+            const wchar_t* pCheck = pwStr;
+            const wchar_t* pExpect = pwSeq;
 
             // Look for rest of sequence
-            while (*++check == *++expect) {
+            while (*++pCheck == *++pExpect) {
                 ;
             }
 
             // Did we hit the end?
-            if (*expect == '\0') {
+            if (*pExpect == '\0') {
                 return pwStr;
             }
         }

@@ -24,13 +24,13 @@ private: // Do not allow object construction/destruction
     ExtView() {
         K_ASSERT(false);
     }
-    ExtView(const ExtView&) {
+    ExtView(const ExtView& /* rOther */) {
         K_ASSERT(false);
     }
     ~ExtView() {
         K_ASSERT(false);
     }
-    ExtView& operator=(const ExtView&) {
+    ExtView& operator=(const ExtView& /* rOther */) {
         K_ASSERT(false);
         return *this;
     }

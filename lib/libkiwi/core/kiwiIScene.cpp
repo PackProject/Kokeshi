@@ -8,6 +8,7 @@ namespace kiwi {
  * @brief Setup scene
  */
 void IScene::Configure() {
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     // Setup model scene
     RP_GET_INSTANCE(RPGrpModelResManager)->CreateResourceList(0x400);
     RP_GET_INSTANCE(RPGrpModelManager)
@@ -20,6 +21,7 @@ void IScene::Configure() {
 
     RPGrpRenderer::GetCurrent()->CreateView2D(1, pScreen);
     RPGrpRenderer::GetCurrent()->CorrectView();
+#endif
 
     // User state function
     OnConfigure();
@@ -37,8 +39,11 @@ void IScene::LoadResource() {
  * @brief Reload scene
  */
 void IScene::Reset() {
+// TODO: Required for WS2 also?
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     RP_GET_INSTANCE(RPSysCursorDrawMgr)->startDpdCheck();
     RP_GET_INSTANCE(RPSysCursorDrawMgr)->createActiveCursor();
+#endif
 
     // User state function
     OnReset();

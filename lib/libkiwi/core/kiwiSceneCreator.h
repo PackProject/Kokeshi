@@ -4,6 +4,7 @@
 #include <RPSystem/RPSysSceneCreator.h>
 #include <libkiwi/k_types.h>
 #include <libkiwi/util/kiwiExtView.h>
+#include <nw4r/ut.h>
 
 namespace kiwi {
 //! @addtogroup libkiwi_core
@@ -13,7 +14,7 @@ namespace kiwi {
  * @brief Game scene ID
  */
 enum ESceneID {
-#ifndef PACK_RESORT
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     // RPSystem
     ESceneID_RPSysBootScene,
     ESceneID_RPSysPlayerSelectScene,
@@ -32,7 +33,6 @@ enum ESceneID {
     ESceneID_RPSportsPhysicalPreviewScene,
     ESceneID_RPSportsPhysicalResultScene,
     ESceneID_RPGolSelectScene,
-#endif
 
 #if defined(PACK_SPORTS)
     ESceneID_Max,
@@ -56,13 +56,14 @@ enum ESceneID {
 #if defined(PACK_PLAY)
     ESceneID_Max,
 #endif
+#endif
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     // System
     ESceneID_Sp2StrapScene,
     ESceneID_Sp2SaveDataLoadScene,
     ESceneID_Sp2TitleScene,
-    ESceneID_Sp2PlayerSelectScene,
+    ESceneID_Sp2MiiSelectScene,
 
     // Sports
     ESceneID_Sp2SwfScene,
@@ -95,6 +96,32 @@ enum ESceneID {
     ESceneID_Max,
 #endif
 };
+
+#if defined(PACK_RESORT)
+/**
+ * @brief Scene group ID
+ */
+enum EGroupID {
+    EGroupID_Cmn = -1, //!< Common
+    EGroupID_Swf,      //!< Swordplay
+    EGroupID_Jsk,      //!< Power Cruising
+    EGroupID_Arc,      //!< Archery
+    EGroupID_Fld,      //!< Frisbee
+    EGroupID_Bsk,      //!< Basketball
+    EGroupID_Bwl,      //!< Bowling
+    EGroupID_Can,      //!< Canoeing
+    EGroupID_Png,      //!< Table Tennis
+    EGroupID_Wkb,      //!< Wakeboarding
+    EGroupID_Pln,      //!< Air Sports
+    EGroupID_Glf,      //!< Golf
+    EGroupID_Dgl,      //!< Frisbee Golf
+    EGroupID_Bic,      //!< Cycling
+    EGroupID_Omk,      //!< Skydiving
+    EGroupID_Debug,    //!< Debug
+
+    EGroupID_Max,
+};
+#endif
 
 /**
  * @brief Pack Project ID
@@ -138,10 +165,14 @@ public:
      * @brief Scene information
      */
     struct Info {
-        RPSysScene* (*pCt)();     //!< Scene create function (for user scenes)
-        String name;              //!< Scene name
-        String dir;               //!< Resource directory
-        s32 id;                   //!< Scene ID (for RP scenes)
+        RPSysScene* (*pCt)(); //!< Scene create function (for user scenes)
+        String name;          //!< Scene name
+        String dir;           //!< Resource directory
+        s32 id;               //!< Scene ID (for RP scenes)
+#if defined(PACK_RESORT)
+        bool warnAsSceneLoading; //!< Show warning screen while scene loads
+        kiwi::EGroupID group;    //!< Scene group
+#endif
         kiwi::EPackID pack;       //!< Pack ID
         kiwi::ECreateType create; //!< How to create the scene
         kiwi::EExitType exit;     //!< How to exit the scene
@@ -158,44 +189,86 @@ public:
      */
     static void RegistScene(const Info& rInfo);
 
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     /**
      * @brief Fades out into a new scene
      *
      * @param id Scene ID
      * @param reload Reload the current scene
+     * @return Success
      */
     bool ChangeSceneAfterFade(s32 id, bool reload = false);
+#elif defined(PACK_RESORT)
+    /**
+     * @brief Fades out into a new scene
+     *
+     * @param id Scene ID
+     * @param color Fade color
+     * @return Success
+     */
+    bool ChangeSceneAfterFade(s32 id,
+                              nw4r::ut::Color color = nw4r::ut::Color::BLACK);
+#endif
 
     /**
      * @brief Gets the specified scene's name
+     *
+     * @param id Scene ID
      */
     const char* GetSceneName(s32 id = -1) const;
 
     /**
      * @brief Gets the specified scene's resource directory name
+     *
+     * @param id Scene ID
      */
     const char* GetSceneDirectory(s32 id = -1) const;
 
+#if defined(PACK_RESORT)
+    /**
+     * @brief Tests whether the specified scene should display the warning
+     * screen while loading
+     *
+     * @param id Scene ID
+     */
+    bool IsSceneWarnAsLoading(s32 id = -1) const;
+
+    /**
+     * @brief Gets the specified scene's group
+     *
+     * @param id Scene ID
+     */
+    EGroupID GetSceneGroup(s32 id = -1) const;
+#endif
+
     /**
      * @brief Gets the specified scene's target pack
+     *
+     * @param id Scene ID
      */
     kiwi::EPackID GetScenePack(s32 id = -1) const;
 
     /**
      * @brief Gets the specified scene's create type
+     *
+     * @param id Scene ID
      */
     kiwi::ECreateType GetSceneCreateType(s32 id = -1) const;
 
     /**
      * @brief Gets the specified scene's exit type
+     *
+     * @param id Scene ID
      */
     kiwi::EExitType GetSceneExitType(s32 id = -1) const;
 
     /**
      * @brief Tests whether the specified scene requires the RP common sound
      * archive
+     *
+     * @param id Scene ID
      */
-    bool GetSceneCommonSound(s32 id = -1) const;
+    bool IsSceneCommonSound(s32 id = -1) const;
 
 private:
     LIBKIWI_KAMEK_PUBLIC

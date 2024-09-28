@@ -125,7 +125,7 @@ public:
      * @ws2
      */
     virtual EKind getKind() {
-        return ETime_Auto;
+        return EKind_System;
     }
 #endif
 

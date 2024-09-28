@@ -437,7 +437,7 @@ template <> const wchar_t* StrChr<wchar_t>(const wchar_t* pStr, wchar_t c) {
  * strstr wrapper function
  */
 template <> const char* StrStr<char>(const char* pStr1, const char* pStr2) {
-    return std::strstr(pStr1, pStr2);
+    return ksl::strstr(pStr1, pStr2);
 }
 template <>
 const wchar_t* StrStr<wchar_t>(const wchar_t* pStr1, const wchar_t* pStr2) {

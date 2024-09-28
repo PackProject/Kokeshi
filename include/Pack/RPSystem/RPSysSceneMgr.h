@@ -106,10 +106,20 @@ public:
      * @remark The default color is white with full opacity.
      */
     void resetFadeColor();
+
     /**
      * @brief Gets the fade color of the manager fader
      */
     nw4r::ut::Color getMgrFadeColor();
+#if defined(PACK_RESORT)
+    /**
+     * @brief Sets the fade color of the manager fader
+     *
+     * @param color Fade color
+     */
+    void setMgrFadeColor(nw4r::ut::Color color);
+#endif
+
     /**
      * @brief Sets the fade color of the scene fader
      *

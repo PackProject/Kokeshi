@@ -14,22 +14,22 @@ namespace json {
  * @name Number
  */
 /**@{*/
-template <> inline f64& Element::Get<f64>() {
+template <> K_INLINE f64& Element::Get<f64>() {
     K_ASSERT(mType == EType_Number);
     return mNumber;
 }
-template <> inline const f64& Element::Get<f64>() const {
+template <> K_INLINE const f64& Element::Get<f64>() const {
     K_ASSERT(mType == EType_Number);
     return mNumber;
 }
 
-template <> inline void Element::Set<f64>(const f64& rValue) {
+template <> K_INLINE void Element::Set<f64>(const f64& rValue) {
     Clear();
 
     mType = EType_Number;
     mNumber = rValue;
 }
-template <> inline void Element::Set<s64>(const s64& rValue) {
+template <> K_INLINE void Element::Set<s64>(const s64& rValue) {
     Clear();
 
     mType = EType_Number;
@@ -41,18 +41,18 @@ template <> inline void Element::Set<s64>(const s64& rValue) {
  * @name String
  */
 /**@{*/
-template <> inline String& Element::Get<String>() {
+template <> K_INLINE String& Element::Get<String>() {
     K_ASSERT(mType == EType_String);
     K_ASSERT(mpString != nullptr);
     return *mpString;
 }
-template <> inline const String& Element::Get<String>() const {
+template <> K_INLINE const String& Element::Get<String>() const {
     K_ASSERT(mType == EType_String);
     K_ASSERT(mpString != nullptr);
     return *mpString;
 }
 
-template <> inline void Element::Set<String>(const String& rValue) {
+template <> K_INLINE void Element::Set<String>(const String& rValue) {
     Clear();
 
     mpString = new String(rValue);
@@ -66,16 +66,16 @@ template <> inline void Element::Set<String>(const String& rValue) {
  * @name Boolean
  */
 /**@{*/
-template <> inline bool& Element::Get<bool>() {
+template <> K_INLINE bool& Element::Get<bool>() {
     K_ASSERT(mType == EType_Boolean);
     return mBoolean;
 }
-template <> inline const bool& Element::Get<bool>() const {
+template <> K_INLINE const bool& Element::Get<bool>() const {
     K_ASSERT(mType == EType_Boolean);
     return mBoolean;
 }
 
-template <> inline void Element::Set<bool>(const bool& rValue) {
+template <> K_INLINE void Element::Set<bool>(const bool& rValue) {
     Clear();
 
     mType = EType_Boolean;
@@ -87,18 +87,18 @@ template <> inline void Element::Set<bool>(const bool& rValue) {
  * @name Array
  */
 /**@{*/
-template <> inline Array& Element::Get<Array>() {
+template <> K_INLINE Array& Element::Get<Array>() {
     K_ASSERT(mType == EType_Array);
     K_ASSERT(mpArray != nullptr);
     return *mpArray;
 }
-template <> inline const Array& Element::Get<Array>() const {
+template <> K_INLINE const Array& Element::Get<Array>() const {
     K_ASSERT(mType == EType_Array);
     K_ASSERT(mpArray != nullptr);
     return *mpArray;
 }
 
-template <> inline void Element::Set<Array>(const Array& rArray) {
+template <> K_INLINE void Element::Set<Array>(const Array& rArray) {
     Clear();
 
     mpArray = new Array(rArray);
@@ -112,18 +112,18 @@ template <> inline void Element::Set<Array>(const Array& rArray) {
  * @name Object
  */
 /**@{*/
-template <> inline Object& Element::Get<Object>() {
+template <> K_INLINE Object& Element::Get<Object>() {
     K_ASSERT(mType == EType_Object);
     K_ASSERT(mpObject != nullptr);
     return *mpObject;
 }
-template <> inline const Object& Element::Get<Object>() const {
+template <> K_INLINE const Object& Element::Get<Object>() const {
     K_ASSERT(mType == EType_Object);
     K_ASSERT(mpObject != nullptr);
     return *mpObject;
 }
 
-template <> inline void Element::Set<Object>(const Object& rValue) {
+template <> K_INLINE void Element::Set<Object>(const Object& rValue) {
     Clear();
 
     mpObject = new Object(rValue);
@@ -137,17 +137,17 @@ template <> inline void Element::Set<Object>(const Object& rValue) {
  * @name Null
  */
 /**@{*/
-template <> inline Null_t& Element::Get<Null_t>() {
+template <> K_INLINE Null_t& Element::Get<Null_t>() {
     K_ASSERT(mType == EType_Null);
     // TODO: Better way to solve this problem?
     return const_cast<Null_t&>(json::null);
 }
-template <> inline const Null_t& Element::Get<Null_t>() const {
+template <> K_INLINE const Null_t& Element::Get<Null_t>() const {
     K_ASSERT(mType == EType_Null);
     return json::null;
 }
 
-template <> inline void Element::Set<Null_t>(const Null_t& rValue) {
+template <> K_INLINE void Element::Set<Null_t>(const Null_t& rValue) {
 #pragma unused(rValue)
 
     Clear();
@@ -164,7 +164,7 @@ template <> inline void Element::Set<Null_t>(const Null_t& rValue) {
  *
  * @tparam T Object type
  */
-template <typename T> inline T Element::GetObj() const {
+template <typename T> K_INLINE T Element::GetObj() const {
     K_ASSERT(mType == EType_Object);
     K_ASSERT(mpObject != nullptr);
 
@@ -176,7 +176,7 @@ template <typename T> inline T Element::GetObj() const {
     return success ? obj : T();
 }
 
-template <typename T> inline void Element::Set(const T& rValue) {
+template <typename T> K_INLINE void Element::Set(const T& rValue) {
     Clear();
 
     mType = EType_Object;
