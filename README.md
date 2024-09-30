@@ -24,9 +24,9 @@ Kokeshi supports the following games:
 | Wii Play          | NTSC-U, Rev 1 | `0da5e7e51135219f580ad011d1b635bc83569bb9` |
 | Wii Sports Resort | NTSC-U, Any*  | `e3e22a9de62f6e11ded52e9a7e6933892963b219` |
 
-*Revisions of Wii Sports Resort only include minor asset changes. The DOL remains unchanged.*
+\*Revisions of Wii Sports Resort only include minor asset changes. The DOL remains unchanged.*
 
-Support for Wii Music and Wii Fit, as well as other revisions of supported games are currently out of scope of this project. This is unfortunately due to the lack of debugging symbols in these games.
+**Support for Wii Music and Wii Fit, as well as other revisions of supported games are currently out of scope of this project. All Pack Project titles were stripped of debugging information, and require considerable effort to identify function symbols.**
 
 ## Build Instructions
 
