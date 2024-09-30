@@ -161,8 +161,6 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
     return success;
 }
 #elif defined(PACK_RESORT)
-extern void FUN_802b70a4();
-
 /**
  * @brief Fades out into a new scene
  *

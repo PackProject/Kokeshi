@@ -42,7 +42,7 @@ void kiwi_fail_assert(const char* pFile, int line, const char* pMsg, ...) {
 // Catch EGG_ASSERT
 KOKESHI_BY_PACK(KM_BRANCH(0x800a1f08, kiwi_fail_assert), // Wii Sports
                 KM_BRANCH(0x800a17d8, kiwi_fail_assert), // Wii Play
-                );                                      // Wii Sports Resort
+                );                                       // Wii Sports Resort
                 
 // Catch OSPanic
 KOKESHI_BY_PACK(KM_BRANCH(0x800eefa8, kiwi_fail_assert),  // Wii Sports

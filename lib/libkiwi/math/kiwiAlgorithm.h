@@ -77,7 +77,6 @@ K_INLINE T Clamp(const T& rValue, const T& rMin, const T& rMax) {
  * @param pEnd End pointer
  */
 K_INLINE ptrdiff_t PtrDistance(const void* pStart, const void* pEnd) {
-    K_ASSERT(pEnd >= pStart);
     return reinterpret_cast<uintptr_t>(pEnd) -
            reinterpret_cast<uintptr_t>(pStart);
 }

@@ -15,7 +15,7 @@ namespace {
 void WaitVIRetrace() {
     AutoInterruptLock lock(true);
 
-    s32 count = VIGetRetraceCount();
+    volatile s32 count = VIGetRetraceCount();
     while (count == VIGetRetraceCount()) {
         ;
     }
@@ -33,7 +33,7 @@ void* CreateFB(const GXRenderModeObj* pRmo) {
 
     // Try using heap, but be careful to not throw a nested exception
     void* pXfb = nullptr;
-    if (MemoryMgr::GetInstance().GetFreeSize(EMemory_MEM1) != 0) {
+    if (MemoryMgr::GetInstance().GetFreeSize(EMemory_MEM1) > size) {
         pXfb = new (32) u8[size];
     }
 
@@ -75,15 +75,20 @@ void Nw4rDirectPrint::SetupXfb() {
     // Initialize direct print
     SetColor(Color::WHITE);
 
+// TODO: WS2 framebuffer is 608x456. Why?
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     // Try to repurpose current framebuffer
     void* pXfb = VIGetCurrentFrameBuffer();
 
     // Create new framebuffer if one doesn't exist
     if (pXfb == nullptr) {
-        // Auto-detect render mode
         pRmo = LibGX::GetDefaultRenderMode();
         pXfb = CreateFB(pRmo);
     }
+#elif defined(PACK_RESORT)
+    pRmo = LibGX::GetDefaultRenderMode();
+    void* pXfb = CreateFB(pRmo);
+#endif
 
     VISetBlack(FALSE);
     VIFlush();
