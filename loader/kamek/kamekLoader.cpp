@@ -277,7 +277,7 @@ void loadKamekBinaryFromDisc(const loaderFunctions* funcs, const char* path) {
     if (!buffer)
         kamekError("FATAL ERROR: Out of file memory");
 
-    DVDReadPrio(&handle, buffer, roundedLength, 0, 2);
+    DVDReadPrio(&handle, buffer, roundedLength, 0, DVD_PRIO_MEDIUM);
     DVDClose(&handle);
 
     loadKamekBinary(funcs, buffer, handle.size);

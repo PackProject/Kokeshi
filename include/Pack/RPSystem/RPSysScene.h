@@ -21,7 +21,7 @@ class RPSysEffectCreator;
  */
 class RPSysScene : public EGG::Scene, public IRPGrpDrawObject {
 public:
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief Scene type
      * @ws2
@@ -119,7 +119,7 @@ public:
         return sUnkStruct;
     } // at 0x3C
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief Gets the scene's class type
      * @ws2
@@ -136,12 +136,17 @@ public:
      */
     virtual void pauseCallBack(bool enter); // at 0x40
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief Gets the scene's island time of day
      * @ws2
      */
     virtual ETime getIslandTime();
+
+    /**
+     * @brief Enters the scene
+     */
+    virtual void Enter() {}
 #endif
 
     /**
@@ -165,7 +170,7 @@ public:
      */
     virtual void Exit() {} // at 0x54
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief Updates the scene's MotionPlus state
      * @ws2

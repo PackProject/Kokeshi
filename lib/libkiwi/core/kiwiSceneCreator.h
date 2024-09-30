@@ -203,11 +203,10 @@ public:
      * @brief Fades out into a new scene
      *
      * @param id Scene ID
-     * @param color Fade color
+     * @param pColor Fade color (optional)
      * @return Success
      */
-    bool ChangeSceneAfterFade(s32 id,
-                              nw4r::ut::Color color = nw4r::ut::Color::BLACK);
+    bool ChangeSceneAfterFade(s32 id, const nw4r::ut::Color* pColor = NULL);
 #endif
 
     /**

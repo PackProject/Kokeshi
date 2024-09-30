@@ -24,7 +24,7 @@ void KokeshiMain() {
     kiwi::cout << "Hello world!" << kiwi::endl;
     // ====================================================
 
-    // Enter first scene
+// Enter first scene
 #ifndef PACK_RESORT
     kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
         kiwi::ESceneID_RPSysBootScene);

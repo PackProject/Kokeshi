@@ -161,14 +161,16 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
     return success;
 }
 #elif defined(PACK_RESORT)
+extern void FUN_802b70a4();
+
 /**
  * @brief Fades out into a new scene
  *
  * @param id Scene ID
- * @param color Fade color
+ * @param pColor Fade color
  * @return Success
  */
-bool SceneCreator::ChangeSceneAfterFade(s32 id, nw4r::ut::Color color) {
+bool SceneCreator::ChangeSceneAfterFade(s32 id, const nw4r::ut::Color* pColor) {
     // Ensure all threads are idle
     if (!RP_GET_INSTANCE(RPSysSceneMgr)->isTaskFinished()) {
         return false;
@@ -192,9 +194,8 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, nw4r::ut::Color color) {
         // Update last scene for exiting
         mLastSceneID = current;
 
-        // Don't waste a function call if the color is the default
-        if (color != nw4r::ut::Color::BLACK) {
-            RP_GET_INSTANCE(RPSysSceneMgr)->setMgrFadeColor(color);
+        if (pColor != nullptr) {
+            RP_GET_INSTANCE(RPSysSceneMgr)->setMgrFadeColor(*pColor);
         }
     }
 
@@ -244,7 +245,9 @@ bool SceneCreator::IsSceneWarnAsLoading(s32 id) const {
     K_ASSERT_EX(pInfo != nullptr, "Invalid scene ID: %d", id);
     return pInfo->warnAsSceneLoading;
 }
-KM_BRANCH_MF(0x8022eaf8, SceneCreator, IsSceneWarnAsLoading);
+// clang-format off
+KM_BRANCH_MF(0x8022eaf8, SceneCreator, IsSceneWarnAsLoading);  // Wii Sports Resort
+// clang-format on
 
 /**
  * @brief Gets the specified scene's group
@@ -256,7 +259,9 @@ EGroupID SceneCreator::GetSceneGroup(s32 id) const {
     K_ASSERT_EX(pInfo != nullptr, "Invalid scene ID: %d", id);
     return pInfo->group;
 }
+// clang-format off
 KM_BRANCH_MF(0x8022eb78, SceneCreator, GetSceneGroup); // Wii Sports Resort
+// clang-format on
 #endif
 
 /**
@@ -283,7 +288,7 @@ ECreateType SceneCreator::GetSceneCreateType(s32 id) const {
 // clang-format off
 KOKESHI_BY_PACK(KM_BRANCH_MF(0x801845f4, SceneCreator, GetSceneCreateType), // Wii Sports
                 KM_BRANCH_MF(0x8018402c, SceneCreator, GetSceneCreateType), // Wii Play
-                );                                                          // Wii Sports Resort
+                /* not applicable */);                                      // Wii Sports Resort
 // clang-format on
 
 /**
@@ -316,7 +321,7 @@ bool SceneCreator::IsSceneCommonSound(s32 id) const {
 // clang-format off
 KOKESHI_BY_PACK(KM_BRANCH_MF(0x801844bc, SceneCreator, IsSceneCommonSound), // Wii Sports
                 KM_BRANCH_MF(0x80183ef4, SceneCreator, IsSceneCommonSound), // Wii Play
-                );                                                          // Wii Sports Resort
+                /* not applicable */);                                      // Wii Sports Resort
 // clang-format on
 
 /**
@@ -385,7 +390,7 @@ KOKESHI_BY_PACK(KM_BRANCH_MF(0x80184838, SceneCreator, Create),  // Wii Sports
  * @param id Scene ID
  */
 RPSysScene* SceneCreator::CreateSystemScene(s32 id) {
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     K_ASSERT_EX(false, "Not for this pack yet.");
     return nullptr;
 #else

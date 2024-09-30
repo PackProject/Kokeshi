@@ -373,13 +373,7 @@ void Nw4rException::PrintStack(u32 depth) {
     Printf("Address:   BackChain   LR save\n");
 
     for (int i = 0; i < depth; i++, pFrame = pFrame->next) {
-        // Main thread root frame
-        if (reinterpret_cast<u32>(pFrame) == 0xFFFFFFFF) {
-            break;
-        }
-
-        // Sub thread root frame
-        if (reinterpret_cast<u32>(pFrame) == 0) {
+        if (pFrame == nullptr || !PtrUtil::IsPointer(pFrame)) {
             break;
         }
 

@@ -86,7 +86,7 @@ public:
         return true;
     }
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief Gets the scene's type
      */
@@ -127,7 +127,7 @@ public:
      * @details Ran once per frame
      */
     virtual void OnCalculate() {}
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief CalculateMPlus state user callback
      * @details Ran once per frame
@@ -193,7 +193,7 @@ private:
      * @details Runs one step of scene logic
      */
     virtual void Calculate();
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     /**
      * @brief CalculateMPlus state
      * @details Runs one step of MotionPlus logic

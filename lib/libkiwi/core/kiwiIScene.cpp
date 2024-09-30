@@ -57,7 +57,7 @@ void IScene::Calculate() {
     OnCalculate();
 }
 
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
 /**
  * @brief Scene MotionPlus logic
  */

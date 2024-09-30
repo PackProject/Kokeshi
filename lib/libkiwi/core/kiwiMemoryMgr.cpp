@@ -53,20 +53,26 @@ void CheckDoubleFree(const void* pBlock) {
  * @brief Constructor
  */
 MemoryMgr::MemoryMgr() {
-    // clang-format off
-    mpHeapMEM1 = EGG::ExpHeap::create(scHeapSize, RP_GET_INSTANCE(RPSysSystem)->getSystemHeap(),   0);
-    mpHeapMEM2 = EGG::ExpHeap::create(scHeapSize, RP_GET_INSTANCE(RPSysSystem)->getResourceHeap(), 0);
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
+    EGG::Heap* pMem1HeapRP = RP_GET_INSTANCE(RPSysSystem)->getSystemHeap();
+    EGG::Heap* pMem2HeapRP = RP_GET_INSTANCE(RPSysSystem)->getResourceHeap();
+#elif defined(PACK_RESORT)
+    EGG::Heap* pMem1HeapRP = RP_GET_INSTANCE(RPSysSystem)->getRootHeapMem1();
+    EGG::Heap* pMem2HeapRP = RP_GET_INSTANCE(RPSysSystem)->getResourceHeap();
+#endif
 
-    LogHeap("RPSysSystem:System",   RP_GET_INSTANCE(RPSysSystem)->getSystemHeap());
-    LogHeap("RPSysSystem:Resource", RP_GET_INSTANCE(RPSysSystem)->getResourceHeap());
-    LogHeap("libkiwi:MEM1",         mpHeapMEM1);
-    LogHeap("libkiwi:MEM2",         mpHeapMEM2);
-    // clang-format on
+    LogHeap("RPSysSystem:System", pMem1HeapRP);
+    LogHeap("RPSysSystem:Resource", pMem2HeapRP);
 
+    mpHeapMEM1 = EGG::ExpHeap::create(scHeapSize, pMem1HeapRP, 0);
     K_ASSERT(mpHeapMEM1 != nullptr);
-    K_ASSERT(mpHeapMEM2 != nullptr);
     K_ASSERT(OSIsMEM1Region(mpHeapMEM1));
+    LogHeap("libkiwi:MEM1", mpHeapMEM1);
+
+    mpHeapMEM2 = EGG::ExpHeap::create(scHeapSize, pMem2HeapRP, 0);
+    K_ASSERT(mpHeapMEM2 != nullptr);
     K_ASSERT(OSIsMEM2Region(mpHeapMEM2));
+    LogHeap("libkiwi:MEM2", mpHeapMEM2);
 }
 
 /**

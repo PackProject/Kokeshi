@@ -21,7 +21,7 @@
 class RPSysSystem {
 public:
 // KOKESHI: We need to access the engine configuration
-#ifdef __KOKESHI__
+#if defined(__KOKESHI__)
     static EGG::Heap* getRootHeapMem1() {
         return sConfigData.getRootHeapMem1();
     }
@@ -210,11 +210,34 @@ public:
     void setDimming(BOOL dim);
 
     /**
+     * @brief Gets the system's main heap
+     */
+    EGG::Heap* getSystemHeapRP() const {
+        return mpSystemHeap;
+    }
+
+    /**
      * @brief Gets the heap for the resource manager
      */
     EGG::Heap* getResourceHeap() const {
         return mpResourceHeap;
     }
+
+#if defined(PACK_RESORT)
+    /**
+     * @brief Gets the heap which holds the rest of free MEM1 memory
+     */
+    EGG::Heap* getMem1RestHeap() const {
+        return mpMem1RestHeap;
+    }
+
+    /**
+     * @brief Gets the heap which holds the rest of free MEM2 memory
+     */
+    EGG::Heap* getMem2RestHeap() const {
+        return mpMem2RestHeap;
+    }
+#endif
 
     /**
      * @brief Gets the thread for asynchronous NAND operations
@@ -299,6 +322,7 @@ private:
     //! Class singleton instance
     static RPSysSystem* spInstance;
 
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     //! Effect manager work memory size
     u32 mEffectWorkSize; // at 0x4
 
@@ -339,6 +363,17 @@ private:
 
     //! Pack Project build information
     char* mpTimeStampString; // at 0x58
+#elif defined(PACK_RESORT)
+    EGG::Heap* mpSystemHeap;          // at 0x4
+    EGG::Heap* mpResourceHeap;        // at 0x8
+    EGG::Heap* mpResCacheHeap;        // at 0xC
+    EGG::Heap* mpRootSceneHeap;       // at 0x10
+    EGG::Heap* mpRootSceneDependHeap; // at 0x14
+    char UNK_0x18[0x28 - 0x14];
+    EGG::Heap* mpMem1RestHeap; // at 0x28
+    EGG::Heap* mpMem2RestHeap; // at 0x2C
+    // . . .
+#endif
 };
 
 //! @}

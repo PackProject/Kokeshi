@@ -6,7 +6,7 @@
 
 namespace EGG {
 class Scene
-#ifdef PACK_RESORT
+#if defined(PACK_RESORT)
     : public Disposer
 #endif
 {
