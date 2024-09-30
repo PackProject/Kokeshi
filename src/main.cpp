@@ -17,7 +17,7 @@ void KokeshiMain() {
     kiwi::GeckoDebugger::GetInstance().Attach();
 #endif
 
-    kiwi::LibSO::Initialize(); // Initialize socket library
+    kiwi::LibSO::Initialize();
 
     // ====================================================
     // Your code goes here!
@@ -25,10 +25,10 @@ void KokeshiMain() {
     // ====================================================
 
 // Enter first scene
-#ifndef PACK_RESORT
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
         kiwi::ESceneID_RPSysBootScene);
-#else
+#elif defined(PACK_RESORT)
     kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
         kiwi::ESceneID_Sp2StrapScene);
 #endif
