@@ -1,8 +1,8 @@
 #ifndef RP_PARTY_SYSTEM_DATA_H
 #define RP_PARTY_SYSTEM_DATA_H
-#include "RPTypes.h"
-
 #include <types_egg.h>
+
+#include "RPTypes.h"
 
 /**
  * @brief Wii Play save file common data

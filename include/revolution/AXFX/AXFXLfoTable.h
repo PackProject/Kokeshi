@@ -5,12 +5,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_axfx
-//! @{
-
 s32* __AXFXGetLfoSinTable(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

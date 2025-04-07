@@ -1,15 +1,14 @@
 #ifndef RVL_FACE_LIBRARY_MODEL_H
 #define RVL_FACE_LIBRARY_MODEL_H
+#include <types.h>
+
 #include <RVLFaceLib/RFL_Types.h>
+
 #include <revolution/GX.h>
 #include <revolution/MTX.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl
-//! @{
 
 // Forward declarations
 typedef struct RFLMiddleDB;
@@ -71,8 +70,6 @@ void RFLDrawOpaCore(const RFLCharModel* model,
 void RFLDrawXluCore(const RFLCharModel* model,
                     const RFLDrawCoreSetting* setting);
 void RFLDrawShape(const RFLCharModel* model);
-
-//! @}
 
 #ifdef __cplusplus
 }

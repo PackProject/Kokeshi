@@ -5,15 +5,10 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_si
-//! @{
-
 #define SI_MAX_SAMPLE_RATE 11
 
 void SISetSamplingRate(u32 msec);
 void SIRefreshSamplingRate(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

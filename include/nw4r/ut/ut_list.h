@@ -1,58 +1,131 @@
-#ifndef NW4R_UT_LIST_H
-#define NW4R_UT_LIST_H
+#ifndef NW4R_UT_LINKLIST_H
+#define NW4R_UT_LINKLIST_H
 #include <nw4r/types_nw4r.h>
 
 namespace nw4r {
 namespace ut {
 
 struct List {
-    void* first; // at 0x0
-    void* last;  // at 0x4
-    u16 size;    // at 0x8
-    u16 offset;  // at 0xA
+    void* headObject; // at 0x0
+    void* tailObject; // at 0x4
+    u16 numObjects;   // at 0x8
+    u16 offset;       // at 0xA
 };
 
-struct Node {
-    void* prev; // at 0x0
-    void* next; // at 0x4
+struct Link {
+    void* prevObject; // at 0x0
+    void* nextObject; // at 0x4
 };
 
-void List_Init(List* list, u16 offset);
-void List_Append(List* list, void* object);
-void List_Prepend(List* list, void* object);
-void List_Insert(List* list, void* next, void* object);
-void List_Remove(List* list, void* object);
-void* List_GetNext(const List* list, const void* object);
-void* List_GetPrev(const List* list, const void* object);
-void* List_GetNth(const List* list, u16 n);
+void List_Init(List* pList, u16 offset);
 
-inline void* List_GetFirst(const List* list) {
-    return List_GetNext(list, NULL);
+void List_Append(List* pList, void* pObject);
+void List_Prepend(List* pList, void* pObject);
+
+void List_Insert(List* pList, void* pTarget, void* pObject);
+void List_Remove(List* pList, void* pObject);
+
+void* List_GetNext(const List* pList, const void* pObject);
+inline const void* List_GetNextConst(const List* pList, const void* pObject) {
+    return List_GetNext(pList, pObject);
 }
 
-inline const void* List_GetFirstConst(const List* list) {
-    return List_GetFirst(list);
+void* List_GetPrev(const List* pList, const void* pObject);
+inline const void* List_GetPrevConst(const List* pList, const void* pObject) {
+    return List_GetPrev(pList, pObject);
 }
 
-inline void* List_GetLast(const List* list) {
-    return List_GetPrev(list, NULL);
+void* List_GetNth(const List* pList, u16 n);
+inline const void* List_GetNthConst(const List* pList, u16 n) {
+    return List_GetNth(pList, n);
 }
 
-inline const void* List_GetLastConst(const List* list) {
-    return List_GetLast(list);
+inline void* List_GetFirst(const List* pList) {
+    return List_GetNext(pList, NULL);
+}
+inline const void* List_GetFirstConst(const List* pList) {
+    return List_GetFirst(pList);
 }
 
-inline const void* List_GetNextConst(const List* list, const void* object) {
-    return List_GetNext(list, object);
+inline void* List_GetLast(const List* pList) {
+    return List_GetPrev(pList, NULL);
+}
+inline const void* List_GetLastConst(const List* pList) {
+    return List_GetLast(pList);
 }
 
-inline const void* List_GetNthConst(const List* list, u16 n) {
-    return List_GetNth(list, n);
+inline u16 List_GetSize(const List* pList) {
+    return pList->numObjects;
 }
 
-inline u16 List_GetSize(const List* list) {
-    return list->size;
-}
+/**
+ * Gets the underlying Link within the specified object.
+ *
+ * @param LIST Reference to list
+ * @param OBJ Pointer to list object
+ */
+#define NW4R_UT_LIST_GET_LINK(LIST, OBJ)                                       \
+    reinterpret_cast<nw4r::ut::Link*>((u8*)(OBJ) + (LIST).offset)
+
+/**
+ * List for-each macro.
+ *
+ * @param TYPE Element type
+ * @param NAME Element name
+ * @param LIST Reference to list
+ * @param ... Statement(s) to execute
+ */
+#define NW4R_UT_LIST_FOREACH(TYPE, NAME, LIST, ...)                            \
+    {                                                                          \
+        TYPE* NAME = NULL;                                                     \
+                                                                               \
+        while ((NAME = static_cast<TYPE*>(                                     \
+                    nw4r::ut::List_GetNext(&(LIST), NAME))) != NULL) {         \
+                                                                               \
+            __VA_ARGS__;                                                       \
+        }                                                                      \
+    }
+/**
+ * List for-each macro (reverse order).
+ *
+ * @param TYPE Element type
+ * @param NAME Element name
+ * @param LIST Reference to list
+ * @param ... Statement(s) to execute
+ */
+#define NW4R_UT_LIST_FOREACH_REV(TYPE, NAME, LIST, ...)                        \
+    {                                                                          \
+        TYPE* NAME = NULL;                                                     \
+                                                                               \
+        while ((NAME = static_cast<TYPE*>(                                     \
+                    nw4r::ut::List_GetPrev(&(LIST), NAME))) != NULL) {         \
+                                                                               \
+            __VA_ARGS__;                                                       \
+        }                                                                      \
+    }
+
+/**
+ * List for-each macro, with robust iteration.
+ *
+ * @param TYPE Element type
+ * @param NAME Element name
+ * @param LIST Reference to list
+ * @param ... Statement(s) to execute
+ */
+#define NW4R_UT_LIST_FOREACH_SAFE(TYPE, NAME, LIST, ...)                       \
+    {                                                                          \
+        TYPE* NAME;                                                            \
+        TYPE* __next__;                                                        \
+                                                                               \
+        for (NAME = static_cast<TYPE*>(nw4r::ut::List_GetFirst(&(LIST)));      \
+             NAME != NULL; NAME = __next__) {                                  \
+                                                                               \
+            __next__ =                                                         \
+                static_cast<TYPE*>(nw4r::ut::List_GetNext(&(LIST), NAME));     \
+                                                                               \
+            __VA_ARGS__;                                                       \
+        }                                                                      \
+    }
 
 } // namespace ut
 } // namespace nw4r

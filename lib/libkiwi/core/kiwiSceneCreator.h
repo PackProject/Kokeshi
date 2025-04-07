@@ -2,8 +2,10 @@
 #define LIBKIWI_CORE_SCENE_CREATOR_H
 
 #include <RPSystem/RPSysSceneCreator.h>
+#include <libkiwi/core/kiwiController.h>
 #include <libkiwi/k_types.h>
-#include <libkiwi/util/kiwiExtView.h>
+#include <libkiwi/util/kiwiExtension.h>
+
 #include <nw4r/ut.h>
 
 namespace kiwi {
@@ -159,7 +161,7 @@ enum EExitType {
 /**
  * @brief Scene factory
  */
-class SceneCreator : private ExtView<RPSysSceneCreator> {
+class SceneCreator : public ExtSingletonPtr<RPSysSceneCreator, SceneCreator> {
 public:
     /**
      * @brief Scene information
@@ -180,14 +182,35 @@ public:
     };
 
 public:
-    K_EXTVIEW_GET_INSTANCE(SceneCreator, RPSysSceneCreator::getInstance);
-
     /**
      * @brief Registers user scene class
      *
      * @param rInfo Scene info
      */
     static void RegistScene(const Info& rInfo);
+
+    /**
+     * @brief Registers root debug menu information
+     * @details The debug root scene is entered when transitioning to the main
+     * menu while the specified button mask is held.
+     *
+     * @param id Debug root scene ID (-1 to disable)
+     * @param buttons Buttons that must be held to visit the debug menu
+     * (defaults to B+MINUS+2)
+     */
+    static void RegistDebugRoot(s32 id,
+                                u16 buttons = (EButton_B | EButton_Minus |
+                                               EButton_2));
+
+    /**
+     * @brief Gets the scene ID of the main menu scene
+     */
+    static s32 GetMenuScene();
+
+    /**
+     * @brief Gets the scene ID of the bootup scene
+     */
+    static s32 GetBootScene();
 
 #if defined(PACK_SPORTS) || defined(PACK_PLAY)
     /**
@@ -206,8 +229,17 @@ public:
      * @param pColor Fade color (optional)
      * @return Success
      */
-    bool ChangeSceneAfterFade(s32 id, const nw4r::ut::Color* pColor = NULL);
+    bool ChangeSceneAfterFade(s32 id, const nw4r::ut::Color* pColor = nullptr);
 #endif
+
+    /**
+     * @brief Changes to the bootup scene
+     *
+     * @return Success
+     */
+    bool ChangeBootScene() {
+        return ChangeSceneAfterFade(GetBootScene());
+    }
 
     /**
      * @brief Gets the specified scene's name
@@ -312,6 +344,11 @@ private:
     static const Info scPackScenes[];
     //! User-registered scenes
     static TMap<s32, Info> sUserScenes;
+
+    //! Root debug menu scene ID
+    static s32 sDebugRootID;
+    //! Root debug menu button combination (held)
+    static u16 sDebugRootButtons;
 };
 
 //! @}

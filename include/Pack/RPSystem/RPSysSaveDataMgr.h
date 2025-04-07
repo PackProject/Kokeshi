@@ -6,6 +6,7 @@
 #include <Pack/RPSports/RPSportsPlayerData.h>
 #include <Pack/RPSports/RPSportsSystemData.h>
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

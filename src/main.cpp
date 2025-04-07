@@ -1,6 +1,8 @@
 #include <Pack/RPSystem.h>
-#include <kokeshi.hpp>
+
 #include <libkiwi.h>
+
+#include <kokeshi.hpp>
 
 /**
  * Mod entrypoint
@@ -12,11 +14,9 @@ void KokeshiMain() {
     kiwi::MapFile::CreateInstance();
     kiwi::MapFile::GetInstance().Open(kokeshi::MAPFILE_PATH,
                                       kiwi::MapFile::ELinkType_Relocatable);
-
-    kiwi::GeckoDebugger::CreateInstance();
-    kiwi::GeckoDebugger::GetInstance().Attach();
 #endif
 
+    // Initialize network socket system
     kiwi::LibSO::Initialize();
 
     // ====================================================
@@ -24,17 +24,14 @@ void KokeshiMain() {
     kiwi::cout << "Hello world!" << kiwi::endl;
     // ====================================================
 
-// Enter first scene
-#if defined(PACK_SPORTS) || defined(PACK_PLAY)
-    kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
-        kiwi::ESceneID_RPSysBootScene);
-#elif defined(PACK_RESORT)
-    kiwi::SceneCreator::GetInstance().ChangeSceneAfterFade(
-        kiwi::ESceneID_Sp2StrapScene);
-#endif
+    // Enter first scene
+    kiwi::SceneCreator::GetInstance().ChangeBootScene();
 
-    RP_GET_INSTANCE(RPSysSystem)->mainLoop(); // Enter game loop
-    ASSERT(false); // Main function should never return
+    // Enter game loop
+    RP_GET_INSTANCE(RPSysSystem)->mainLoop();
+
+    // Main function should never return
+    ASSERT(false);
 }
 KOKESHI_BY_PACK(KM_CALL(0x80183b6c, KokeshiMain),  // Wii Sports
                 KM_CALL(0x80183784, KokeshiMain),  // Wii Play

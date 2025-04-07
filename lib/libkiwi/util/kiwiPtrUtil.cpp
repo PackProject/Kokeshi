@@ -1,5 +1,7 @@
 #include <libkiwi.h>
 
+#include <cctype>
+
 namespace kiwi {
 
 /**
@@ -118,7 +120,7 @@ bool PtrUtil::IsString(const void* addr) {
         char c = buffer[length];
 
         // "String-like" characters
-        if (ksl::isalpha(c) || ksl::isdigit(c) || c == ' ' || c == '_' ||
+        if (std::isalpha(c) || std::isdigit(c) || c == ' ' || c == '_' ||
             c == '-') {
             chars++;
         }

@@ -1,8 +1,9 @@
 #ifndef LIBKIWI_PRIM_VECTOR_H
 #define LIBKIWI_PRIM_VECTOR_H
-#include <algorithm>
 #include <libkiwi/debug/kiwiAssert.h>
 #include <libkiwi/k_types.h>
+
+#include <algorithm>
 
 namespace kiwi {
 //! @addtogroup libkiwi_prim
@@ -12,6 +13,199 @@ namespace kiwi {
  * @brief Dynamically-sized, contiguous array (std::vector)
  */
 template <typename T> class TVector {
+public:
+    // Forward declarations
+    class ConstIterator;
+
+    /**
+     * @brief Vector iterator
+     */
+    class Iterator {
+        template <typename> friend class TVector;
+        friend class ConstIterator;
+
+    public:
+        /**
+         * @brief Constructor
+         *
+         * @param pVector Parent container
+         * @param index Element index
+         */
+        explicit Iterator(TVector<T>* pVector, u32 index)
+            : mpParent(pVector), mIndex(index) {
+
+            K_ASSERT(pVector != nullptr);
+            K_ASSERT(0 <= index && index <= pVector->Size());
+        }
+
+        /**
+         * @brief Pre-increment operator
+         */
+        Iterator& operator++() {
+            // Can't iterate
+            if (mIndex >= mpParent->Size()) {
+                return *this;
+            }
+
+            mIndex++;
+            return *this;
+        }
+        /**
+         * @brief Post-increment operator
+         */
+        Iterator operator++(int) {
+            Iterator clone(*this);
+            ++*this;
+            return clone;
+        }
+
+        /**
+         * @brief Pre-decrement operator
+         */
+        Iterator& operator--() {
+            // Can't iterate
+            if (mIndex == 0) {
+                return *this;
+            }
+
+            mIndex--;
+            return *this;
+        }
+        /**
+         * @brief Post-decrement operator
+         */
+        Iterator operator--(int) {
+            Iterator clone(*this);
+            --*this;
+            return clone;
+        }
+
+        T* operator->() const {
+            K_ASSERT(mpParent != nullptr);
+
+            if (mIndex >= mpParent->Size()) {
+                return nullptr;
+            }
+
+            return &(*mpParent)[mIndex];
+        }
+        T& operator*() const {
+            K_ASSERT(mpParent != nullptr);
+            K_ASSERT(0 <= mIndex && mIndex < mpParent->Size());
+
+            return (*mpParent)[mIndex];
+        }
+
+        // clang-format off
+        bool operator==(Iterator rhs) const { return mpParent == rhs.mpParent && mIndex == rhs.mIndex; }
+        bool operator!=(Iterator rhs) const { return mpParent != rhs.mpParent || mIndex != rhs.mIndex; }
+        // clang-format on
+
+    private:
+        TVector<T>* mpParent; //!< Parent vector
+        u32 mIndex;           //!< Element index
+    };
+
+    /**
+     * @brief Vector iterator (const-view)
+     */
+    class ConstIterator {
+        template <typename> friend class TVector;
+
+    public:
+        /**
+         * @brief Constructor
+         *
+         * @param pVector Parent container
+         * @param index Element index
+         */
+        explicit ConstIterator(TVector<T>* pVector, u32 index)
+            : mpParent(pVector), mIndex(index) {
+
+            K_ASSERT(pVector != nullptr);
+            K_ASSERT(0 <= index && index <= pVector->Size());
+        }
+
+        /**
+         * @brief Constructor
+         *
+         * @param iter Iterator
+         */
+        ConstIterator(Iterator iter)
+            : mpParent(iter.mpParent), mIndex(iter.mIndex) {
+
+            K_ASSERT(mpParent != nullptr);
+            K_ASSERT(0 <= mIndex && mIndex <= mpParent->Size());
+        }
+
+        /**
+         * @brief Pre-increment operator
+         */
+        ConstIterator& operator++() {
+            // Can't iterate
+            if (mIndex >= mpParent->Size()) {
+                return *this;
+            }
+
+            mIndex++;
+            return *this;
+        }
+        /**
+         * @brief Post-increment operator
+         */
+        ConstIterator operator++(int) {
+            ConstIterator clone(*this);
+            ++*this;
+            return clone;
+        }
+
+        /**
+         * @brief Pre-decrement operator
+         */
+        ConstIterator& operator--() {
+            // Can't iterate
+            if (mIndex == 0) {
+                return *this;
+            }
+
+            mIndex--;
+            return *this;
+        }
+        /**
+         * @brief Post-decrement operator
+         */
+        ConstIterator operator--(int) {
+            ConstIterator clone(*this);
+            --*this;
+            return clone;
+        }
+
+        const T* operator->() const {
+            K_ASSERT(mpParent != nullptr);
+
+            if (mIndex >= mpParent->Size()) {
+                return nullptr;
+            }
+
+            return &(*mpParent)[mIndex];
+        }
+        const T& operator*() const {
+            K_ASSERT(mpParent != nullptr);
+            K_ASSERT(0 <= mIndex && mIndex < mpParent->Size());
+
+            return (*mpParent)[mIndex];
+        }
+
+        // clang-format off
+        bool operator==(ConstIterator rhs) const { return mpParent == rhs.mpParent && mIndex == rhs.mIndex; }
+        bool operator!=(ConstIterator rhs) const { return mpParent != rhs.mpParent || mIndex != rhs.mIndex; }
+        // clang-format on
+
+    private:
+        TVector<T>* mpParent; //!< Parent vector
+        u32 mIndex;           //!< Element index
+    };
+
 public:
     /**
      * @brief Constructor
@@ -81,6 +275,32 @@ public:
         return *this;
     }
 #endif
+
+    /**
+     * @brief Gets iterator to beginning of vector
+     */
+    Iterator Begin() {
+        return Iterator(this, 0);
+    }
+    /**
+     * @brief Gets iterator to beginning of vector (const view)
+     */
+    ConstIterator Begin() const {
+        return ConstIterator(const_cast<TVector*>(this)->Begin());
+    }
+
+    /**
+     * @brief Gets iterator to end of vector
+     */
+    Iterator End() {
+        return Iterator(this, Size());
+    }
+    /**
+     * @brief Gets iterator to end of vector (const-view)
+     */
+    ConstIterator End() const {
+        return ConstIterator(const_cast<TVector*>(this)->End());
+    }
 
     /**
      * @brief Gets the number of elements in the vector

@@ -1,17 +1,16 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_CONTROLLER_H
 #define RVL_FACE_LIBRARY_INTERNAL_CONTROLLER_H
+#include <types.h>
+
 #include <RVLFaceLib/RFL_MiddleDatabase.h>
 #include <RVLFaceLib/RFLi_Types.h>
+
 #include <revolution/CARD.h>
 #include <revolution/MEM.h>
 #include <revolution/WPAD.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 #define RFLi_CTRL_REPLACE_BUF_NUM 2
 
@@ -58,8 +57,6 @@ BOOL RFLiCheckCtrlBufferCore(const RFLiCtrlBuf* buf, u8 index,
 RFLErrcode RFLiLoadControllerAsync(s32 chan, BOOL ch);
 BOOL RFLiGetControllerData(RFLiCharInfo* info, s32 chan, u16 index,
                            BOOL allowHidden);
-
-//! @}
 
 #ifdef __cplusplus
 }

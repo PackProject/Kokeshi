@@ -99,27 +99,6 @@ public:
     bool Listen(s32 backlog = SOMAXCONN) const;
 
     /**
-     * @brief Tests whether socket is blocking
-     */
-    bool IsBlocking() const;
-
-    /**
-     * @brief Toggles socket blocking
-     *
-     * @param enable Whether to enable blocking
-     * @return Success
-     */
-    bool SetBlocking(bool enable) const;
-
-    /**
-     * @brief Toggles port reuse
-     *
-     * @param enable Whether to enable port reuse
-     * @return Success
-     */
-    bool SetReuseAddr(bool enable) const;
-
-    /**
      * @brief Stops socket from reading/writing
      *
      * @param how How to shutdown connection
@@ -148,6 +127,41 @@ public:
      * @return Success
      */
     bool GetPeerAddr(SockAddrAny& rAddr) const;
+
+    /**
+     * @brief Tests whether socket is blocking
+     */
+    bool IsBlocking() const;
+    /**
+     * @brief Toggles socket blocking
+     *
+     * @param enable Whether to enable blocking
+     * @return Success
+     */
+    bool SetBlocking(bool enable) const;
+
+    /**
+     * @brief Toggles port reuse
+     *
+     * @param enable Whether to enable port reuse
+     * @return Success
+     */
+    bool SetReuseAddr(bool enable) const;
+
+    /**
+     * @brief Sets the size of the send buffer
+     *
+     * @param size New buffer size
+     * @return Success
+     */
+    bool SetSendBufferSize(s32 size) const;
+    /**
+     * @brief Sets the size of the receive buffer
+     *
+     * @param size New buffer size
+     * @return Success
+     */
+    bool SetRecvBufferSize(s32 size) const;
 
     /**
      * @brief Tests whether socket can receive data

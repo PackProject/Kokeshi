@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_AXFX_CHORUS_H
 #define RVL_SDK_AXFX_CHORUS_H
-#include <revolution/AXFX/AXFXChorusExp.h>
 #include <types.h>
+
+#include <revolution/AXFX/AXFXChorusExp.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_axfx
-//! @{
 
 typedef struct AXFX_CHORUS {
     AXFX_CHORUS_EXP exp; // at 0x0
@@ -21,8 +19,6 @@ BOOL AXFXChorusInit(AXFX_CHORUS* fx);
 BOOL AXFXChorusShutdown(AXFX_CHORUS* fx);
 BOOL AXFXChorusSettings(AXFX_CHORUS* fx);
 void AXFXChorusCallback(void* chans, void* context);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,13 @@
 #ifndef RVL_SDK_NDEV_EXI2_AD_DEBUGGER_DRIVER_H
 #define RVL_SDK_NDEV_EXI2_AD_DEBUGGER_DRIVER_H
-#include <revolution/NdevExi2AD/exi2.h>
-#include <revolution/OS.h>
 #include <types.h>
+
+#include <revolution/NdevExi2AD/exi2.h>
+
+#include <revolution/OS.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_ndev
-//! @{
 
 void DBInitComm(u8** flagOut, OSInterruptHandler handler);
 void DBInitInterrupts(void);
@@ -34,8 +33,6 @@ static BOOL __DBWrite(u32 ofs, const void* src, u32 size) {
     return __DBEXIWriteRam(
         (((ofs + 0xD10000) * 0x40) & 0x3FFFFF00) | 0x80000000, src, size);
 }
-
-//! @}
 
 #ifdef __cplusplus
 }

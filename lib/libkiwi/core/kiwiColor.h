@@ -1,6 +1,7 @@
 #ifndef LIBKIWI_CORE_COLOR_H
 #define LIBKIWI_CORE_COLOR_H
 #include <libkiwi/k_types.h>
+
 #include <nw4r/ut.h>
 
 namespace kiwi {
@@ -60,8 +61,8 @@ public:
     }
 
     // clang-format off
-    operator             u32() const { return Rgba32(); }                  //!< Implicitly converts color to u32 (RGBA order)
-    operator nw4r::ut::Color() const { return nw4r::ut::Color(Rgba32()); } //!< Implicitly converts color to NW4R color
+    operator             u32() const { return Rgba32(); }                  //!< Implicitly convert to u32 (RGBA order)
+    operator nw4r::ut::Color() const { return nw4r::ut::Color(Rgba32()); } //!< Implicitly convert to NW4R color
     // clang-format on
 
 public:
@@ -74,18 +75,18 @@ public:
      * @name Preset Colors
      */
     /**@{*/
-    static const Color RED;
-    static const Color ORANGE;
-    static const Color YELLOW;
-    static const Color GREEN;
-    static const Color BLUE;
-    static const Color PURPLE;
-    static const Color PINK;
-    static const Color CYAN;
-    static const Color BLACK;
-    static const Color WHITE;
-    static const Color BROWN;
-    static const Color GREY;
+    static const u32 RED = 0xFF0000FF;
+    static const u32 ORANGE = 0xFF8000FF;
+    static const u32 YELLOW = 0xFFFF00FF;
+    static const u32 GREEN = 0x00FF00FF;
+    static const u32 BLUE = 0x0000FFFF;
+    static const u32 PURPLE = 0x8000FFFF;
+    static const u32 PINK = 0xFF00FFFF;
+    static const u32 CYAN = 0x00FFFFFF;
+    static const u32 BLACK = 0x000000FF;
+    static const u32 WHITE = 0xFFFFFFFF;
+    static const u32 BROWN = 0x643200FF;
+    static const u32 GREY = 0x808080FF;
     /**@}*/
 };
 

@@ -102,7 +102,7 @@ void* Nw4rException::ThreadFunc(void* pArg) {
 
     // Thread waits until error handler
     OSMessage msg;
-    OSReceiveMessage(&GetInstance().mMessageQueue, &msg, OS_MSG_PERSISTENT);
+    OSReceiveMessage(&GetInstance().mMessageQueue, &msg, OS_MSG_BLOCKING);
 
     OSDisableInterrupts();
     VISetPreRetraceCallback(nullptr);
@@ -142,7 +142,7 @@ void Nw4rException::ErrorHandler(u8 error, OSContext* pCtx, u32 _dsisr,
     OSSetErrorHandler(error, nullptr);
 
     // Allow thread to continue
-    OSSendMessage(&GetInstance().mMessageQueue, 0, OS_MSG_PERSISTENT);
+    OSSendMessage(&GetInstance().mMessageQueue, 0, OS_MSG_BLOCKING);
 
     if (OSGetCurrentThread() == nullptr) {
         VISetPreRetraceCallback(nullptr);

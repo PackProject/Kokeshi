@@ -1,7 +1,8 @@
 #ifndef NW4R_UT_RECT_H
 #define NW4R_UT_RECT_H
-#include <nw4r/math.h>
 #include <nw4r/types_nw4r.h>
+
+#include <nw4r/math.h>
 
 namespace nw4r {
 namespace ut {
@@ -43,9 +44,9 @@ struct Rect {
     }
 
     void MoveTo(f32 x, f32 y) {
-        right = GetWidth() + x;
+        right = x + GetWidth();
         left = x;
-        bottom = GetHeight() + y;
+        bottom = y + GetHeight();
         top = y;
     }
 };

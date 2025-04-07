@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_EXI_BIOS_H
 #define RVL_SDK_EXI_BIOS_H
-#include <revolution/EXI/EXICommon.h>
 #include <types.h>
+
+#include <revolution/EXI/EXICommon.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_exi
-//! @{
 
 typedef struct EXIItem {
     u32 dev;              // at 0x0
@@ -46,8 +44,6 @@ void EXIInit(void);
 BOOL EXILock(EXIChannel chan, u32 dev, EXICallback callback);
 BOOL EXIUnlock(EXIChannel chan);
 s32 EXIGetID(EXIChannel chan, u32 dev, u32* out);
-
-//! @}
 
 #ifdef __cplusplus
 }

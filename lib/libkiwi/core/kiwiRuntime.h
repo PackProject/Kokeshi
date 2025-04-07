@@ -361,31 +361,26 @@ u32 GetDolDataSize() {
  */
 /**@{*/
 /**
- * @brief Begin an inline assembly block
- */
-#define K_ASM_BEGIN asm volatile
-
-/**
  * @brief Copy the contents of a GPR to a variable
  * @note Compiler optimizations usually alias the variable to the specified GPR
  */
 #define K_GET_GPR(r, var)                                                      \
-    K_ASM_BEGIN {                                                              \
+    asm volatile {                                                             \
         mr var, r;                                                             \
     }
 /**
  * @brief Copy the contents of a variable to a GPR
  */
 #define K_SET_GPR(r, var)                                                      \
-    K_ASM_BEGIN {                                                              \
+    asm volatile {                                                             \
         mr r, var;                                                             \
     }
 
 /**
  * @brief Create a stack frame and save all GPRs
  */
-#define K_SAVE_GPRS                                                            \
-    K_ASM_BEGIN {                                                              \
+#define K_SAVE_GPRS()                                                          \
+    asm volatile {                                                             \
         stwu r1, -0x90(r1);                                                    \
         stmw r3, 0xC(r1);                                                      \
         mflr r12;                                                              \
@@ -395,8 +390,8 @@ u32 GetDolDataSize() {
 /**
  * @brief Destroy the stack frame and restore all GPRs
  */
-#define K_REST_GPRS                                                            \
-    K_ASM_BEGIN {                                                              \
+#define K_REST_GPRS()                                                          \
+    asm volatile {                                                             \
         lwz r12, 0x8(r1);                                                      \
         mtlr r12;                                                              \
         lmw r3, 0xC(r1);                                                       \

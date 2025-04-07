@@ -9,7 +9,7 @@ struct Disposer {
     virtual ~Disposer();
 
     Heap* mHeap;          // at 0x0
-    nw4r::ut::Node mNode; // at 0x4
+    nw4r::ut::Link mNode; // at 0x4
 };
 } // namespace EGG
 

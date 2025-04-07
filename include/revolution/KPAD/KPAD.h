@@ -1,8 +1,9 @@
-#ifndef REVOSDK_KPAD_H
-#define REVOSDK_KPAD_H
+#ifndef RVL_SDK_KPAD_H
+#define RVL_SDK_KPAD_H
 #ifdef __cplusplus
-#include <revolution/MTX.h>
 #include <types.h>
+
+#include <revolution/MTX.h>
 extern "C" {
 #endif
 
@@ -30,13 +31,13 @@ typedef enum {
     KPAD_BTN_PLUS = (1 << 4),
     KPAD_BTN_MINUS = (1 << 12),
 
-    KPAD_BTN_1 = (1 << 8),
-    KPAD_BTN_2 = (1 << 9),
+    KPAD_BTN_1 = (1 << 9),
+    KPAD_BTN_2 = (1 << 8),
 
     KPAD_BTN_A = (1 << 11),
     KPAD_BTN_B = (1 << 10),
 
-    KPAD_BTN_HOME = (1 << 16),
+    KPAD_BTN_HOME = (1 << 15),
 } KPADButton;
 
 typedef struct Vec2 {

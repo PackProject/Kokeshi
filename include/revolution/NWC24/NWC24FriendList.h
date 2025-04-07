@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_NWC24_FRIEND_LIST_H
 #define RVL_SDK_NWC24_FRIEND_LIST_H
-#include <revolution/NWC24/NWC24Types.h>
 #include <types.h>
+
+#include <revolution/NWC24/NWC24Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nwc24
-//! @{
 
 #define NWC24_FRIEND_LIST_CAPACITY 100
 
@@ -21,8 +19,6 @@ typedef struct NWC24FLHeader {
 } NWC24FLHeader;
 
 NWC24Err NWC24iOpenFriendList(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

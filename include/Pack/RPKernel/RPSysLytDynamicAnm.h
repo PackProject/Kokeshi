@@ -1,7 +1,6 @@
 #ifndef RP_KERNEL_LYT_DYNAMIC_ANM_H
 #define RP_KERNEL_LYT_DYNAMIC_ANM_H
 #include "RPTypes.h"
-
 #include <egg/math/eggVector.h>
 #include <nw4r/lyt/lyt_pane.h>
 #include <nw4r/ut/ut_list.h>
@@ -101,7 +100,7 @@ private:
     // @brief Animation end position
     EGG::Vector3f mDestPos; // at 0x24
     // @brief Node for linked list
-    nw4r::ut::Node mNode; // at 0x30
+    nw4r::ut::Link mNode; // at 0x30
 };
 
 #endif

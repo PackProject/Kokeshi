@@ -1,25 +1,46 @@
 #ifndef NW4R_LYT_BOUNDING_H
 #define NW4R_LYT_BOUNDING_H
-#include "lyt_drawInfo.h"
-#include "lyt_pane.h"
-#include "types_nw4r.h"
+#include <nw4r/types_nw4r.h>
+
+#include <nw4r/lyt/lyt_pane.h>
+
+#include <nw4r/ut.h>
 
 namespace nw4r {
 namespace lyt {
+
+// Forward declarations
+struct ResBlockSet;
+
 namespace res {
-struct Bounding : Pane {};
+
+/******************************************************************************
+ *
+ * BND1 binary layout
+ *
+ ******************************************************************************/
+struct Bounding : Pane {
+    static const u32 SIGNATURE = 'bnd1';
+};
+
 } // namespace res
 
-struct ResBlockSet {};
+/******************************************************************************
+ *
+ * Bounding
+ *
+ ******************************************************************************/
+class Bounding : public Pane {
+public:
+    NW4R_UT_RTTI_DECL(Bounding);
 
-struct Bounding : Pane {
-    Bounding(const res::Bounding*, const ResBlockSet&);
-    virtual ~Bounding();
-    virtual const ut::detail::RuntimeTypeInfo* GetRuntimeTypeInfo() const;
-    virtual void DrawSelf(const DrawInfo&);
+public:
+    Bounding(const res::Bounding* pRes, const ResBlockSet& rBlockSet);
+    virtual ~Bounding(); // at 0x8
 
-    static ut::detail::RuntimeTypeInfo typeInfo;
+    virtual void DrawSelf(const DrawInfo& rInfo); // at 0x18
 };
+
 } // namespace lyt
 } // namespace nw4r
 

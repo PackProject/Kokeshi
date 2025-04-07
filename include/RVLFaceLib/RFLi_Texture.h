@@ -1,13 +1,11 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_TEXTURE_H
 #define RVL_FACE_LIBRARY_INTERNAL_TEXTURE_H
-#include <RVLFaceLib/RFLi_Types.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFLi_Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 typedef struct RFLiTexture {
     u8 format;          // at 0x0
@@ -37,8 +35,6 @@ typedef struct RFLiTexture {
 inline void* RFLiGetTexImage(const RFLiTexture* tex) {
     return (u8*)tex + tex->imageOfs;
 }
-
-//! @}
 
 #ifdef __cplusplus
 }

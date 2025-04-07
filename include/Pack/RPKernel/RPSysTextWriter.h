@@ -2,7 +2,6 @@
 #define RP_KERNEL_TEXT_WRITER_H
 #include "RPSysFontManager.h"
 #include "RPTypes.h"
-
 #include <nw4r/ut/ut_RomFont.h>
 #include <nw4r/ut/ut_TextWriterBase.h>
 

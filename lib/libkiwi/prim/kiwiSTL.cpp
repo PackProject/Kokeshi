@@ -1,6 +1,8 @@
+#include <libkiwi.h>
+
 #include <cstdio>
 #include <cstring>
-#include <libkiwi.h>
+#include <cwchar>
 
 namespace ksl {
 
@@ -9,7 +11,7 @@ namespace ksl {
  *
  * @param c Character
  */
-bool isdigit(char c) {
+int isdigit(char c) {
     return c >= '0' && c <= '9';
 }
 
@@ -18,7 +20,7 @@ bool isdigit(char c) {
  *
  * @param c Character
  */
-bool isalpha(char c) {
+int isalpha(char c) {
     return isupper(c) || islower(c);
 }
 
@@ -27,7 +29,7 @@ bool isalpha(char c) {
  *
  * @param c Character
  */
-bool isupper(char c) {
+int isupper(char c) {
     return c >= 'A' && c <= 'Z';
 }
 
@@ -36,7 +38,7 @@ bool isupper(char c) {
  *
  * @param c Character
  */
-bool islower(char c) {
+int islower(char c) {
     return c >= 'a' && c <= 'z';
 }
 
@@ -357,6 +359,64 @@ const wchar_t* wcsstr(const wchar_t* pwStr, const wchar_t* pwSeq) {
     }
 
     return nullptr;
+}
+
+/******************************************************************************
+ *
+ * Formatter implementation
+ *
+ ******************************************************************************/
+// Internal STL declarations
+extern "C" {
+struct FormatCtx {
+    char* pwDst;   // at 0x0
+    size_t maxlen; // at 0x4
+    size_t pos;    // at 0x8
+};
+
+typedef void (*WriterFunc)(FormatCtx* pCtx, const char* pFmt, size_t length);
+
+struct WideFormatCtx {
+    wchar_t* pwDst; // at 0x0
+    size_t maxlen;  // at 0x4
+    size_t pos;     // at 0x8
+};
+
+typedef void (*WideWriterFunc)(WideFormatCtx* pCtx, const wchar_t* pwFmt,
+                               size_t length);
+
+int __wpformatter(WideWriterFunc pWriter, WideFormatCtx* pContext,
+                  const wchar_t* pwFmt, std::va_list args);
+
+void __wStringWrite(WideFormatCtx* pCtx, const wchar_t* pwFmt, size_t length);
+}
+
+/**
+ * @brief Applies the specified arguments to the specified wide-char format
+ * string, placing the result in the output buffer.
+ *
+ * @param[out] pwDst Destination buffer
+ * @param maxlen Buffer size
+ * @param pwFmt Format string
+ * @param args Format arguments
+ * @return int Number of characters written
+ */
+int vswprintf(wchar_t* pwDst, size_t maxlen, const wchar_t* pwFmt,
+              std::va_list args) {
+
+    WideFormatCtx context = {pwDst, maxlen};
+    int n = __wpformatter(__wStringWrite, &context, pwFmt, args);
+
+    if (n >= 0) {
+        if (n < maxlen) {
+            pwDst[n] = L'\0';
+        } else {
+            pwDst[maxlen - 1] = L'\0';
+            return -1;
+        }
+    }
+
+    return n;
 }
 
 } // namespace ksl

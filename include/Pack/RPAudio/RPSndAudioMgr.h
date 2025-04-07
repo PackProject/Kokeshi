@@ -1,9 +1,11 @@
 #ifndef RP_AUDIO_SND_AUDIO_MGR_H
 #define RP_AUDIO_SND_AUDIO_MGR_H
-#include <RPTypes.h>
 #include <egg/audio.h>
 #include <egg/core.h>
+
 #include <nw4r/snd.h>
+
+#include <RPTypes.h>
 
 //! @addtogroup rp_audio
 //! @{
@@ -39,7 +41,7 @@ public:
     void changeScene();
 
 private:
-    char UNK_0x0[0x928];
+    char UNK_0x898[0x90];
     nw4r::snd::SoundHandle mSndHandle; // at 0x928
 };
 

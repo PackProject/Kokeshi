@@ -11,6 +11,8 @@
 
 namespace EGG {
 class DvdFile : File {
+    friend class DvdRipper;
+
     struct FileInfoPair {
         DVDFileInfo mFileInfo; // at 0x0
         DvdFile* pDvdFile;     // at 0x3C
@@ -29,7 +31,7 @@ public:
     virtual s32 writeData(const void*, s32, s32); // at 0x18
     virtual UNKWORD getFileSize() const {
         return mFileInfo.size;
-    };                                     // at 0x1C
+    }; // at 0x1C
     virtual bool open(int);                // at 0x20
     virtual bool open(const char*, void*); // at 0x24
 
@@ -48,7 +50,7 @@ private:
     OSMessageQueue mMesgQueue_0xA0;
     OSMessage mMesg_0xC0;
     OSThread* mThread;    // at 0xC4
-    nw4r::ut::Node mNode; // at 0xC8
+    nw4r::ut::Link mNode; // at 0xC8
 
     static nw4r::ut::List sDvdList;
     static bool sIsInitialized;

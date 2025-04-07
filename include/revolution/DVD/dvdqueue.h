@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_DVD_QUEUE_H
 #define RVL_SDK_DVD_QUEUE_H
-#include <revolution/DVD/dvd.h>
 #include <types.h>
+
+#include <revolution/DVD/dvd.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_dvd
-//! @{
 
 typedef enum {
     DVD_PRIO_HIGHEST,
@@ -24,8 +22,6 @@ DVDCommandBlock* __DVDPopWaitingQueue(void);
 BOOL __DVDCheckWaitingQueue(void);
 DVDCommandBlock* __DVDGetNextWaitingQueue(void);
 BOOL __DVDDequeueWaitingQueue(const DVDCommandBlock* block);
-
-//! @}
 
 #ifdef __cplusplus
 }

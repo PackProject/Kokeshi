@@ -1,22 +1,25 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_TYPES_H
 #define RVL_FACE_LIBRARY_INTERNAL_TYPES_H
-#include <RVLFaceLib/RFL_Types.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFL_Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//
-// Common RFL elements have been moved here to avoid circular dependencies.
-// Everything is organized alphabetically where possible.
-//
+/**
+ * Common types used throughout many RFL files.
+ *
+ * To avoid circular depencies, common structures and all enums have been moved
+ * here.
+ *
+ * Everything is organized in alphabetical order (when possible, otherwise
+ * dependency order).
+ */
 
-//! @addtogroup rfl_impl
-//! @{
-
-//
-// Common enums
-//
+/**
+ * Common enums
+ */
 
 typedef enum {
     RFLiArcID_Beard,
@@ -125,17 +128,16 @@ typedef enum {
     RFLiPartsTex_Max
 } RFLiPartsTex;
 
-//
-// Common typedefs
-//
+/**
+ * Common typedefs
+ */
 
 typedef void (*RFLiCallback)(void);
 typedef void (*RFLiExCallback)(u32 arg);
 
-//
-// Common structs
-//
-
+/**
+ * Common structs
+ */
 typedef struct RFLiCharInfo {
     union {
         struct {
@@ -429,8 +431,6 @@ typedef struct RFLiHiddenCharData {
 
     char padding9[10]; // at 0x36
 } RFLiHiddenCharData;
-
-//! @}
 
 #ifdef __cplusplus
 }

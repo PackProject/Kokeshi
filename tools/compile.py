@@ -41,6 +41,7 @@ CFLAGS_COMMON = " ".join([
     "-sdata 0",                   # We can't use small data sections in relocatable code
     "-sdata2 0",                  # We can't use small data sections in relocatable code
     "-pragma \"cpp1x on\"",       # Enable C++11 features
+    "-DREVOLUTION",               # For BTE library
 ])
 
 # Flags applied only to the module
@@ -132,6 +133,8 @@ def main() -> None:
     if not success:
         exit(1)
 
+    print(f"[INFO] Success!")
+
 
 def build(args) -> bool:
     """Attempt to build the mod
@@ -158,7 +161,6 @@ def build(args) -> bool:
         if not install_romfs(args):
             return False
 
-    print(f"[INFO] Success!")
     return True
 
 
@@ -511,13 +513,16 @@ def install_romfs(args) -> bool:
             {disc_root}""")
             return False
 
-    # Install loader (sys/main.dol patch)
-    copyfile(f"{BUILD_DIR}/main_{args.game}.dol",
-             f"{partition_root}/sys/main.dol")
+    try:
+        # Install loader (sys/main.dol patch)
+        copyfile(f"{BUILD_DIR}/main_{args.game}.dol",
+                 f"{partition_root}/sys/main.dol")
 
-    # Install module & mapfile
-    copytree(f"{BUILD_DIR}/{MODULES_DIR}",
-             f"{partition_root}/files/{MODULES_DIR}", dirs_exist_ok=True)
+        # Install module & mapfile
+        copytree(f"{BUILD_DIR}/{MODULES_DIR}",
+                 f"{partition_root}/files/{MODULES_DIR}", dirs_exist_ok=True)
+    except Exception:
+        return False
 
     return True
 

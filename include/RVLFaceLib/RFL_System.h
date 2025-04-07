@@ -1,13 +1,11 @@
 #ifndef RVL_FACE_LIBRARY_SYSTEM_H
 #define RVL_FACE_LIBRARY_SYSTEM_H
-#include <RVLFaceLib/RFL_Types.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFL_Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl
-//! @{
 
 u32 RFLGetWorkSize(BOOL deluxeTex);
 RFLErrcode RFLInitResAsync(void* workBuffer, void* resBuffer, u32 resSize,
@@ -19,8 +17,6 @@ BOOL RFLAvailable(void);
 RFLErrcode RFLGetAsyncStatus(void);
 s32 RFLGetLastReason(void);
 RFLErrcode RFLWaitAsync(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

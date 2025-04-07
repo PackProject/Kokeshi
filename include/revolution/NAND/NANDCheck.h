@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_NAND_CHECK_H
 #define RVL_SDK_NAND_CHECK_H
-#include <revolution/NAND/nand.h>
 #include <types.h>
+
+#include <revolution/NAND/nand.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nand
-//! @{
 
 typedef enum {
     NAND_CHECK_TOO_MANY_APP_BLOCKS = (1 << 0),
@@ -17,8 +15,6 @@ typedef enum {
 } NANDCheckFlags;
 
 s32 NANDCheck(u32 neededBlocks, u32 neededFiles, u32* answer);
-
-//! @}
 
 #ifdef __cplusplus
 }

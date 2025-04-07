@@ -91,47 +91,6 @@ bool SocketBase::Listen(s32 backlog) const {
 }
 
 /**
- * @brief Tests whether socket is blocking
- */
-bool SocketBase::IsBlocking() const {
-    K_ASSERT(IsOpen());
-
-    s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
-    return (flags & SO_O_NONBLOCK) == 0;
-}
-
-/**
- * @brief Toggles socket blocking
- *
- * @param enable Whether to enable blocking
- * @return Success
- */
-bool SocketBase::SetBlocking(bool enable) const {
-    K_ASSERT(IsOpen());
-
-    s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
-    if (enable) {
-        flags &= ~SO_O_NONBLOCK;
-    } else {
-        flags |= SO_O_NONBLOCK;
-    }
-
-    return LibSO::Fcntl(mHandle, SO_F_SETFL, flags) >= 0;
-}
-
-/**
- * @brief Toggles port reuse
- *
- * @param enable Whether to enable port reuse
- * @return Success
- */
-bool SocketBase::SetReuseAddr(bool enable) const {
-    s32 value = enable;
-    return LibSO::SetSockOpt(mHandle, SO_SOL_SOCKET, SO_SO_REUSEADDR, &value,
-                             sizeof(value)) == SO_SUCCESS;
-}
-
-/**
  * @brief Stops socket from reading/writing
  *
  * @param how How to shutdown connection
@@ -189,6 +148,69 @@ bool SocketBase::GetPeerAddr(SockAddrAny& rAddr) const {
 }
 
 /**
+ * @brief Tests whether socket is blocking
+ */
+bool SocketBase::IsBlocking() const {
+    K_ASSERT(IsOpen());
+
+    s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
+    return (flags & SO_O_NONBLOCK) == 0;
+}
+
+/**
+ * @brief Toggles socket blocking
+ *
+ * @param enable Whether to enable blocking
+ * @return Success
+ */
+bool SocketBase::SetBlocking(bool enable) const {
+    K_ASSERT(IsOpen());
+
+    s32 flags = LibSO::Fcntl(mHandle, SO_F_GETFL, 0);
+    if (enable) {
+        flags &= ~SO_O_NONBLOCK;
+    } else {
+        flags |= SO_O_NONBLOCK;
+    }
+
+    return LibSO::Fcntl(mHandle, SO_F_SETFL, flags) >= 0;
+}
+
+/**
+ * @brief Toggles port reuse
+ *
+ * @param enable Whether to enable port reuse
+ * @return Success
+ */
+bool SocketBase::SetReuseAddr(bool enable) const {
+    s32 value = enable;
+    return LibSO::SetSockOpt(mHandle, SO_SOL_SOCKET, SO_SO_REUSEADDR, &value,
+                             sizeof(s32)) == SO_SUCCESS;
+}
+
+/**
+ * @brief Sets the size of the send buffer
+ *
+ * @param size New buffer size
+ * @return Success
+ */
+bool SocketBase::SetSendBufferSize(s32 size) const {
+    return LibSO::SetSockOpt(mHandle, SO_SOL_SOCKET, SO_SO_SNDBUF, &size,
+                             sizeof(s32)) == SO_SUCCESS;
+}
+
+/**
+ * @brief Sets the size of the receive buffer
+ *
+ * @param size New buffer size
+ * @return Success
+ */
+bool SocketBase::SetRecvBufferSize(s32 size) const {
+    return LibSO::SetSockOpt(mHandle, SO_SOL_SOCKET, SO_SO_RCVBUF, &size,
+                             sizeof(s32)) == SO_SUCCESS;
+}
+
+/**
  * @brief Tests whether socket can receive data
  */
 bool SocketBase::CanRecv() const {
@@ -199,8 +221,9 @@ bool SocketBase::CanRecv() const {
     fd[0].events = SO_POLLRDNORM;
     fd[0].revents = 0;
 
-    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0);
-    return success && fd[0].events == fd[0].revents;
+    // If peer has closed connection (POLLHUP), reads are still possible
+    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0) >= 0;
+    return success && (fd[0].revents & (SO_POLLRDNORM | SO_POLLHUP));
 }
 
 /**
@@ -214,8 +237,8 @@ bool SocketBase::CanSend() const {
     fd[0].events = SO_POLLWRNORM;
     fd[0].revents = 0;
 
-    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0);
-    return success && fd[0].events == fd[0].revents;
+    bool success = LibSO::Poll(fd, LENGTHOF(fd), 0) >= 0;
+    return success && (fd[0].revents & SO_POLLWRNORM);
 }
 
 /**
@@ -231,23 +254,17 @@ Optional<u32> SocketBase::RecvBytes(void* pDst, u32 len, Callback pCallback,
                                     void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pDst != nullptr);
+    K_ASSERT(OSIsMEM2Region(pDst));
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nrecv = 0;
     SOResult result = RecvImpl(pDst, len, nrecv, nullptr, pCallback, pArg);
 
-    // Success, return bytes read
-    if (result == SO_SUCCESS) {
+    if (result == SO_SUCCESS || result == SO_EWOULDBLOCK) {
         return nrecv;
     }
 
-    // Blocking is OK, just say zero bytes
-    if (result == SO_EWOULDBLOCK) {
-        return 0;
-    }
-
-    // Something went wrong!
     return kiwi::nullopt;
 }
 
@@ -265,23 +282,17 @@ Optional<u32> SocketBase::RecvBytesFrom(void* pDst, u32 len, SockAddrAny& rAddr,
                                         Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pDst != nullptr);
+    K_ASSERT(OSIsMEM2Region(pDst));
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nrecv = 0;
     SOResult result = RecvImpl(pDst, len, nrecv, &rAddr, pCallback, pArg);
 
-    // Success, return bytes read
-    if (result == SO_SUCCESS) {
+    if (result == SO_SUCCESS || result == SO_EWOULDBLOCK) {
         return nrecv;
     }
 
-    // Blocking is OK, just say zero bytes
-    if (result == SO_EWOULDBLOCK) {
-        return 0;
-    }
-
-    // Something went wrong!
     return kiwi::nullopt;
 }
 
@@ -298,23 +309,17 @@ Optional<u32> SocketBase::SendBytes(const void* pSrc, u32 len,
                                     Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pSrc != nullptr);
+    K_ASSERT(OSIsMEM2Region(pSrc));
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nsend = 0;
     SOResult result = SendImpl(pSrc, len, nsend, nullptr, pCallback, pArg);
 
-    // Success, return bytes read
-    if (result == SO_SUCCESS) {
+    if (result == SO_SUCCESS || result == SO_EWOULDBLOCK) {
         return nsend;
     }
 
-    // Blocking is OK, just say zero bytes
-    if (result == SO_EWOULDBLOCK) {
-        return 0;
-    }
-
-    // Something went wrong!
     return kiwi::nullopt;
 }
 
@@ -333,23 +338,17 @@ Optional<u32> SocketBase::SendBytesTo(const void* pSrc, u32 len,
                                       Callback pCallback, void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pSrc != nullptr);
+    K_ASSERT(OSIsMEM2Region(pSrc));
     K_ASSERT(len > 0);
 
     // Implementation version is responsible for using the callback
     u32 nsend = 0;
     SOResult result = SendImpl(pSrc, len, nsend, &rAddr, pCallback, pArg);
 
-    // Success, return bytes read
-    if (result == SO_SUCCESS) {
+    if (result == SO_SUCCESS || result == SO_EWOULDBLOCK) {
         return nsend;
     }
 
-    // Blocking is OK, just say zero bytes
-    if (result == SO_EWOULDBLOCK) {
-        return 0;
-    }
-
-    // Something went wrong!
     return kiwi::nullopt;
 }
 

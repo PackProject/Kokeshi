@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
+#include <new>
 #else
 #include <stdarg.h>
 #include <stddef.h>

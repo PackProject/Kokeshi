@@ -4,6 +4,7 @@
 #include "types_egg.h"
 
 namespace EGG {
+
 class Screen : public Frustum {
 public:
     enum TVMode { TV_MODE_4_3, TV_MODE_16_9, TV_MODE_MAX };
@@ -35,14 +36,28 @@ public:
 public:
     static void Initialize(const u16*, const u16*, Screen*);
     static void CalcRatio();
+
     static void SetTVMode(TVMode);
     static void SetTVModeDefault();
 
-    static u16 GetSizeXMax() {
-        return sTVModeWidths[sTVMode];
+    static TVMode GetTVMode() {
+        return sTVMode;
     }
+
+    static u16 GetSizeXMax() {
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
+        return sTVModeWidths[sTVMode];
+#elif defined(PACK_RESORT)
+        return sTVInfo[sTVMode].width;
+#endif
+    }
+
     static u16 GetSizeYMax() {
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
         return sTVModeHeights[sTVMode];
+#elif defined(PACK_RESORT)
+        return sTVInfo[sTVMode].height;
+#endif
     }
 
     Screen();
@@ -85,8 +100,20 @@ private:
     mutable DataEfb mDataEfb;   // at 0x48
 
     static TVMode sTVMode;
+
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     static u16 sTVModeWidths[TV_MODE_MAX];
     static u16 sTVModeHeights[TV_MODE_MAX];
+#elif defined(PACK_RESORT)
+    struct TVInfo {
+        u16 width;
+        u16 height;
+        f32 _08;
+        f32 _0C;
+    };
+
+    static TVInfo sTVInfo[TV_MODE_MAX];
+#endif
 
     static Screen* spRoot;
 

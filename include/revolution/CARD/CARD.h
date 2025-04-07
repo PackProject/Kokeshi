@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_card
-//! @{
-
 typedef struct CARDFileInfo {
     s32 chan;    // at 0x0
     s32 fileNo;  // at 0x4
@@ -16,8 +13,6 @@ typedef struct CARDFileInfo {
     u16 iBlock;  // at 0x10
     u16 padding; // at 0x12
 } CARDFileInfo;
-
-/**@}*/
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,5 @@
 memcpy=0x80004000
+wmemcpy=0x80010870
 memset=0x80004350
 vprintf=0x8000ceec
 vsprintf=0x8000cff0
@@ -13,8 +14,11 @@ sscanf=0x8000e604
 wcslen=0x80012c18
 strncat=0x8000e864
 strncmp=0x8000e9cc
+swprintf=0x80012a94
 wcsncpy=0x80012c50
 wcschr=0x80012d14
+wcstombs=0x8000a938
+mbstowcs=0x8000a878
 
 _f_dol_init=0x80004000
 _e_dol_init=0x800066df
@@ -121,6 +125,8 @@ __shl2i=0x80007cd0
 __shr2i=0x80007cf4
 __cvt_dbl_sll=0x80007d18
 __cvt_dbl_ull=0x80007dc8
+__wStringWrite=0x80012a28
+__wpformatter=0x8001209c
 
 __DBIntrHandler=0x8001c204
 DBInitComm=0x8001c228
@@ -544,6 +550,7 @@ OSDefaultExceptionHandler=0x80044d50
 __OSPSInit=0x80044db0
 __OSGetDIConfig=0x80044e10
 OSGetAppGamename=0x80044e30
+OSCreateAlarm=0x80044f40
 __OSInitAlarm=0x80044ee0
 InsertAlarm=0x80044f50
 OSSetAlarm=0x800451a0
@@ -3564,6 +3571,12 @@ Free__Q44nw4r3lyt6detail11TexCoordAryFv=0x801a2980
 Reserve__Q44nw4r3lyt6detail11TexCoordAryFUc=0x801a29d0
 SetSize__Q44nw4r3lyt6detail11TexCoordAryFUc=0x801a2a70
 DrawQuad__Q34nw4r3lyt6detailFRCQ34nw4r4math4VEC2RCQ34nw4r3lyt4SizeUcPA4_CQ34nw4r4math4VEC2PCQ34nw4r2ut5Color=0x801a2e60
+UpdateVertexColor__Q34nw4r2ut10CharWriterFv=0x80110640
+__dt__Q34nw4r2ut17TextWriterBase<w>Fv=0x80113480
+__ct__Q34nw4r2ut17TextWriterBase<w>Fv=0x80113420
+Print__Q34nw4r2ut17TextWriterBase<w>FPCwi=0x80114510
+
+sInstance__Q23EGG17CoreControllerMgr=0x806f4a08
 
 create__Q23EGG7ExpHeapFUlPQ23EGG4HeapUs=0x801c0e58
 alloc__Q23EGG4HeapFUliPQ23EGG4Heap=0x801c1654
@@ -3573,11 +3586,14 @@ getCoreStatus__Q23EGG14CoreControllerCFi=0x801c4380
 getNthController__Q23EGG17CoreControllerMgrFi=0x801c4ab8
 __dt__Q23EGG5SceneFv=0x801c8318
 sCurrentHeap__Q23EGG4Heap=0x806f49b0
+sTVMode__Q23EGG6Screen=0x806f4938
+sTVInfo__Q23EGG6Screen=0x806b4ad8
 
 spInstance__11RPSysSystem=0x806f4c68
 spInstance__13RPSysSceneMgr=0x806f4c98
 spInstance__13RPSndAudioMgr=0x806f5088
 spInstance__17RPSysSceneCreator=0x806f4c88
+spInstance__16RPSysFontManager=0x806f4cc8
 
 sUnkStruct__10RPSysScene=0x806f4c90
 __ct__10RPSysSceneFv=0x8022fb88
@@ -3614,3 +3630,5 @@ sDrawPass__13RPGrpRenderer=0x806f0bf8
 spInstance__15RPSysTextWriter=0x806f4d08
 Begin__15RPSysTextWriterFv=0x8023bdfc
 mainLoop__11RPSysSystemFv=0x80237b2c
+
+sActiveScreen__13RPGrpRenderer=0x807cef2c

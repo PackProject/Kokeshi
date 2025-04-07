@@ -44,7 +44,7 @@ struct Archive : Disposer {
     int INT_0x10;
     int INT_0x14;
     ARCHandle mHandle;    // at 0x18
-    nw4r::ut::Node mNode; // at 0x34
+    nw4r::ut::Link mNode; // at 0x34
 
     static nw4r::ut::List sArchiveList;
     static bool sIsArchiveListInitialized;

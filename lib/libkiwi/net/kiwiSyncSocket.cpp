@@ -68,25 +68,17 @@ SOResult SyncSocket::RecvImpl(void* pDst, u32 len, u32& rRecv,
                               void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pDst != nullptr);
+    K_ASSERT(OSIsMEM2Region(pDst));
     K_ASSERT(len > 0);
 
-    s32 result;
-    SockAddr4 addr; // TODO: Will forcing ipv4 cause problems?
-
     rRecv = 0;
-    while (rRecv < len) {
-        result = LibSO::RecvFrom(mHandle, pDst, len - rRecv, 0, addr);
-        if (result <= 0) {
-            goto _exit;
-        }
+    SockAddr4 addr;
 
-        pDst = AddToPtr(pDst, result);
+    s32 result = LibSO::RecvFrom(mHandle, pDst, len, 0, addr);
+    if (result > 0) {
         rRecv += result;
     }
 
-    K_ASSERT_EX(rRecv <= len, "Overflow???");
-
-_exit:
     if (pAddr != nullptr) {
         *pAddr = addr;
     }
@@ -95,7 +87,7 @@ _exit:
         pCallback(LibSO::GetLastError(), pArg);
     }
 
-    // Successful if the last transaction resulted in some amount of bytes read
+    // Successful if some amount of bytes read
     return result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 }
 
@@ -115,32 +107,27 @@ SOResult SyncSocket::SendImpl(const void* pSrc, u32 len, u32& rSend,
                               void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pSrc != nullptr);
+    K_ASSERT(OSIsMEM2Region(pSrc));
     K_ASSERT(len > 0);
 
-    s32 result;
-
     rSend = 0;
-    while (rSend < len) {
-        if (pAddr != nullptr) {
-            result = LibSO::SendTo(mHandle, pSrc, len - rSend, 0, *pAddr);
-        } else {
-            result = LibSO::Send(mHandle, pSrc, len - rSend, 0);
-        }
 
-        if (result < 0) {
-            goto _exit;
-        }
+    s32 result;
+    if (pAddr != nullptr) {
+        result = LibSO::SendTo(mHandle, pSrc, len - rSend, 0, *pAddr);
+    } else {
+        result = LibSO::Send(mHandle, pSrc, len - rSend, 0);
+    }
 
+    if (result > 0) {
         rSend += result;
     }
 
-    K_ASSERT_EX(rSend <= len, "Overflow???");
-
-_exit:
     if (pCallback != nullptr) {
         pCallback(LibSO::GetLastError(), pArg);
     }
 
+    // Successful if some amount of bytes sent
     return result >= 0 ? SO_SUCCESS : static_cast<SOResult>(result);
 }
 

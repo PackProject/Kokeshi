@@ -1,13 +1,11 @@
 #ifndef RVL_FACE_LIBRARY_INTENRAL_DATA_UTILITY_H
 #define RVL_FACE_LIBRARY_INTERNAL_DATA_UTILITY_H
-#include <RVLFaceLib/RFLi_Types.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFLi_Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 // Forward declarations
 typedef struct RFLMiddleDB;
@@ -18,8 +16,6 @@ BOOL RFLiIsSameFaceCore(const RFLiCharInfo* lhs, const RFLiCharInfo* rhs);
 RFLErrcode RFLiPickupCharInfo(RFLiCharInfo* info, RFLDataSource source,
                               struct RFLMiddleDB* db, u16 index);
 BOOL RFLiCheckBirthday(u8 month, u8 day);
-
-//! @}
 
 #ifdef __cplusplus
 }

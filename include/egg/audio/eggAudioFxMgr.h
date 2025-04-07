@@ -1,8 +1,7 @@
 #ifndef EGG_AUDIO_AUDIO_FX_MGR_H
 #define EGG_AUDIO_AUDIO_FX_MGR_H
 #include "types_egg.h"
-
-#include <nw4r/snd/snd_Common.h>
+#include <nw4r/snd/snd_Types.h>
 
 namespace EGG {
 

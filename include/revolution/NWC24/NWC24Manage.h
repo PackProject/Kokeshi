@@ -1,17 +1,15 @@
 #ifndef RVL_SDK_NWC24_MANAGE_H
 #define RVL_SDK_NWC24_MANAGE_H
+#include <types.h>
+
 #include <revolution/NWC24/NWC24Config.h>
 #include <revolution/NWC24/NWC24Download.h>
 #include <revolution/NWC24/NWC24FriendList.h>
 #include <revolution/NWC24/NWC24SecretFList.h>
 #include <revolution/NWC24/NWC24Types.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nwc24
-//! @{
 
 #define NWC24_IO_BUFFER_SIZE 512
 
@@ -48,8 +46,6 @@ BOOL NWC24IsMsgLibOpenBlocking(void);
 NWC24Err NWC24BlockOpenMsgLib(BOOL block);
 NWC24Err NWC24iSetNewMsgArrived(u32 flags);
 void NWC24iSetErrorCode(u32 code);
-
-//! @}
 
 #ifdef __cplusplus
 }

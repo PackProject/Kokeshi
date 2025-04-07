@@ -2,6 +2,11 @@
 #define LIBKIWI_PRIM_STL_H
 #include <libkiwi/k_types.h>
 
+// Export with C linkage to cover missing STL functions
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 namespace ksl {
 
 /**
@@ -9,25 +14,25 @@ namespace ksl {
  *
  * @param c Character
  */
-bool isdigit(char c);
+K_WEAK int isdigit(char c);
 /**
  * @brief Tests whether character is alphabetic
  *
  * @param c Character
  */
-bool isalpha(char c);
+K_WEAK int isalpha(char c);
 /**
  * @brief Tests whether character is uppercase
  *
  * @param c Character
  */
-bool isupper(char c);
+K_WEAK int isupper(char c);
 /**
  * @brief Tests whether character is lowercase
  *
  * @param c Character
  */
-bool islower(char c);
+K_WEAK int islower(char c);
 
 /**
  * @brief Finds first occurrence of the specified character in the string
@@ -35,7 +40,7 @@ bool islower(char c);
  * @param pStr String to search
  * @param c Character to search for
  */
-char* strchr(const char* pStr, char c);
+K_WEAK char* strchr(const char* pStr, char c);
 
 /**
  * @brief Finds the first occurrence of a sequence in a string
@@ -43,7 +48,7 @@ char* strchr(const char* pStr, char c);
  * @param pStr String to search
  * @param pSeq Sequence to search for
  */
-const char* strstr(const char* pStr, const char* pSeq);
+K_WEAK const char* strstr(const char* pStr, const char* pSeq);
 
 /**
  * @brief Determines string length (up to the specified limit)
@@ -52,7 +57,7 @@ const char* strstr(const char* pStr, const char* pSeq);
  * @param pStr String to check
  * @param maxlen Maximum length
  */
-size_t strnlen(const char* pStr, size_t maxlen);
+K_WEAK size_t strnlen(const char* pStr, size_t maxlen);
 
 /**
  * @brief Converts string to signed long
@@ -62,7 +67,7 @@ size_t strnlen(const char* pStr, size_t maxlen);
  * @param[out] pEndPtr Pointer to string data after the converted number
  * @param base Number base
  */
-s32 strtol(const char* pStr, char** pEndPtr = nullptr, int base = 0);
+K_WEAK s32 strtol(const char* pStr, char** pEndPtr = nullptr, int base = 0);
 
 /**
  * @brief Converts string to unsigned long
@@ -72,14 +77,14 @@ s32 strtol(const char* pStr, char** pEndPtr = nullptr, int base = 0);
  * @param[out] pEndPtr Pointer to string data after the converted number
  * @param base Number base
  */
-u32 strtoul(const char* pStr, char** pEndPtr = nullptr, int base = 0);
+K_WEAK u32 strtoul(const char* pStr, char** pEndPtr = nullptr, int base = 0);
 
 /**
  * @brief Converts string to double value
  *
  * @param pStr String to convert
  */
-f64 atof(const char* pStr);
+K_WEAK f64 atof(const char* pStr);
 
 /**
  * @brief Concatenates two wide-char strings (up to the specified character
@@ -89,7 +94,7 @@ f64 atof(const char* pStr);
  * @param pwSrc String to concatenate from
  * @param maxlen Maximum number of characters to concatenate
  */
-wchar_t* wcsncat(wchar_t* pwDst, const wchar_t* pwSrc, size_t maxlen);
+K_WEAK wchar_t* wcsncat(wchar_t* pwDst, const wchar_t* pwSrc, size_t maxlen);
 
 /**
  * @brief Compares two wide-char strings (up to the specified character limit)
@@ -98,7 +103,7 @@ wchar_t* wcsncat(wchar_t* pwDst, const wchar_t* pwSrc, size_t maxlen);
  * @param pwStr2 String 2
  * @param maxlen Maximum number of characters to compare
  */
-int wcsncmp(const wchar_t* pwStr1, const wchar_t* pwStr2, size_t maxlen);
+K_WEAK int wcsncmp(const wchar_t* pwStr1, const wchar_t* pwStr2, size_t maxlen);
 
 /**
  * @brief Finds the first occurrence of a sequence in a wide-char string
@@ -106,8 +111,25 @@ int wcsncmp(const wchar_t* pwStr1, const wchar_t* pwStr2, size_t maxlen);
  * @param pwStr String to search
  * @param pwSeq Sequence to search for
  */
-const wchar_t* wcsstr(const wchar_t* pwStr, const wchar_t* pwSeq);
+K_WEAK const wchar_t* wcsstr(const wchar_t* pwStr, const wchar_t* pwSeq);
+
+/**
+ * @brief Applies the specified arguments to the specified wide-char format
+ * string, placing the result in the output buffer.
+ *
+ * @param[out] pwDst Destination buffer
+ * @param maxlen Buffer size
+ * @param pwFmt Format string
+ * @param args Format arguments
+ * @return int Number of characters written
+ */
+K_WEAK int vswprintf(wchar_t* pwDst, size_t maxlen, const wchar_t* pwFmt,
+                     std::va_list args);
 
 } // namespace ksl
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

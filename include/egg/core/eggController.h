@@ -198,7 +198,7 @@ struct ControllerRumbleUnit {
     f32 FLOAT_0x10;
     f32 FLOAT_0x14;
     TBitFlag<u8> mFlags;  // at 0x18
-    nw4r::ut::Node mNode; // at 0x1C
+    nw4r::ut::Link mNode; // at 0x1C
     char UNK_0x24[0x28 - 0x24];
 };
 
@@ -264,7 +264,7 @@ private:
     TBuffer<CoreController*> mControllers; // at 0x14
     struct UnkInterface {
         virtual UNKTYPE VF08(UNKTYPE*) = 0;
-    } * PTR_0x20;
+    }* PTR_0x20;
     TBuffer<eCoreDevType> mDevTypes; // at 0x24
 
     static CoreControllerMgr* sInstance;

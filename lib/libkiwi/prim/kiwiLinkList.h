@@ -37,6 +37,9 @@ private:
  */
 template <typename T> class TList : private NonCopyable {
 public:
+    // Forward declarations
+    class ConstIterator;
+
     /**
      * @brief Linked-list iterator
      */
@@ -111,7 +114,7 @@ public:
          * @param pNode Iterator node
          */
         explicit ConstIterator(TListNode<T>* pNode) : mpNode(pNode) {
-            K_ASSERT(mpNode);
+            K_ASSERT(mpNode != nullptr);
         }
 
         /**
@@ -120,7 +123,7 @@ public:
          * @param iter Iterator
          */
         ConstIterator(Iterator iter) : mpNode(iter.mpNode) {
-            K_ASSERT(mpNode);
+            K_ASSERT(mpNode != nullptr);
         }
 
         /**
@@ -202,7 +205,7 @@ public:
      * @brief Gets iterator to beginning of list (const view)
      */
     ConstIterator Begin() const {
-        return ConstIterator(Begin());
+        return ConstIterator(const_cast<TList*>(this)->Begin());
     }
 
     /**
@@ -215,13 +218,13 @@ public:
      * @brief Gets iterator to end of list (const-view)
      */
     ConstIterator End() const {
-        return ConstIterator(End());
+        return ConstIterator(const_cast<TList*>(this)->End());
     }
 
     /**
      * @brief Gets list size
      */
-    u32 GetSize() const {
+    u32 Size() const {
         return mSize;
     }
 
@@ -229,7 +232,7 @@ public:
      * @brief Tests whether list is empty
      */
     bool Empty() const {
-        return GetSize() == 0;
+        return Size() == 0;
     }
 
     /**
@@ -378,33 +381,6 @@ private:
 
 //! @}
 } // namespace kiwi
-
-/**
- * @brief Applies code to each list element
- * @note The current iterator can be accessed through the variable 'it'.
- *
- * @param rList List reference
- * @param T List element type
- * @param stmt Code to run during each iteration
- */
-#define K_LIST_FOREACH(rList, T, stmt)                                         \
-    for (TList<T>::Iterator it = rList.Begin(); it != rList.End(); ++it) {     \
-        stmt                                                                   \
-    }
-
-/**
- * @brief Applies code to each list element (const-view)
- * @note The current iterator can be accessed through the variable 'it'.
- *
- * @param rList List reference (const-view)
- * @param T List element type
- * @param stmt Code to run during each iteration
- */
-#define K_LIST_FOREACH_CONST(rList, T, stmt)                                   \
-    for (TList<T>::ConstIterator it = rList.Begin(); it != rList.End();        \
-         ++it) {                                                               \
-        stmt                                                                   \
-    }
 
 // Implementation header
 #ifndef LIBKIWI_PRIM_LINKLIST_IMPL_HPP

@@ -2,6 +2,7 @@
 
 #include <Pack/RPGraphics.h>
 #include <Pack/RPSystem.h>
+
 #include <libkiwi.h>
 
 namespace kiwi {
@@ -70,13 +71,15 @@ void SceneHookMgr::DoEnter() {
     GetCurrentScene()->Configure();
 
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->Configure(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->Configure(GetCurrentScene());
+    }
 
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->Configure(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->Configure(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -90,23 +93,29 @@ KOKESHI_BY_PACK(KM_CALL(0x8018532c, SceneHookMgr::DoEnter),  // Wii Sports
  */
 void SceneHookMgr::DoReset() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->BeforeReset(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->BeforeReset(GetCurrentScene());
+    }
+
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->BeforeReset(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->BeforeReset(GetCurrentScene());
+        }
     }
 
     GetCurrentScene()->Reset();
 
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->AfterReset(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->AfterReset(GetCurrentScene());
+    }
+
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->AfterReset(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->AfterReset(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -123,13 +132,15 @@ KOKESHI_BY_PACK(KM_CALL(0x801853d4, SceneHookMgr::DoReset),  // Wii Sports
  */
 void SceneHookMgr::DoLoadResource() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->LoadResource(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->LoadResource(GetCurrentScene());
+    }
 
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->LoadResource(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->LoadResource(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -143,12 +154,15 @@ KOKESHI_BY_PACK(KM_BRANCH(0x8018695c, SceneHookMgr::DoLoadResource),  // Wii Spo
  */
 void SceneHookMgr::DoCalculate() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->BeforeCalculate(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->BeforeCalculate(GetCurrentScene());
+    }
+
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->BeforeCalculate(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->BeforeCalculate(GetCurrentScene());
+        }
     }
 
     // Run scene logic
@@ -156,12 +170,15 @@ void SceneHookMgr::DoCalculate() {
     RP_GET_INSTANCE(RPSysSceneMgr)->SceneManager::calcCurrentScene();
 
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->AfterCalculate(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->AfterCalculate(GetCurrentScene());
+    }
+
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->AfterCalculate(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->AfterCalculate(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -175,13 +192,15 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80185868, SceneHookMgr::DoCalculate),  // Wii Sports
  */
 void SceneHookMgr::DoExit() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->Exit(GetCurrentScene()); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->Exit(GetCurrentScene());
+    }
 
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->Exit(GetCurrentScene()); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->Exit(GetCurrentScene());
+        }
     }
 }
 // clang-format off
@@ -195,13 +214,15 @@ KOKESHI_BY_PACK(KM_BRANCH(0x80185000, SceneHookMgr::DoExit),  // Wii Sports
  */
 void SceneHookMgr::DoPause() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->Pause(GetCurrentScene(), true); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->Pause(GetCurrentScene(), true);
+    }
 
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->Pause(GetCurrentScene(), true); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->Pause(GetCurrentScene(), true);
+        }
     }
 }
 // clang-format off
@@ -215,13 +236,15 @@ KOKESHI_BY_PACK(KM_BRANCH(0x801b68ec, SceneHookMgr::DoPause), // Wii Sports
  */
 void SceneHookMgr::DoUnPause() {
     // Global hooks
-    K_LIST_FOREACH(GetInstance().mGlobalHooks, ISceneHook,
-                   { it->Pause(GetCurrentScene(), false); });
+    K_FOREACH (GetInstance().mGlobalHooks) {
+        it->Pause(GetCurrentScene(), false);
+    }
 
     // Hooks for game scene
     if (IsPackScene()) {
-        K_LIST_FOREACH(GetInstance().GetActiveHooks(), ISceneHook,
-                       { it->Pause(GetCurrentScene(), false); });
+        K_FOREACH (GetInstance().GetActiveHooks()) {
+            it->Pause(GetCurrentScene(), false);
+        }
     }
 }
 // clang-format off

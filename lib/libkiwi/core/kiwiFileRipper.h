@@ -72,7 +72,7 @@ public:
      * @param where Storage device on which the file is located
      * @return File stream
      */
-    static MemStream Open(const String& rPath, EStorage where);
+    static MemStream Open(const String& rPath, EStorage where = EStorage_DVD);
 };
 
 //! @}

@@ -1,9 +1,9 @@
 #ifndef RP_KERNEL_KOKESHI_GEN_INFO_H
 #define RP_KERNEL_KOKESHI_GEN_INFO_H
 #include "RPTypes.h"
-
 #include <RPKernel/RPSysKokeshiLocation.h>
 #include <RPKernel/RPSysKokeshiManager.h>
+
 #include <RVLFaceLib.h>
 
 class RPSysKokeshiGenInfo {

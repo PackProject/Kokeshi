@@ -222,6 +222,19 @@ public:
     }
 
     /**
+     * @brief Look for the value corresponding to a key
+     *
+     * @param rKey Key
+     * @param rDefault Default value
+     * @return Value if it exists
+     */
+    const TValue& Get(const TKey& rKey,
+                      const TValue& rDefault = TValue()) const {
+        TValue* pValue = Find(rKey);
+        return pValue != nullptr ? *pValue : rDefault;
+    }
+
+    /**
      * @brief Check whether a key exists
      *
      * @param rKey Key

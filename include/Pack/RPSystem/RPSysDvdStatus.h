@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_DVD_STATUS_H
 #define RP_SYSTEM_DVD_STATUS_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

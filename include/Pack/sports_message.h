@@ -2,7 +2,7 @@
 #define SPORTS_MESSAGE_BMG_H
 
 // Split full ID into group/message ID arguments
-#define MESSAGE_ID_ARGS(x) ((x) >> 8), ((x)&0xFF)
+#define MESSAGE_ID_ARGS(x) ((x) >> 8), ((x) & 0xFF)
 
 enum sports_message {
     // clang-format off
@@ -1206,7 +1206,7 @@ enum sports_message {
     MSG_G0074EA_M00 = 0x0074EA00, // Please press B and C.
     MSG_G0074F4_M00 = 0x0074F400, // Wii Sports
     MSG_G0074F5_M00 = 0x0074F500, // Play like a pro!
-                                  // clang-format on
+                                // clang-format on
 };
 
 #endif

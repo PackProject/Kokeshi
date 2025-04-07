@@ -4,6 +4,10 @@
 #ifdef __cplusplus
 
 namespace std {
+using ::isalpha;
+using ::isdigit;
+using ::islower;
+using ::isupper;
 using ::tolower;
 using ::toupper;
 } // namespace std

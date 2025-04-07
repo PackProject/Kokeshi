@@ -11,7 +11,7 @@ void LibOS::FillFPUContext(register OSContext* ctx) {
     K_ASSERT(ctx != nullptr);
 
     // clang-format off
-    K_ASM_BEGIN {
+    asm volatile {
         mfmsr r5
         ori r5, r5, MSR_FP
         mtmsr r5

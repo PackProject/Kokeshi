@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_GX_ATTR_H
 #define RVL_SDK_GX_ATTR_H
-#include <revolution/GX/GXTypes.h>
 #include <types.h>
+
+#include <revolution/GX/GXTypes.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_gx
-//! @{
 
 typedef struct _GXVtxDescList {
     GXAttr attr;     // at 0x0
@@ -29,7 +27,7 @@ void GXClearVtxDesc(void);
 void GXSetVtxAttrFmt(GXVtxFmt fmt, GXAttr attr, GXCompCnt compCnt,
                      GXCompType compType, u8 shift);
 
-//! @todo Please find a way to get rid of this
+// TODO: Please find a way to get rid of this
 #ifdef GXATTR_MATCH_HACK
 void GXSetVtxAttrFmtv(s16 fmt, const GXVtxAttrFmtList* list);
 #else
@@ -51,10 +49,8 @@ void __GXSetVAT(void);
 
 static void GXSetTexCoordGen(GXTexCoordID id, GXTexGenType type,
                              GXTexGenSrc src, u32 texMtxIdx) {
-    GXSetTexCoordGen2(id, type, src, texMtxIdx, FALSE, GX_DUALMTX_IDENT);
+    GXSetTexCoordGen2(id, type, src, texMtxIdx, FALSE, GX_PTIDENTITY);
 }
-
-//! @}
 
 #ifdef __cplusplus
 }

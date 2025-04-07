@@ -1,16 +1,15 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_MODEL_H
 #define RVL_FACE_LIBRARY_INTERNAL_MODEL_H
+#include <types.h>
+
 #include <RVLFaceLib/RFL_Model.h>
 #include <RVLFaceLib/RFLi_Types.h>
+
 #include <revolution/GX.h>
 #include <revolution/MTX.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 #define VTX_COORDS_IN_POS 3
 #define VTX_COORDS_IN_NRM 3
@@ -138,7 +137,7 @@ typedef struct RFLiCharModel {
 
 extern RFLiCoordinateData coordinateData;
 
-static inline void RFLiSetCoordinateData(const RFLiCoordinateData* data) {
+inline void RFLiSetCoordinateData(const RFLiCoordinateData* data) {
     coordinateData = *data;
 }
 
@@ -151,8 +150,6 @@ void RFLiInitShapeRes(RFLiShapeRes* shape);
 void RFLiInitTexRes(GXTexObj* texObj, RFLiPartsShpTex part, u16 file,
                     void* buffer) DECOMP_DONT_INLINE;
 void RFLiTransformCoordinate(s16* to, const s16* from);
-
-//! @}
 
 #ifdef __cplusplus
 }

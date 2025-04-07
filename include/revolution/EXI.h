@@ -1,6 +1,6 @@
-//
-// References: YAGCD, publicly available patents
-//
+/**
+ * References: YAGCD, publicly available patents
+ */
 
 #ifndef RVL_SDK_PUBLIC_EXI_H
 #define RVL_SDK_PUBLIC_EXI_H
@@ -8,18 +8,10 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_exi
-//! @{
-
-//! @file
-//! @brief Includes all header files of the EXI library
-
 #include <revolution/EXI/EXIBios.h>
 #include <revolution/EXI/EXICommon.h>
 #include <revolution/EXI/EXIHardware.h>
 #include <revolution/EXI/EXIUart.h>
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -18,8 +18,8 @@ public:
     enum ProjectionType { PROJ_ORTHO, PROJ_PERSP };
 
     enum CanvasMode {
-        CANVASMODE_0,
-        CANVASMODE_1,
+        CANVASMODE_CC,
+        CANVASMODE_LU,
     };
 
 protected:
@@ -72,10 +72,10 @@ public:
     }
 
     void ConvertToCanvasLU(f32 ix, f32 iy, f32* ox, f32* oy) const {
-        if (mCanvasMode == CANVASMODE_1) {
+        if (mCanvasMode == CANVASMODE_LU) {
             *ox = ix;
             *oy = iy;
-        } else if (mCanvasMode == CANVASMODE_0) {
+        } else if (mCanvasMode == CANVASMODE_CC) {
             ConvertToCanvasLU_Inline_0(ix, iy, ox, oy);
         }
     }

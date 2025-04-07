@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_USB_H
 #define RVL_SDK_USB_H
-#include <revolution/IPC.h>
 #include <types.h>
+
+#include <revolution/IPC.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_usb
-//! @{
 
 typedef void (*USBCallback)(IPCResult result, void* arg);
 
@@ -27,8 +25,6 @@ IPCResult IUSB_WriteBlkMsgAsync(s32 fd, u32 endpoint, u32 length,
 IPCResult IUSB_WriteCtrlMsgAsync(s32 fd, u8 requestType, u8 request, u16 value,
                                  u16 index, u16 length, void* buffer,
                                  USBCallback callback, void* callbackArg);
-
-//! @}
 
 #ifdef __cplusplus
 }

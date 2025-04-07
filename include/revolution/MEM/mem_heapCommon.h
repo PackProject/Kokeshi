@@ -1,15 +1,15 @@
 #ifndef RVL_SDK_MEM_HEAP_COMMON_H
 #define RVL_SDK_MEM_HEAP_COMMON_H
-#include <revolution/MEM/mem_list.h>
-#include <revolution/OS.h>
-#include <string.h>
 #include <types.h>
+
+#include <revolution/MEM/mem_list.h>
+
+#include <revolution/OS.h>
+
+#include <string.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_mem
-//! @{
 
 typedef enum {
     MEM_HEAP_OPT_CLEAR_ALLOC = (1 << 0),
@@ -92,8 +92,6 @@ static void FillAllocMemory(MEMiHeapHead* heap, void* memBlock, u32 size) {
 static s32 MEMGetHeapTotalSize(MEMiHeapHead* heap) {
     return GetOffsetFromPtr(heap, heap->end);
 }
-
-//! @}
 
 #ifdef __cplusplus
 }

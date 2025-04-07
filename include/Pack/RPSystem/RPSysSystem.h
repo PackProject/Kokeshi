@@ -3,8 +3,11 @@
 #include <Pack/RPSystem/RPSysConfigData.h>
 #include <Pack/RPSystem/RPSysRenderMode.h>
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
+
 #include <nw4r/ut.h>
+
 #include <revolution/GX.h>
 #include <revolution/OS.h>
 
@@ -210,13 +213,6 @@ public:
     void setDimming(BOOL dim);
 
     /**
-     * @brief Gets the system's main heap
-     */
-    EGG::Heap* getSystemHeapRP() const {
-        return mpSystemHeap;
-    }
-
-    /**
      * @brief Gets the heap for the resource manager
      */
     EGG::Heap* getResourceHeap() const {
@@ -224,6 +220,13 @@ public:
     }
 
 #if defined(PACK_RESORT)
+    /**
+     * @brief Gets the system's main heap
+     */
+    EGG::Heap* getSystemHeapRP() const {
+        return mpSystemHeap;
+    }
+
     /**
      * @brief Gets the heap which holds the rest of free MEM1 memory
      */

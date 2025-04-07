@@ -1,5 +1,7 @@
-#include <cstring>
 #include <libkiwi.h>
+
+#include <cstdlib>
+#include <cstring>
 
 namespace kiwi {
 
@@ -96,26 +98,26 @@ void MapFile::Unpack() {
     // Skip map file header (2 lines)
     char* pIt = mpMapBuffer;
     for (int i = 0; i < 2; i++) {
-        pIt = ksl::strchr(pIt, '\n') + 1;
+        pIt = std::strchr(pIt, '\n') + 1;
     }
 
     // Parse lines
-    for (char* pEndl = pIt; (pEndl = ksl::strchr(pIt, '\n')); pIt = pEndl + 1) {
+    for (char* pEndl = pIt; (pEndl = std::strchr(pIt, '\n')); pIt = pEndl + 1) {
         Symbol* sym = new Symbol();
         K_ASSERT(sym != nullptr);
 
         // Location
         if (mLinkType == ELinkType_Static) {
-            sym->pAddr = reinterpret_cast<void*>(ksl::strtoul(pIt, &pIt, 16));
+            sym->pAddr = reinterpret_cast<void*>(std::strtoul(pIt, &pIt, 16));
         } else {
-            sym->offset = ksl::strtoul(pIt, &pIt, 16);
+            sym->offset = std::strtoul(pIt, &pIt, 16);
         }
 
         // Linkage
         sym->type = mLinkType;
 
         // Size
-        sym->size = ksl::strtoul(pIt, &pIt, 16);
+        sym->size = std::strtoul(pIt, &pIt, 16);
 
         // Trim whitespace from name
         while (*pIt == ' ') {

@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 typedef void (*OSStateCallback)(void);
 
 OSStateCallback OSSetResetCallback(OSStateCallback callback);
@@ -19,8 +16,6 @@ BOOL __OSGetResetButtonStateRaw(void);
 s32 __OSSetVIForceDimming(u32 arg0, u32 arg1, u32 arg2);
 s32 __OSSetIdleLEDMode(u32 mode);
 s32 __OSUnRegisterStateEvent(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

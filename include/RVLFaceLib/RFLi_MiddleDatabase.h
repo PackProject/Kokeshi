@@ -1,14 +1,12 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_MIDDLE_DATABASE_H
 #define RVL_FACE_LIBRARY_INTERNAL_MIDDLE_DATABASE_H
+#include <types.h>
+
 #include <RVLFaceLib/RFL_MiddleDatabase.h>
 #include <RVLFaceLib/RFLi_Types.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 typedef struct RFLiMiddleDB {
     RFLMiddleDBType type;     // at 0x0
@@ -25,8 +23,6 @@ RFLErrcode RFLiUpdateMiddleDBAsync(RFLMiddleDB* db, RFLiCallback cb,
 BOOL RFLiGetCharInfoMiddleDB(RFLiCharInfo* info, const RFLMiddleDB* db,
                              u16 index);
 RFLErrcode RFLiAddMiddleDBUserData(RFLMiddleDB* db, RFLiCharData* raw);
-
-//! @}
 
 #ifdef __cplusplus
 }

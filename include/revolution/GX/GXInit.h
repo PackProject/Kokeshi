@@ -1,13 +1,12 @@
 #ifndef RVL_SDK_GX_INIT_H
 #define RVL_SDK_GX_INIT_H
-#include <revolution/GX/GXFifo.h>
 #include <types.h>
+
+#include <revolution/GX/GXFifo.h>
+#include <revolution/GX/GXTransform.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_gx
-//! @{
 
 typedef struct _GXData {
     union {
@@ -53,11 +52,11 @@ typedef struct _GXData {
     char UNK_0x230[0x254 - 0x230];
     u32 genMode; // at 0x254
     char UNK_0x258[0x520 - 0x258];
-    GXAttrType normalType;     // at 0x520
-    GXBool normal;             // at 0x524
-    GXBool binormal;           // at 0x525
-    GXProjectionType projType; // at 0x528
-    f32 proj[6];               // at 0x52C
+    GXAttrType normalType;          // at 0x520
+    GXBool normal;                  // at 0x524
+    GXBool binormal;                // at 0x525
+    GXProjectionType projType;      // at 0x528
+    f32 proj[GX_PROJECTION_SZ - 1]; // at 0x52C
     union {
         struct {
             f32 vpOx;   // at 0x544
@@ -67,7 +66,7 @@ typedef struct _GXData {
             f32 vpNear; // at 0x554
             f32 vpFar;  // at 0x558
         };
-        f32 view[6];
+        f32 view[GX_VIEWPORT_SZ];
     }; // at 0x544
     f32 offsetZ; // at 0x55C
     f32 scaleZ;  // at 0x560
@@ -85,8 +84,6 @@ extern GXData* const __GXData;
 #define gxdt __GXData
 
 GXFifoObj* GXInit(void*, u32);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -5,14 +5,9 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_vi
-//! @{
-
 void __VISetRGBModeImm(void);
 
 void __VISetRevolutionModeSimple(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

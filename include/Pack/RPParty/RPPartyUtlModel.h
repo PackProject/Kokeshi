@@ -1,10 +1,11 @@
 #ifndef RP_PARTY_UTL_MODEL_H
 #define RP_PARTY_UTL_MODEL_H
+#include <types.h>
+
 #include <Pack/RPGraphics/IRPGrpDrawObject.h>
 #include <Pack/RPKernel/IRPSysHostIOSocket.h>
 #include <Pack/RPSystem/RP_DEBUG_STUB_1.h>
 #include <egg/math/eggVector.h>
-#include <types.h>
 
 // Forward declarations
 class RPGrpModel;

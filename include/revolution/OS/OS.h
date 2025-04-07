@@ -1,14 +1,12 @@
 #ifndef RVL_SDK_OS_H
 #define RVL_SDK_OS_H
+#include <types.h>
+
 #include <revolution/OS/OSContext.h>
 #include <revolution/OS/OSExec.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_os
-//! @{
 
 typedef enum {
     OS_CONSOLE_MASK = 0xF0000000,
@@ -85,8 +83,6 @@ u32 __OSGetDIConfig(void);
 void OSRegisterVersion(const char* ver);
 const char* OSGetAppGamename(void);
 u8 OSGetAppType(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

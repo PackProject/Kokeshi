@@ -1,7 +1,6 @@
 #ifndef RP_SYSTEM_FONT_MANAGER_H
 #define RP_SYSTEM_FONT_MANAGER_H
 #include "RPTypes.h"
-
 #include <nw4r/ut/ut_ResFont.h>
 #include <nw4r/ut/ut_RomFont.h>
 
@@ -40,16 +39,27 @@ public:
      */
     void LoadResFonts(); // 8018bd64
 
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
     /**
      * @brief Retrieve ResFont data by name
      * @address 8018bcdc
      * @return Serialized res font
      */
     void* GetResFontData(const char* name) const;
+#endif
 
     // @brief Access RomFont (for text writer)
-    nw4r::ut::RomFont& GetRomFont() const {
-        return *mRomFont;
+    nw4r::ut::RomFont* GetRomFont() const {
+        return mRomFont;
+    }
+
+    /**
+     * @brief Retrieve ResFont by index
+     *
+     * @param idx Index
+     */
+    nw4r::ut::ResFont* GetResFont(int idx) const {
+        return mResFonts[idx];
     }
 
 private:

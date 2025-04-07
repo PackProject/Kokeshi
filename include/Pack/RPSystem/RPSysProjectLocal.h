@@ -2,6 +2,7 @@
 #define RP_SYSTEM_PROJECT_LOCAL_H
 #include <Pack/RPSystem/RPSysSceneCreator.h>
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

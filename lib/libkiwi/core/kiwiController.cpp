@@ -1,3 +1,5 @@
+#include <revolution/KPAD.h>
+
 #include <libkiwi.h>
 
 namespace kiwi {

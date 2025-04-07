@@ -1,13 +1,11 @@
 #ifndef RVL_FACE_LIBRARY_MIDDLE_DATABASE_H
 #define RVL_FACE_LIBRARY_MIDDLE_DATABASE_H
-#include <RVLFaceLib/RFL_Types.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFL_Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl
-//! @{
 
 typedef enum {
     RFLMiddleDBType_HiddenRandom,
@@ -32,8 +30,6 @@ void RFLSetMiddleDBRandomMask(RFLMiddleDB* db, RFLSex sex, RFLAge age,
                               RFLRace race);
 void RFLSetMiddleDBHiddenMask(RFLMiddleDB* db, RFLSex sex);
 RFLErrcode RFLAddMiddleDBStoreData(RFLMiddleDB* db, const RFLStoreData* data);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_AXFX_REVERB_HI_H
 #define RVL_SDK_AXFX_REVERB_HI_H
-#include <revolution/AXFX/AXFXReverbHiExp.h>
 #include <types.h>
+
+#include <revolution/AXFX/AXFXReverbHiExp.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_axfx
-//! @{
 
 typedef struct AXFX_REVERBHI {
     AXFX_REVERBHI_EXP exp; // at 0x0
@@ -24,8 +22,6 @@ BOOL AXFXReverbHiInit(AXFX_REVERBHI* fx);
 BOOL AXFXReverbHiShutdown(AXFX_REVERBHI* fx);
 BOOL AXFXReverbHiSettings(AXFX_REVERBHI* fx);
 void AXFXReverbHiCallback(void* chans, void* context);
-
-//! @}
 
 #ifdef __cplusplus
 }

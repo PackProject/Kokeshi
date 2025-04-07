@@ -5,12 +5,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_nwc24
-//! @{
-
 void NWC24InitBase64Table(u8* table);
-
-//! @}
 
 #ifdef __cplusplus
 }

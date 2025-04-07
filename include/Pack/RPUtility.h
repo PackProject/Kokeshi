@@ -3,6 +3,7 @@
 
 #include <RPUtility/RPUtlBaseFsm.h>
 #include <RPUtility/RPUtlLytBase.h>
+#include <RPUtility/RPUtlMapData.h>
 #include <RPUtility/RPUtlRandom.h>
 
 #endif

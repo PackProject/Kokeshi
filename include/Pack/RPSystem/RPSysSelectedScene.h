@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_SELECTED_SCENE_H
 #define RP_SYSTEM_SELECTED_SCENE_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

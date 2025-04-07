@@ -5,22 +5,22 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_ax
-//! @{
-
-//! One frame contains eight bytes
+/**
+ * One frame contains eight bytes:
+ * - One for the header
+ * - Seven for the audio samples
+ */
 #define AX_ADPCM_FRAME_SIZE 8
-//! One for the header, seven for the audio samples
 #define AX_ADPCM_SAMPLE_BYTES_PER_FRAME (AX_ADPCM_FRAME_SIZE - 1)
 
-//! Two audio samples per byte (each nibble)
+// Two audio samples per byte (each nibble)
 #define AX_ADPCM_SAMPLES_PER_BYTE 2
 
-//! Amount of audio samples in a frame
+// Amount of audio samples in a frame
 #define AX_ADPCM_SAMPLES_PER_FRAME                                             \
     (AX_ADPCM_SAMPLE_BYTES_PER_FRAME * AX_ADPCM_SAMPLES_PER_BYTE)
 
-//! Amount of nibbles in a frame
+// Amount of nibbles in a frame
 #define AX_ADPCM_NIBBLES_PER_FRAME (AX_ADPCM_FRAME_SIZE * 2)
 
 typedef enum { AX_VOICE_NORMAL, AX_VOICE_STREAM } AXVOICETYPE;
@@ -33,6 +33,7 @@ typedef enum {
     AX_SAMPLE_FORMAT_PCM_S8 = 25,
 } AXSAMPLETYPE;
 
+// For rmtIIR union I think? From NW4R asserts, but fits well in __AXSyncPBs
 typedef enum {
     AX_PB_LPF_ON = 1,
     AX_PB_BIQUAD_ON,
@@ -272,8 +273,6 @@ typedef struct _AXPB {
     AXPBRMTIIR rmtIIR;         // at 0x114
     u8 padding[0x140 - 0x128]; // at 0x128
 } AXPB;
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -2,9 +2,23 @@
 #define RP_SPORTS_GOL_FIELD_MANAGER_H
 #include "RPSysUnknownBase.h"
 #include "RPTypes.h"
-
 #include <RPGolScene/RPGolMapObjPin.h>
 #include <nw4r/math/math_types.h>
+
+// Forward declarations
+class RPUtlMapData;
+class RPGrpShadowTexture;
+class RPGolMapObjTree;
+class RPGolMapObjTreeWater;
+class RPGolMapObjTeeMarker;
+class RPGolMapObjSky;
+class RPGolMapObjPlayer;
+class RPUtlDohGraphSun;
+class RPGolMapObjWind;
+class RPGolMapObjTarget;
+class RPGolMapObjTargetHit;
+class RPGolMapObjCup;
+class RPSysEffect;
 
 /**
  * @brief Golf course object, effect, and shadow manager
@@ -36,10 +50,16 @@ public:
         MAP_OBJ_TARGET_A,            // Target A (Large)
         MAP_OBJ_TARGET_B,            // Target B (Medium, UNUSED)
         MAP_OBJ_TARGET_C,            // Target C (Small)
-        MAP_OBJ_TARGET_D             // Target D (Very small, UNUSED)
+        MAP_OBJ_TARGET_D,            // Target D (Very small, UNUSED)
+
+        MAP_OBJ_MAX
     };
 
 public:
+    RPUtlMapData* GetMapData() const {
+        return mMapData;
+    }
+
     RPGolMapObjBase* GetCourseObj() const {
         return mCourseObj;
     }
@@ -53,6 +73,8 @@ public:
     RPGolMapObjPin* GetPinObj(int i) const {
         return &mPinObjs[i];
     }
+
+    const nw4r::math::VEC3& GetGoalPos() const;
 
 private:
     // @brief Player Mii shadow

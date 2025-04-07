@@ -2,8 +2,10 @@
 #define RP_SYSTEM_SCENE_H
 #include <Pack/RPGraphics.h>
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 #include <egg/math.h>
+
 #include <nw4r/ut.h>
 
 // Forward declarations

@@ -1,8 +1,10 @@
 #ifndef RP_SPORTS_PLAYER_DATA_H
 #define RP_SPORTS_PLAYER_DATA_H
 #include <Pack/RPTypes.h>
-#include <RVLFaceLib.h>
+
 #include <egg/core.h>
+
+#include <RVLFaceLib.h>
 
 //! @addtogroup rp_sports
 //! @{

@@ -32,7 +32,7 @@ public:
      */
     virtual ~IStream() {
         // Warn for derived types :D
-        K_WARN_EX(IsOpen(), "Your class forgot to close the stream!");
+        K_WARN_EX(IsOpen(), "Your class forgot to close the stream!\n");
     }
 
     /**

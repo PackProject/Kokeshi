@@ -5,12 +5,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_axfx
-//! @{
-
 f32* __AXFXGetSrcCoef(u32 i);
-
-//! @}
 
 #ifdef __cplusplus
 }

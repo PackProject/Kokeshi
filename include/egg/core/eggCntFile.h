@@ -45,7 +45,7 @@ private:
     OSMessageQueue mMesgQueue_0x78;
     OSMessage mMesgBuffer_0x98;
     OSThread* mThread;    // at 0x9C
-    nw4r::ut::Node mNode; // at 0xA0
+    nw4r::ut::Link mNode; // at 0xA0
 
     // Unofficial symbol
     static nw4r::ut::List sCntList;

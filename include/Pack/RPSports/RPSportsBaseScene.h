@@ -4,6 +4,9 @@
 #include "RPSysSceneCreator.h"
 #include "RPTypes.h"
 
+class RPSysMessage;
+class RPSportsTrainingResult;
+
 /**
  * @brief Base class for all Sports Pack scenes
  * @customname

@@ -5,17 +5,19 @@
 extern "C" {
 #endif
 
-//
-// Common RFL elements have been moved here to avoid circular dependencies.
-// Everything is organized alphabetically where possible.
-//
+/**
+ * Common types used throughout many RFL files.
+ *
+ * To avoid circular depencies, common structures and all enums have been moved
+ * here.
+ *
+ * Everything is organized in alphabetical order (when possible, otherwise
+ * dependency order).
+ */
 
-//! @addtogroup rfl
-//! @{
-
-//
-// Common defines
-//
+/**
+ * Common defines
+ */
 
 #define RFL_NAME_LEN 10
 #define RFL_CREATOR_LEN 10
@@ -24,9 +26,9 @@ extern "C" {
 #define RFL_CTRL_CHAR_MAX 10
 #define RFL_DB_CHAR_MAX 100
 
-//
-// Common enums
-//
+/**
+ * Common enums
+ */
 
 typedef enum { RFLAge_Child, RFLAge_Adult, RFLAge_Elder, RFLAge_All } RFLAge;
 
@@ -116,16 +118,15 @@ typedef enum {
 
 typedef enum { RFLSex_Male, RFLSex_Female, RFLSex_All } RFLSex;
 
-//
-// Common typedefs
-//
+/**
+ * Common typedefs
+ */
 
 typedef void (*RFLCallback)(void);
 
-//
-// Common structs
-//
-
+/**
+ * Common structs
+ */
 typedef struct RFLCreateID {
     u8 data[RFL_CREATEID_LEN];
 } RFLCreateID;
@@ -137,8 +138,6 @@ typedef struct RFLCharData {
 typedef struct RFLStoreData {
     u8 dummy[0x4C];
 } RFLStoreData;
-
-//! @}
 
 #ifdef __cplusplus
 }

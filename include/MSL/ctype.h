@@ -31,6 +31,11 @@ inline int toupper(int x) {
                : (int)(&_current_locale)->cmap->to_upper_table[x];
 }
 
+int isdigit(int);
+int isalpha(int);
+int isupper(int);
+int islower(int);
+
 #ifdef __cplusplus
 }
 #endif

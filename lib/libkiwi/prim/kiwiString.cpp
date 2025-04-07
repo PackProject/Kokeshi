@@ -1,6 +1,7 @@
+#include <libkiwi.h>
+
 #include <cstring>
 #include <cwchar>
-#include <libkiwi.h>
 
 namespace kiwi {
 
@@ -22,7 +23,23 @@ template <typename T> T* StrNCpy(T* pDst, const T* pSrc, u32 n);
 template <typename T> const T* StrChr(const T* pStr, T c);
 template <typename T> const T* StrStr(const T* pStr1, const T* pStr2);
 
+template <typename T>
+int VsNPrintf(T* pDst, u32 n, const T* pFmt, std::va_list args);
+
 } // namespace
+
+/**
+ * @brief Destructor
+ */
+template <typename T> StringImpl<T>::~StringImpl() {
+    // Don't delete static memory
+    if (mpBuffer == scEmptyCStr) {
+        return;
+    }
+
+    delete[] mpBuffer;
+    mpBuffer = nullptr;
+}
 
 /**
  * @brief Reserves string buffer of specified size
@@ -240,7 +257,10 @@ TVector<StringImpl<T> > StringImpl<T>::Split(const StringImpl& rDelim) const {
     }
 
     // Push back very last token
-    tokens.PushBack(SubStr(start));
+    if (start != mLength) {
+        tokens.PushBack(SubStr(start));
+    }
+
     return tokens;
 }
 
@@ -379,6 +399,103 @@ template <typename T> void StringImpl<T>::Append(T c) {
     mpBuffer[mLength] = static_cast<T>(0);
 }
 
+/**
+ * @brief Convert this string to a multi-byte string
+ */
+template <> String StringImpl<char>::ToMultiByte() const {
+    return *this;
+}
+
+/**
+ * @brief Convert this string to a multi-byte string
+ */
+template <> String StringImpl<wchar_t>::ToMultiByte() const {
+    char* pMultiByteBuffer = new char[Length()];
+    K_ASSERT(pMultiByteBuffer != nullptr);
+
+    std::wcstombs(pMultiByteBuffer, CStr(), Length());
+    String str(pMultiByteBuffer);
+
+    delete[] pMultiByteBuffer;
+    return str;
+}
+
+/**
+ * @brief Convert this string to a wide-char string
+ */
+template <> WString StringImpl<char>::ToWideChar() const {
+    wchar_t* pWideCharBuffer = new wchar_t[Length()];
+    K_ASSERT(pWideCharBuffer != nullptr);
+
+    std::mbstowcs(pWideCharBuffer, CStr(), Length());
+    WString wstr(pWideCharBuffer);
+
+    delete[] pWideCharBuffer;
+    return wstr;
+}
+
+/**
+ * @brief Convert this string to a wide-char string
+ */
+template <> WString StringImpl<wchar_t>::ToWideChar() const {
+    return *this;
+}
+
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param rFmt Format string
+ * @param args Format arguments
+ */
+template <typename T>
+StringImpl<T> VFormat(const StringImpl<T>& rFmt, std::va_list args) {
+    T buffer[1024];
+    VsNPrintf(buffer, sizeof(buffer), rFmt.CStr(), args);
+    return StringImpl<T>(buffer);
+}
+
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param pFmt Format C-style string
+ * @param args Format arguments
+ */
+template <typename T> StringImpl<T> VFormat(const T* pFmt, std::va_list args) {
+    T buffer[1024];
+    VsNPrintf(buffer, sizeof(buffer), pFmt, args);
+    return StringImpl<T>(buffer);
+}
+
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param rFmt Format string
+ * @param ... Format arguments
+ */
+template <typename T> StringImpl<T> Format(const StringImpl<T>& rFmt, ...) {
+    std::va_list list;
+    va_start(list, rFmt);
+    StringImpl<T> str = VFormat(rFmt, list);
+    va_end(list);
+
+    return str;
+}
+
+/**
+ * @brief Creates a new string from format arguments
+ *
+ * @param pFmt Format C-style string
+ * @param ... Format arguments
+ */
+template <typename T> StringImpl<T> Format(const T* pFmt, ...) {
+    std::va_list list;
+    va_start(list, pFmt);
+    StringImpl<T> str = VFormat(pFmt, list);
+    va_end(list);
+
+    return str;
+}
+
 namespace {
 
 /**
@@ -398,7 +515,7 @@ template <> char* StrNCat(char* pDst, const char* pSrc, u32 n) {
     return std::strncat(pDst, pSrc, n);
 }
 template <> wchar_t* StrNCat(wchar_t* pDst, const wchar_t* pSrc, u32 n) {
-    return ksl::wcsncat(pDst, pSrc, n);
+    return std::wcsncat(pDst, pSrc, n);
 }
 
 /**
@@ -409,7 +526,7 @@ template <> int StrNCmp<char>(const char* pStr1, const char* pStr2, u32 n) {
 }
 template <>
 int StrNCmp<wchar_t>(const wchar_t* pStr1, const wchar_t* pStr2, u32 n) {
-    return ksl::wcsncmp(pStr1, pStr2, n);
+    return std::wcsncmp(pStr1, pStr2, n);
 }
 
 /**
@@ -437,17 +554,45 @@ template <> const wchar_t* StrChr<wchar_t>(const wchar_t* pStr, wchar_t c) {
  * strstr wrapper function
  */
 template <> const char* StrStr<char>(const char* pStr1, const char* pStr2) {
-    return ksl::strstr(pStr1, pStr2);
+    return std::strstr(pStr1, pStr2);
 }
 template <>
 const wchar_t* StrStr<wchar_t>(const wchar_t* pStr1, const wchar_t* pStr2) {
-    return ksl::wcsstr(pStr1, pStr2);
+    return std::wcsstr(pStr1, pStr2);
+}
+
+/**
+ * vsnprintf wrapper function
+ */
+template <>
+int VsNPrintf<char>(char* pDst, u32 n, const char* pFmt, std::va_list args) {
+    return std::vsnprintf(pDst, n, pFmt, args);
+}
+template <>
+int VsNPrintf<wchar_t>(wchar_t* pDst, u32 n, const wchar_t* pFmt,
+                       std::va_list args) {
+    return std::vswprintf(pDst, n, pFmt, args);
 }
 
 } // namespace
 
+// clang-format off
+
 // Instantiate supported string types
 template class StringImpl<char>;
 template class StringImpl<wchar_t>;
+
+// Instantiate functions
+template StringImpl<char> VFormat<char>(const StringImpl<char>& rFmt, std::va_list args);
+template StringImpl<char> VFormat<char>(const char* pFmt, std::va_list args);
+template StringImpl<char> Format<char>(const StringImpl<char>& rFmt, ...);
+template StringImpl<char> Format<char>(const char* pFmt, ...);
+
+template StringImpl<wchar_t> VFormat<wchar_t>(const StringImpl<wchar_t>& rFmt, std::va_list args);
+template StringImpl<wchar_t> VFormat<wchar_t>(const wchar_t* pFmt, std::va_list args);
+template StringImpl<wchar_t> Format<wchar_t>(const StringImpl<wchar_t>& rFmt, ...);
+template StringImpl<wchar_t> Format<wchar_t>(const wchar_t* pFmt, ...);
+
+// clang-format on
 
 } // namespace kiwi

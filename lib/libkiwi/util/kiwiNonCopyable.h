@@ -16,10 +16,10 @@ protected:
     ~NonCopyable() {}
 
 private:
-    NonCopyable(const NonCopyable& other) {
+    NonCopyable(const NonCopyable& /* rOther */) {
         K_ASSERT(false);
     }
-    NonCopyable& operator=(const NonCopyable& other) {
+    NonCopyable& operator=(const NonCopyable& /* rOther */) {
         K_ASSERT(false);
         return *this;
     }

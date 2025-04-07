@@ -4,4 +4,5 @@
 #include <internal/mbstring.h>
 #include <internal/rand.h>
 #include <internal/strtold.h>
+#include <internal/strtoul.h>
 #endif

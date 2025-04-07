@@ -24,19 +24,38 @@ public:
     };
 
     /**
+     * @brief Training game ID
+     */
+    enum ETrainingGame {
+        TRAININGGAME_1ST,
+        TRAININGGAME_2ND,
+        TRAININGGAME_3RD,
+    };
+
+    /**
+     * @brief Menu ID
+     */
+    enum EMenu { MENU_TRAINING, MENU_PHYSICAL, MENU_STANDARD };
+
+    /**
      * @brief Golf gamemode
      */
-    enum EGolfMode { GOLF_NINEHOLE, GOLF_BEGINNER, GOLF_INTERMED, GOLF_EXPERT };
+    enum EGolfMode {
+        GOLFMODE_NINEHOLE,
+        GOLFMODE_BEGINNER,
+        GOLFMODE_INTERMEDIATE,
+        GOLFMODE_EXPERT
+    };
 
 public:
-    u32 GetSport() const {
-        return (u32)mSport;
+    ESport GetSport() const {
+        return mSport;
     }
-    void SetSequence(u32 seq) {
-        mSequence = seq;
+    EMenu GetLastMenu() const {
+        return mLastMenu;
     }
-    u32 GetSequence() const {
-        return mSequence;
+    ETrainingGame GetTrainingGame() const {
+        return mTrainingGame;
     }
 
     /**
@@ -122,10 +141,10 @@ private:
 
     // @brief Current sport
     ESport mSport; // at 0x4
-    // @brief Current sequence
-    u32 mSequence; // at 0x8
+    // @brief Previous menu
+    EMenu mLastMenu; // at 0x8
     // @brief Current training game
-    u32 mTrainingGame; // at 0xC
+    ETrainingGame mTrainingGame; // at 0xC
 
     // @brief Final hole in golf game
     // @bug Accidentally(?) updated in RPGolConfig::CanPlayNextHole,

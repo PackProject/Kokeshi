@@ -19,8 +19,9 @@ void Packet::Alloc(u32 size) {
     // Protocol may have memory overhead
     mBufferSize = size + GetOverhead();
 
-    mpBuffer = new u8[mBufferSize];
+    mpBuffer = new (32, EMemory_MEM2) u8[mBufferSize];
     K_ASSERT(mpBuffer != nullptr);
+    K_ASSERT(OSIsMEM2Region(mpBuffer));
 
     Clear();
 }

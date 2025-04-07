@@ -10,6 +10,7 @@ using ::mbstowcs;
 using ::mbtowc;
 using ::rand;
 using ::wcstombs;
+using ::strtoul;
 } // namespace std
 
 #endif

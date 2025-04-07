@@ -1,66 +1,96 @@
 #ifndef NW4R_SND_INSTANCE_POOL_H
 #define NW4R_SND_INSTANCE_POOL_H
-#include "types_nw4r.h"
-
-#include <new>
+#include <nw4r/types_nw4r.h>
 
 namespace nw4r {
 namespace snd {
 namespace detail {
-struct PoolImpl {
-    struct Member {
-        Member* mNext; // at 0x0
-    };
 
-    u32 CreateImpl(void*, u32, u32);
-    void DestroyImpl(void*, u32);
-    u32 CountImpl() const;
+/******************************************************************************
+ *
+ * PoolImpl
+ *
+ ******************************************************************************/
+class PoolImpl {
+public:
+    PoolImpl() : mNext(NULL) {}
+
+protected:
+    u32 CreateImpl(void* pBuffer, u32 size, u32 stride);
+    void DestroyImpl(void* pBuffer, u32 size);
+    int CountImpl() const;
+
     void* AllocImpl();
-    void FreeImpl(void*);
+    void FreeImpl(void* pElem);
 
-    Member mHead; // at 0x0
-
-    inline PoolImpl() {
-        mHead.mNext = NULL;
-    }
+private:
+    PoolImpl* mNext; // at 0x0
 };
 
-template <typename T> struct InstancePool : PoolImpl {
-    inline u32 Create(void* ptr, u32 num) {
-        return CreateImpl(ptr, num, sizeof(T));
+/******************************************************************************
+ *
+ * InstancePool
+ *
+ ******************************************************************************/
+template <typename T> class InstancePool : private PoolImpl {
+public:
+    u32 Create(void* pBuffer, u32 size) {
+        return CreateImpl(pBuffer, size, sizeof(T));
     }
 
-    inline T* Alloc() {
-        void* ptr = AllocImpl();
-
-        if (!ptr)
-            return NULL;
-
-        return new (ptr) T;
+    void Destroy(void* pPtr, u32 size) {
+        DestroyImpl(pPtr, size);
     }
 
-    inline void Free(T* ptr) {
-        if (ptr) {
-            ptr->~T();
-            FreeImpl(ptr);
-        }
-    }
-
-    inline void Destroy(void* ptr, u32 num) {
-        DestroyImpl(ptr, num);
-    }
-
-    inline u32 Count() const {
+    int Count() const {
         return CountImpl();
     }
-};
 
-template <typename T> struct MemoryPool : PoolImpl {
-    inline void Free(T* ptr) {
-        ptr->~T();
-        FreeImpl(ptr);
+    T* Alloc() {
+        void* pPtr = AllocImpl();
+        if (pPtr == NULL) {
+            return NULL;
+        }
+
+        return new (pPtr) T;
+    }
+
+    void Free(T* pElem) {
+        if (pElem != NULL) {
+            pElem->~T();
+            FreeImpl(pElem);
+        }
     }
 };
+
+/******************************************************************************
+ *
+ * MemoryPool
+ *
+ ******************************************************************************/
+template <typename T> class MemoryPool : private PoolImpl {
+public:
+    u32 Create(void* pBuffer, u32 size) {
+        return CreateImpl(pBuffer, size, sizeof(T));
+    }
+
+    void Destroy(void* pPtr, u32 size) {
+        DestroyImpl(pPtr, size);
+    }
+
+    int Count() const {
+        return CountImpl();
+    }
+
+    T* Alloc() {
+        return static_cast<T*>(AllocImpl());
+    }
+
+    void Free(T* pElem) {
+        FreeImpl(pElem);
+    }
+};
+
 } // namespace detail
 } // namespace snd
 } // namespace nw4r

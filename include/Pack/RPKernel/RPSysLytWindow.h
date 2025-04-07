@@ -1,7 +1,6 @@
 #ifndef RP_KERNEL_LYT_WINDOW_H
 #define RP_KERNEL_LYT_WINDOW_H
 #include "RPTypes.h"
-
 #include <nw4r/lyt/lyt_window.h>
 
 /**

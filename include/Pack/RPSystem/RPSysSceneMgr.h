@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_SCENE_MGR_H
 #define RP_SYSTEM_SCENE_MGR_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

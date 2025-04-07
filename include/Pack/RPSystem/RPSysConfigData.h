@@ -3,6 +3,7 @@
 #include <Pack/RPAudio/RPSndAudioMgr.h>
 #include <Pack/RPTypes.h>
 #include <RPSystem/RPSysSceneMgr.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

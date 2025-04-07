@@ -8,6 +8,8 @@
  * @wscname
  */
 class RPGolConfig : RPSysUnknownBase {
+    RP_SINGLETON_DECL(RPGolConfig);
+
 public:
     /**
      * @brief Configuration for a golf hole
@@ -45,27 +47,22 @@ public:
         GAMEMODE_1,
         GAMEMODE_2,
 
-        GAMEMODE_TR_PUTTING,
+        GAMEMODE_TR_ONEPAT,
         GAMEMODE_TR_NEARPIN,
         GAMEMODE_TR_TARGET,
 
-        GAMEMODE_FT_PUTTING,
+        GAMEMODE_FT_ONEPAT,
         GAMEMODE_FT_NEARPIN,
         GAMEMODE_FT_TARGET,
 
-        GAMEMODE_9H,
+        GAMEMODE_NINEHOLE,
 
-        GAMEMODE_3H_BEGINNER,
-        GAMEMODE_3H_INTERMED,
-        GAMEMODE_3H_EXPERT,
+        GAMEMODE_BEGINNER,
+        GAMEMODE_INTERMEDIATE,
+        GAMEMODE_EXPERT,
     };
 
 public:
-    // @address 8029dcc0
-    static void CreateInstance();
-    // @address 8029dcc0
-    static void DestroyInstance();
-
     /**
      * @brief Number of holes played so far
      * @address 8029cb1c
@@ -119,14 +116,6 @@ public:
     static int GetNumHolesTotal();
 
     /**
-     * @brief Current wind direction + speed
-     * @address 8029ce74
-     * @param dirOut Direction output ptr
-     * @param spdOut Speed output ptr
-     */
-    void GetWind(int* dirOut, int* spdOut) const;
-
-    /**
      * @brief Creates the wind set based on what holes are required by the
      * gamemode
      * @address 8029cea8
@@ -151,19 +140,6 @@ public:
      * @address 8029d0b8
      */
     static int GetUIHoleNum();
-
-    /**
-     * @brief Par of specified hole
-     * @address 8029d0c8
-     * @param n Hole id (Hole N, not relative to round)
-     */
-    static int GetHolePar(int n);
-
-    /**
-     * @brief Par of current hole
-     * @address 8029d0e0
-     */
-    static int GetCurrentHolePar();
 
     /**
      * @brief Choose random pin position
@@ -207,7 +183,7 @@ public:
     // @address 8029d6e0
     void SetupFitnessGame();
     // @address 8029d778
-    void SetupStandardGame();
+    void SetupTrainingGame();
     // @address 8029d810
     void SetupGame();
 
@@ -247,11 +223,143 @@ public:
      */
     static int GetHoleNumFromName(const char* name);
 
-private:
-    // @address 8029d9fc
-    RPGolConfig();
-    // @address 8029d9a0
-    virtual ~RPGolConfig();
+    /**
+     * @brief Gets the explicit "goal" position for auto-aiming.
+     * @details If the position is (0,0,0), this falls back to the field
+     * manager.
+     */
+    static const nw4r::math::VEC3& GetGoalPos();
+
+    /**
+     * @brief Adjusts the minimap zoom level
+     *
+     * @param[in,out] rZoom Zoom level
+     */
+    static void AdjustMapZoom(f32& zoom);
+
+    /**
+     * @brief Adjusts the minimap position
+     *
+     * @param[in,out] rPos Minimap position
+     */
+    static void AdjustMapPos(nw4r::math::VEC2& pos);
+
+    /**
+     * @brief Gets the number of holes played in the round
+     */
+    static s32 GetHolesPlayed();
+
+    /**
+     * @brief Tests whether the current hole is the first hole of the current
+     * round
+     */
+    static bool IsStartHole();
+
+    /**
+     * @brief Gets the stroke score on the specified hole, by the specified
+     * player
+     *
+     * @param hole Hole ID (relative)
+     * @param player Player ID
+     */
+    static s32 GetNthScore(u32 hole, u32 player);
+
+    /**
+     * @brief Gets the stroke count on the specified hole, by the specified
+     * player
+     *
+     * @param hole Hole ID (relative)
+     * @param player Player ID
+     */
+    static u32 GetNthTotal(u32 hole, u32 player);
+
+    /**
+     * @brief Gets the total stroke score by the specified player
+     *
+     * @param player Player ID
+     * @param finish Count the current hole (for a finished round)
+     */
+    static s32 GetRoundScore(u32 player, bool finish);
+
+    /**
+     * @brief Gets the absolute hole index based on the specified relative index
+     *
+     * @param no Hole index (relative)
+     */
+    static u32 GetAbsoluteHole(u32 no);
+
+    /**
+     * @brief Gets the number of holes in the round
+     */
+    static u32 GetRoundLength();
+
+    /**
+     * @brief Gets the wind speed/direction of the current hole
+     *
+     * @param[out] pDir Wind direction
+     * @param[out] pSpd Wind speed
+     */
+    void GetWind(u32* pDir, u32* pSpd) const;
+
+    /**
+     * @brief Gets the stroke par of the specified hole
+     *
+     * @param hole Hole ID
+     */
+    static u32 GetHolePar(u32 hole);
+    /**
+     * @brief Gets the stroke par of the current hole
+     */
+    static u32 GetPar();
+
+    /**
+     * @brief Generates a random permutation of integer values
+     *
+     * @param max Maximum value (exclusive)
+     * @param[out] pArray Permutation
+     */
+    static void Random(s32 max, s32* pArray);
+
+    /**
+     * @brief Gets the hole ID corresponding to the specified resource filename
+     *
+     * @param pName Hole resource filename
+     */
+    static u32 GetHoleNo(const char* pName);
+
+    /**
+     * @brief Creates a set of wind conditions
+     *
+     * @param start Start hole
+     * @param end End hole
+     * @param min Minimum wind speed (inclusive)
+     * @param max Maximum wind speed (inclusive)
+     */
+    static void DecideWindImpl(u32 start, u32 end, u32 min, u32 max);
+
+    /**
+     * @brief Gets the resource filename of the current hole
+     */
+    static const char* GetHoleName();
+
+    /**
+     * @brief Tests whether the current hole requires the river environment
+     * sounds
+     */
+    static bool IsHoleFlagRiverSE();
+    /**
+     * @brief Tests whether the current hole requires the sea environment sounds
+     */
+    static bool IsHoleFlagSeaSE();
+    /**
+     * @brief Tests whether the current hole requires the reflected sky model
+     */
+    static bool IsHoleFlagSkyReflect();
+
+    /**
+     * @brief Tests whether expert mode (UI hidden) is enabled
+     */
+    static bool IsExpertMode();
 
 private:
     // @brief Max player count
@@ -259,9 +367,9 @@ private:
     // @brief Golf course length
     static const u32 HOLE_MAX = 9;
 
-    u32 mPlayerScores[PLAYER_MAX][HOLE_MAX]; // at 0x4
-    u32 mGameMode;                           // at 0x94
-    u32 mCurrentHole;                        // at 0x98
+    u32 mStrokeTotal[HOLE_MAX][PLAYER_MAX]; // at 0x4
+    u32 mGameMode;                          // at 0x94
+    u32 mCurrentHole;                       // at 0x98
     char UNK_0x9C[0x1C74 - 0x9C];
 
     /**
@@ -270,42 +378,7 @@ private:
      */
     static HoleInfo sHoleInfo[];
 
-    /**
-     * @brief Static instance
-     * @address 804bf8c4
-     */
-    static RPGolConfig* sInstance;
-};
-
-RPGolConfig::HoleInfo sHoleInfo[] = {
-    {"fc1", 4, RPGolConfig::RES_NONE, -136.0f, -216.0f, -2.9f, 0.0f, 0.0f,
-     0.0f},
-    {"fc3", 3, RPGolConfig::RES_SKY_REFLECT, 198.0f, -520.0f, 2.1f, 0.0f, 0.0f,
-     0.0f},
-    {"fc8", 5, RPGolConfig::RES_SKY_REFLECT, 958.0f, -246.0f, -4.3f, 0.0f, 0.0f,
-     0.0f},
-    {"fc14", 3, RPGolConfig::RES_SEA_SFX, 64.0f, -380.0f, 2.4f, 0.0f, 0.0f,
-     0.0f},
-    {"fc5", 5, RPGolConfig::RES_SEA_SFX, -1354.0f, -96.0f, -3.0f, 0.0f, 0.0f,
-     0.0f},
-    {"fc16", 4, RPGolConfig::RES_RIVER_SFX, -980.0f, -451.0f, -1.3f, 0.0f, 0.0f,
-     0.0f},
-    {"fc12", 4, RPGolConfig::RES_NONE, -331.0f, -941.0f, 2.4f, 0.0f, 0.0f,
-     0.0f},
-    {"fc9", 3, RPGolConfig::RES_SEA_SFX, -397.0f, -205.0f, 0.4f, 0.0f, 0.0f,
-     0.0f},
-    {"fc13", 5, RPGolConfig::RES_SEA_SFX, 1044.0f, -287.0f, -4.5f, 0.0f, 0.0f,
-     0.0f},
-    {"fc11", 3, RPGolConfig::RES_SKY_REFLECT, 0.0f, -205.0f, -0.8f, 0.0f, 0.0f,
-     0.0f}, // Target Practice hole
-    {"E3", 4, RPGolConfig::RES_NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-     0.0f}, // E3 hole
-    {"survey", 5, RPGolConfig::RES_NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-     0.0f}, // "Survey" (Driving range)
-    {"angle", 5, RPGolConfig::RES_NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-     0.0f}, // "Angle" (Physics test)
-    {"fc18", 5, RPGolConfig::RES_NONE, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-     0.0f} // Unfinished port of Famicom Hole 18
+    static bool sIsExpertMode;
 };
 
 #endif

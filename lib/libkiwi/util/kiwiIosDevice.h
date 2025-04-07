@@ -34,10 +34,10 @@ public:
      * @brief Attempt to open this device
      *
      * @param path Virtual file path
-     * @param timeOut Time-out period, in milliseconds
+     * @param timeOut Time-out period, in microseconds
      * @return Success
      */
-    bool Open(const String& path, u32 timeOut = 50);
+    bool Open(const String& path, u32 timeOut = 500);
 
     /**
      * @brief Attempt to close this device

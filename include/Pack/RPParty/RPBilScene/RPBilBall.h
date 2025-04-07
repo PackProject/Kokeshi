@@ -1,7 +1,6 @@
 #ifndef RP_PARTY_BIL_BALL_H
 #define RP_PARTY_BIL_BALL_H
 #include "RPTypes.h"
-
 #include <RPUtility/RPUtlBaseFsm.h>
 
 class RPBilBall {

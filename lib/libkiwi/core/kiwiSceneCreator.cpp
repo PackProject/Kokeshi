@@ -1,6 +1,7 @@
 #define LIBKIWI_INTERNAL
 
 #include <Pack/RPSystem.h>
+
 #include <libkiwi.h>
 
 namespace kiwi {
@@ -76,6 +77,11 @@ const SceneCreator::Info SceneCreator::scPackScenes[] = {
 //! User-registered scenes
 TMap<s32, SceneCreator::Info> SceneCreator::sUserScenes;
 
+//! Root debug menu scene ID
+s32 SceneCreator::sDebugRootID = -1;
+//! Root debug menu button combination (held)
+u16 SceneCreator::sDebugRootButtons = 0xFFFF;
+
 /**
  * @brief Gets information on the specified scene
  *
@@ -123,6 +129,50 @@ void SceneCreator::RegistScene(const Info& rInfo) {
     sUserScenes.Insert(rInfo.id, rInfo);
 }
 
+/**
+ * @brief Registers root debug menu information
+ * @details The debug root scene is entered when transitioning to the main
+ * menu while the specified button mask is held.
+ *
+ * @param id Debug root scene ID (-1 to disable)
+ * @param buttons Buttons that must be held to visit the debug menu
+ * (defaults to B+Minus+1+2)
+ */
+void SceneCreator::RegistDebugRoot(s32 id, u16 buttons) {
+    K_ASSERT_EX(id >= 0 || id == -1, "Invalid scene ID");
+
+    sDebugRootID = id;
+    sDebugRootButtons = buttons;
+}
+
+/**
+ * @brief Gets the scene ID of the main menu scene
+ */
+s32 SceneCreator::GetMenuScene() {
+#if defined(PACK_SPORTS)
+    return kiwi::ESceneID_RPSportsMenuScene;
+#elif defined(PACK_PLAY)
+    return kiwi::ESceneID_RPPartyMenuScene;
+#elif defined(PACK_RESORT)
+    return kiwi::ESceneID_Sp2TitleScene;
+#else
+    return -1;
+#endif
+}
+
+/**
+ * @brief Gets the scene ID of the bootup scene
+ */
+s32 SceneCreator::GetBootScene() {
+#if defined(PACK_SPORTS) || defined(PACK_PLAY)
+    return kiwi::ESceneID_RPSysBootScene;
+#elif defined(PACK_RESORT)
+    return kiwi::ESceneID_Sp2StrapScene;
+#else
+    return -1;
+#endif
+}
+
 #if defined(PACK_SPORTS) || defined(PACK_PLAY)
 /**
  * @brief Fades out into a new scene
@@ -141,6 +191,19 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, bool reload) {
     s32 current = RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID();
     if (reload) {
         id = current;
+    }
+
+    // Visit debug root instead of menu if buttons are held
+    if (id == GetMenuScene()) {
+        for (int i = 0; i < EPlayer_Max; i++) {
+            const WiiCtrl& rCtrl =
+                CtrlMgr::GetInstance().GetWiiCtrl(static_cast<EPlayer>(i));
+
+            if (rCtrl.IsConnected() && rCtrl.IsHold(sDebugRootButtons)) {
+                id = sDebugRootID;
+                break;
+            }
+        }
     }
 
     // Send request to scene manager
@@ -178,6 +241,19 @@ bool SceneCreator::ChangeSceneAfterFade(s32 id, const nw4r::ut::Color* pColor) {
     s32 current = RP_GET_INSTANCE(RPSysSceneMgr)->getCurrentSceneID();
     if (id == -1) {
         id = current;
+    }
+
+    // Visit debug root instead of menu if buttons are held
+    if (id == GetMenuScene()) {
+        for (int i = 0; i < EPlayer_Max; i++) {
+            const WiiCtrl& rCtrl =
+                CtrlMgr::GetInstance().GetWiiCtrl(static_cast<EPlayer>(i));
+
+            if (rCtrl.IsConnected() && rCtrl.IsHold(sDebugRootButtons)) {
+                id = sDebugRootID;
+                break;
+            }
+        }
     }
 
     // Send request to scene manager
@@ -337,7 +413,7 @@ RPSysScene* SceneCreator::Create(s32 id) {
 #if defined(PACK_SPORTS) || defined(PACK_PLAY)
         switch (GetScenePack(id)) {
         case EPackID_SportsPack:
-        case EPackID_PartyPack:  {
+        case EPackID_PartyPack: {
             pScene = CreatePackScene(id);
             break;
         }
@@ -349,7 +425,7 @@ RPSysScene* SceneCreator::Create(s32 id) {
 
         case EPackID_MusicPack:
         case EPackID_HealthPack:
-        default:                 {
+        default: {
             K_ASSERT_EX(false, "Not for this pack yet.");
             break;
         }

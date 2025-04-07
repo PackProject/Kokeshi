@@ -4,15 +4,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_arc
-//! @{
-
-//! @file
-//! @brief Includes all header files of the ARC library
-
 #include <revolution/ARC/arc.h>
-
-//! @}
 
 #ifdef __cplusplus
 }

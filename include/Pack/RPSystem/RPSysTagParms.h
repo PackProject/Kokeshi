@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_TAG_PARMS_H
 #define RP_SYSTEM_TAG_PARMS_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 // Forward declarations

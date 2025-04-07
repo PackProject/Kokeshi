@@ -40,11 +40,14 @@ inline float fmodf(float x, float y) {
     return fmod(x, y);
 }
 
+inline float ldexpf(float value, int exp) {
+    return ldexp(value, exp);
+}
+
 inline float modff(float x, float* iptr) {
     float frac;
     double intg;
 
-    x = (double)x;
     frac = modf(x, &intg);
     *iptr = intg;
 

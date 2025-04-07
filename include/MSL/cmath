@@ -3,12 +3,16 @@
 #include <math.h>
 #ifdef __cplusplus
 
+// Remove C macro
+#undef fabs
+
 namespace std {
 using ::acos;
 using ::acosf;
 using ::asin;
 using ::atan;
 using ::atan2;
+using ::atan2f;
 using ::ceil;
 using ::ceilf;
 using ::copysign;
@@ -21,6 +25,7 @@ using ::fmod;
 using ::fmodf;
 using ::frexp;
 using ::ldexp;
+using ::ldexpf;
 using ::modf;
 using ::modff;
 using ::nan;
@@ -32,6 +37,20 @@ using ::sqrt;
 using ::sqrtf;
 using ::tan;
 using ::tanf;
+
+inline float sqrt(float x) {
+    return ::sqrtf(x);
+}
+
+// TODO: Very fake!
+inline double fabs_wrapper(double x) {
+    return __fabs(x);
+}
+
+inline float fabs(float x) {
+    return fabs_wrapper(x);
+}
+
 } // namespace std
 
 #endif

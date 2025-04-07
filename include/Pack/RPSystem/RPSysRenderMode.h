@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_RENDER_MODE_H
 #define RP_SYSTEM_RENDER_MODE_H
 #include <Pack/RPTypes.h>
+
 #include <revolution/GX.h>
 
 //! @addtogroup rp_system

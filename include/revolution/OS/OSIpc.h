@@ -5,14 +5,9 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 void* __OSGetIPCBufferHi(void);
 void* __OSGetIPCBufferLo(void);
 void __OSInitIPCBuffer(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

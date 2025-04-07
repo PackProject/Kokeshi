@@ -8,12 +8,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_ax
-//! @{
-
-//! @file
-//! @brief Includes all header files of the AX library
-
 #include <revolution/AX/AX.h>
 #include <revolution/AX/AXAlloc.h>
 #include <revolution/AX/AXAux.h>
@@ -25,8 +19,6 @@ extern "C" {
 #include <revolution/AX/AXSPB.h>
 #include <revolution/AX/AXVPB.h>
 #include <revolution/AX/DSPCode.h>
-
-//! @}
 
 #ifdef __cplusplus
 }

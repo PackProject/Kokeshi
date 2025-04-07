@@ -2,6 +2,7 @@
 #define RP_SYSTEM_GAME_CONFIG_H
 #include <Pack/RPSystem/RPSysTagParms.h>
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

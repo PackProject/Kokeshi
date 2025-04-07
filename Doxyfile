@@ -79,7 +79,7 @@ STRIP_FROM_INC_PATH    = include/MSL/ loader/ include/ lib/
 ALIASES                += wfuname="\note Type name from Wii Fit U."
 ALIASES                += wscname="\note Type name from Wii Sports Club."
 ALIASES 			   += typo="\attention This identifier contains a known typo that is preserved for accuracy."
-ALIASES                += extview{1}="\note This class cannot be instantiated. It is an extension of \1."
+ALIASES                += extension{1}="\note This class cannot be instantiated. It is an extension of \1."
 ALIASES                += history="\attention"
 ALIASES                += unused="\note This functionality is unused."
 ALIASES                += stubbed="\note This functionality is removed from retail builds."

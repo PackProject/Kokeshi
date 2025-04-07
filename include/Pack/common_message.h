@@ -2,7 +2,7 @@
 #define COMMON_MESSAGE_BMG_H
 
 // Split full ID into group/message ID arguments
-#define MESSAGE_ID_ARGS(x) ((x) >> 8), ((x)&0xFF)
+#define MESSAGE_ID_ARGS(x) ((x) >> 8), ((x) & 0xFF)
 
 enum common_message {
     // clang-format off
@@ -139,7 +139,7 @@ enum common_message {
     MSG_G000384_M00 = 0x00038400, // Are you using your Wii Remote\nJacket? Make sure there are\nno people or objects around\nthat you might bump into!
     MSG_G000385_M00 = 0x00038500, // Why not take a break?\nYou can pause the game\nby pressing E.
     MSG_G0003E7_M00 = 0x0003E700, //
-                                  // clang-format on
+                                // clang-format on
 };
 
 #endif

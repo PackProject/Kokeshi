@@ -1,11 +1,12 @@
 #ifndef LIBKIWI_UTIL_IOS_OBJECT_H
 #define LIBKIWI_UTIL_IOS_OBJECT_H
-#include <cstring>
 #include <libkiwi/core/kiwiMemoryMgr.h>
 #include <libkiwi/debug/kiwiAssert.h>
 #include <libkiwi/k_types.h>
 #include <libkiwi/prim/kiwiString.h>
 #include <libkiwi/util/kiwiIosVector.h>
+
+#include <cstring>
 
 namespace kiwi {
 //! @addtogroup libkiwi_util
@@ -85,6 +86,14 @@ public:
     virtual ~IosObject() {
         // IosBuffer frees this memory
         Ptr()->~T();
+    }
+
+    /**
+     * @brief Access data length
+     */
+    // TODO: Hack to make this function specializable by template...
+    virtual u32 Length() const {
+        return IosVector::Length();
     }
 
     /**

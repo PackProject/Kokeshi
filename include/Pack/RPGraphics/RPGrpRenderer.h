@@ -49,7 +49,7 @@ public:
         return sActiveScreen;
     }
 
-    static bool IsDrawLayout() {
+    static bool IsLytDraw() {
         return sDrawPass == EDrawPass_Draw2D;
     }
 

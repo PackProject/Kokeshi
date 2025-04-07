@@ -14,6 +14,7 @@
 // Function macros
 #define K_INLINE inline
 #define K_DONT_INLINE __attribute__((never_inline))
+#define K_WEAK __attribute__((weak))
 
 // Expose private members only to Kamek hooks
 #ifdef LIBKIWI_INTERNAL
@@ -21,6 +22,14 @@
 #else
 #define LIBKIWI_KAMEK_PUBLIC
 #endif
+
+// 'typeof'
+#define K_TYPEOF(x) __typeof__(x)
+// 'decltype'
+#define K_DECLTYPE(x) __decltype__(x)
+
+// Primitive array length
+#define K_LENGTHOF(x) static_cast<size_t>(sizeof((x)) / sizeof((x)[0]))
 
 // C++ exclusive options
 #ifdef __cplusplus

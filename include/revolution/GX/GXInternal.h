@@ -1,28 +1,31 @@
 #ifndef RVL_SDK_GX_INTERNAL_H
 #define RVL_SDK_GX_INTERNAL_H
-#include <revolution/GX/GXTypes.h>
 #include <types.h>
+
+#include <revolution/GX/GXTypes.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//! @addtogroup rvl_gx
-//! @{
-
-//
-// GX internal structures
-// Public structures include padding so they must be included in decomp.
-//
+/**
+ * GX internal structures.
+ *
+ * Wouldn't be necessary if the public ones didn't include padding; but they do,
+ * so there has to be different structure definitions.
+ *
+ * These internal structures are implemented like the RFL ones since we don't
+ * have DWARF info for most GX structures.
+ */
 
 /**
- * @brief Declares a dummy public structure from an internal structure.
- *
+ * Declare a public structure from the corresponding internal structure.
  * (Implementation size is included to require that such a structure already
  * exists.)
  */
-#define GX_DECL_PUBLIC_STRUCT(name, size)                                      \
+#define GX_PUBLIC_STRUCT_DECL(name, size)                                      \
     typedef struct _##name {                                                   \
-        u8 dummy[(size) - sizeof(name##Impl) + sizeof(name##Impl)];            \
+        u32 dummy[((size) - sizeof(name##Impl) + sizeof(name##Impl)) /         \
+                  sizeof(u32)];                                                \
     } name;
 
 typedef struct _GXFifoObjImpl {
@@ -62,7 +65,13 @@ typedef struct _GXTlutObjImpl {
     u8 todo;
 } GXTlutObjImpl;
 
-//! @}
+typedef struct _GXTexRegionImpl {
+    u8 todo;
+} GXTexRegionImpl;
+
+typedef struct _GXTlutRegionImpl {
+    u8 todo;
+} GXTlutRegionImpl;
 
 #ifdef __cplusplus
 }

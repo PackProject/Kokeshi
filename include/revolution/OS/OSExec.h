@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 typedef struct OSExecParams {
     UNKWORD WORD_0x0;
     UNKWORD WORD_0x4;
@@ -21,8 +18,6 @@ extern BOOL __OSInReboot;
 
 void __OSGetExecParams(OSExecParams* out);
 void __OSLaunchMenu(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

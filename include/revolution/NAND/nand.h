@@ -1,19 +1,17 @@
 #ifndef RVL_SDK_NAND_H
 #define RVL_SDK_NAND_H
-#include <revolution/FS.h>
 #include <types.h>
+
+#include <revolution/FS.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nand
-//! @{
 
 #define NAND_BANNER_TITLE_MAX 32
 #define NAND_BANNER_ICON_MAX_FRAME 8
 
 // Forward declarations
-typedef struct NANDCommandBlock;
+typedef struct NANDCommandBlock NANDCommandBlock;
 
 typedef enum {
     NAND_RESULT_FATAL_ERROR = -128,
@@ -74,7 +72,7 @@ typedef enum {
     NAND_PERM_RWALL = NAND_PERM_RALL | NAND_PERM_WALL
 } NANDPermission;
 
-typedef void (*NANDAsyncCallback)(s32 result, struct NANDCommandBlock* block);
+typedef void (*NANDAsyncCallback)(s32 result, NANDCommandBlock* block);
 
 typedef struct NANDStatus {
     u32 ownerId; // at 0x0
@@ -179,8 +177,6 @@ s32 NANDPrivateGetStatusAsync(const char* path, NANDStatus* status,
 
 void NANDSetUserData(NANDCommandBlock* block, void* data);
 void* NANDGetUserData(NANDCommandBlock* block);
-
-//! @}
 
 #ifdef __cplusplus
 }

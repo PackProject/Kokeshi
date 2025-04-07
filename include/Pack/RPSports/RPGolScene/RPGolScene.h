@@ -3,6 +3,8 @@
 #include "RPSportsBaseScene.h"
 #include "RPTypes.h"
 
+class RPGolMain;
+
 /**
  * @brief Golf scene
  * @wscname

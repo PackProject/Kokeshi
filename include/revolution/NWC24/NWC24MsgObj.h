@@ -1,20 +1,18 @@
 #ifndef RVL_SDK_NWC24_MSG_OBJ_H
 #define RVL_SDK_NWC24_MSG_OBJ_H
+#include <types.h>
+
 #include <revolution/NWC24/NWC24Types.h>
 #include <revolution/NWC24/NWC24Utils.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nwc24
-//! @{
 
 #define NWC24_MSG_RECIPIENT_MAX 8
 #define NWC24_MSG_ATTACHMENT_MAX 2
 
 // Forward declarations
-typedef struct RFLCharData;
+typedef struct RFLCharData RFLCharData;
 
 typedef enum {
     NWC24_MSGTYPE_RVL_MENU_SHARED,
@@ -79,12 +77,10 @@ NWC24Err NWC24InitMsgObj(NWC24MsgObj* msg, NWC24MsgType type);
 NWC24Err NWC24SetMsgToId(NWC24MsgObj* msg, u64 id);
 NWC24Err NWC24SetMsgText(NWC24MsgObj* msg, const char* text, u32 len,
                          NWC24Charset charset, NWC24Encoding encoding);
-NWC24Err NWC24SetMsgFaceData(NWC24MsgObj* msg, const struct RFLCharData* data);
+NWC24Err NWC24SetMsgFaceData(NWC24MsgObj* msg, const RFLCharData* data);
 NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const wchar_t* name, u32 len);
 NWC24Err NWC24SetMsgMBNoReply(NWC24MsgObj* msg, BOOL enable);
 NWC24Err NWC24SetMsgMBRegDate(NWC24MsgObj* msg, u16 year, u8 month, u8 day);
-
-//! @}
 
 #ifdef __cplusplus
 }

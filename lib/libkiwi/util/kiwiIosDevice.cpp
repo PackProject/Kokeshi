@@ -6,7 +6,7 @@ namespace kiwi {
  * @brief Attempt to open this device
  *
  * @param path Virtual file path
- * @param timeOut Time-out period, in milliseconds
+ * @param timeOut Time-out period, in microseconds
  * @return Success
  */
 bool IosDevice::Open(const String& path, u32 timeOut) {
@@ -17,7 +17,7 @@ bool IosDevice::Open(const String& path, u32 timeOut) {
         if (IsOpen()) {
             return true;
         }
-    } while (OSGetTick() - start < OS_MSEC_TO_TICKS(timeOut));
+    } while (OSGetTick() - start < OS_USEC_TO_TICKS(timeOut));
 
     return false;
 }
@@ -83,16 +83,19 @@ s32 IosDevice::IoctlV(s32 id, const TVector<IosVector>& in,
     K_ASSERT_EX(IsOpen(), "Please open this device");
 
     // Vectors need to be contiguous and usually(?) in MEM2
-    IosVector* vectors =
-        new (32, EMemory_MEM2) IosVector[in.Size() + out.Size()];
+    IPCIOVector* vectors =
+        new (32, EMemory_MEM2) IPCIOVector[in.Size() + out.Size()];
+    K_ASSERT(vectors != nullptr);
 
     // Copy in user vectors
     int i = 0;
-    for (int j = 0; j < in.Size();) {
-        vectors[i++] = in[j++];
+    for (int j = 0; j < in.Size(); j++, i++) {
+        vectors[i].base = in[j].Base();
+        vectors[i].length = in[j].Length();
     }
-    for (int j = 0; j < out.Size();) {
-        vectors[i++] = out[j++];
+    for (int j = 0; j < out.Size(); j++, i++) {
+        vectors[i].base = out[j].Base();
+        vectors[i].length = out[j].Length();
     }
 
     s32 result = IOS_Ioctlv(mHandle, id, in.Size(), out.Size(), vectors);

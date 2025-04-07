@@ -1,5 +1,7 @@
-#include <cstring>
 #include <libkiwi.h>
+
+#include <cstdlib>
+#include <cstring>
 
 namespace kiwi {
 namespace json {
@@ -554,7 +556,7 @@ bool Reader::ParseNumber(u32& rPos, f64& rNumber) {
     ParseExponent(pos, exponent);
 
     String s = integer + fraction + exponent;
-    f64 number = ksl::atof(s.CStr());
+    f64 number = std::atof(s.CStr());
     rNumber = sign ? -number : number;
 
     MATCH();

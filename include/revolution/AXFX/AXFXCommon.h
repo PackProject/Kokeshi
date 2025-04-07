@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_axfx
-//! @{
-
 typedef struct AXFX_BUS {
     s32* left;     // at 0x0
     s32* right;    // at 0x4
@@ -26,8 +23,6 @@ typedef struct AXFX_BUFFERUPDATE_DPL2 {
     s32* left_surround;  // at 0x8
     s32* right_surround; // at 0xC
 } AXFX_BUFFERUPDATE_DPL2;
-
-//! @}
 
 #ifdef __cplusplus
 }

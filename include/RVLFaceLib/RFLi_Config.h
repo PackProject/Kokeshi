@@ -1,14 +1,13 @@
 #ifndef RVL_FACE_LIBRARY_INTENRAL_CONFIG_H
 #define RVL_FACE_LIBRARY_INTERNAL_CONFIG_H
-#include <RVLFaceLib/RFLi_Types.h>
-#include <revolution/GX.h>
 #include <types.h>
+
+#include <RVLFaceLib/RFLi_Types.h>
+
+#include <revolution/GX.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 /**
  * Char data constraints
@@ -145,8 +144,6 @@ static const GXColor RFLi_BEARD_COLOR0[RFLi_MAX_BEARD_COLOR + 1] = {
     {30, 26, 24, 255},  {56, 32, 21, 255},    {85, 38, 23, 255},
     {112, 64, 36, 255}, {114, 114, 120, 255}, {73, 54, 26, 255},
     {122, 89, 40, 255}, {193, 159, 100, 255}};
-
-//! @}
 
 #ifdef __cplusplus
 }

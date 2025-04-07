@@ -22,7 +22,7 @@ tools/Kamek*.*
 tools/mwasmeppc.exe
 tools/mwcceppc.exe
 tools/mwldeppc.exe
-tools/lmgr*.dll
+tools/*.dll
 # Compiled Python
 tools/**/*.pyc
 
@@ -31,3 +31,5 @@ tools/**/*.pyc
 #=========================================================#
 # Build artifacts
 build/**
+# Symbol maps
+*.MAP

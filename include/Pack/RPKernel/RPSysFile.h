@@ -1,7 +1,9 @@
 #ifndef RP_KERNEL_FILE_H
 #define RP_KERNEL_FILE_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
+
 #include <nw4r/ut.h>
 
 /**
@@ -26,7 +28,7 @@ public:
 
 public:
     //! Link node used for cache lists
-    nw4r::ut::Node node; // at 0x10
+    nw4r::ut::Link node; // at 0x10
 
 private:
     //! File path

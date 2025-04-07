@@ -1,8 +1,9 @@
 #ifndef RP_TYPES_H
 #define RP_TYPES_H
+#include <types.h>
+
 #include <egg/core.h>
 #include <egg/prim.h>
-#include <types.h>
 
 //! @addtogroup rp
 //! @{

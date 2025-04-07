@@ -2,7 +2,7 @@
 #define LIBKIWI_CORE_CONTROLLER_H
 #include <egg/core.h>
 #include <libkiwi/k_types.h>
-#include <libkiwi/util/kiwiExtView.h>
+#include <libkiwi/util/kiwiExtension.h>
 
 namespace kiwi {
 //! @addtogroup libkiwi_core
@@ -39,9 +39,9 @@ enum EButton {
 
 /**
  * @brief Wii Remote controller
- * @extview{EGG::CoreController}
+ * @extension{EGG::CoreController}
  */
-class WiiCtrl : public ExtView<EGG::CoreController> {
+class WiiCtrl : public Extension<EGG::CoreController> {
 public:
     /**
      * @brief Tests whether the controller is connected
@@ -88,12 +88,10 @@ private:
 
 /**
  * @brief Controller manager
- * @extview{EGG::CoreControllerMgr}
+ * @extension{EGG::CoreControllerMgr}
  */
-class CtrlMgr : public ExtView<EGG::CoreControllerMgr> {
+class CtrlMgr : public ExtSingletonPtr<EGG::CoreControllerMgr, CtrlMgr> {
 public:
-    K_EXTVIEW_GET_INSTANCE(CtrlMgr, EGG::CoreControllerMgr::getInstance);
-
     /**
      * @brief Gets Wii Remote controller by player index
      *

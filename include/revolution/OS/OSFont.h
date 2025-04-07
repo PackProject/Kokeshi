@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 typedef enum {
     OS_FONT_ENCODE_ANSI,
     OS_FONT_ENCODE_SJIS,
@@ -53,8 +50,6 @@ BOOL OSInitFont(OSFontHeader* font);
 const char* OSGetFontTexture(const char* str, void** texOut, u32* xOut,
                              u32* yOut, u32* widthOut);
 const char* OSGetFontWidth(const char* str, u32* widthOut);
-
-//! @}
 
 #ifdef __cplusplus
 }

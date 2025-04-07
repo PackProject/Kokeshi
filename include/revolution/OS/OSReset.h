@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 typedef BOOL (*OSShutdownFunction)(BOOL final, u32 event);
 
 typedef enum {
@@ -37,8 +34,6 @@ void OSShutdownSystem(void);
 void OSReturnToMenu(void);
 u32 OSGetResetCode(void);
 void OSResetSystem(u32 arg0, u32 arg1, u32 arg2);
-
-//! @}
 
 #ifdef __cplusplus
 }

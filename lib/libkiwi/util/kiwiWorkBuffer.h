@@ -38,10 +38,12 @@ public:
         : mpBuffer(nullptr),
           mBufferSize(arg.size),
           mBufferAlignSize(0),
+          mMemRegion(arg.region),
           mSizeAlign(arg.sizeAlign),
           mMemAlign(arg.memAlign) {
+
         mBufferAlignSize = ROUND_UP(mBufferSize, mSizeAlign);
-        mpBuffer = new (mMemAlign) u8[mBufferAlignSize];
+        mpBuffer = new (mMemAlign, mMemRegion) u8[mBufferAlignSize];
         K_ASSERT(mpBuffer != nullptr);
     }
 
@@ -83,8 +85,9 @@ private:
     u32 mBufferSize;      // Buffer unaligned size
     u32 mBufferAlignSize; // Buffer aligned size
 
-    u32 mSizeAlign; // Requested size alignment
-    u32 mMemAlign;  // Requested address alignment
+    EMemory mMemRegion; // Requested memory region
+    u32 mSizeAlign;     // Requested size alignment
+    u32 mMemAlign;      // Requested address alignment
 };
 
 //! @}

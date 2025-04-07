@@ -45,6 +45,7 @@ public:
           mpArg(pArg) {
         K_ASSERT(mpPacket != nullptr);
         K_ASSERT(mpDst != nullptr);
+        K_ASSERT(OSIsMEM2Region(mpDst));
     }
 
     /**
@@ -84,6 +85,8 @@ public:
         // Write out data
         if (done) {
             K_ASSERT(mpDst != nullptr);
+            K_ASSERT(OSIsMEM2Region(mpDst));
+
             std::memcpy(mpDst, mpPacket->GetContent(),
                         mpPacket->GetContentSize());
 
@@ -406,7 +409,7 @@ SOResult AsyncSocket::RecvImpl(void* pDst, u32 len, u32& rRecv,
                                void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pDst != nullptr);
-    K_ASSERT_EX(!PtrUtil::IsStack(pDst), "Don't use stack memory for async");
+    K_ASSERT(OSIsMEM2Region(pDst));
 
     // Packet to hold incoming data
     Packet* pPacket = new Packet(len);
@@ -438,7 +441,7 @@ SOResult AsyncSocket::SendImpl(const void* pSrc, u32 len, u32& rSend,
                                void* pArg) {
     K_ASSERT(IsOpen());
     K_ASSERT(pSrc != nullptr);
-    K_ASSERT_EX(!PtrUtil::IsStack(pSrc), "Don't use stack memory for async");
+    K_ASSERT(OSIsMEM2Region(pSrc));
 
     // Packet to hold incoming data
     Packet* pPacket = new Packet(len, pAddr);

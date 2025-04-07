@@ -1,14 +1,12 @@
 #ifndef RVL_SDK_ESP_H
 #define RVL_SDK_ESP_H
+#include <types.h>
+
 #include <revolution/ARC.h>
 #include <revolution/IPC.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_esp
-//! @{
 
 typedef enum {
     ES_IOCTLV_LAUNCH_TITLE = 8,
@@ -30,8 +28,6 @@ typedef struct ESPTmd {
 
 s32 ESP_ReadContentFile(s32 fd, void* dst, u32 len);
 s32 ESP_SeekContentFile(s32 fd, s32 offset, s32 origin);
-
-//! @}
 
 #ifdef __cplusplus
 }

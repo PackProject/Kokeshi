@@ -1,4 +1,5 @@
 #include <egg/core.h>
+
 #include <libkiwi.h>
 
 namespace kiwi {
@@ -89,11 +90,25 @@ MemoryMgr::~MemoryMgr() {
  * @param memory Target memory region
  */
 EGG::Heap* MemoryMgr::GetHeap(EMemory memory) const {
-    K_ASSERT(memory < EMemory_Max);
+    EGG::Heap* pHeap = nullptr;
 
-    EGG::Heap* pHeap = memory == EMemory_MEM1 ? mpHeapMEM1 : mpHeapMEM2;
+    switch (memory) {
+    case EMemory_MEM1: {
+        pHeap = mpHeapMEM1;
+        break;
+    }
+
+    case EMemory_MEM2: {
+        pHeap = mpHeapMEM2;
+        break;
+    }
+
+    default: {
+        K_ASSERT(false);
+    }
+    }
+
     K_ASSERT(pHeap != nullptr);
-
     return pHeap;
 }
 

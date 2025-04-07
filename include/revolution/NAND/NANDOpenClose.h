@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_NAND_OPEN_CLOSE_H
 #define RVL_SDK_NAND_OPEN_CLOSE_H
-#include <revolution/NAND/nand.h>
 #include <types.h>
+
+#include <revolution/NAND/nand.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nand
-//! @{
 
 s32 NANDOpen(const char* path, NANDFileInfo* info, u8 mode);
 s32 NANDPrivateOpen(const char* path, NANDFileInfo* info, u8 mode);
@@ -26,8 +24,6 @@ s32 NANDPrivateSafeOpenAsync(const char* path, NANDFileInfo* info, u8 access,
                              NANDCommandBlock* block);
 s32 NANDSafeCloseAsync(NANDFileInfo* info, NANDAsyncCallback callback,
                        NANDCommandBlock* block);
-
-//! @}
 
 #ifdef __cplusplus
 }

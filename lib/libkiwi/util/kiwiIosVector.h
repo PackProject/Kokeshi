@@ -29,7 +29,7 @@ public:
     /**
      * @brief Access data length
      */
-    u32 Length() const {
+    virtual u32 Length() const {
         return length;
     }
 
@@ -41,7 +41,6 @@ public:
      */
     void Set(const void* _base, u32 _length) {
         K_ASSERT(_base == nullptr || OSIsMEM2Region(_base));
-
         base = const_cast<void*>(_base);
         length = _length;
     }

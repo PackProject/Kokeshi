@@ -1,7 +1,6 @@
 #ifndef RP_GRAPHICS_FOG_MANAGER_H
 #define RP_GRAPHICS_FOG_MANAGER_H
 #include "RPTypes.h"
-
 #include <egg/gfx/eggFogManager.h>
 
 /**

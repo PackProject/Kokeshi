@@ -5,12 +5,7 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_dsp
-//! @{
-
 void __DSP_debug_printf(const char* fmt, ...);
-
-//! @}
 
 #ifdef __cplusplus
 }

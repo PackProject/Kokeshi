@@ -1,8 +1,9 @@
 #ifndef NW4R_SND_EXTERNAL_SOUND_PLAYER_H
 #define NW4R_SND_EXTERNAL_SOUND_PLAYER_H
+#include <nw4r/types_nw4r.h>
+
 #include <nw4r/snd/snd_BasicSound.h>
 #include <nw4r/snd/snd_SoundHandle.h>
-#include <nw4r/types_nw4r.h>
 
 namespace nw4r {
 namespace snd {
@@ -14,7 +15,7 @@ public:
     ~ExternalSoundPlayer();
 
     int GetPlayableSoundCount() const {
-        return mPlayableSoundCount;
+        return mPlayableCount;
     }
     void SetPlayableSoundCount(int count);
 
@@ -27,11 +28,11 @@ public:
     }
     BasicSound* GetLowestPrioritySound();
 
-    void InsertSoundList(BasicSound* sound);
-    void RemoveSoundList(BasicSound* sound);
+    void InsertSoundList(BasicSound* pSound);
+    void RemoveSoundList(BasicSound* pSound);
 
     template <typename TForEachFunc>
-    TForEachFunc ForEachSound(TForEachFunc func, bool reverse) {
+    TForEachFunc ForEachSound(TForEachFunc pFunc, bool reverse) {
         if (reverse) {
             BasicSoundExtPlayList::RevIterator it =
                 mSoundList.GetBeginReverseIter();
@@ -41,30 +42,26 @@ public:
 
                 SoundHandle handle;
                 handle.detail_AttachSoundAsTempHandle(&*curr);
-                func(handle);
+                pFunc(handle);
 
                 if (handle.IsAttachedSound()) {
                     ++it;
                 }
             }
         } else {
-            BasicSoundExtPlayList::Iterator it = mSoundList.GetBeginIter();
-
-            while (it != mSoundList.GetEndIter()) {
-                BasicSoundExtPlayList::Iterator curr = it++;
-
+            NW4R_UT_LINKLIST_FOREACH_SAFE(it, mSoundList, {
                 SoundHandle handle;
-                handle.detail_AttachSoundAsTempHandle(&*curr);
-                func(handle);
-            }
+                handle.detail_AttachSoundAsTempHandle(&*it);
+                pFunc(handle);
+            });
         }
 
-        return func;
+        return pFunc;
     }
 
 private:
     BasicSoundExtPlayList mSoundList; // at 0x0
-    u16 mPlayableSoundCount;          // at 0xC
+    u16 mPlayableCount;               // at 0xC
     f32 mVolume;                      // at 0x10
 };
 

@@ -5,11 +5,8 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 // Forward declarations
-typedef struct OSContext;
+typedef struct OSContext OSContext;
 
 // Create mask from interrupt ID
 #define OS_INTR_MASK(intr) (1 << (31 - intr))
@@ -51,7 +48,7 @@ typedef enum {
     OS_INTR_MAX
 } OSInterruptType;
 
-typedef void (*OSInterruptHandler)(s16 intr, struct OSContext* ctx);
+typedef void (*OSInterruptHandler)(s16 intr, OSContext* ctx);
 
 extern u32 __OSLastInterruptSrr0;
 extern s16 __OSLastInterrupt;
@@ -69,12 +66,10 @@ void __OSInterruptInit(void);
 
 u32 __OSMaskInterrupts(u32 userMask);
 u32 __OSUnmaskInterrupts(u32 userMask);
-void __OSDispatchInterrupt(u8 intr, struct OSContext* ctx);
+void __OSDispatchInterrupt(u8 intr, OSContext* ctx);
 
 void __RAS_OSDisableInterrupts_begin(void);
 void __RAS_OSDisableInterrupts_end(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

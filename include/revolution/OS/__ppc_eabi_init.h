@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 #pragma section ".init"
 DECL_SECTION(".init") void __init_hardware(void);
 DECL_SECTION(".init") void __flush_cache(void*, size_t);
@@ -88,8 +85,6 @@ typedef struct ExtabIndexInfo {
 DECL_SECTION(".init") extern const RomSection _rom_copy_info[];
 DECL_SECTION(".init") extern const BssSection _bss_init_info[];
 DECL_SECTION(".init") extern const ExtabIndexInfo _eti_init_info[];
-
-//! @}
 
 #ifdef __cplusplus
 }

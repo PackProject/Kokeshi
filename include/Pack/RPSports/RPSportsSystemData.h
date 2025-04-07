@@ -1,7 +1,9 @@
 #ifndef RP_SPORTS_SYSTEM_DATA_H
 #define RP_SPORTS_SYSTEM_DATA_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
+
 #include <revolution/WPAD.h>
 
 //! @addtogroup rp_sports

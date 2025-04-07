@@ -5,13 +5,10 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 #define OS_CACHE_BASE 0xE0000000
 
 // Forward declarations
-typedef struct OSContext;
+typedef struct OSContext OSContext;
 
 void DCEnable(void);
 void DCInvalidateRange(const void* buf, u32 len);
@@ -27,8 +24,8 @@ void ICEnable(void);
 
 void LCEnable(void);
 void LCDisable(void);
-void LCLoadBlocks(void* dst, const void* src, u32 len);
-void LCStoreBlocks(void* dst, const void* src, u32 len);
+void LCLoadBlocks(void* dst, const void* src, u32 blocks);
+void LCStoreBlocks(void* dst, const void* src, u32 blocks);
 u32 LCStoreData(void* dst, const void* src, u32 len);
 u32 LCQueueLength(void);
 void LCQueueWait(u32 n);
@@ -40,8 +37,6 @@ void L2GlobalInvalidate(void);
 void DMAErrorHandler(u8 error, OSContext* ctx, u32 dsisr, u32 dar, ...);
 
 void __OSCacheInit(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

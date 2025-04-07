@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_NWC24_CONFIG_H
 #define RVL_SDK_NWC24_CONFIG_H
-#include <revolution/NWC24/NWC24Types.h>
 #include <types.h>
+
+#include <revolution/NWC24/NWC24Types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nwc24
-//! @{
 
 typedef enum {
     NWC24_IDCS_INITIAL,
@@ -43,8 +41,6 @@ const char* NWC24GetAccountDomain(void);
 const char* NWC24GetMBoxDir(void);
 u32 NWC24GetAppId(void);
 u16 NWC24GetGroupId(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,12 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_HIDDEN_DATABASE_H
 #define RVL_FACE_LIBRARY_INTERNAL_HIDDEN_DATABASE_H
+#include <types.h>
+
 #include <RVLFaceLib/RFLi_Format.h>
 #include <RVLFaceLib/RFLi_Types.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 #define RFLi_HDB_DATA_MAX 10000
 
@@ -61,8 +59,6 @@ s16 RFLiGetHiddenPrev(u16 index);
 BOOL RFLiIsValidHiddenData(u16 index, RFLSex sex) DECOMP_DONT_INLINE;
 void RFLiClearCacheHDB(RFLiHiddenCharData* hdb);
 BOOL RFLiIsCachedHDB(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

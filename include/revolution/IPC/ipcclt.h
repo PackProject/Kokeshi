@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_IPC_CLT_H
 #define RVL_SDK_IPC_CLT_H
-#include <revolution/OS.h>
 #include <types.h>
+
+#include <revolution/OS.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_ipc
-//! @{
 
 typedef enum {
     IPC_RESULT_FATAL_ERROR = -119,
@@ -144,8 +142,6 @@ s32 IOS_Ioctlv(s32 fd, s32 type, s32 inCount, s32 outCount,
                IPCIOVector* vectors);
 s32 IOS_IoctlvReboot(s32 fd, s32 type, s32 inCount, s32 outCount,
                      IPCIOVector* vectors);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_GX_BUMP_H
 #define RVL_SDK_GX_BUMP_H
-#include <revolution/GX/GXTypes.h>
 #include <types.h>
+
+#include <revolution/GX/GXTypes.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_gx
-//! @{
 
 void GXSetTevIndirect(GXTevStageID tevStage, GXIndTexStageID texStage,
                       GXIndTexFormat texFmt, GXIndTexBiasSel biasSel,
@@ -25,8 +23,6 @@ void GXSetTevDirect(GXTevStageID stage);
 void __GXUpdateBPMask(void);
 void __GXSetIndirectMask(u32 mask);
 void __GXFlushTextureState(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,13 @@
 #ifndef RVL_SDK_NWC24_DOWNLOAD_H
 #define RVL_SDK_NWC24_DOWNLOAD_H
-#include <revolution/FS.h>
-#include <revolution/NWC24/NWC24Types.h>
 #include <types.h>
+
+#include <revolution/NWC24/NWC24Types.h>
+
+#include <revolution/FS.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rvl_nwc24
-//! @{
 
 #define NWC24_DL_TASK_MAX 120
 #define NWC24_DL_SUBTASK_MAX 32
@@ -96,11 +95,9 @@ NWC24Err NWC24GetDlTask(NWC24DlTask* task, u16 i);
 NWC24Err NWC24iOpenDlTaskList(void);
 NWC24Err NWC24iCloseDlTaskList(void);
 NWC24DlHeader* NWC24iGetCachedDlHeader(void);
-NWC24Err NWC24iCheckHeaderConsistency(NWC24DlHeader* header,
-                                      BOOL clear) DECOMP_DONT_INLINE;
+NWC24Err NWC24iCheckHeaderConsistency(NWC24DlHeader* header, BOOL clear)
+    DECOMP_DONT_INLINE;
 NWC24Err NWC24iLoadDlHeader(void);
-
-//! @}
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 #ifndef RP_SYSTEM_SCENE_CREATOR_H
 #define RP_SYSTEM_SCENE_CREATOR_H
 #include <Pack/RPTypes.h>
+
 #include <egg/core.h>
 
 //! @addtogroup rp_system

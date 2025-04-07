@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_os
-//! @{
-
 void* OSGetMEM1ArenaHi(void);
 void* OSGetMEM2ArenaHi(void);
 void* OSGetArenaHi(void);
@@ -25,8 +22,6 @@ void OSSetMEM2ArenaLo(void* lo);
 void OSSetArenaLo(void* lo);
 
 void* OSAllocFromMEM1ArenaLo(size_t size, u32 align);
-
-//! @}
 
 #ifdef __cplusplus
 }

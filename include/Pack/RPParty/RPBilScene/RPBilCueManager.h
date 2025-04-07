@@ -1,7 +1,6 @@
 #ifndef RP_PARTY_BIL_CUE_MANAGER_H
 #define RP_PARTY_BIL_CUE_MANAGER_H
 #include "RPTypes.h"
-
 #include <RPBilScene/RPBilCue.h>
 #include <RPUtility/RPUtlBaseFsm.h>
 

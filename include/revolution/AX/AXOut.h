@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-//! @addtogroup rvl_ax
-//! @{
-
 #define AX_STREAM_SIZE_RMT 40
 #define AX_RMT_MAX 4
 
@@ -22,8 +19,6 @@ AXOutCallback AXRegisterCallback(AXOutCallback callback);
 s32 AXRmtGetSamplesLeft(void);
 s32 AXRmtGetSamples(s32 chan, s16* out, s32 num);
 s32 AXRmtAdvancePtr(s32 num);
-
-//! @}
 
 #ifdef __cplusplus
 }

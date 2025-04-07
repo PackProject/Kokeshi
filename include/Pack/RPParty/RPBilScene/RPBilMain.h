@@ -1,7 +1,6 @@
 #ifndef RP_PARTY_BIL_MAIN_H
 #define RP_PARTY_BIL_MAIN_H
 #include "RPTypes.h"
-
 #include <RPUtility/RPUtlBaseFsm.h>
 
 class RPBilMain {

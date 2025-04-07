@@ -1,16 +1,15 @@
 #ifndef RVL_FACE_LIBRARY_INTERNAL_DATABASE_H
 #define RVL_FACE_LIBRARY_INTERNAL_DATABASE_H
+#include <types.h>
+
 #include <RVLFaceLib/RFLi_HiddenDatabase.h>
 #include <RVLFaceLib/RFLi_Types.h>
+
 #include <revolution/MEM.h>
 #include <revolution/OS.h>
-#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//! @addtogroup rfl_impl
-//! @{
 
 typedef struct RFLiDatabase {
     u32 identifier;                        // at 0x0
@@ -22,7 +21,7 @@ typedef struct RFLiDatabase {
 
     u8 specialInvite[13]; // at 0x1CF0
     u8 nwc24Month;        // at 0x1CFD
-    u8 nwc24Day;          // at 0x1CFE
+    u8 mwc24Day;          // at 0x1CFE
     u8 padding2;          // at 0x1CFF
 
     RFLiHiddenDB hidden; // at 0x1D00
@@ -72,8 +71,6 @@ BOOL RFLiDBIsLoaded(void);
 u16 RFLiCalculateCRC(const void* p, u32 len);
 void RFLiCreateHeaderCRCAsync(RFLiExCallback callback);
 void RFLiCheckHeaderCRCAsync(RFLiExCallback callback);
-
-//! @}
 
 #ifdef __cplusplus
 }

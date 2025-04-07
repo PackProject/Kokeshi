@@ -102,7 +102,7 @@ public:
 
         if (mScnObj != NULL) {
             nw4r::math::MTX34Copy(
-                pMtx, mScnObj->GetMtxPtr(nw4r::g3d::ScnObj::MTX_TYPE_0));
+                pMtx, mScnObj->GetMtxPtr(nw4r::g3d::ScnObj::MTX_LOCAL));
         } else {
             nw4r::math::MTX34Identity(pMtx);
         }
