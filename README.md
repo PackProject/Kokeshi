@@ -34,7 +34,7 @@ Kokeshi supports the following games:
 
 #### Tools
 1. Install GNU `make`. If you have DevKitPRO or Windows Subsystem for Linux you may already have the tool installed.
-2. Download the latest release of [the PackProject fork of Kamek](github.com/PackProject/Kamek/releases/latest).
+2. Download the latest release of [the PackProject fork of Kamek](https://github.com/PackProject/Kamek/releases/latest).
    1. Install the contents of the zip file to the `tools/` directory.
 3. Download the Wii v1.7 version of [the CodeWarrior compiler](https://files.decomp.dev/compilers_20230715.zip).
    1. Install the contents of the `Wii/1.7/` folder to the `tools/` directory.
